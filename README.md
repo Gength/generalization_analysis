@@ -73,7 +73,7 @@ The parameter $w \in [0, 1]$ allows for the calibration of the evaluation focus.
 
 ## Overview
 
-This section outlines a comprehensive experimental framework to evaluate, compare, and validate our two proposed generalization metrics — **Method 1 (Pick-One-Out with Joint Variant–Transition Weighting)** and **Method 2 (Hybrid Generative–Structural Evaluation)**. The experiments are organized into three tiers: (1) deep-dive single-dataset analysis, (2) cross-method benchmarking and consistency analysis, and (3) stress-testing via noise injection, extreme model confrontation, data-characteristic sensitivity, and scalability profiling.
+This section outlines a comprehensive experimental framework to evaluate, compare, and validate our two proposed generalization metrics — **Method 1 (Pick-One-Out with Joint Variant–Transition Weighting)** and **Method 2 (Hybrid Generative–Structural Evaluation)**. The experiments are organized into three tiers: (1) deep-dive single-dataset analysis, (2) cross-method benchmarking and consistency analysis, and (3) stress-testing via model morphology confrontation, noise injection, data-characteristic sensitivity, and scalability profiling.
 
 ---
 
@@ -159,21 +159,107 @@ In this tier, we select one richly characterized real-world event log (e.g., a s
 
 ## Tier III: Stress-Testing & Boundary Analysis
 
-### 3.1 Extreme Model Confrontation: Trace Model vs. Flower Model
+### 3.1 Model Morphology Confrontation: From Theoretical Extremes to Real-World Archetypes
 
-**Objective:** Verify that our metrics correctly identify and severely penalize the two well-known pathological extremes in process mining — the **Trace Model** (extreme overfitting) and the **Flower Model** (extreme underfitting).
+**Objective:** Go beyond the two theoretical boundary extremes (Trace Model and Flower Model) and evaluate our metrics against the full spectrum of model morphologies encountered in real-world process mining — characterized by Wil van der Aalst's "Italian Food" taxonomy. This experiment verifies that our metrics correctly rank models along the generalization spectrum and uniquely identify the "Lasagna" ideal.
 
-**Procedure:**
-1. Take the original event log and construct two degenerate models:
-   - **Trace Model:** Every trace is a dedicated sequential path; zero generalization.
-   - **Flower Model:** All activities are connected in a fully connected Petri net; permits any arbitrary sequence.
-2. Compute both Method 1 and Method 2 scores for these two models.
+**Background — The Generalization Spectrum:**
+Trace Model (absolute overfitting) and Flower Model (absolute underfitting) are theoretical boundary cases. Real process mining on authentic event logs produces models inhabiting the continuum between these extremes, each with distinct structural and behavioral signatures. We adopt the classic taxonomy:
 
-**Expected Results & Analysis:**
-- **Trace Model:** Both methods should assign an extremely low score. Method 1's leave-one-out replay will fail catastrophically for any removed variant. Method 2's $Gen\_struct$ will heavily penalize the explosion of rarely-used structural paths.
-- **Flower Model:** Method 1 may assign a moderate-to-high score (since all variants replay perfectly after removal). However, Method 2's $Gen\_struct$ penalty should drag the score down significantly, exposing the model's lack of meaningful structure. Analyze whether Method 2's hybrid formula successfully "immune" itself against the Flower Model's cheating.
+#### 3.1.1 The Model Morphology Catalog
 
-**Deliverables:** Score comparison table; discussion of each method's immunity to extreme model pathologies.
+**A. Trace Model (Theoretical Extreme — Absolute Overfitting)**
+- *Morphology:* Every trace in the log is encoded as a dedicated sequential path with zero structural sharing. No generalization whatsoever.
+- *Our Metrics' Expected Behavior:* Both methods should assign extremely low scores. Method 1's leave-one-out replay fails catastrophically for any removed variant. Method 2's $Gen\_struct$ heavily penalizes the explosion of single-use structural paths.
+
+**B. Spaghetti Model (Real-World Overfitting — "The Nightmare")**
+- *Morphology:* Extremely chaotic — nearly all activities are connected with crisscrossing arcs, like a tangled plate of spaghetti. The main process backbone is unrecognizable. This is the most common outcome when mining unstructured real-world logs (e.g., hospital records, unclassified customer service tickets) without adequate frequency filtering.
+- *Root Cause:* The discovery algorithm (e.g., Heuristics Miner with no frequency threshold, or Alpha Miner on noisy data) attempts to accommodate every low-frequency, long-tail anomaly, drawing arcs for every coincidental co-occurrence.
+- *Expected Behavior Under Our Metrics:*
+  - **Method 1 (Pick-One-Out):** May assign a deceptively moderate-to-high score because the model's excessive permissiveness allows it to replay many removed variants successfully.
+  - **Method 2 ($Gen\_struct$):** Will **brutally penalize** the Spaghetti Model. The structural penalty term identifies the massive redundancy — countless arcs visited only once globally — and drives the composite score down sharply. This is a key differentiator: Method 2's hybrid formula successfully exposes the Spaghetti Model's lack of meaningful structure.
+- *How to Generate:* Run Heuristics Miner with dependency threshold = 0.0 and no frequency filtering on a noisy real-world log (e.g., BPI Challenge 2012 without preprocessing). Alternatively, use Alpha Miner on the same unfiltered log.
+
+**C. Flower Model (Theoretical Extreme — Absolute Underfitting)**
+- *Morphology:* A fully connected Petri net where all activities are placed in a single concurrent block, permitting any arbitrary activity sequence.
+- *Our Metrics' Expected Behavior:* Method 1 may assign a moderate-to-high score (all variants replay perfectly). Method 2's $Gen\_struct$ penalty should drag the score down significantly, exposing the model's vacuous structure.
+
+**D. Causal / Heuristics Net (Probability-Driven Pragmatism)**
+- *Morphology:* Occupies the middle ground between Spaghetti and Lasagna. The model does not guarantee logical perfection (potential deadlocks are tolerated), but it exhibits strong immunity to low-frequency noise through probability-driven arc filtering. Arcs are annotated with dependency/confidence measures derived from directly-follows frequencies.
+- *Representative Algorithm:* **Heuristics Miner** — its core logic (using directly-follows frequency and dependency metrics to prune arcs) shares a philosophical kinship with Method 1's joint weighting formula.
+- *Expected Behavior Under Our Metrics:* A well-tuned Heuristics Miner (with appropriate dependency/confidence thresholds) should rank second only to Inductive Miner on our leaderboard. Its probabilistic arc pruning naturally aligns with the frequency-weighted reasoning in both methods.
+- *How to Generate:* Run Heuristics Miner with dependency threshold $\approx 0.9$ and relative-to-best threshold $\approx 0.1$–$0.3$.
+
+**E. Strict Block-Structured Model (Algorithmic Discipline)**
+- *Morphology:* The model is constructed like building blocks — every split gateway (e.g., AND-Split) is guaranteed to have a corresponding join gateway (AND-Join) within a well-nested scope. No unstructured cross-level arcs are permitted. This structural discipline is a direct product of the discovery algorithm's design philosophy.
+- *Representative Algorithm:* **Inductive Miner (IM)** — inherently builds models by recursively identifying "cuts" (sequence, parallel, exclusive choice, loop) in the directly-follows graph, guaranteeing block-structured output.
+- *Expected Behavior Under Our Metrics:* Block-structured models exhibit an innate structural restraint that prevents overfitting. IM will never produce a Flower Model or a Spaghetti Model. In experiments pitting IM against Alpha Miner, IM consistently produces the most structurally parsimonious models that still capture the core process logic.
+- *How to Generate:* Run Inductive Miner (IM or IMf) directly — no parameter tuning needed for the block-structure guarantee.
+
+**F. Lasagna Model (The "Holy Grail")**
+- *Morphology:* The ideal process model — structurally crisp with clearly stratified layers. The high-frequency "Happy Path" backbone runs through the center like the main pasta layers of a lasagna, while rare exception branches are elegantly encapsulated in adjacent concurrent or choice constructs without tangling the main flow. Exhibits both structural clarity and behavioral flexibility.
+- *Root Cause:* Produced either from highly normative data (e.g., automated manufacturing pipelines) or by applying a well-tuned discovery algorithm (e.g., Inductive Miner with noise filtering) on well-preprocessed logs.
+- *Expected Behavior Under Our Metrics:* This should be the **absolute top-scoring model** under both methods. It retains reasonable flexibility ($Gen\_shadow$ scores high) while avoiding spurious arcs ($Gen\_struct$ penalty is minimal). Method 1's joint weighting correctly identifies that all meaningful variants are replayable, and Method 2's hybrid formula confirms that the model's structure is both flexible and parsimonious.
+- *How to Generate:* Run Inductive Miner with noise threshold $\approx 0.2$–$0.4$ on a well-preprocessed log, or use Split Miner with appropriate filtering.
+
+#### 3.1.2 Experimental Procedure
+
+1. **Construct the Model Gallery:** Using a single richly characterized real-world event log (e.g., BPI Challenge 2012 or 2017), generate all six model archetypes:
+   - **Trace Model** — manually construct from the variant list.
+   - **Spaghetti Model** — Heuristics Miner with dependency threshold = 0.0, or Alpha Miner on unfiltered log.
+   - **Causal Net** — Heuristics Miner with tuned thresholds (dependency $\approx 0.9$).
+   - **Strict Block-Structured Model** — Inductive Miner (default).
+   - **Lasagna Model** — Inductive Miner with noise filtering, or Split Miner.
+   - **Flower Model** — manually construct a fully connected Petri net.
+
+2. **Compute Scores:** Evaluate all six models using both Method 1 and Method 2. Record $Gen\_Total$, $Gen\_shadow$, and $Gen\_struct$ separately for Method 2.
+
+3. **Quadrant Visualization:** Plot each model on a **2D quadrant diagram**:
+   - **X-axis: Structural Complexity** (from Minimal / Parsimonious → Chaotic / Over-parameterized).
+   - **Y-axis: Behavioral Permissiveness** (from Rigid / Strict → Permissive / Anything-Goes).
+   - Annotate each model's position with its $Gen\_Total$ score from Method 2.
+   - The ideal "Lasagna Zone" occupies the center-right region (moderate complexity, moderate permissiveness).
+
+   ```
+   Behavioral Permissiveness
+        ↑
+   1.0  │  Flower Model          │
+        │  (Gen_Total ≈ 0.2)     │  Spaghetti Model
+        │                        │  (Gen_Total ≈ 0.3–0.5)
+        │                        │
+        │         Lasagna Model  │
+        │         (Gen_Total ≈   │
+        │          0.85–0.95)    │
+        │                        │
+        │  Strict Block-Struct.  │  Causal/Heuristics Net
+        │  (Gen_Total ≈ 0.7–0.8) │  (Gen_Total ≈ 0.6–0.8)
+        │                        │
+   0.0  │  Trace Model           │
+        │  (Gen_Total ≈ 0.0–0.1) │
+        └────────────────────────┘
+        0.0   Structural Complexity →   1.0
+   ```
+
+4. **Score Trajectory Analysis:** Trace how $Gen\_Total$ evolves as we move from Trace Model → Spaghetti → Causal Net → Lasagna → Flower Model. The score should peak at Lasagna and decline toward both extremes, forming an inverted-U shape — demonstrating that our metric correctly identifies the sweet spot between overfitting and underfitting.
+
+5. **Decomposition Analysis (Method 2 Only):** For each model archetype, examine the individual contributions of $Gen\_shadow$ and $Gen\_struct$:
+   - Spaghetti Model: $Gen\_shadow$ moderate-to-high, but $Gen\_struct$ very low → composite score pulled down.
+   - Flower Model: $Gen\_shadow$ very high, but $Gen\_struct$ near zero → composite score pulled down.
+   - Lasagna Model: Both $Gen\_shadow$ and $Gen\_struct$ are high → composite score maximized.
+   - This decomposition proves that neither sub-component alone suffices — only the hybrid formula correctly identifies the Lasagna ideal.
+
+**Deliverables:**
+- Model gallery table with morphological descriptions, generation parameters, and per-method scores.
+- Quadrant diagram with $Gen\_Total$ annotations.
+- Score trajectory chart (inverted-U curve) across the six archetypes.
+- Decomposition bar chart ($Gen\_shadow$ vs. $Gen\_struct$) for each model.
+- Narrative analysis: "How our metrics guide the search toward Lasagna."
+
+**PM4Py Feasibility Note:** All required miners are natively available in PM4Py:
+- `pm4py.discover_petri_net_inductive()` for Inductive Miner (block-structured / Lasagna).
+- `pm4py.discover_petri_net_heuristics()` for Heuristics Miner (Spaghetti with low thresholds, Causal Net with high thresholds).
+- `pm4py.discover_petri_net_alpha()` for Alpha Miner (can produce Spaghetti on noisy logs).
+- Trace and Flower Models can be constructed manually via `pm4py.objects.petri_net` primitives.
 
 ### 3.2 Data-Characteristic Sensitivity Analysis
 
@@ -242,7 +328,7 @@ In this tier, we select one richly characterized real-world event log (e.g., a s
 | 1.2 Baseline Correlation | Do our metrics see what PM4Py misses? |
 | 1.3 Ablation Study | Is every formula component necessary? |
 | 2.1 Cross-Method Benchmark | Do Method 1 and Method 2 agree? If not, why? |
-| 3.1 Extreme Models | Can we detect and penalize Trace/Flower pathologies? |
+| 3.1 Model Morphology Confrontation | Can our metrics navigate the full spectrum from Trace → Spaghetti → Lasagna → Flower, and uniquely identify the Lasagna ideal? |
 | 3.2 Data Sensitivity | Which metric dominates under which data characteristics? |
 | 3.3 Noise Robustness | How gracefully do our metrics degrade under noise? |
 | 3.4 Scalability | What is the computational cost of each method? |
