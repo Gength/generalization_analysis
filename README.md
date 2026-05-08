@@ -120,7 +120,7 @@ In this tier, we select one richly characterized real-world event log (e.g., a s
 
 **Ablation for Method 1 (Pick-One-Out):**
 - **Variant A:** Pure variant-frequency weighting only: $w(v_i) = \ln(f(v_i) + 1)$.
-- **Variant B:** Full joint weighting: $w(v_i) = \ln(f(v_i) + 1) \times \ln(\text{avg\_global\_freq} + 1)$.
+- **Variant B:** Full joint weighting: $w(v_i) = \ln(f(v_i) + 1) \times \ln(\text{AvgGlobalFreq} + 1)$.
 - Compare the model rankings produced by Variant A vs. Variant B on the same dataset and miners.
 - Demonstrate specific cases where Variant B correctly down-weights true noise variants (low $GlobalFreq$) and up-weights concurrency-induced rare variants (high $GlobalFreq$), leading to a more sensible ranking.
 
