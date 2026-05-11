@@ -78,8 +78,10 @@ def load_and_prepare_log(path):
     """Load XES and convert to EventLog (list of traces)."""
     print(f"[1/5] Loading event log from {path} ...")
     t0 = time.time()
-    df = pm4py.read_xes(path)
-    event_log = log_converter.apply(df, variant=log_converter.Variants.TO_EVENT_LOG)
+    # Use classic XES importer to avoid the r4pm codepath
+    from pm4py.objects.log.importer.xes import importer as xes_importer
+    event_log = xes_importer.apply(path)
+    df = pm4py.convert_to_dataframe(event_log)
     # expose original dataframe for efficient filtering in workers
     global ORIGINAL_DF, CASE_IDS_ORDERED
     ORIGINAL_DF = df
@@ -174,7 +176,23 @@ def discover_petri_net_for_miner(miner_name, log):
 
 
 def replay_trace_on_model(trace, net, im, fm):
-    """Replay a single trace on the given Petri net using alignment."""
+    """Replay a single trace on the given Petri net.
+    
+    Uses token-based replay first (fast); falls back to alignment-based
+    only when token-based fails, to keep per-variant cost low.
+    """
+    # Token-based replay first (orders of magnitude faster than alignment)
+    try:
+        fitness_result = replay_fitness.apply(
+            [trace], net, im, fm,
+            variant=replay_fitness.Variants.TOKEN_BASED
+        )
+        return fitness_result.get("averageFitness",
+                                  fitness_result.get("average_trace_fitness", 0.0))
+    except Exception:
+        pass
+
+    # Fall back to alignment-based replay
     try:
         fitness_result = replay_fitness.apply(
             [trace], net, im, fm,
@@ -183,16 +201,7 @@ def replay_trace_on_model(trace, net, im, fm):
         return fitness_result.get("averageFitness",
                                   fitness_result.get("average_trace_fitness", 0.0))
     except Exception:
-        # If alignment fails, fall back to token-based replay
-        try:
-            fitness_result = replay_fitness.apply(
-                [trace], net, im, fm,
-                variant=replay_fitness.Variants.TOKEN_BASED
-            )
-            return fitness_result.get("averageFitness",
-                                      fitness_result.get("average_trace_fitness", 0.0))
-        except Exception:
-            return 0.0
+        return 0.0
 
 
 def evaluate_variant_task(task):
@@ -243,11 +252,6 @@ def evaluate_variant_task(task):
             "replay_score": replay_score,
             "pure_weight": pure_weight,
             "joint_weight": joint_weight,
-        }
-        return {
-            "skip": True,
-            "reason": "insufficient remaining traces",
-            "variant": " → ".join(variant_tuple),
         }
 
     try:
