@@ -1,0 +1,1668 @@
+{
+  "dataset": "BPI Challenge 2017",
+  "num_variants_sampled": 50,
+  "miner_results": [
+    {
+      "miner": "Inductive Miner (IM)",
+      "score_pure_weighting": 1.0,
+      "score_joint_weighting": 1.0,
+      "pm4py_generalization": 0.9484917562396579,
+      "num_variants_evaluated": 50
+    },
+    {
+      "miner": "Inductive Miner (IMf)",
+      "score_pure_weighting": 0.9472596636555224,
+      "score_joint_weighting": 0.9473000360917111,
+      "pm4py_generalization": 0.9472750056937391,
+      "num_variants_evaluated": 50
+    },
+    {
+      "miner": "Heuristics Miner",
+      "score_pure_weighting": 0.8090781939079363,
+      "score_joint_weighting": 0.80917659906357,
+      "pm4py_generalization": 0.9437540808310951,
+      "num_variants_evaluated": 50
+    },
+    {
+      "miner": "Alpha Miner",
+      "score_pure_weighting": 0.24304611916794522,
+      "score_joint_weighting": 0.24252585878384741,
+      "pm4py_generalization": 0.9824200959583872,
+      "num_variants_evaluated": 50
+    }
+  ],
+  "detailed_results": [
+    {
+      "miner": "Inductive Miner (IM)",
+      "score_pure": 1.0,
+      "score_joint": 1.0,
+      "pm4py_generalization": 0.9484917562396579,
+      "results": [
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 1056,
+          "replay_score": 1.0,
+          "pure_weight": 6.963189985870238,
+          "joint_weight": 73.50677919454903
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 1021,
+          "replay_score": 1.0,
+          "pure_weight": 6.92951677076365,
+          "joint_weight": 73.80184463733862
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 734,
+          "replay_score": 1.0,
+          "pure_weight": 6.5998704992128365,
+          "joint_weight": 69.88284330395007
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 451,
+          "replay_score": 1.0,
+          "pure_weight": 6.113682179832232,
+          "joint_weight": 64.90760094936113
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 332,
+          "replay_score": 1.0,
+          "pure_weight": 5.808142489980444,
+          "joint_weight": 61.33849025313115
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 298,
+          "replay_score": 1.0,
+          "pure_weight": 5.700443573390687,
+          "joint_weight": 60.66355079870743
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 278,
+          "replay_score": 1.0,
+          "pure_weight": 5.631211781821365,
+          "joint_weight": 60.491244583709125
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 244,
+          "replay_score": 1.0,
+          "pure_weight": 5.501258210544727,
+          "joint_weight": 58.67824704128862
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 212,
+          "replay_score": 1.0,
+          "pure_weight": 5.3612921657094255,
+          "joint_weight": 57.28535668028583
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 204,
+          "replay_score": 1.0,
+          "pure_weight": 5.3230099791384085,
+          "joint_weight": 56.7666427264504
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 170,
+          "replay_score": 1.0,
+          "pure_weight": 5.14166355650266,
+          "joint_weight": 55.88420000749415
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 157,
+          "replay_score": 1.0,
+          "pure_weight": 5.062595033026967,
+          "joint_weight": 53.67240465362672
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 140,
+          "replay_score": 1.0,
+          "pure_weight": 4.948759890378168,
+          "joint_weight": 53.4734805090336
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 138,
+          "replay_score": 1.0,
+          "pure_weight": 4.9344739331306915,
+          "joint_weight": 52.723073618006225
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 134,
+          "replay_score": 1.0,
+          "pure_weight": 4.90527477843843,
+          "joint_weight": 51.223723717054305
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 132,
+          "replay_score": 1.0,
+          "pure_weight": 4.890349128221754,
+          "joint_weight": 51.968866633244915
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 127,
+          "replay_score": 1.0,
+          "pure_weight": 4.852030263919617,
+          "joint_weight": 52.13416673235704
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 125,
+          "replay_score": 1.0,
+          "pure_weight": 4.836281906951478,
+          "joint_weight": 52.30237232531237
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 121,
+          "replay_score": 1.0,
+          "pure_weight": 4.804021044733257,
+          "joint_weight": 51.18362128304819
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 99,
+          "replay_score": 1.0,
+          "pure_weight": 4.605170185988092,
+          "joint_weight": 48.41028167505438
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 99,
+          "replay_score": 1.0,
+          "pure_weight": 4.605170185988092,
+          "joint_weight": 49.15282097019593
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 90,
+          "replay_score": 1.0,
+          "pure_weight": 4.51085950651685,
+          "joint_weight": 48.275264266175526
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 88,
+          "replay_score": 1.0,
+          "pure_weight": 4.48863636973214,
+          "joint_weight": 47.750755368153385
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 87,
+          "replay_score": 1.0,
+          "pure_weight": 4.477336814478207,
+          "joint_weight": 48.54626964499498
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 86,
+          "replay_score": 1.0,
+          "pure_weight": 4.465908118654584,
+          "joint_weight": 48.12417163956471
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 85,
+          "replay_score": 1.0,
+          "pure_weight": 4.454347296253507,
+          "joint_weight": 48.544944964229124
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 81,
+          "replay_score": 1.0,
+          "pure_weight": 4.406719247264253,
+          "joint_weight": 47.188433988309036
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 79,
+          "replay_score": 1.0,
+          "pure_weight": 4.382026634673881,
+          "joint_weight": 45.51488351612445
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 78,
+          "replay_score": 1.0,
+          "pure_weight": 4.3694478524670215,
+          "joint_weight": 46.53172785279966
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 78,
+          "replay_score": 1.0,
+          "pure_weight": 4.3694478524670215,
+          "joint_weight": 46.808044212162415
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 77,
+          "replay_score": 1.0,
+          "pure_weight": 4.356708826689592,
+          "joint_weight": 46.62974841389655
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 77,
+          "replay_score": 1.0,
+          "pure_weight": 4.356708826689592,
+          "joint_weight": 46.693461101937835
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 76,
+          "replay_score": 1.0,
+          "pure_weight": 4.343805421853684,
+          "joint_weight": 46.8668129344427
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 75,
+          "replay_score": 1.0,
+          "pure_weight": 4.330733340286331,
+          "joint_weight": 46.85151640614713
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 69,
+          "replay_score": 1.0,
+          "pure_weight": 4.248495242049359,
+          "joint_weight": 45.56137723224182
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 66,
+          "replay_score": 1.0,
+          "pure_weight": 4.204692619390966,
+          "joint_weight": 44.054400749163904
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 62,
+          "replay_score": 1.0,
+          "pure_weight": 4.143134726391533,
+          "joint_weight": 43.80817638227877
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 58,
+          "replay_score": 1.0,
+          "pure_weight": 4.07753744390572,
+          "joint_weight": 44.2389537710975
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 58,
+          "replay_score": 1.0,
+          "pure_weight": 4.07753744390572,
+          "joint_weight": 42.99134769915651
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 57,
+          "replay_score": 1.0,
+          "pure_weight": 4.060443010546419,
+          "joint_weight": 42.66944251872854
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 56,
+          "replay_score": 1.0,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.138072638599446
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 56,
+          "replay_score": 1.0,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.72265064266808
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 56,
+          "replay_score": 1.0,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.09232869294601
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 52,
+          "replay_score": 1.0,
+          "pure_weight": 3.970291913552122,
+          "joint_weight": 43.09892994123373
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 51,
+          "replay_score": 1.0,
+          "pure_weight": 3.9512437185814275,
+          "joint_weight": 41.37730050276398
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 50,
+          "replay_score": 1.0,
+          "pure_weight": 3.9318256327243257,
+          "joint_weight": 40.51383003650418
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 46,
+          "replay_score": 1.0,
+          "pure_weight": 3.8501476017100584,
+          "joint_weight": 40.444693284414
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 45,
+          "replay_score": 1.0,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.88312319734645
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 45,
+          "replay_score": 1.0,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.128719565267446
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 45,
+          "replay_score": 1.0,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.041730788289634
+        }
+      ]
+    },
+    {
+      "miner": "Inductive Miner (IMf)",
+      "score_pure": 0.9472596636555224,
+      "score_joint": 0.9473000360917111,
+      "pm4py_generalization": 0.9472750056937391,
+      "results": [
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 1056,
+          "replay_score": 0.9545454545454546,
+          "pure_weight": 6.963189985870238,
+          "joint_weight": 73.50677919454903
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 1021,
+          "replay_score": 0.9473684210526316,
+          "pure_weight": 6.92951677076365,
+          "joint_weight": 73.80184463733862
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 734,
+          "replay_score": 0.9565217391304348,
+          "pure_weight": 6.5998704992128365,
+          "joint_weight": 69.88284330395007
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 451,
+          "replay_score": 0.9583333333333334,
+          "pure_weight": 6.113682179832232,
+          "joint_weight": 64.90760094936113
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 332,
+          "replay_score": 0.9523809523809523,
+          "pure_weight": 5.808142489980444,
+          "joint_weight": 61.33849025313115
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 298,
+          "replay_score": 0.96,
+          "pure_weight": 5.700443573390687,
+          "joint_weight": 60.66355079870743
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 278,
+          "replay_score": 0.96,
+          "pure_weight": 5.631211781821365,
+          "joint_weight": 60.491244583709125
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 244,
+          "replay_score": 0.9642857142857143,
+          "pure_weight": 5.501258210544727,
+          "joint_weight": 58.67824704128862
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 212,
+          "replay_score": 0.9655172413793104,
+          "pure_weight": 5.3612921657094255,
+          "joint_weight": 57.28535668028583
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 204,
+          "replay_score": 0.9615384615384616,
+          "pure_weight": 5.3230099791384085,
+          "joint_weight": 56.7666427264504
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 170,
+          "replay_score": 0.90625,
+          "pure_weight": 5.14166355650266,
+          "joint_weight": 55.88420000749415
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 157,
+          "replay_score": 0.96,
+          "pure_weight": 5.062595033026967,
+          "joint_weight": 53.67240465362672
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 140,
+          "replay_score": 0.9142857142857143,
+          "pure_weight": 4.948759890378168,
+          "joint_weight": 53.4734805090336
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 138,
+          "replay_score": 0.962962962962963,
+          "pure_weight": 4.9344739331306915,
+          "joint_weight": 52.723073618006225
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 134,
+          "replay_score": 0.9230769230769231,
+          "pure_weight": 4.90527477843843,
+          "joint_weight": 51.223723717054305
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 132,
+          "replay_score": 0.9615384615384616,
+          "pure_weight": 4.890349128221754,
+          "joint_weight": 51.968866633244915
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 127,
+          "replay_score": 0.96,
+          "pure_weight": 4.852030263919617,
+          "joint_weight": 52.13416673235704
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 125,
+          "replay_score": 0.9166666666666666,
+          "pure_weight": 4.836281906951478,
+          "joint_weight": 52.30237232531237
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 121,
+          "replay_score": 0.9473684210526316,
+          "pure_weight": 4.804021044733257,
+          "joint_weight": 51.18362128304819
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 99,
+          "replay_score": 0.9130434782608696,
+          "pure_weight": 4.605170185988092,
+          "joint_weight": 48.41028167505438
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 99,
+          "replay_score": 0.962962962962963,
+          "pure_weight": 4.605170185988092,
+          "joint_weight": 49.15282097019593
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 90,
+          "replay_score": 0.9666666666666667,
+          "pure_weight": 4.51085950651685,
+          "joint_weight": 48.275264266175526
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 88,
+          "replay_score": 0.9642857142857143,
+          "pure_weight": 4.48863636973214,
+          "joint_weight": 47.750755368153385
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 87,
+          "replay_score": 0.95,
+          "pure_weight": 4.477336814478207,
+          "joint_weight": 48.54626964499498
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 86,
+          "replay_score": 0.962962962962963,
+          "pure_weight": 4.465908118654584,
+          "joint_weight": 48.12417163956471
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 85,
+          "replay_score": 0.9459459459459459,
+          "pure_weight": 4.454347296253507,
+          "joint_weight": 48.544944964229124
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 81,
+          "replay_score": 0.9523809523809523,
+          "pure_weight": 4.406719247264253,
+          "joint_weight": 47.188433988309036
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 79,
+          "replay_score": 0.9411764705882353,
+          "pure_weight": 4.382026634673881,
+          "joint_weight": 45.51488351612445
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 78,
+          "replay_score": 0.962962962962963,
+          "pure_weight": 4.3694478524670215,
+          "joint_weight": 46.53172785279966
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 78,
+          "replay_score": 0.96,
+          "pure_weight": 4.3694478524670215,
+          "joint_weight": 46.808044212162415
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 77,
+          "replay_score": 0.9642857142857143,
+          "pure_weight": 4.356708826689592,
+          "joint_weight": 46.62974841389655
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 77,
+          "replay_score": 0.967741935483871,
+          "pure_weight": 4.356708826689592,
+          "joint_weight": 46.693461101937835
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 76,
+          "replay_score": 0.9642857142857143,
+          "pure_weight": 4.343805421853684,
+          "joint_weight": 46.8668129344427
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 75,
+          "replay_score": 0.9523809523809523,
+          "pure_weight": 4.330733340286331,
+          "joint_weight": 46.85151640614713
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 69,
+          "replay_score": 0.9583333333333334,
+          "pure_weight": 4.248495242049359,
+          "joint_weight": 45.56137723224182
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 66,
+          "replay_score": 0.9259259259259259,
+          "pure_weight": 4.204692619390966,
+          "joint_weight": 44.054400749163904
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 62,
+          "replay_score": 0.9583333333333334,
+          "pure_weight": 4.143134726391533,
+          "joint_weight": 43.80817638227877
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 58,
+          "replay_score": 0.9512195121951219,
+          "pure_weight": 4.07753744390572,
+          "joint_weight": 44.2389537710975
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 58,
+          "replay_score": 0.8695652173913043,
+          "pure_weight": 4.07753744390572,
+          "joint_weight": 42.99134769915651
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 57,
+          "replay_score": 0.9285714285714286,
+          "pure_weight": 4.060443010546419,
+          "joint_weight": 42.66944251872854
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 56,
+          "replay_score": 0.9642857142857143,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.138072638599446
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 56,
+          "replay_score": 0.9117647058823529,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.72265064266808
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 56,
+          "replay_score": 0.9655172413793104,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.09232869294601
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 52,
+          "replay_score": 0.962962962962963,
+          "pure_weight": 3.970291913552122,
+          "joint_weight": 43.09892994123373
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 51,
+          "replay_score": 0.8846153846153846,
+          "pure_weight": 3.9512437185814275,
+          "joint_weight": 41.37730050276398
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 50,
+          "replay_score": 0.95,
+          "pure_weight": 3.9318256327243257,
+          "joint_weight": 40.51383003650418
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 46,
+          "replay_score": 0.8888888888888888,
+          "pure_weight": 3.8501476017100584,
+          "joint_weight": 40.444693284414
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 45,
+          "replay_score": 0.9117647058823529,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.88312319734645
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 45,
+          "replay_score": 0.96,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.128719565267446
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 45,
+          "replay_score": 0.9655172413793104,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.041730788289634
+        }
+      ]
+    },
+    {
+      "miner": "Heuristics Miner",
+      "score_pure": 0.8090781939079363,
+      "score_joint": 0.80917659906357,
+      "pm4py_generalization": 0.9437540808310951,
+      "results": [
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 1056,
+          "replay_score": 0.84,
+          "pure_weight": 6.963189985870238,
+          "joint_weight": 73.50677919454903
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 1021,
+          "replay_score": 0.7272727272727273,
+          "pure_weight": 6.92951677076365,
+          "joint_weight": 73.80184463733862
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 734,
+          "replay_score": 0.8461538461538461,
+          "pure_weight": 6.5998704992128365,
+          "joint_weight": 69.88284330395007
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 451,
+          "replay_score": 0.8518518518518519,
+          "pure_weight": 6.113682179832232,
+          "joint_weight": 64.90760094936113
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 332,
+          "replay_score": 0.8333333333333334,
+          "pure_weight": 5.808142489980444,
+          "joint_weight": 61.33849025313115
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 298,
+          "replay_score": 0.8571428571428572,
+          "pure_weight": 5.700443573390687,
+          "joint_weight": 60.66355079870743
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 278,
+          "replay_score": 0.75,
+          "pure_weight": 5.631211781821365,
+          "joint_weight": 60.491244583709125
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 244,
+          "replay_score": 0.7741935483870968,
+          "pure_weight": 5.501258210544727,
+          "joint_weight": 58.67824704128862
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 212,
+          "replay_score": 0.78125,
+          "pure_weight": 5.3612921657094255,
+          "joint_weight": 57.28535668028583
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 204,
+          "replay_score": 0.8620689655172413,
+          "pure_weight": 5.3230099791384085,
+          "joint_weight": 56.7666427264504
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 170,
+          "replay_score": 0.8285714285714285,
+          "pure_weight": 5.14166355650266,
+          "joint_weight": 55.88420000749415
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 157,
+          "replay_score": 0.8571428571428572,
+          "pure_weight": 5.062595033026967,
+          "joint_weight": 53.67240465362672
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 140,
+          "replay_score": 0.8421052631578947,
+          "pure_weight": 4.948759890378168,
+          "joint_weight": 53.4734805090336
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 138,
+          "replay_score": 0.8666666666666667,
+          "pure_weight": 4.9344739331306915,
+          "joint_weight": 52.723073618006225
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 134,
+          "replay_score": 0.7931034482758621,
+          "pure_weight": 4.90527477843843,
+          "joint_weight": 51.223723717054305
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 132,
+          "replay_score": 0.8620689655172413,
+          "pure_weight": 4.890349128221754,
+          "joint_weight": 51.968866633244915
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 127,
+          "replay_score": 0.75,
+          "pure_weight": 4.852030263919617,
+          "joint_weight": 52.13416673235704
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 125,
+          "replay_score": 0.8461538461538461,
+          "pure_weight": 4.836281906951478,
+          "joint_weight": 52.30237232531237
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 121,
+          "replay_score": 0.7272727272727273,
+          "pure_weight": 4.804021044733257,
+          "joint_weight": 51.18362128304819
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 99,
+          "replay_score": 0.7692307692307692,
+          "pure_weight": 4.605170185988092,
+          "joint_weight": 48.41028167505438
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 99,
+          "replay_score": 0.7666666666666666,
+          "pure_weight": 4.605170185988092,
+          "joint_weight": 49.15282097019593
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 90,
+          "replay_score": 0.7878787878787878,
+          "pure_weight": 4.51085950651685,
+          "joint_weight": 48.275264266175526
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 88,
+          "replay_score": 0.7741935483870968,
+          "pure_weight": 4.48863636973214,
+          "joint_weight": 47.750755368153385
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 87,
+          "replay_score": 0.8604651162790697,
+          "pure_weight": 4.477336814478207,
+          "joint_weight": 48.54626964499498
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 86,
+          "replay_score": 0.7666666666666666,
+          "pure_weight": 4.465908118654584,
+          "joint_weight": 48.12417163956471
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 85,
+          "replay_score": 0.85,
+          "pure_weight": 4.454347296253507,
+          "joint_weight": 48.544944964229124
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 81,
+          "replay_score": 0.75,
+          "pure_weight": 4.406719247264253,
+          "joint_weight": 47.188433988309036
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 79,
+          "replay_score": 0.7,
+          "pure_weight": 4.382026634673881,
+          "joint_weight": 45.51488351612445
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 78,
+          "replay_score": 0.8666666666666667,
+          "pure_weight": 4.3694478524670215,
+          "joint_weight": 46.53172785279966
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 78,
+          "replay_score": 0.75,
+          "pure_weight": 4.3694478524670215,
+          "joint_weight": 46.808044212162415
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 77,
+          "replay_score": 0.8709677419354839,
+          "pure_weight": 4.356708826689592,
+          "joint_weight": 46.62974841389655
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 77,
+          "replay_score": 0.7941176470588236,
+          "pure_weight": 4.356708826689592,
+          "joint_weight": 46.693461101937835
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 76,
+          "replay_score": 0.7741935483870968,
+          "pure_weight": 4.343805421853684,
+          "joint_weight": 46.8668129344427
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 75,
+          "replay_score": 0.75,
+          "pure_weight": 4.330733340286331,
+          "joint_weight": 46.85151640614713
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 69,
+          "replay_score": 0.8518518518518519,
+          "pure_weight": 4.248495242049359,
+          "joint_weight": 45.56137723224182
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 66,
+          "replay_score": 0.8,
+          "pure_weight": 4.204692619390966,
+          "joint_weight": 44.054400749163904
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 62,
+          "replay_score": 0.8518518518518519,
+          "pure_weight": 4.143134726391533,
+          "joint_weight": 43.80817638227877
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 58,
+          "replay_score": 0.8636363636363636,
+          "pure_weight": 4.07753744390572,
+          "joint_weight": 44.2389537710975
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 58,
+          "replay_score": 0.7692307692307692,
+          "pure_weight": 4.07753744390572,
+          "joint_weight": 42.99134769915651
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 57,
+          "replay_score": 0.8064516129032258,
+          "pure_weight": 4.060443010546419,
+          "joint_weight": 42.66944251872854
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 56,
+          "replay_score": 0.8709677419354839,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.138072638599446
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 56,
+          "replay_score": 0.8378378378378378,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.72265064266808
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 56,
+          "replay_score": 0.78125,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.09232869294601
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 52,
+          "replay_score": 0.7666666666666666,
+          "pure_weight": 3.970291913552122,
+          "joint_weight": 43.09892994123373
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 51,
+          "replay_score": 0.7586206896551724,
+          "pure_weight": 3.9512437185814275,
+          "joint_weight": 41.37730050276398
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 50,
+          "replay_score": 0.8260869565217391,
+          "pure_weight": 3.9318256327243257,
+          "joint_weight": 40.51383003650418
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 46,
+          "replay_score": 0.7666666666666666,
+          "pure_weight": 3.8501476017100584,
+          "joint_weight": 40.444693284414
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 45,
+          "replay_score": 0.8378378378378378,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.88312319734645
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 45,
+          "replay_score": 0.8571428571428572,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.128719565267446
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 45,
+          "replay_score": 0.875,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.041730788289634
+        }
+      ]
+    },
+    {
+      "miner": "Alpha Miner",
+      "score_pure": 0.24304611916794522,
+      "score_joint": 0.24252585878384741,
+      "pm4py_generalization": 0.9824200959583872,
+      "results": [
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 1056,
+          "replay_score": 0.33333333333333337,
+          "pure_weight": 6.963189985870238,
+          "joint_weight": 73.50677919454903
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 1021,
+          "replay_score": 0.19047619047619047,
+          "pure_weight": 6.92951677076365,
+          "joint_weight": 73.80184463733862
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 734,
+          "replay_score": 0.31999999999999995,
+          "pure_weight": 6.5998704992128365,
+          "joint_weight": 69.88284330395007
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 451,
+          "replay_score": 0.3076923076923077,
+          "pure_weight": 6.113682179832232,
+          "joint_weight": 64.90760094936113
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 332,
+          "replay_score": 0.34782608695652173,
+          "pure_weight": 5.808142489980444,
+          "joint_weight": 61.33849025313115
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 298,
+          "replay_score": 0.2962962962962963,
+          "pure_weight": 5.700443573390687,
+          "joint_weight": 60.66355079870743
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 278,
+          "replay_score": 0.14814814814814814,
+          "pure_weight": 5.631211781821365,
+          "joint_weight": 60.491244583709125
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 244,
+          "replay_score": 0.2666666666666667,
+          "pure_weight": 5.501258210544727,
+          "joint_weight": 58.67824704128862
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 212,
+          "replay_score": 0.25806451612903225,
+          "pure_weight": 5.3612921657094255,
+          "joint_weight": 57.28535668028583
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 204,
+          "replay_score": 0.2857142857142857,
+          "pure_weight": 5.3230099791384085,
+          "joint_weight": 56.7666427264504
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 170,
+          "replay_score": 0.11764705882352944,
+          "pure_weight": 5.14166355650266,
+          "joint_weight": 55.88420000749415
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 157,
+          "replay_score": 0.33333333333333337,
+          "pure_weight": 5.062595033026967,
+          "joint_weight": 53.67240465362672
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 140,
+          "replay_score": 0.21621621621621623,
+          "pure_weight": 4.948759890378168,
+          "joint_weight": 53.4734805090336
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 138,
+          "replay_score": 0.27586206896551724,
+          "pure_weight": 4.9344739331306915,
+          "joint_weight": 52.723073618006225
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 134,
+          "replay_score": 0.2857142857142857,
+          "pure_weight": 4.90527477843843,
+          "joint_weight": 51.223723717054305
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 132,
+          "replay_score": 0.3214285714285714,
+          "pure_weight": 4.890349128221754,
+          "joint_weight": 51.968866633244915
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 127,
+          "replay_score": 0.14814814814814814,
+          "pure_weight": 4.852030263919617,
+          "joint_weight": 52.13416673235704
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 125,
+          "replay_score": 0.21052631578947367,
+          "pure_weight": 4.836281906951478,
+          "joint_weight": 52.30237232531237
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 121,
+          "replay_score": 0.19047619047619047,
+          "pure_weight": 4.804021044733257,
+          "joint_weight": 51.18362128304819
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 99,
+          "replay_score": 0.16000000000000003,
+          "pure_weight": 4.605170185988092,
+          "joint_weight": 48.41028167505438
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 99,
+          "replay_score": 0.27586206896551724,
+          "pure_weight": 4.605170185988092,
+          "joint_weight": 49.15282097019593
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 90,
+          "replay_score": 0.25,
+          "pure_weight": 4.51085950651685,
+          "joint_weight": 48.275264266175526
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 88,
+          "replay_score": 0.30000000000000004,
+          "pure_weight": 4.48863636973214,
+          "joint_weight": 47.750755368153385
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 87,
+          "replay_score": 0.19047619047619047,
+          "pure_weight": 4.477336814478207,
+          "joint_weight": 48.54626964499498
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 86,
+          "replay_score": 0.13793103448275867,
+          "pure_weight": 4.465908118654584,
+          "joint_weight": 48.12417163956471
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 85,
+          "replay_score": 0.10256410256410253,
+          "pure_weight": 4.454347296253507,
+          "joint_weight": 48.544944964229124
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 81,
+          "replay_score": 0.17391304347826086,
+          "pure_weight": 4.406719247264253,
+          "joint_weight": 47.188433988309036
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 79,
+          "replay_score": 0.21052631578947367,
+          "pure_weight": 4.382026634673881,
+          "joint_weight": 45.51488351612445
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 78,
+          "replay_score": 0.31034482758620685,
+          "pure_weight": 4.3694478524670215,
+          "joint_weight": 46.53172785279966
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 78,
+          "replay_score": 0.18518518518518523,
+          "pure_weight": 4.3694478524670215,
+          "joint_weight": 46.808044212162415
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 77,
+          "replay_score": 0.2666666666666667,
+          "pure_weight": 4.356708826689592,
+          "joint_weight": 46.62974841389655
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 77,
+          "replay_score": 0.24242424242424243,
+          "pure_weight": 4.356708826689592,
+          "joint_weight": 46.693461101937835
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 76,
+          "replay_score": 0.1333333333333333,
+          "pure_weight": 4.343805421853684,
+          "joint_weight": 46.8668129344427
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 75,
+          "replay_score": 0.17391304347826086,
+          "pure_weight": 4.330733340286331,
+          "joint_weight": 46.85151640614713
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 69,
+          "replay_score": 0.3076923076923077,
+          "pure_weight": 4.248495242049359,
+          "joint_weight": 45.56137723224182
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 66,
+          "replay_score": 0.27586206896551724,
+          "pure_weight": 4.204692619390966,
+          "joint_weight": 44.054400749163904
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 62,
+          "replay_score": 0.34615384615384615,
+          "pure_weight": 4.143134726391533,
+          "joint_weight": 43.80817638227877
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 58,
+          "replay_score": 0.18604651162790697,
+          "pure_weight": 4.07753744390572,
+          "joint_weight": 44.2389537710975
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 58,
+          "replay_score": 0.16000000000000003,
+          "pure_weight": 4.07753744390572,
+          "joint_weight": 42.99134769915651
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 57,
+          "replay_score": 0.2666666666666667,
+          "pure_weight": 4.060443010546419,
+          "joint_weight": 42.66944251872854
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 56,
+          "replay_score": 0.30000000000000004,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.138072638599446
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 56,
+          "replay_score": 0.2222222222222222,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.72265064266808
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 A_Denied \u2192 O_Refused \u2192 W_Validate application",
+          "freq": 56,
+          "replay_score": 0.29032258064516125,
+          "pure_weight": 4.04305126783455,
+          "joint_weight": 43.09232869294601
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Validate application \u2192 O_Accepted \u2192 A_Pending \u2192 W_Validate application",
+          "freq": 52,
+          "replay_score": 0.13793103448275867,
+          "pure_weight": 3.970291913552122,
+          "joint_weight": 43.09892994123373
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 51,
+          "replay_score": 0.2857142857142857,
+          "pure_weight": 3.9512437185814275,
+          "joint_weight": 41.37730050276398
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 50,
+          "replay_score": 0.36363636363636365,
+          "pure_weight": 3.9318256327243257,
+          "joint_weight": 40.51383003650418
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 A_Cancelled \u2192 O_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 46,
+          "replay_score": 0.27586206896551724,
+          "pure_weight": 3.8501476017100584,
+          "joint_weight": 40.444693284414
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Concept \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Validate application \u2192 W_Validate application \u2192 A_Validating \u2192 O_Returned \u2192 W_Validate application \u2192 W_Validate application \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 A_Incomplete \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 W_Call incomplete files \u2192 O_Accepted \u2192 A_Pending \u2192 W_Call incomplete files",
+          "freq": 45,
+          "replay_score": 0.11111111111111116,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.88312319734645
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 45,
+          "replay_score": 0.2962962962962963,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.128719565267446
+        },
+        {
+          "skip": false,
+          "variant": "A_Create Application \u2192 A_Submitted \u2192 W_Handle leads \u2192 W_Handle leads \u2192 W_Complete application \u2192 A_Concept \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 W_Complete application \u2192 A_Accepted \u2192 O_Create Offer \u2192 O_Created \u2192 O_Sent (mail and online) \u2192 W_Complete application \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Complete \u2192 W_Call after offers \u2192 W_Call after offers \u2192 W_Call after offers \u2192 A_Cancelled \u2192 O_Cancelled \u2192 W_Call after offers",
+          "freq": 45,
+          "replay_score": 0.25806451612903225,
+          "pure_weight": 3.828641396489095,
+          "joint_weight": 41.041730788289634
+        }
+      ]
+    }
+  ]
+}
