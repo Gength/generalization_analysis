@@ -1,35 +1,27 @@
 """
-Pick-One-Out Generalization Metric — Core Algorithm
-====================================================
-Based on BPI Challenge 2017 event log.
+Pick-One-Out Generalization Metric — Core Algorithm (Method 1)
+===============================================================
+Pure algorithm for the pick-one-out (leave-one-out) generalization metric.
 
-This module contains the pure algorithmic components:
-  - Event log loading & preprocessing
-  - Variant computation & global DFG construction
+This module contains ONLY Method 1 components:
   - Weighting functions (pure frequency & joint variant–transition)
   - Petri net discovery via multiple miners
   - Trace replay (token-based + alignment fallback)
   - Pick-one-out evaluation loop (single-process & multiprocessing)
-  - PM4Py baseline metric computation
 
-It does NOT contain CLI argument parsing, output formatting, or
-experiment orchestration — those live in pick_one_out_experiment.py.
+Preprocessing (log loading, variant/DFG computation) and experiment
+orchestration live in pick_one_out_experiment.py.
 """
 
 import pm4py
-import time
 import random
 import signal
 import os
 import multiprocessing as mp
 from concurrent.futures import ProcessPoolExecutor, wait, FIRST_COMPLETED
-from collections import defaultdict
-from math import log, ceil
+from math import log
 from datetime import datetime
-import pandas as pd
-import numpy as np
 
-from pm4py.algo.evaluation.generalization import algorithm as generalization_eval
 from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
 
@@ -49,72 +41,15 @@ RANDOM_SEED = 42            # Seed for stratified random sampling
 _interrupted = False
 
 
+# Signal flag for graceful Ctrl+C shutdown across multiprocessing
+_interrupted = False
+
+
 def _sigint_handler(signum, frame):
     """Set interrupt flag — polled in the worker-result loop."""
     global _interrupted
     _interrupted = True
-    # Re-raise KeyboardInterrupt so the main thread wakes from any pure-Python wait.
-    # (C-extension blocks won't see this, hence the polling loop.)
     raise KeyboardInterrupt
-
-
-# ─── Log Loading & Preprocessing ────────────────────────────────────────────
-
-def load_and_prepare_log(path):
-    """Load XES and convert to EventLog (list of traces)."""
-    print(f"[1/5] Loading event log from {path} ...")
-    t0 = time.time()
-    # Use classic XES importer to avoid the r4pm codepath
-    from pm4py.objects.log.importer.xes import importer as xes_importer
-    event_log = xes_importer.apply(path)
-    df = pm4py.convert_to_dataframe(event_log)
-    # expose original dataframe for efficient filtering in workers
-    global ORIGINAL_DF, CASE_IDS_ORDERED
-    ORIGINAL_DF = df
-    CASE_IDS_ORDERED = df["case:concept:name"].drop_duplicates().tolist()
-    print(f"       Loaded {len(event_log)} cases, "
-          f"{sum(len(t) for t in event_log)} events in {time.time() - t0:.1f}s")
-    return event_log
-
-
-def event_log_to_dataframe(log):
-    """Convert an event log (list of traces) into a dataframe."""
-    rows = []
-    for case_index, trace in enumerate(log):
-        case_id = None
-        if CASE_IDS_ORDERED is not None and case_index < len(CASE_IDS_ORDERED):
-            case_id = CASE_IDS_ORDERED[case_index]
-        for event in trace:
-            row = dict(event)
-            if case_id is not None:
-                row["case:concept:name"] = case_id
-            rows.append(row)
-    return pd.DataFrame(rows)
-
-
-# ─── Variant & DFG Computation ─────────────────────────────────────────────
-
-def compute_variants(event_log):
-    """Return dict: variant_tuple -> list of trace indices."""
-    print("[2/5] Computing variants ...")
-    t0 = time.time()
-    variants = defaultdict(list)
-    for idx, trace in enumerate(event_log):
-        variant_key = tuple(event["concept:name"] for event in trace)
-        variants[variant_key].append(idx)
-    print(f"       Found {len(variants)} unique variants in {time.time() - t0:.1f}s")
-    return variants
-
-
-def build_global_dfg(event_log):
-    """Build global Directly-Follows Graph: edge -> frequency."""
-    dfg = defaultdict(int)
-    for trace in event_log:
-        for i in range(len(trace) - 1):
-            a = trace[i]["concept:name"]
-            b = trace[i + 1]["concept:name"]
-            dfg[(a, b)] += 1
-    return dfg
 
 
 # ─── Weighting Functions ────────────────────────────────────────────────────
@@ -152,9 +87,8 @@ def compute_pure_freq_weight(variant_freq):
 def discover_petri_net_for_miner(miner_name, log):
     """Discover a Petri net using the requested miner."""
     # pm4py discovery functions expect a DataFrame in the current API
-    # Convert event-log list to DataFrame if necessary.
     if isinstance(log, list):
-        log = event_log_to_dataframe(log)
+        log = pm4py.convert_to_dataframe(log)
 
     if miner_name == "Inductive Miner (IM)":
         return pm4py.discover_petri_net_inductive(log)
@@ -305,10 +239,10 @@ def evaluate_miner(event_log, variants, global_dfg, miner_name, miner_fn,
 
     Returns
     -------
-    dict with keys: miner, score_pure, score_joint, pm4py_generalization, results
+    dict with keys: miner, score_pure, score_joint, results
     """
     print(f"\n{'='*60}")
-    print(f"[3/5] Evaluating: {miner_name}")
+    print(f"Evaluating: {miner_name}")
     print(f"{'='*60}")
 
     # Sort variants by frequency descending, then stratified random sampling:
@@ -335,16 +269,6 @@ def evaluate_miner(event_log, variants, global_dfg, miner_name, miner_fn,
 
     results = []
     total = len(sampled)
-
-    # Compute PM4Py generalization on the full log for this miner (baseline per-miner)
-    try:
-        if ORIGINAL_DF is not None:
-            net_full, im_full, fm_full = discover_petri_net_for_miner(miner_name, ORIGINAL_DF)
-        else:
-            net_full, im_full, fm_full = discover_petri_net_for_miner(miner_name, event_log)
-        pm4py_gen = generalization_eval.apply(event_log, net_full, im_full, fm_full)
-    except Exception as e:
-        pm4py_gen = None
 
     # Share the heavy objects with worker processes through module-level globals.
     global EVENT_LOG, GLOBAL_DFG, ACTIVE_MINER_NAME
@@ -423,7 +347,6 @@ def evaluate_miner(event_log, variants, global_dfg, miner_name, miner_fn,
             "miner": miner_name,
             "score_pure": 0,
             "score_joint": 0,
-            "pm4py_generalization": pm4py_gen,
             "results": [],
         }
 
@@ -442,28 +365,5 @@ def evaluate_miner(event_log, variants, global_dfg, miner_name, miner_fn,
         "miner": miner_name,
         "score_pure": score_pure,
         "score_joint": score_joint,
-        "pm4py_generalization": pm4py_gen,
         "results": results,
-    }
-
-
-# ─── PM4Py Baseline Metrics ─────────────────────────────────────────────────
-
-def compute_baseline_metrics(event_log):
-    """Compute PM4Py built-in metrics on the full log using Inductive Miner."""
-    print(f"\n{'='*60}")
-    print(f"[4/5] Computing PM4Py baseline metrics")
-    print(f"{'='*60}")
-
-    net, im, fm = pm4py.discover_petri_net_inductive(event_log)
-
-    # Generalization (PM4Py built-in)
-    generalization = generalization_eval.apply(
-        event_log, net, im, fm
-    )
-
-    print(f"       Generalization (PM4Py): {generalization:.4f}")
-
-    return {
-        "generalization_pm4py": generalization,
     }
