@@ -1,1 +1,1 @@
-python pick_one_out_experiment.py -t 10 -m IM -w 8
+python pick_one_out_experiment.py -t 2 -m IM -w 8

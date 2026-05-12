@@ -23,7 +23,7 @@ import os
 import sys
 import argparse
 from math import ceil
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pick_one_out_algorithm as algo
 
@@ -243,9 +243,19 @@ def main():
 
     # Set algorithm globals from CLI args
     algo.NUM_WORKERS = args.workers
+    algo.RANDOM_SEED = RANDOM_SEED
 
     t_start = time.time()
 
+    try:
+        _run_experiment(args, t_start)
+    except KeyboardInterrupt:
+        print("\n\n⏹ Experiment cancelled by user.")
+        sys.exit(130)
+
+
+def _run_experiment(args, t_start):
+    """Core experiment flow — separated so KeyboardInterrupt is caught cleanly."""
     # Resolve miner selection
     active_miners, run_baseline = resolve_miners(args.miner)
     if not active_miners and not run_baseline:
@@ -307,7 +317,7 @@ def main():
         "total_variants": total_variants,
         "num_workers": algo.NUM_WORKERS,
         "random_seed": RANDOM_SEED,
-        "timestamp_utc": datetime.utcnow().isoformat(),
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "total_runtime_s": round(time.time() - t_start, 1),
     }
     print_summary(all_results, baseline, max_variants, total_variants,

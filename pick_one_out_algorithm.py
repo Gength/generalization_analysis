@@ -18,8 +18,11 @@ experiment orchestration — those live in pick_one_out_experiment.py.
 
 import pm4py
 import time
+import random
+import signal
+import os
 import multiprocessing as mp
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, wait, FIRST_COMPLETED
 from collections import defaultdict
 from math import log, ceil
 from datetime import datetime
@@ -40,6 +43,19 @@ EVENT_LOG = None            # Full event log (list of traces)
 GLOBAL_DFG = None           # Global Directly-Follows Graph: edge -> freq
 ACTIVE_MINER_NAME = None    # Currently active miner name (set before workers)
 NUM_WORKERS = 1             # Number of worker processes (set from CLI)
+RANDOM_SEED = 42            # Seed for stratified random sampling
+
+# Signal flag for graceful Ctrl+C shutdown across multiprocessing
+_interrupted = False
+
+
+def _sigint_handler(signum, frame):
+    """Set interrupt flag — polled in the worker-result loop."""
+    global _interrupted
+    _interrupted = True
+    # Re-raise KeyboardInterrupt so the main thread wakes from any pure-Python wait.
+    # (C-extension blocks won't see this, hence the polling loop.)
+    raise KeyboardInterrupt
 
 
 # ─── Log Loading & Preprocessing ────────────────────────────────────────────
@@ -295,11 +311,27 @@ def evaluate_miner(event_log, variants, global_dfg, miner_name, miner_fn,
     print(f"[3/5] Evaluating: {miner_name}")
     print(f"{'='*60}")
 
-    # Sort variants by frequency and sample
+    # Sort variants by frequency descending, then stratified random sampling:
+    # divide into sample_count equal strata, pick one variant randomly from each.
+    # This guarantees coverage of the full frequency spectrum (high → low)
+    # while avoiding the periodicity bias of deterministic systematic sampling.
     sorted_variants = sorted(variants.items(), key=lambda x: len(x[1]), reverse=True)
-    sample_count = min(max_variants, len(sorted_variants))
-    sampled = sorted_variants[:sample_count]
-    print(f"       Sampling top {len(sampled)}/{len(variants)} variants")
+    total_v = len(sorted_variants)
+    sample_count = min(max_variants, total_v)
+
+    if sample_count >= total_v:
+        sampled = sorted_variants
+    else:
+        rng = random.Random(RANDOM_SEED)
+        sampled = []
+        for i in range(sample_count):
+            start = int(i * total_v / sample_count)
+            end = int((i + 1) * total_v / sample_count)
+            # pick one variant at random within this stratum
+            pick = rng.randrange(start, end)
+            sampled.append(sorted_variants[pick])
+    print(f"       Stratified random sampling: {len(sampled)}/{total_v} variants "
+          f"(spanning full frequency range)")
 
     results = []
     total = len(sampled)
@@ -328,26 +360,62 @@ def evaluate_miner(event_log, variants, global_dfg, miner_name, miner_fn,
     done_count = 0
     if NUM_WORKERS <= 1:
         # Single-process: sequential, report each as it finishes
-        for task in tasks:
-            task_result = evaluate_variant_task(task)
-            done_count += 1
-            _report_task_result(task_result, done_count, total)
-            if not task_result.get("skip"):
-                results.append(task_result)
+        try:
+            for task in tasks:
+                task_result = evaluate_variant_task(task)
+                done_count += 1
+                _report_task_result(task_result, done_count, total)
+                if not task_result.get("skip"):
+                    results.append(task_result)
+        except KeyboardInterrupt:
+            print(f"\n       ⚠ Interrupted — {done_count}/{total} variants evaluated")
+            raise
     else:
         print(f"       Using {NUM_WORKERS} worker processes")
+
+        # Install SIGINT handler and store the previous one
+        global _interrupted
+        _interrupted = False
+        old_handler = signal.signal(signal.SIGINT, _sigint_handler)
+
         ctx = mp.get_context("fork")
-        with ProcessPoolExecutor(max_workers=NUM_WORKERS, mp_context=ctx) as executor:
+        executor = ProcessPoolExecutor(max_workers=NUM_WORKERS, mp_context=ctx)
+        try:
             future_map = {
                 executor.submit(evaluate_variant_task, task): task
                 for task in tasks
             }
-            for future in as_completed(future_map):
-                done_count += 1
-                task_result = future.result()
-                _report_task_result(task_result, done_count, total)
-                if not task_result.get("skip"):
-                    results.append(task_result)
+            pending = set(future_map.keys())
+
+            # Poll with timeout so SIGINT is detected even when workers
+            # are stuck in C extensions (e.g. PM4Py alignment / ILP solver).
+            while pending:
+                if _interrupted:
+                    raise KeyboardInterrupt
+                done, pending = wait(
+                    pending, timeout=1.0, return_when=FIRST_COMPLETED
+                )
+                for future in done:
+                    done_count += 1
+                    if _interrupted:
+                        raise KeyboardInterrupt
+                    task_result = future.result()
+                    _report_task_result(task_result, done_count, total)
+                    if not task_result.get("skip"):
+                        results.append(task_result)
+        except KeyboardInterrupt:
+            print(f"\n       ⚠ Interrupted — {done_count}/{total} variants evaluated")
+            executor.shutdown(wait=False, cancel_futures=True)
+            # Kill any straggler child processes that survived shutdown
+            try:
+                os.killpg(0, signal.SIGTERM)
+            except OSError:
+                pass
+            raise
+        else:
+            executor.shutdown(wait=True)
+        finally:
+            signal.signal(signal.SIGINT, old_handler)
 
     # Compute weighted scores
     if not results:
