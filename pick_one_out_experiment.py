@@ -116,8 +116,8 @@ def compute_baseline_metrics(event_log):
 # ─── Output & Summary ───────────────────────────────────────────────────────
 
 def print_summary(all_results, baseline, max_variants, total_variants,
-                  output_path, run_config):
-    """Print final comparison table and save results to JSON."""
+                  summary_path, details_path, run_config):
+    """Print final comparison table; save summary + details to separate JSONs."""
     method = run_config.get("method", "method1")
 
     print(f"\n{'='*60}")
@@ -136,15 +136,15 @@ def print_summary(all_results, baseline, max_variants, total_variants,
     if baseline:
         print(f"\n  PM4Py Baseline (IM) generalization: {baseline.get('generalization_pm4py', 'N/A')}")
 
-    # Save results
-    output = {
+    # ── Summary JSON (lightweight: config + scores only) ─────────────────
+    summary = {
         "run_config": run_config,
         "dataset": "BPI Challenge 2017",
         "total_variants": total_variants,
         "num_variants_sampled": max_variants,
     }
     if all_results:
-        output["miner_results"] = [
+        summary["miner_results"] = [
             {
                 "miner": r["miner"],
                 "score_pure_weighting": r["score_pure"],
@@ -153,14 +153,23 @@ def print_summary(all_results, baseline, max_variants, total_variants,
             }
             for r in all_results
         ]
-        output["detailed_results"] = all_results
     if baseline:
-        output["pm4py_baseline"] = baseline
+        summary["pm4py_baseline"] = baseline
 
-    path = output_path or os.path.join(OUTPUT_DIR, "pick_one_out_results.json")
-    with open(path, "w") as f:
-        json.dump(output, f, indent=2, default=str)
-    print(f"\nResults saved to {path}")
+    with open(summary_path, "w") as f:
+        json.dump(summary, f, indent=2, default=str)
+
+    # ── Details JSON (full per-variant data) ─────────────────────────────
+    details = {
+        "run_config": run_config,
+        "detailed_results": all_results,
+    }
+
+    with open(details_path, "w") as f:
+        json.dump(details, f, indent=2, default=str)
+
+    print(f"\nSummary  → {summary_path}")
+    print(f"Details  → {details_path}")
 
 
 # ─── Argument Parser ─────────────────────────────────────────────────────────
@@ -248,14 +257,11 @@ def resolve_miners(requested):
 
 # ─── Output Path ─────────────────────────────────────────────────────────────
 
-def _make_output_path(method, miners_requested, test_variant_pct, explicit_path):
-    """Generate a unique output filename.
+def _make_output_paths(method, miners_requested, test_variant_pct, explicit_path):
+    """Generate output paths for summary and details JSON files.
 
-    Format: output/{METHOD}_{MINERS}_{PCT}pct_{TIMESTAMP}.json
+    Returns (summary_path, details_path).
     """
-    if explicit_path:
-        return explicit_path
-
     if not miners_requested or miners_requested == ["all"]:
         miner_label = "all"
     else:
@@ -263,8 +269,19 @@ def _make_output_path(method, miners_requested, test_variant_pct, explicit_path)
 
     pct_label = f"{test_variant_pct:.0f}pct" if test_variant_pct == int(test_variant_pct) else f"{test_variant_pct:.1f}pct"
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{method}_{miner_label}_{pct_label}_{timestamp}.json"
-    return os.path.join(OUTPUT_DIR, filename)
+    base = f"{method}_{miner_label}_{pct_label}_{timestamp}"
+
+    if explicit_path:
+        # Use user-provided path as prefix, derive summary/details from it
+        dirname = os.path.dirname(explicit_path) or OUTPUT_DIR
+        stem = os.path.splitext(os.path.basename(explicit_path))[0]
+        summary_path = os.path.join(dirname, f"{stem}_summary.json")
+        details_path = os.path.join(dirname, f"{stem}_details.json")
+    else:
+        summary_path = os.path.join(OUTPUT_DIR, f"{base}_summary.json")
+        details_path = os.path.join(OUTPUT_DIR, f"{base}_details.json")
+
+    return summary_path, details_path
 
 
 # ─── Main ────────────────────────────────────────────────────────────────────
@@ -348,7 +365,9 @@ def _run_experiment(args, t_start):
         baseline = compute_baseline_metrics(event_log)
 
     # ── Step 4: Summary ─────────────────────────────────────────────────────
-    output_path = _make_output_path(method, args.miner, args.test_variant, args.output)
+    summary_path, details_path = _make_output_paths(
+        method, args.miner, args.test_variant, args.output
+    )
     run_config = {
         "method": method,
         "xes_path": XES_PATH,
@@ -363,7 +382,7 @@ def _run_experiment(args, t_start):
         "total_runtime_s": round(time.time() - t_start, 1),
     }
     print_summary(all_results, baseline, max_variants, total_variants,
-                  output_path, run_config)
+                  summary_path, details_path, run_config)
 
     print(f"\nTotal execution time: {time.time() - t_start:.1f}s")
     if is_mtd1 and args.test_variant < 5:
