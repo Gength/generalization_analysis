@@ -8,11 +8,12 @@
 
 ### Motivation — Why v1 Failed
 
-v1's formula $w(v_i) = \ln(f(v_i) + 1) \times \ln(AvgGlobalFreq + 1)$ produced a **near-constant multiplier** across all variants. Empirically, on the event log, $\ln(AvgGlobalFreq + 1)$ converged to $\approx 10.7$ for nearly every variant, regardless of whether it was a high-frequency happy path or low-frequency noise. The mathematical and structural reasons for this failure are threefold:
+v1's formula $w(v_i) = \ln(f(v_i) + 1) \times \ln(AvgGlobalFreq + 1)$ produced a **near-constant multiplier** across all variants. Empirically, on the event log, $\ln(AvgGlobalFreq + 1)$ converged to $\approx 10.7$ for nearly every variant, regardless of whether it was a high-frequency happy path or low-frequency noise. The mathematical and structural reasons for this failure are fourfold:
 
 1. **The Dilution Effect of Arithmetic Means:** Most long-tail variants are not entirely composed of rare behavior; they typically consist of a long sequence of frequent "main-path" edges followed by a single rare deviation. When calculating the arithmetic mean ($Avg$), the massive frequencies of the normal edges completely swallow and dilute the tiny frequency of the rare edge, making the average artificially high.
 2. **Logarithmic Over-compression:** Even if a slight difference remains after averaging (e.g., 30,000 vs. 50,000), the natural logarithm violently compresses this variance. A linear difference of 20,000 collapses to a mere $\approx 0.5$ difference in log scale.
-3. **Weighted-Average Cancellation:** Because the dilution and compression force the right-hand term to converge to an approximate constant $k$, it simply factors out of both the numerator and denominator in the final generalization score. 
+3. **Lack of Relative Normalization:** By feeding raw, unbounded absolute frequencies (often in the tens of thousands) directly into the logarithm, the metric failed to establish a standardized baseline. Without normalizing these frequencies against a global maximum to create a bounded $(0, 1]$ ratio, the formula lacked a mechanism to express the internal transition frequency as a meaningful proportional penalty.
+4. **Weighted-Average Cancellation:** Because the dilution, compression, and lack of normalization collectively forced the right-hand term to converge to an approximate constant $k$, it simply factored out of both the numerator and denominator in the final generalization score. 
 
 $$Generalization = \frac{\sum (w_{pure} \cdot k) \cdot Score_i}{\sum (w_{pure} \cdot k)} = \frac{k \cdot \sum w_{pure} \cdot Score_i}{k \cdot \sum w_{pure}} = \frac{\sum w_{pure} \cdot Score_i}{\sum w_{pure}}$$
 
@@ -66,6 +67,14 @@ If a discovered model successfully replays a Quadrant 3 variant, it means the mi
 - Noise variants (characterized by at least one extremely low-frequency edge pulling down the $HMean$) will have their contribution to the final score proportionally suppressed.
 - Concurrency-induced rare variants (high $HMean$ because *all* internal edges are frequent globally, but low $f$ locally) will retain meaningful weight — perfectly preserving the original design goal.
 
+### Limitation of v2: The Absence of Structural Penalty
+
+While v2 successfully establishes a noise-resistant metric, it is inherently an advanced evaluation of **Cross-Validated Fitness**. It effectively measures a model's *capacity to accommodate* unseen logical behavior, but lacks the mechanism to measure a model's *strictness*. 
+
+Because the final generalization score relies on the replay alignment score ($Score_i$), v2 remains vulnerable to hyper-permissive models, such as the "Flower Model" (which structurally allows nearly any sequence of events). A Flower Model will achieve a perfect replay score of $1.0$ for all variants. Consequently, even if v2 aggressively down-weights noise variants, the final weighted average will mathematically result in $1.0$. 
+
+To evaluate true generalization, a metric must balance the accommodation of unseen behavior against the rejection of meaningless paths. Therefore, subsequent versions of this methodology will introduce a **Structural Penalty ($Gen_{struct}$)** to counteract extreme permissiveness, forming a hybrid framework that evaluates both replay fitness and structural precision.
+
 ---
 
 ## v1: Double-Log Joint Weighting *(deprecated)*
@@ -118,7 +127,7 @@ This is the core problem the formula solves. A variant might appear only once in
 **3. Standard Main-Path Processes (High $\times$ High $\rightarrow$ Maximum Weight)**
 For standard, highly frequent business processes, both the variant frequency and the internal state transition frequencies are high. This yields the highest possible weight, ensuring that the model's ability to support the core operational pathways remains the dominant factor in the generalization score.
 
-### Implementation Record
+### Implementation
 ```python
 def compute_joint_weight(variant_tuple, variant_freq, global_dfg):
     """

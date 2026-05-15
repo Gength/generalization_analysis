@@ -37,10 +37,10 @@ generalization_analysis/
 **Core idea:** Remove each variant one at a time, rediscover the model from the remaining log, and check whether the held-out variant can be replayed.
 
 - **Weighting formula (v2, current):**
-  $$w_{v2}(v_i) = \ln(f(v_i) + 1) \times \frac{\text{AvgGlobalFreq}(E_{v_i})}{\text{MaxGlobalFreq}(E_{\log})}$$
-  Jointly weights variant frequency and the global frequency of its internal state transitions, distinguishing true noise from concurrency-induced rare variants.
+  $$w_{v2}(v_i) = \ln\big(f(v_i) + 1\big) \times \frac{HMean(E_{v_i})}{MaxGlobalFreq(E_{\log})}, \quad HMean(E_{v_i}) = \frac{|E_{v_i}|}{\sum_{e \in E_{v_i}} \frac{1}{GlobalFreq(e)}}$$
+  Uses the **harmonic mean** (dominated by the smallest edge frequency — the "weakest link") instead of the arithmetic mean, preventing frequent path edges from diluting rare deviation edges. This sharply distinguishes true noise from concurrency-induced rare variants.
 - **Replay strategy:** Token-based replay (fast) → Alignment-based (fallback).
-- **Docs:** `Method1Log.md` tracks the full design evolution from v1 (double-log joint weighting) to v2 (relative-frequency normalized joint weighting).
+- **Docs:** `Method1Log.md` tracks the full design evolution from v1 (double-log arithmetic-mean weighting → cancelled out) to v2 (harmonic-mean normalized joint weighting).
 
 ### Method 2 — Hybrid Generative–Structural
 
