@@ -1,0 +1,30 @@
+{
+  "run_config": {
+    "method": "method1",
+    "xes_path": "data/BPI-Challenge_2017/BPI Challenge 2017.xes.gz",
+    "miners_requested": [
+      "IM"
+    ],
+    "miners_evaluated": [
+      "Inductive Miner (IM)"
+    ],
+    "test_variant_pct": 20.0,
+    "max_variants": 3186,
+    "total_variants": 15930,
+    "num_workers": 14,
+    "random_seed": 42,
+    "timestamp_utc": "2026-05-15T07:10:29.108698+00:00",
+    "total_runtime_s": 40968.9
+  },
+  "dataset": "BPI Challenge 2017",
+  "total_variants": 15930,
+  "num_variants_sampled": 3186,
+  "miner_results": [
+    {
+      "miner": "Inductive Miner (IM)",
+      "score_pure_weighting": 1.0,
+      "score_joint_weighting": 1.0,
+      "num_variants_evaluated": 3186
+    }
+  ]
+}

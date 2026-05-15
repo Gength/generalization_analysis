@@ -158,18 +158,17 @@ def print_summary(all_results, baseline, max_variants, total_variants,
 
     with open(summary_path, "w") as f:
         json.dump(summary, f, indent=2, default=str)
+    print(f"\nSummary  → {summary_path}")
 
     # ── Details JSON (full per-variant data) ─────────────────────────────
     details = {
         "run_config": run_config,
         "detailed_results": all_results,
     }
-
-    with open(details_path, "w") as f:
-        json.dump(details, f, indent=2, default=str)
-
-    print(f"\nSummary  → {summary_path}")
-    print(f"Details  → {details_path}")
+    if not baseline:
+        with open(details_path, "w") as f:
+            json.dump(details, f, indent=2, default=str)
+        print(f"Details  → {details_path}")
 
 
 # ─── Argument Parser ─────────────────────────────────────────────────────────
