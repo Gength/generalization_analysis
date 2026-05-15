@@ -42,6 +42,24 @@ $$HMean(E_{v_i}) = \frac{|E_{v_i}|}{\sum_{e \in E_{v_i}} \frac{1}{GlobalFreq(e)}
 3. **Bounded and interpretable.** The ratio is always in $(0, 1]$. Multiplication by $\ln(f+1)$ keeps the frequency-smoothing benefit of the original design while the linear ratio supplies genuine discriminative power.
 4. **No more cancellation.** The ratio varies substantially across variants (from near $0$ to $1.0$), so it no longer factors out of the weighted average — the Joint score will finally diverge meaningfully from the Pure score.
 
+### The 4-Quadrant Variant Matrix: Justifying the Harmonic Penalty
+
+To fully understand the discriminative mechanism of v2, we can classify process variants into a 4-quadrant matrix based on their macroscopic frequency ($f$) and microscopic edge frequencies ($E_{v_i}$):
+
+* **Quadrant 1: The Happy Path** (High $f$, All edges high frequency). 
+    * *Weight:* Maximum. The formula preserves the dominant influence of core business processes.
+* **Quadrant 2: Concurrency-Induced Rarity** (Low $f$, All edges high frequency). 
+    * *Weight:* Moderate to High. Although the specific trace is rare, every individual step is highly common globally. The harmonic mean recognizes this validity and correctly forces the model to generalize and support these unseen but logical interleavings.
+* **Quadrant 3: Mixed Anomaly / Typo** (Low $f$, Mixed edges: e.g., 90% high, 10% extremely low). 
+    * *Weight:* Near Zero (Slashed by $HMean$).
+* **Quadrant 4: Total Noise** (Low $f$, All edges low frequency). 
+    * *Weight:* Near Zero (Slashed by $HMean$).
+
+**Discussion: Does the Harmonic Mean over-penalize Quadrant 3?**
+One might argue that Quadrant 3 variants (mostly normal paths with a single typo) are conceptually different from Quadrant 4 variants (total garbage), yet the Harmonic Mean reduces both to near-zero weights. However, in the context of evaluating process *generalization*, this equalization is strictly necessary. 
+
+If a discovered model successfully replays a Quadrant 3 variant, it means the mining algorithm has actively constructed an ad-hoc, isolated branch solely to accommodate that single rare "typo" edge—a textbook definition of overfitting (the Spaghetti Model). Conversely, a structurally sound model (the Lasagna Model) *should* fail to replay this anomaly. By slashing the weight of Quadrant 3 variants to zero, we ensure that excellent models are not unfairly penalized in their final generalization score for correctly rejecting noisy deviations. A single broken link invalidates the variant's worthiness for replay inclusion.
+
 ### Expected Impact
 
 - Pure vs. Joint score gap should widen from $\sim 0.0001$ to at least $0.05$–$0.10$.
