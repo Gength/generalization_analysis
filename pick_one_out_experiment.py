@@ -76,6 +76,7 @@ def load_and_prepare_log(path):
 
 def compute_variants(event_log):
     """Return dict: variant_tuple -> list of trace indices."""
+    # a process variant (or simply variant) is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
     print("Computing variants ...")
     t0 = time.time()
     variants = defaultdict(list)
