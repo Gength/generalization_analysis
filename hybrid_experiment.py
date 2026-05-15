@@ -1,8 +1,5 @@
 """
 Hybrid Generalization Metric — Experiment Runner
-=================================================
-CLI front-end for Method 2: The Hybrid Generative-Structural evaluation.
-Supports multiple independent runs (for Box Plots) and Weight Sweeps (for Ablation).
 """
 
 import time
@@ -15,8 +12,6 @@ import numpy as np
 
 import pm4py
 import hybrid_algorithm as algo
-
-# ─── Configuration ───────────────────────────────────────────────────────────
 
 XES_PATH = "data/BPI-Challenge_2017/BPI Challenge 2017.xes.gz"
 OUTPUT_DIR = "output"
@@ -34,8 +29,6 @@ MINER_ALIASES = {
     "Heuristics":  "Heuristics Miner",
     "Alpha":       "Alpha Miner",
 }
-
-# ─── Argument Parser ─────────────────────────────────────────────────────────
 
 def parse_args():
     p = argparse.ArgumentParser(description="Hybrid Generative-Structural Evaluation")
@@ -89,8 +82,7 @@ def resolve_miners(requested):
     expanded = list(MINER_ALIASES.keys()) if "all" in requested else requested
     return {MINER_ALIASES[name]: MINERS[MINER_ALIASES[name]] for name in set(expanded)}
 
-# ─── Main Execution ──────────────────────────────────────────────────────────
-
+#Main Execution
 def main():
     args = parse_args()
     t_start = time.time()
@@ -106,18 +98,18 @@ def main():
     print(f"     Base Seed           : {args.seed}")
     print("=" * 80)
 
-    # 1. Load Data
+    #1. Load Data
     print("\n[1/3] Loading event log...")
     if os.path.exists(XES_PATH):
         event_log = pm4py.read_xes(XES_PATH)
     else:
-        print("      ⚠️ Log not found at path, generating dummy dataset...")
+        print("Log not found, generating dummy dataset...")
         import pandas as pd
         df = pd.DataFrame({'case:concept:name':['1','1','1','2','2','2','3','3'], 
                            'concept:name':['A','B','C','A','X','C','A','B']})
         event_log = pm4py.format_dataframe(df, case_id='case:concept:name', activity_key='concept:name')
 
-    # 2. Evaluation Loop (Grid Search: Weight -> Miner -> Run)
+    #2. Evaluation Loop
     print(f"\n[2/3] Running Evaluations...")
     all_results = []
     
@@ -126,8 +118,7 @@ def main():
         for miner_name, miner_fn in active_miners.items():
             for run_idx in range(1, args.runs + 1):
                 
-                # Increment seed per run to ensure statistical independence for box plots,
-                # but keep it deterministic based on the starting seed.
+                #Increment seed per run
                 current_seed = (args.seed + run_idx) if args.seed is not None else None
                 
                 print(f"   Run {run_idx}/{args.runs} | Seed: {current_seed}")
@@ -142,18 +133,18 @@ def main():
                     seed=current_seed
                 )
                 
-                # Append experiment metadata for pandas ingestion later
+                #Append experiment metadata for pandas
                 res['run_id'] = run_idx
                 res['base_seed'] = args.seed
                 all_results.append(res)
 
-    # 3. Aggregate Summary (Calculate mean across the independent runs)
+    #3. Aggregate Summary (Calculate mean across the multiple runs)
     print(f"\n[3/3] Final Aggregated Summary (Averaged across {args.runs} runs)")
     print("-" * 105)
     print(f"{'Miner':<22} | {'Weight':>6} | {'Avg Gen_Struct':>14} | {'Avg Gen_Shadow':>14} | {'Avg Gen_Total':>14} | {'Total StdDev':>12}")
     print("-" * 105)
     
-    # Group results for the summary table
+    #Group results for the summary table
     summary = defaultdict(list)
     for r in all_results:
         key = (r['miner'], r['w_weight'])
@@ -167,14 +158,14 @@ def main():
         
         print(f"{miner:<22} | {w:>6.2f} | {avg_struct:>14.4f} | {avg_shadow:>14.4f} | {avg_total:>14.4f} | ±{std_total:<11.4f}")
 
-    # 4. Export to JSON
+    #4. Export to JSON
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_path = args.output or os.path.join(OUTPUT_DIR, f"hybrid_extensive_{timestamp}.json")
     
     with open(out_path, "w") as f:
         json.dump({"config": vars(args), "results": all_results}, f, indent=2)
         
-    print(f"\n✅ Extensive results saved to {out_path} (Total time: {time.time()-t_start:.1f}s)")
+    print(f"\n Results saved to {out_path} (Total time: {time.time()-t_start:.1f}s)")
 
 if __name__ == "__main__":
     main()
