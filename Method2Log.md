@@ -1,23 +1,28 @@
-# 2. Hybrid Generative-Structural Generalization Evaluation
+# Hybrid Generative-Structural Generalization Evaluation
 
-To comprehensively assess a process model's ability to handle unseen, future behavior without falling into the trap of severe overfitting (e.g., Trace Models) or underfitting (e.g., Flower Models), we introduce a hybrid evaluation framework. This approach evaluates generalization through two complementary lenses: **Generative Behavioral Analysis** and **Structural Frequency Analysis**.
+In order to comprehensively assess a process model's ability to handle unseen, future behavior without falling into the trap of severe overfitting (i.e. Trace Models) or underfitting (i.e. Flower Models), we introduce a hybrid evaluation framework. This approach evaluates generalization through two complementary approaches: **Generative Behavioral Analysis** (Gen_shadow) and **Structural Frequency Analysis** (Gen_struct).
 
-## 2.1. Generative Behavioral Analysis ($Gen\_shadow$)
-The first component, $Gen\_shadow$, measures the model's flexibility by simulating potential future event logs. Instead of relying purely on existing data, it acts as a probabilistic stress test.
+## 2.1. Generative Behavioral Analysis (Gen_shadow)
+Gen_shadow measures the model's flexibility by simulating potential future event logs, essentially acting as a probabilistic stress test.
 
-* **Local Marking and Probability Estimation:** To avoid the state-space explosion typically associated with global Petri net markings, the algorithm relies on **Local Markings** (the token distribution of immediate input places). We employ the **Good-Turing frequency estimation** to calculate the mutation probability ($P_{unseen}$) of these local states. 
-* **Dynamic Trace Generation (Play-out):** For predictable states (high historical frequency, low variance), the algorithm applies a low mutation rate, restricting the generation of illogical traces. Conversely, for unpredictable states (low frequency, high variance), it actively explores new, logically valid variations.
-* **Replay Evaluation:** A synthetic "shadow" log is generated through this stochastic random walk. $Gen\_shadow$ is formally defined as the replay fitness of this newly generated synthetic log evaluated against the discovered model.
+Local Marking and Probability Estimation:
+The algorithm relies on Local Variance (the token distribution of immediate input places). We employ the Good-Turing frequency estimation to calculate the mutation probability (P_{unseen}) of these local states.
+Dynamic Trace Generation:
+For predictable states (high historical frequency, low variance), the algorithm applies a low mutation rate, limiting the generation of illogical traces. However, for unpredictable states (low frequency, high variance), it explores new, potentially logically valid variations.
+Replay Evaluation:
+A synthetic "shadow log" is generated through this stochastic random walk. Gen_shadow is formally defined as the replay fitness of this newly generated synthetic log evaluated against the discovered model.
 
-## 2.2. Structural Frequency Analysis ($Gen\_struct$)
-A purely generative approach risks falsely rewarding "Flower Models" that permit all possible behaviors. To counteract this, we introduce $Gen\_struct$ as a strict, reality-based mathematical constraint.
+## 2.2. Structural Frequency Analysis (Gen_struct)
+A purely generative approach risks falsely rewarding "Flower Models" that permit all possible behaviors and generating/speculating beyond the reality of the given Scenario. In order to counteract this, we introduce Gen_struct as a strict reality-based mathematical constraint.
 
-* **Overfitting Penalty:** This component replays the *original* event log on the discovered model to analyze the usage frequency of its internal structure. If certain structural paths or transitions are visited exceptionally rarely, the algorithm penalizes the score. This effectively identifies and downgrades models that overfit by constructing specific, isolated branches solely to memorize rare outlier traces.
+Overfitting Penalty:
+This component replays the original event log on the discovered model to analyze the usage frequency of its internal structure. If certain structural paths or transitions are visited very rarely, it is penalized. This identifies and downgrades models that overfit by constructing specific isolated branches solely to memorize rare outlier traces (i.e. Spaghetti-model)
 
 ## 2.3. The Hybrid Synthesis
-The final generalization metric is computed as a weighted combination of the generative and structural scores. This guarantees that the model is neither strictly constrained by historical data nor overly permissive of random noise.
+The final generalization metric is computed as a weighted combination of the generative and structural scores.
 
-$$Gen\_Total = w \times Gen\_shadow + (1 - w) \times Gen\_struct$$
+Gen_Total = w*Gen_shadow + (1 - w)*Gen_struct
 
-The parameter $w \in [0, 1]$ allows for the calibration of the evaluation focus. By adjusting $w$, the metric can dynamically balance the reward for probabilistic flexibility against the penalty for structural bloat, providing a holistic measurement of process model generalization.
+The parameter w $\in$ [0, 1] allows for the calibration of the evaluation focus. By adjusting w, the metric can balance the reward for probabilistic flexibility against the penalty for structural "bloat".
+Alternatively, the default w value of 0.5 would be used.
 
