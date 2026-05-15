@@ -1,0 +1,587 @@
+{
+  "config": {
+    "miner": [
+      "all"
+    ],
+    "weights": [
+      0.5
+    ],
+    "runs": 10,
+    "shadow_traces": 1000,
+    "iterations": 5,
+    "seed": 42,
+    "output": null
+  },
+  "results": [
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.9386704350690028,
+      "gen_shadow_std": 0.0008117156776365518,
+      "gen_shadow_raw_iterations": [
+        0.9392841999339445,
+        0.937173370010849,
+        0.9386111282494227,
+        0.9394799170191912,
+        0.9388035601316068
+      ],
+      "gen_total": 0.6660565290099112,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 107.18437099456787,
+      "run_id": 1,
+      "base_seed": 42
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.9385113875627435,
+      "gen_shadow_std": 0.000638656816507837,
+      "gen_shadow_raw_iterations": [
+        0.9388284005685298,
+        0.9384334398555108,
+        0.9373780858541423,
+        0.9386059171872568,
+        0.9393110943482781
+      ],
+      "gen_total": 0.6659770052567816,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 104.84186959266663,
+      "run_id": 2,
+      "base_seed": 42
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.9388231228317074,
+      "gen_shadow_std": 0.000646037367281665,
+      "gen_shadow_raw_iterations": [
+        0.9392409069493127,
+        0.9386651212027725,
+        0.9377972185232057,
+        0.9386859134540141,
+        0.9397264540292327
+      ],
+      "gen_total": 0.6661328728912635,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 103.27021813392639,
+      "run_id": 3,
+      "base_seed": 42
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.93899924653817,
+      "gen_shadow_std": 0.0007726617578872945,
+      "gen_shadow_raw_iterations": [
+        0.9386849010646745,
+        0.9382054024535975,
+        0.9402213842379927,
+        0.9395570556837021,
+        0.9383274892508836
+      ],
+      "gen_total": 0.6662209347444948,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 105.19976329803467,
+      "run_id": 4,
+      "base_seed": 42
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.9390378843185484,
+      "gen_shadow_std": 0.0009621245909234883,
+      "gen_shadow_raw_iterations": [
+        0.9397232284653977,
+        0.9402418408718672,
+        0.938209066596783,
+        0.9376532542260916,
+        0.9393620314326019
+      ],
+      "gen_total": 0.6662402536346841,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 106.21384978294373,
+      "run_id": 5,
+      "base_seed": 42
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.9384200608060368,
+      "gen_shadow_std": 0.0009997266797392448,
+      "gen_shadow_raw_iterations": [
+        0.9396329061384678,
+        0.9368964876242525,
+        0.9378593459650815,
+        0.9393611982254044,
+        0.9383503660769777
+      ],
+      "gen_total": 0.6659313418784283,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 105.59369039535522,
+      "run_id": 6,
+      "base_seed": 42
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.9388090029695884,
+      "gen_shadow_std": 0.0004778774780498701,
+      "gen_shadow_raw_iterations": [
+        0.9395694466887102,
+        0.9385313016953772,
+        0.9381264551746624,
+        0.9388914529774561,
+        0.9389263583117355
+      ],
+      "gen_total": 0.666125812960204,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 105.45675563812256,
+      "run_id": 7,
+      "base_seed": 42
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.9386683984203454,
+      "gen_shadow_std": 0.0006350311001183039,
+      "gen_shadow_raw_iterations": [
+        0.9375438604479898,
+        0.9389559910724311,
+        0.93846539444322,
+        0.9393970228000259,
+        0.9389797233380606
+      ],
+      "gen_total": 0.6660555106855826,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 103.79104089736938,
+      "run_id": 8,
+      "base_seed": 42
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.9389717146126737,
+      "gen_shadow_std": 0.0006884694708825414,
+      "gen_shadow_raw_iterations": [
+        0.9388784024016015,
+        0.93943932337289,
+        0.93792954971603,
+        0.9399511928219966,
+        0.9386601047508504
+      ],
+      "gen_total": 0.6662071687817467,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 103.23083400726318,
+      "run_id": 9,
+      "base_seed": 42
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 0.39344262295081966,
+      "gen_shadow_mean": 0.9379274978227066,
+      "gen_shadow_std": 0.0010148747537440889,
+      "gen_shadow_raw_iterations": [
+        0.9377927258187995,
+        0.9365100902304363,
+        0.9396462822239966,
+        0.9381221771233361,
+        0.9375662137169649
+      ],
+      "gen_total": 0.6656850603867631,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 103.18772006034851,
+      "run_id": 10,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.9752980348143441,
+      "gen_shadow_std": 0.0006608324028112632,
+      "gen_shadow_raw_iterations": [
+        0.9757371236133523,
+        0.9747485842165456,
+        0.976372084323645,
+        0.9750044368621867,
+        0.9746279450559904
+      ],
+      "gen_total": 0.8463446695810851,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 169.68691420555115,
+      "run_id": 1,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.9753858150372932,
+      "gen_shadow_std": 0.0007086569713708802,
+      "gen_shadow_raw_iterations": [
+        0.9750684537614093,
+        0.9757072866406371,
+        0.976567732076947,
+        0.9751142457484453,
+        0.9744713569590271
+      ],
+      "gen_total": 0.8463885596925597,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 168.66911840438843,
+      "run_id": 2,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.9750651913949426,
+      "gen_shadow_std": 0.0004867603233762211,
+      "gen_shadow_raw_iterations": [
+        0.9756074962011052,
+        0.9756825909059267,
+        0.974738342907544,
+        0.9748157171455405,
+        0.9744818098145969
+      ],
+      "gen_total": 0.8462282478713844,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 167.6837170124054,
+      "run_id": 3,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.9755904926321438,
+      "gen_shadow_std": 9.068995259963399e-05,
+      "gen_shadow_raw_iterations": [
+        0.9755531569840965,
+        0.9755872360625475,
+        0.9756792061371073,
+        0.9754425553027386,
+        0.9756903086742288
+      ],
+      "gen_total": 0.846490898489985,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 168.14880871772766,
+      "run_id": 4,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.9759687848902285,
+      "gen_shadow_std": 0.00047566331805173987,
+      "gen_shadow_raw_iterations": [
+        0.9760420836855861,
+        0.9766376766537135,
+        0.975618852854111,
+        0.9752832155141358,
+        0.9762620957435966
+      ],
+      "gen_total": 0.8466800446190273,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 166.83698916435242,
+      "run_id": 5,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.9753359406666222,
+      "gen_shadow_std": 0.0006834013276222874,
+      "gen_shadow_raw_iterations": [
+        0.975342153333153,
+        0.9747653258995359,
+        0.9765952677672165,
+        0.9752902909721686,
+        0.9746866653610374
+      ],
+      "gen_total": 0.8463636225072242,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 139.98068690299988,
+      "run_id": 6,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.975492718529065,
+      "gen_shadow_std": 0.00030047202822370954,
+      "gen_shadow_raw_iterations": [
+        0.9758315236275589,
+        0.9751277589003131,
+        0.9758471626314403,
+        0.9754379243946993,
+        0.9752192230913139
+      ],
+      "gen_total": 0.8464420114384457,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 137.5919120311737,
+      "run_id": 7,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.9755290974226455,
+      "gen_shadow_std": 0.0008783906863873695,
+      "gen_shadow_raw_iterations": [
+        0.9754832264784579,
+        0.9753618183450132,
+        0.9742401722535221,
+        0.9770006631317611,
+        0.9755596069044732
+      ],
+      "gen_total": 0.8464602008852358,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 137.85354351997375,
+      "run_id": 8,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.9753707770745438,
+      "gen_shadow_std": 0.000389383380608954,
+      "gen_shadow_raw_iterations": [
+        0.9747461126782244,
+        0.9756527639448611,
+        0.9751009754799543,
+        0.9755586598745996,
+        0.975795373395079
+      ],
+      "gen_total": 0.8463810407111849,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 142.4439206123352,
+      "run_id": 9,
+      "base_seed": 42
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 0.7173913043478262,
+      "gen_shadow_mean": 0.9754995438257656,
+      "gen_shadow_std": 0.0005427653608277785,
+      "gen_shadow_raw_iterations": [
+        0.9764128897953221,
+        0.9755971451286978,
+        0.9751615758165898,
+        0.9755429037633355,
+        0.9747832046248831
+      ],
+      "gen_total": 0.8464454240867959,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 142.47962522506714,
+      "run_id": 10,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.32041711598516204,
+      "gen_shadow_std": 0.0018755788448807963,
+      "gen_shadow_raw_iterations": [
+        0.3214592023594182,
+        0.31957089120592364,
+        0.32011222778202303,
+        0.3232723470018244,
+        0.317670911576621
+      ],
+      "gen_total": 0.5329358307198537,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 36.6980767250061,
+      "run_id": 1,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.31801123169655005,
+      "gen_shadow_std": 0.0043130455216617535,
+      "gen_shadow_raw_iterations": [
+        0.32597526812399397,
+        0.31567381232508845,
+        0.3171773089710286,
+        0.31805844916512166,
+        0.3131713198975174
+      ],
+      "gen_total": 0.5317328885755478,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 38.540066957473755,
+      "run_id": 2,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.31885939591607676,
+      "gen_shadow_std": 0.002697783386375228,
+      "gen_shadow_raw_iterations": [
+        0.31803591481777427,
+        0.3166488143153097,
+        0.3161168140246752,
+        0.319928540227614,
+        0.3235668961950107
+      ],
+      "gen_total": 0.5321569706853111,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 36.627604246139526,
+      "run_id": 3,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.31641581965761506,
+      "gen_shadow_std": 0.003121940096137674,
+      "gen_shadow_raw_iterations": [
+        0.31698919778421486,
+        0.3159159034865572,
+        0.3204291888066739,
+        0.31093033750225274,
+        0.3178144707083766
+      ],
+      "gen_total": 0.5309351825560803,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 36.97132086753845,
+      "run_id": 4,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.31801814455992916,
+      "gen_shadow_std": 0.0019267927706299198,
+      "gen_shadow_raw_iterations": [
+        0.3207390939091124,
+        0.3194496347621834,
+        0.31710904334388934,
+        0.3176260760479016,
+        0.31516687473655935
+      ],
+      "gen_total": 0.5317363450072373,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 39.73548603057861,
+      "run_id": 5,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.3179331276250623,
+      "gen_shadow_std": 0.0032442791513873598,
+      "gen_shadow_raw_iterations": [
+        0.3171468971594934,
+        0.31758533288243973,
+        0.3196474130882235,
+        0.3225816456375898,
+        0.31270434935756514
+      ],
+      "gen_total": 0.5316938365398038,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 36.54083228111267,
+      "run_id": 6,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.3182320019678548,
+      "gen_shadow_std": 0.0024250677996525425,
+      "gen_shadow_raw_iterations": [
+        0.3207458656470769,
+        0.3202485178874674,
+        0.3193680747132462,
+        0.31448392068555175,
+        0.31631363090593184
+      ],
+      "gen_total": 0.5318432737112001,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 36.300169229507446,
+      "run_id": 7,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.3193289286080972,
+      "gen_shadow_std": 0.003313975125670279,
+      "gen_shadow_raw_iterations": [
+        0.3200102356407395,
+        0.31617969580295435,
+        0.3212298080007238,
+        0.3241266624638269,
+        0.31509824113224133
+      ],
+      "gen_total": 0.5323917370313214,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 36.54204297065735,
+      "run_id": 8,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.31805766218586984,
+      "gen_shadow_std": 0.0032887038094690283,
+      "gen_shadow_raw_iterations": [
+        0.3196532792859724,
+        0.3142949028701322,
+        0.32148897393508086,
+        0.3139041750344711,
+        0.3209469798036928
+      ],
+      "gen_total": 0.5317561038202077,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 36.87472891807556,
+      "run_id": 9,
+      "base_seed": 42
+    },
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 0.7454545454545455,
+      "gen_shadow_mean": 0.3158374288598778,
+      "gen_shadow_std": 0.005524291652819404,
+      "gen_shadow_raw_iterations": [
+        0.3147735563836245,
+        0.3251385450594581,
+        0.3179015254137939,
+        0.31263959048379497,
+        0.3087339269587174
+      ],
+      "gen_total": 0.5306459871572117,
+      "w_weight": 0.5,
+      "determinism_rating": "High",
+      "runtime_s": 36.91669034957886,
+      "run_id": 10,
+      "base_seed": 42
+    }
+  ]
+}

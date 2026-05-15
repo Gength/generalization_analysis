@@ -1,0 +1,38 @@
+{
+  "config": {
+    "miner": [
+      "IM",
+      "Heuristics",
+      "Alpha"
+    ],
+    "weight": 0.5,
+    "shadow_traces": 1000,
+    "output": null
+  },
+  "results": [
+    {
+      "miner": "Alpha Miner",
+      "gen_struct": 1.0,
+      "gen_shadow": 0.3204046174337622,
+      "gen_total": 0.6602023087168811,
+      "w_weight": 0.5,
+      "runtime_s": 38.04278087615967
+    },
+    {
+      "miner": "Heuristics Miner",
+      "gen_struct": 1.0,
+      "gen_shadow": 0.938895676785336,
+      "gen_total": 0.969447838392668,
+      "w_weight": 0.5,
+      "runtime_s": 83.83185029029846
+    },
+    {
+      "miner": "Inductive Miner (IM)",
+      "gen_struct": 1.0,
+      "gen_shadow": 0.9760633276964001,
+      "gen_total": 0.9880316638482001,
+      "w_weight": 0.5,
+      "runtime_s": 150.7642412185669
+    }
+  ]
+}
