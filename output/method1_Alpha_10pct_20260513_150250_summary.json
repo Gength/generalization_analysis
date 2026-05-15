@@ -1,0 +1,30 @@
+{
+  "run_config": {
+    "method": "method1",
+    "xes_path": "data/BPI-Challenge_2017/BPI Challenge 2017.xes.gz",
+    "miners_requested": [
+      "Alpha"
+    ],
+    "miners_evaluated": [
+      "Alpha Miner"
+    ],
+    "test_variant_pct": 10.0,
+    "max_variants": 1593,
+    "total_variants": 15930,
+    "num_workers": 8,
+    "random_seed": 42,
+    "timestamp_utc": "2026-05-13T13:02:50.689337+00:00",
+    "total_runtime_s": 238.2
+  },
+  "dataset": "BPI Challenge 2017",
+  "total_variants": 15930,
+  "num_variants_sampled": 1593,
+  "miner_results": [
+    {
+      "miner": "Alpha Miner",
+      "score_pure_weighting": 0.3921554824882019,
+      "score_joint_weighting": 0.3920362043135053,
+      "num_variants_evaluated": 1593
+    }
+  ]
+}

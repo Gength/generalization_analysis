@@ -1,0 +1,16 @@
+{
+  "run_config": {
+    "method": "baseline",
+    "xes_path": "data/BPI-Challenge_2017/BPI Challenge 2017.xes.gz",
+    "miners_requested": [],
+    "miners_evaluated": [],
+    "test_variant_pct": null,
+    "max_variants": null,
+    "total_variants": 15930,
+    "num_workers": 8,
+    "random_seed": 42,
+    "timestamp_utc": "2026-05-13T13:06:30.531668+00:00",
+    "total_runtime_s": 108.3
+  },
+  "detailed_results": []
+}
