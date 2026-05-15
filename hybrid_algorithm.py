@@ -12,10 +12,11 @@ from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 #1. Generative Behavioral Analysis (Gen_shadow)
 
 def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100):
-    #Generates a synthetic 'shadow' log acting as probabilistic based future behaviorusing Good-Turing estimation
+    '''
+    Generates a synthetic 'shadow' log acting as probabilistic based future behaviorusing Good-Turing estimation
+    '''
     
-    
-    #1. Discover the historical Directly-Follows Graph (DFG). Tells us how the process executed in the past
+    #1. Discover historical Directly-Follows Graph (DFG) (#howTheProcessExecutedInThePast)
     #dfg: dict of (Activity A, Activity B) -> Frequency count
     #starts: dict of Starting Activity -> Frequency count
     #ends: dict of Ending Activity -> Frequency count
@@ -28,11 +29,11 @@ def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100):
         outgoing[a][b] = count
         
     #3. Extract every unique activity in the log
-    #Needed to generate mutations
+    #Needed for mutation generation
     alphabet = list(set([a for a, _ in dfg.keys()] + [b for _, b in dfg.keys()]))
     
     #4. Calculate the Good-Turing Probability (P_unseen) for every local state
-    #Good-Turing estimates the probability that the next event will be something we have never seen follow this activity before
+    #Good-Turing: probability that the next event will be something new
     p_unseen = {}
     for act in alphabet:
         out_edges = outgoing[act]
@@ -40,15 +41,15 @@ def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100):
         #N: Total number of times we transitioned out of this activity
         n_total = sum(out_edges.values())
         
-        #N_1: How many target activities followed this one exactly one time?
-        #A high number of 'singletons' -> high variance/unpredictability
+        #N_1: How many target activities followed this one exactly one time
+        #High number of 'singletons' -> high variance/unpredictability
         n_1 = sum(1 for target, count in out_edges.items() if count == 1)
         
         #Formula: P_unseen = N_1 / N
-        #If the state never had an outgoing edge (it was strictly an endpoint), we assign a 100% (1.0) chance to mutate if forced to continue
+        #If the state never had an outgoing edge (endpoint), we assign a 100% (1.0) chance to mutate if forced to continue
         p_unseen[act] = (n_1 / n_total) if n_total > 0 else 1.0
 
-    #5. Initialize the empty shadow log and prepare start distributions
+    #5. Initialize the (empty) shadow log and prepare start distributions
     shadow_log = EventLog()
     start_choices = list(starts.keys())
     start_weights = list(starts.values())
@@ -108,44 +109,38 @@ def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100):
 
 def calculate_gen_shadow_stable(event_log, net, im, fm, num_traces, iterations=5):
     """
-    Runs the shadow log generation K times to ensure mathematical determinism.
-    Because shadow log generation is stochastic (random), a single run might yield outliers.
-    We run it multiple times and return the mean and standard deviation.
+    Run the shadow log generation K times to ensure mathematical determinism and return the mean and standard deviation
     """
     scores = []
     
     #Run the stochastic generation and fitness check multiple times
     for i in range(iterations):
-        #1. Generate a brand new shadow log
+        #1. Generate a new shadow log
         shadow_log = generate_shadow_log(event_log, num_traces=num_traces)
         
-        #2. Replay the shadow log on the discovered model.
-        #If the model is too restrictive (underfitting/Alpha miner), this will fail heavily.
+        #2. Replay the shadow log on the discovered model
+        #If the model is too restrictive it will fail
         fitness_res = replay_fitness.apply(shadow_log, net, im, fm, 
                                            variant=replay_fitness.Variants.TOKEN_BASED)
         
         #Store the fitness score (0.0 to 1.0) of this iteration
         scores.append(fitness_res['log_fitness'])
     
-    #Return the Expected Value (mean), Variance (std), and the raw iteration list
+    #Return the mean + variance + iteration list
     return np.mean(scores), np.std(scores), scores
 
 
-#3. Structural Rigor Analysis (Gen_struct)
+#3. Structural Analysis (Gen_struct)
 
 def calculate_gen_struct(event_log, net, initial_marking, final_marking):
     """
-    Evaluates Structural Parsimony (Overfitting Penalty) via Arc Flow Density.
-    Spaghetti models (Alpha) and Trace models create an explosion of arcs (lines) to handle rare, coincidental noise. 
-    We penalize models where a large percentage of arcs are rarely or never used.
+    Evaluates Structure (#OverfittingPenalty) via "Arc Flow Density", penalizing them if they are rarely used
     """
     
-    #1. Replay the original historical log against the discovered model
-    #This tells us which parts of the model's structure are actually used
+    #1. Replay the original log against the discovered model
     replayed = token_replay.apply(event_log, net, initial_marking, final_marking)
     
-    #2. Initialize a counter for every single arc in the Petri Net
-    #This includes both visible and invisible arcs
+    #2. Initialize a counter for every arc in the Petri Net
     arc_usage = {arc: 0 for arc in net.arcs}
     
     #3. Track how many Traces use each arc
@@ -154,13 +149,13 @@ def calculate_gen_struct(event_log, net, initial_marking, final_marking):
         
         #Look at every transition that was fired to support this trace
         for t in res['activated_transitions']:
-            #Record the incoming and outgoing structural wires for that transition
+            #Record the incoming and outgoing structural "wires" for that transition
             for arc in t.in_arcs:
                 used_arcs.add(arc)
             for arc in t.out_arcs:
                 used_arcs.add(arc)
                 
-        #We only count an arc ONCE per trace. Even if a loop uses an arc 50 times in one trace, we want to know if this structural path is relevant to this trace as a whole
+        #Only count an arc once per trace
         for arc in used_arcs:
             arc_usage[arc] += 1
             
@@ -172,8 +167,7 @@ def calculate_gen_struct(event_log, net, initial_marking, final_marking):
         return 0.0
         
     #4. Defining Bloat 
-    #An arc is considered "overfit/bloated" if it handles a negligible fraction of the log
-    #We define negligible as less than 1% of the total traces
+    #An arc is "bloated" if it handles a negligible fraction of the log (i.e. 1%)
     num_traces = len(event_log)
     
     #We use max(2, ...) to ensure that paths created purely for a single outlier trace (count=1) are always penalized, regardless of how large the log is
@@ -183,7 +177,7 @@ def calculate_gen_struct(event_log, net, initial_marking, final_marking):
     rare_arcs = sum(1 for arc, count in arc_usage.items() if count < rare_threshold)
     
     #5. Calculate the structural penalty
-    #i.e. If 80% of the model's arcs are only used to handle 1% of the exceptions, the overfit_penalty is 0.8, dropping the score to 0.2.
+    #i.e. If 80% of the model's arcs are only used to handle 1% of the exceptions, the overfit_penalty is 0.8
     overfit_penalty = rare_arcs / total_arcs
     
     #Ensure the score never drops below absolute 0
@@ -197,46 +191,42 @@ def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=100
     Executes the hybrid evaluation with model discovery, structural penalty calculation and stochastic shadow log generation.
     """
     
-    #1. Set a seed for scientific benchmarking, ensuring the same scores the next run
+    #1. Set a seed
     if seed is not None:
         random.seed(seed)
         np.random.seed(seed)
     
     print(f"       Evaluating {miner_name}...")
-    t0 = time.time() #Start the timer
+    t0 = time.time()
     
-    #2. Execute the process discovery algorithm provided by the runner
+    #2. Execute the process discovery algorithm provided
     net, im, fm = miner_fn(event_log)
     
-    #3. Calculate Structural Penalty (Reality-based mathematical constraint)
-    #Punishes models with too many spaghetti arcs
+    #3. Calculate gen_struct
     gen_struct = calculate_gen_struct(event_log, net, im, fm)
     
-    #4. Calculate Generative Behavioral Score (Probabilistic stress test)
-    #Rewards models that are flexible enough to handle unseen mutations
-    #Returns the average score, standard deviation, and raw list
+    #4. Calculate gen_shadow
     shadow_mean, shadow_std, raw_scores = calculate_gen_shadow_stable(
         event_log, net, im, fm, num_shadow_traces, iterations
     )
     
-    #5. Hybrid Synthesis: Combine the two scores using the user-defined weight (w)
-    #Default is 0.5 (equal balance between parsimony and flexibility)
+    #5. Combine the scores using the user-defined weight (Default is 0.5)
     gen_total = (w * shadow_mean) + ((1.0 - w) * gen_struct)
     
     #Stop the timer
     runtime = time.time() - t0
     print(f"         └─ Gen_Total: {gen_total:.4f} | Struct: {gen_struct:.2f} | Shadow Mean: {shadow_mean:.4f} (±{shadow_std:.4f}) | {runtime:.1f}s")
     
-    #6. Format the results for JSON serialization in the CLI runner
+    #6. Format the results
     return {
         "miner": miner_name,
         "gen_struct": gen_struct,
         "gen_shadow_mean": shadow_mean,
-        "gen_shadow_std": shadow_std, #The determinism/stability check
+        "gen_shadow_std": shadow_std,
         "gen_shadow_raw_iterations": raw_scores,
         "gen_total": gen_total,
         "w_weight": w,
-        #Human-readable label indicating if the metric is statistically reliable
+        #Quick Human-readable version
         "determinism_rating": "High" if shadow_std < 0.02 else "Moderate" if shadow_std < 0.05 else "Low",
         "runtime_s": runtime
     }
