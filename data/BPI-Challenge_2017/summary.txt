@@ -19,6 +19,24 @@ Trace variant frequency distribution:
   Singletons (freq=1): 13,907
   freq<=5: 15,461
 
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 26              | 26      (100.0%) |       0.00 | 0     (  0.0%)
+N=2 (Lookback 1) | 167             | 136     ( 81.4%) |       0.13 | 20    ( 12.0%)
+N=3 (Lookback 2) | 506             | 339     ( 67.0%) |       0.23 | 105   ( 20.8%)
+N=4 (Lookback 3) | 1062            | 609     ( 57.3%) |       0.30 | 293   ( 27.6%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 20).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
 Top 10 trace variants by frequency:
   Variant 1: freq=1056, trace=('A_Create Application', 'A_Submitted', 'W_Handle leads', 'W_Handle leads', 'W_Complete application', 'A_Concept', 'W_Complete application', 'A_Accepted', 'O_Create Offer', 'O_Created', 'O_Sent (mail and online)', 'W_Complete application', 'W_Call after offers', 'W_Call after offers', 'A_Complete')...
   Variant 2: freq=1021, trace=('A_Create Application', 'W_Complete application', 'W_Complete application', 'A_Concept', 'A_Accepted', 'O_Create Offer', 'O_Created', 'O_Sent (mail and online)', 'W_Complete application', 'W_Call after offers', 'W_Call after offers', 'A_Complete', 'W_Call after offers', 'W_Call after offers', 'W_Call after offers')...
