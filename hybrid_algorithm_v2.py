@@ -43,10 +43,18 @@ def _evaluate_state(state_tuple, ngram_dict, safe_threshold):
         
     return p_unseen, out_edges
 
-def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length, safe_threshold):
+def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length, safe_threshold, max_n, had_mutation=False):
     """
     Recursive DFS function to generate a single shadow trace.
     Naturally maintains the state context through the call stack.
+    
+    Args:
+        max_n: Maximum N-gram order (lookback = max_n - 1). Backoff from max_n down to 2,
+               with absolute fallback to N=1.
+    
+    Returns:
+        (sequence, had_mutation): The generated activity sequence and a boolean flag
+        indicating whether any mutation event occurred during generation.
     """
     current_local = current_seq[-1]
     
@@ -60,24 +68,23 @@ def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length,
         
         # Probabilistic roll to stop the trace
         if random.random() < (times_as_end / total_occurrences):
-            return current_seq
+            return current_seq, had_mutation
             
     # Safety catch: Prevent infinite loops in case of cyclic mutations
     if len(current_seq) >= max_length:
-        return current_seq
+        return current_seq, had_mutation
 
-    # 2. Dynamic Katz Backoff Strategy (N=3 -> N=2 -> N=1)
+    # 2. Dynamic Katz Backoff Strategy (max_n -> ... -> 2 -> 1)
     p_unseen, valid_out_edges = None, None
     
-    # Attempt N=3 (Regional Marking, Lookback 2)
-    # Highest context fidelity, but most vulnerable to data sparsity
-    if len(current_seq) >= 3:
-        p_unseen, valid_out_edges = _evaluate_state(tuple(current_seq[-3:]), ngram_outgoings[3], safe_threshold)
-        
-    # Fallback to N=2 (Lookback 1)
-    # Medium context fidelity, used when N=3 is too sparse
-    if p_unseen is None and len(current_seq) >= 2:
-        p_unseen, valid_out_edges = _evaluate_state(tuple(current_seq[-2:]), ngram_outgoings[2], safe_threshold)
+    # Try from highest order down to N=2, stopping at the first statistically safe state
+    for n in range(max_n, 1, -1):
+        if len(current_seq) >= n:
+            p_unseen, valid_out_edges = _evaluate_state(
+                tuple(current_seq[-n:]), ngram_outgoings[n], safe_threshold
+            )
+            if p_unseen is not None:
+                break
         
     # Absolute Fallback to N=1 (Local Marking, Lookback 0)
     # Lowest context fidelity, but 100% safe from sparsity collapse
@@ -95,26 +102,34 @@ def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length,
         # Mutation Triggered: The algorithm actively explores a logically valid but historically unseen path.
         # It picks a random activity from the entire known alphabet.
         next_node = random.choice(alphabet)
+        had_mutation = True
     else:
         # Predictable Path Triggered: Follow historical DFG distribution.
         if not valid_out_edges:
-            return current_seq # Dead end reached
+            return current_seq, had_mutation # Dead end reached
         # Weighted random choice based on how many times paths were taken in the past
         next_node = random.choices(list(valid_out_edges.keys()), weights=list(valid_out_edges.values()), k=1)[0]
         
     # 4. DFS Recursion
     # Pass a new list (current_seq + [next_node]) to avoid mutation side-effects and maintain immutability
-    return generate_trace_dfs(current_seq + [next_node], ngram_outgoings, ends, alphabet, max_length, safe_threshold)
+    return generate_trace_dfs(current_seq + [next_node], ngram_outgoings, ends, alphabet, max_length, safe_threshold, max_n, had_mutation)
 
-def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100, safe_threshold=5):
+def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100, safe_threshold=5, max_n=3):
     """
     Generates a synthetic 'shadow' log acting as probabilistic based future behavior 
     using Good-Turing estimation and Katz Backoff.
+    
+    Args:
+        max_n: Maximum N-gram order. N-gram statistics are pre-computed for N=1..max_n.
+    
+    Returns:
+        (shadow_log, mutation_flags): The generated EventLog and a list of booleans
+        indicating which traces contain at least one mutation event.
     """
     
     # 1. Discover historical N-gram Directly-Follows Graphs (#howTheProcessExecutedInThePast)
-    # Pre-compute dictionaries up to N=3 for fast lookups during generation
-    ngram_outgoings = {1: defaultdict(Counter), 2: defaultdict(Counter), 3: defaultdict(Counter)}
+    # Pre-compute dictionaries up to max_n for fast lookups during generation
+    ngram_outgoings = {n: defaultdict(Counter) for n in range(1, max_n + 1)}
     starts = Counter()
     ends = Counter()
     alphabet = set()
@@ -132,14 +147,15 @@ def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100, safe_t
         trace_len = len(seq)
         for i in range(trace_len - 1):
             nxt_act = seq[i + 1]
-            # Extract states for N=1 (Local), N=2 (Lookback 1), N=3 (Lookback 2)
-            for n in range(1, 4):
+            # Extract states for all N-gram orders from 1 to max_n
+            for n in range(1, max_n + 1):
                 if i >= n - 1:
                     state_tuple = tuple(seq[i - (n - 1) : i + 1])
                     ngram_outgoings[n][state_tuple][nxt_act] += 1
 
     alphabet = list(alphabet)
     shadow_log = EventLog()
+    mutation_flags = []
     start_choices = list(starts.keys())
     start_weights = list(starts.values())
 
@@ -149,7 +165,9 @@ def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100, safe_t
         start_node = random.choices(start_choices, weights=start_weights, k=1)[0]
         
         # Execute the recursive DFS walker to build the sequence
-        final_sequence = generate_trace_dfs([start_node], ngram_outgoings, ends, alphabet, max_trace_length, safe_threshold)
+        final_sequence, had_mutation = generate_trace_dfs(
+            [start_node], ngram_outgoings, ends, alphabet, max_trace_length, safe_threshold, max_n
+        )
         
         # Convert the generated string sequence back into a PM4Py Trace object
         trace = Trace(attributes={"concept:name": f"shadow_{i}"})
@@ -158,29 +176,59 @@ def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100, safe_t
             
         # Add the completed synthetic trace to the shadow log
         shadow_log.append(trace)
+        mutation_flags.append(had_mutation)
         
-    return shadow_log
+    return shadow_log, mutation_flags
 
-def calculate_gen_shadow_stable(event_log, net, im, fm, num_traces, iterations=5, safe_threshold=5):
+def calculate_gen_shadow_stable(event_log, net, im, fm, num_traces, iterations=5, safe_threshold=5, max_n=3):
     """
-    Run the shadow log generation K times to ensure mathematical determinism and return the mean and standard deviation
+    Run the shadow log generation K times to ensure mathematical determinism and
+    return the mean and standard deviation, plus stratified scores for regular vs.
+    mutated traces.
+    
+    Args:
+        max_n: Maximum N-gram order passed through to shadow log generation.
+    
+    Returns:
+        (mean, std, raw_scores, reg_mean, reg_std, mut_mean, mut_std, mutation_counts)
     """
     scores = []
+    regular_scores = []    # Per-iteration: mean fitness on non-mutated traces
+    mutated_scores = []    # Per-iteration: mean fitness on mutated traces
+    mutation_counts = []   # Per-iteration: number of mutated traces
 
-    #Run the stochastic generation and fitness check multiple times
+    # Run the stochastic generation and fitness check multiple times
     for i in range(iterations):
-        #1. Generate a new shadow log
-        shadow_log = generate_shadow_log(event_log, num_traces=num_traces, safe_threshold=safe_threshold)
+        # 1. Generate a new shadow log with mutation flags
+        shadow_log, mutation_flags = generate_shadow_log(
+            event_log, num_traces=num_traces, safe_threshold=safe_threshold, max_n=max_n
+        )
         
-        #2. Replay the shadow log on the discovered model
-        #If the model is too restrictive it will fail
-        fitness_res = replay_fitness.apply(shadow_log, net, im, fm, variant=replay_fitness.Variants.TOKEN_BASED)
+        # 2. Replay the shadow log on the discovered model (per-trace for stratification)
+        replayed = token_replay.apply(shadow_log, net, im, fm)
+        
+        # 3. Collect per-trace fitness
+        trace_fitnesses = [res['trace_fitness'] for res in replayed]
+        
+        # Overall fitness (existing metric)
+        overall_fitness = sum(trace_fitnesses) / len(trace_fitnesses) if trace_fitnesses else 0.0
+        scores.append(overall_fitness)
+        
+        # 4. Stratified analysis: split by mutation flag
+        reg_fits = [f for f, flag in zip(trace_fitnesses, mutation_flags) if not flag]
+        mut_fits = [f for f, flag in zip(trace_fitnesses, mutation_flags) if flag]
+        
+        mutation_counts.append(len(mut_fits))
+        regular_scores.append(np.mean(reg_fits) if reg_fits else 0.0)
+        mutated_scores.append(np.mean(mut_fits) if mut_fits else 0.0)
 
-        #Store the fitness score (0.0 to 1.0) of this iteration
-        scores.append(fitness_res['log_fitness'])
+    # Aggregate across iterations
+    reg_mean = np.mean(regular_scores) if regular_scores else 0.0
+    reg_std = np.std(regular_scores) if regular_scores else 0.0
+    mut_mean = np.mean(mutated_scores) if mutated_scores else 0.0
+    mut_std = np.std(mutated_scores) if mutated_scores else 0.0
     
-    #Return the mean + variance + iteration list
-    return np.mean(scores), np.std(scores), scores
+    return np.mean(scores), np.std(scores), scores, reg_mean, reg_std, mut_mean, mut_std, mutation_counts
 
 # =====================================================================
 # 2. Structural Analysis (Gen_struct) 
@@ -242,9 +290,12 @@ def calculate_gen_struct(event_log, net, initial_marking, final_marking):
 # 3. Core Evaluation Orchestrator
 # =====================================================================
 
-def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=1000, iterations=5, seed=42):
+def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=1000, iterations=5, seed=42, max_n=3):
     """
     Executes the hybrid evaluation: Model Discovery -> Gen_struct -> Gen_shadow -> Total Score.
+    
+    Args:
+        max_n: Maximum N-gram order for shadow log generation (default 3).
     """
     #1. Set a seed
     if seed is not None:
@@ -262,8 +313,8 @@ def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=100
     
     #4. Calculate gen_shadow
     # Using safe_threshold=5 optimal for sparse, highly variable logs like BPI 2017
-    shadow_mean, shadow_std, raw_scores = calculate_gen_shadow_stable(
-        event_log, net, im, fm, num_shadow_traces, iterations, safe_threshold=5
+    shadow_mean, shadow_std, raw_scores, reg_mean, reg_std, mut_mean, mut_std, mutation_counts = calculate_gen_shadow_stable(
+        event_log, net, im, fm, num_shadow_traces, iterations, safe_threshold=5, max_n=max_n
     )
     
     #5. Combine the scores using the user-defined weight (Default is 0.5)
@@ -271,7 +322,10 @@ def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=100
     
     #Stop the timer
     runtime = time.time() - t0
+    avg_mutations = np.mean(mutation_counts) if mutation_counts else 0
     print(f"         └─ Gen_Total: {gen_total:.4f} | Struct: {gen_struct:.2f} | Shadow Mean: {shadow_mean:.4f} (±{shadow_std:.4f}) | {runtime:.1f}s")
+    if avg_mutations > 0:
+        print(f"            └─ Stratified: Regular={reg_mean:.4f} (±{reg_std:.4f}) | Mutated({avg_mutations:.0f})={mut_mean:.4f} (±{mut_std:.4f})")
     
     #6. Format the results
     return {
@@ -282,6 +336,13 @@ def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=100
         "gen_shadow_raw_iterations": raw_scores,
         "gen_total": gen_total,
         "w_weight": w,
+        # Stratified mutation analysis
+        "gen_shadow_regular_mean": reg_mean,
+        "gen_shadow_regular_std": reg_std,
+        "gen_shadow_mutated_mean": mut_mean,
+        "gen_shadow_mutated_std": mut_std,
+        "mutation_counts_per_iteration": mutation_counts,
+        "avg_mutations_per_run": avg_mutations,
         #Quick Human-readable version
         "determinism_rating": "High" if shadow_std < 0.02 else "Moderate" if shadow_std < 0.05 else "Low",
         "runtime_s": runtime
