@@ -67,7 +67,7 @@ def parse_args():
     p.add_argument(
         "--seed",
         type=int,
-        default=42,
+        default=None,
         help="Base random seed. Increments automatically per run for independence. Default: 42"
     )
     p.add_argument(
@@ -108,7 +108,25 @@ def main():
         df = pd.DataFrame({'case:concept:name':['1','1','1','2','2','2','3','3'], 
                            'concept:name':['A','B','C','A','X','C','A','B']})
         event_log = pm4py.format_dataframe(df, case_id='case:concept:name', activity_key='concept:name')
-
+    # =====================================================================
+    # CRITICAL DATA STRUCTURE STANDARDIZATION
+    # ---------------------------------------------------------------------
+    # By default, pm4py.read_xes() returns a Pandas DataFrame. We MUST 
+    # explicitly convert it to an Object-Oriented EventLog for two reasons:
+    #
+    # 1. Traversal Compatibility (Fixing TypeError): 
+    #    Our custom DFS and N-gram extraction logic iterates over the log 
+    #    hierarchically (for trace in log -> for event in trace). Iterating 
+    #    directly over a DataFrame yields column names (strings), which crashes 
+    #    the custom generators.
+    # 
+    # 2. Threshold Accuracy for Gen_struct: 
+    #    Calling len() on a DataFrame returns the total number of *events* #    (e.g., 1.2 million), whereas calling len() on an EventLog returns 
+    #    the total number of *cases/traces* (e.g., 31,509). This conversion 
+    #    ensures the 'rare_threshold' (1% of traces) is calculated correctly.
+    # =====================================================================
+    print("      Converting DataFrame to standard EventLog object...")
+    event_log = pm4py.convert_to_event_log(event_log)
     #2. Evaluation Loop
     print(f"\n[2/3] Running Evaluations...")
     all_results = []
