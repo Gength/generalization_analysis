@@ -12,6 +12,18 @@ Log Representativeness:
   * Evaluates the probability that an additional trace has been seen previously in the log.
   * Higher values (closer to 1.0) indicate the log already highly represents the system.
 
+Trace length distribution (events per case):
+  Min:      10
+  Max:      180
+  Mean:     38.2
+  Median:   35.0
+  Std:      16.7
+  P25:      25.0
+  P75:      47.0
+  P90:      60.0
+  P95:      70.0
+  P99:      93.0
+
 Trace variant frequency distribution:
   Min freq: 1
   Max freq: 1056
@@ -30,7 +42,7 @@ N=4 (Lookback 3) | 1062            | 609     ( 57.3%) |       0.30 | 293   ( 27.
 =====================================================================================
 
 [Diagnostic Guide]
-1. Safe States: % of states with total outgoing frequency > threshold (default 20).
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
    -> If very low at N=3, it means most 3-level states lack sufficient historical support.
 2. Avg P_unseen: Average Good-Turing mutation probability.
    -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.

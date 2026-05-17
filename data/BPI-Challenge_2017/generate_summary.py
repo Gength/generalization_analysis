@@ -12,6 +12,7 @@ Reads 'BPI Challenge 2017.xes.gz' and produces summary.txt containing:
 """
 
 import os
+import statistics
 import time
 from collections import Counter, defaultdict
 
@@ -107,15 +108,38 @@ def generate_summary(xes_path: str, output_path: str) -> None:
     variant_counter = Counter()
     activities_set = set()
 
+    trace_lengths = []
     for trace in event_log:
         seq = tuple(event["concept:name"] for event in trace)
         variant_counter[seq] += 1
         activities_set.update(seq)
+        trace_lengths.append(len(seq))
 
     num_activities = len(activities_set)
     num_variants = len(variant_counter)
 
-    # ── 3. Frequency distribution stats & TLRA ─────────────────────────
+    # ── 3. Trace length distribution ───────────────────────────────────
+    trace_lengths.sort()
+    tl_min = trace_lengths[0]
+    tl_max = trace_lengths[-1]
+    tl_mean = statistics.mean(trace_lengths)
+    tl_median = statistics.median(trace_lengths)
+    tl_stdev = statistics.stdev(trace_lengths)
+    # Percentiles via linear interpolation
+    def _percentile(sorted_data, p):
+        k = (len(sorted_data) - 1) * p / 100
+        f = int(k)
+        c = k - f
+        if f + 1 < len(sorted_data):
+            return sorted_data[f] + c * (sorted_data[f + 1] - sorted_data[f])
+        return sorted_data[f]
+    tl_p25 = _percentile(trace_lengths, 25)
+    tl_p75 = _percentile(trace_lengths, 75)
+    tl_p90 = _percentile(trace_lengths, 90)
+    tl_p95 = _percentile(trace_lengths, 95)
+    tl_p99 = _percentile(trace_lengths, 99)
+
+    # ── 4. Frequency distribution stats & TLRA ─────────────────────────
     freqs = list(variant_counter.values())
     min_freq = min(freqs)
     max_freq = max(freqs)
@@ -126,13 +150,13 @@ def generate_summary(xes_path: str, output_path: str) -> None:
     # Calculate TLRA: 1 - (|lang(L)| / |L|)
     tlra = 1.0 - (num_variants / num_cases) if num_cases > 0 else 0.0
 
-    # ── 4. N-gram Sparsity Analysis ────────────────────────────────────
+    # ── 5. N-gram Sparsity Analysis ────────────────────────────────────
     ngram_report_str = analyze_ngram_sparsity(variant_counter, max_n=4, safe_threshold=5)
 
-    # ── 5. Top 10 variants ─────────────────────────────────────────────
+    # ── 6. Top 10 variants ─────────────────────────────────────────────
     top10 = variant_counter.most_common(10)
 
-    # ── 6. Write summary ───────────────────────────────────────────────
+    # ── 7. Write summary ───────────────────────────────────────────────
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(f"Cases: {num_cases}\n")
         f.write(f"Events: {num_events:,}\n")
@@ -152,6 +176,18 @@ def generate_summary(xes_path: str, output_path: str) -> None:
         f.write("  * Higher values (closer to 1.0) indicate the log already highly represents the system.\n")
         f.write("\n")
         
+        f.write("Trace length distribution (events per case):\n")
+        f.write(f"  Min:      {tl_min}\n")
+        f.write(f"  Max:      {tl_max}\n")
+        f.write(f"  Mean:     {tl_mean:.1f}\n")
+        f.write(f"  Median:   {tl_median:.1f}\n")
+        f.write(f"  Std:      {tl_stdev:.1f}\n")
+        f.write(f"  P25:      {tl_p25:.1f}\n")
+        f.write(f"  P75:      {tl_p75:.1f}\n")
+        f.write(f"  P90:      {tl_p90:.1f}\n")
+        f.write(f"  P95:      {tl_p95:.1f}\n")
+        f.write(f"  P99:      {tl_p99:.1f}\n")
+        f.write("\n")
         f.write("Trace variant frequency distribution:\n")
         f.write(f"  Min freq: {min_freq}\n")
         f.write(f"  Max freq: {max_freq}\n")
