@@ -1,0 +1,62 @@
+Cases: 251734
+Events: 1,595,923
+
+A trace variant is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
+
+Unique activities: 42
+
+Unique trace variants: 11,973
+
+Log Representativeness:
+  TLRA (Trace-Based Log Representativeness Approx.): 0.9524
+  * Evaluates the probability that an additional trace has been seen previously in the log.
+  * Higher values (closer to 1.0) indicate the log already highly represents the system.
+
+Trace length distribution (events per case):
+  Min:      1
+  Max:      990
+  Mean:     6.3
+  Median:   5.0
+  Std:      13.1
+  P25:      5.0
+  P75:      6.0
+  P90:      7.0
+  P95:      9.0
+  P99:      24.0
+
+Trace variant frequency distribution:
+  Min freq: 1
+  Max freq: 50286
+  Mean freq: 21.0
+  Singletons (freq=1): 9,030
+  freq<=5: 10,963
+
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 42              | 39      ( 92.9%) |       0.09 | 3     (  7.1%)
+N=2 (Lookback 1) | 478             | 332     ( 69.5%) |       0.24 | 90    ( 18.8%)
+N=3 (Lookback 2) | 2392            | 1232    ( 51.5%) |       0.38 | 771   ( 32.2%)
+N=4 (Lookback 3) | 7043            | 2554    ( 36.3%) |       0.50 | 3192  ( 45.3%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
+Top 10 trace variants by frequency:
+  Variant 1: freq=50286, trace=('Create Purchase Order Item', 'Vendor creates invoice', 'Record Goods Receipt', 'Record Invoice Receipt', 'Clear Invoice')
+  Variant 2: freq=30798, trace=('Create Purchase Order Item', 'Record Goods Receipt', 'Vendor creates invoice', 'Record Invoice Receipt', 'Clear Invoice')
+  Variant 3: freq=12214, trace=('Create Purchase Order Item', 'Record Goods Receipt')
+  Variant 4: freq=11383, trace=('Create Purchase Order Item', 'Vendor creates invoice', 'Record Goods Receipt', 'Record Invoice Receipt', 'Remove Payment Block', 'Clear Invoice')
+  Variant 5: freq=9694, trace=('Create Purchase Order Item', 'Receive Order Confirmation', 'Record Goods Receipt', 'Vendor creates invoice', 'Record Invoice Receipt', 'Clear Invoice')
+  Variant 6: freq=8921, trace=('Create Purchase Requisition Item', 'Create Purchase Order Item', 'Vendor creates invoice', 'Record Goods Receipt', 'Record Invoice Receipt', 'Clear Invoice')
+  Variant 7: freq=8835, trace=('Create Purchase Order Item', 'Vendor creates invoice', 'Record Invoice Receipt', 'Record Goods Receipt', 'Remove Payment Block', 'Clear Invoice')
+  Variant 8: freq=7985, trace=('Create Purchase Order Item', 'Record Goods Receipt', 'Vendor creates invoice', 'Record Invoice Receipt', 'Remove Payment Block', 'Clear Invoice')
+  Variant 9: freq=5298, trace=('Create Purchase Order Item', 'Delete Purchase Order Item')
+  Variant 10: freq=4244, trace=('Create Purchase Order Item', 'Receive Order Confirmation', 'Vendor creates invoice', 'Record Goods Receipt', 'Record Invoice Receipt', 'Clear Invoice')

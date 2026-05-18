@@ -1,0 +1,62 @@
+Cases: 2099
+Events: 18,246
+
+A trace variant is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
+
+Unique activities: 29
+
+Unique trace variants: 202
+
+Log Representativeness:
+  TLRA (Trace-Based Log Representativeness Approx.): 0.9038
+  * Evaluates the probability that an additional trace has been seen previously in the log.
+  * Higher values (closer to 1.0) indicate the log already highly represents the system.
+
+Trace length distribution (events per case):
+  Min:      1
+  Max:      21
+  Mean:     8.7
+  Median:   8.0
+  Std:      2.3
+  P25:      8.0
+  P75:      10.0
+  P90:      11.0
+  P95:      13.0
+  P99:      15.0
+
+Trace variant frequency distribution:
+  Min freq: 1
+  Max freq: 569
+  Mean freq: 10.4
+  Singletons (freq=1): 108
+  freq<=5: 171
+
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 29              | 27      ( 93.1%) |       0.04 | 0     (  0.0%)
+N=2 (Lookback 1) | 152             | 74      ( 48.7%) |       0.33 | 46    ( 30.3%)
+N=3 (Lookback 2) | 280             | 110     ( 39.3%) |       0.40 | 106   ( 37.9%)
+N=4 (Lookback 3) | 394             | 131     ( 33.2%) |       0.45 | 174   ( 44.2%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
+Top 10 trace variants by frequency:
+  Variant 1: freq=569, trace=('Permit SUBMITTED by EMPLOYEE', 'Permit APPROVED by ADMINISTRATION', 'Permit FINAL_APPROVED by SUPERVISOR', 'Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment APPROVED by ADMINISTRATION', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 2: freq=311, trace=('Permit SUBMITTED by EMPLOYEE', 'Permit APPROVED by ADMINISTRATION', 'Permit APPROVED by BUDGET OWNER', 'Permit FINAL_APPROVED by SUPERVISOR', 'Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment APPROVED by ADMINISTRATION', 'Request For Payment APPROVED by BUDGET OWNER', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 3: freq=126, trace=('Permit SUBMITTED by EMPLOYEE', 'Permit APPROVED by ADMINISTRATION', 'Permit APPROVED by SUPERVISOR', 'Permit FINAL_APPROVED by DIRECTOR', 'Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment APPROVED by ADMINISTRATION', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 4: freq=100, trace=('Permit SUBMITTED by EMPLOYEE', 'Permit APPROVED by ADMINISTRATION', 'Permit APPROVED by BUDGET OWNER', 'Permit APPROVED by SUPERVISOR', 'Permit FINAL_APPROVED by DIRECTOR', 'Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment APPROVED by ADMINISTRATION', 'Request For Payment APPROVED by BUDGET OWNER', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 5: freq=93, trace=('Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment APPROVED by ADMINISTRATION', 'Request For Payment APPROVED by BUDGET OWNER', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 6: freq=90, trace=('Permit SUBMITTED by EMPLOYEE', 'Permit APPROVED by PRE_APPROVER', 'Permit FINAL_APPROVED by SUPERVISOR', 'Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment APPROVED by PRE_APPROVER', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 7: freq=84, trace=('Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment APPROVED by ADMINISTRATION', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 8: freq=79, trace=('Permit SUBMITTED by EMPLOYEE', 'Permit FINAL_APPROVED by SUPERVISOR', 'Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 9: freq=53, trace=('Permit SUBMITTED by EMPLOYEE', 'Permit APPROVED by ADMINISTRATION', 'Permit FINAL_APPROVED by SUPERVISOR', 'Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment REJECTED by ADMINISTRATION', 'Request For Payment REJECTED by EMPLOYEE', 'Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment APPROVED by ADMINISTRATION', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 10: freq=43, trace=('Permit SUBMITTED by EMPLOYEE', 'Permit APPROVED by ADMINISTRATION', 'Request For Payment SUBMITTED by EMPLOYEE', 'Request For Payment APPROVED by ADMINISTRATION', 'Permit FINAL_APPROVED by SUPERVISOR', 'Request For Payment FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')

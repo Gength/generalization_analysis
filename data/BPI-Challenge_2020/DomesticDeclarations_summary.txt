@@ -1,0 +1,62 @@
+Cases: 10500
+Events: 56,437
+
+A trace variant is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
+
+Unique activities: 17
+
+Unique trace variants: 99
+
+Log Representativeness:
+  TLRA (Trace-Based Log Representativeness Approx.): 0.9906
+  * Evaluates the probability that an additional trace has been seen previously in the log.
+  * Higher values (closer to 1.0) indicate the log already highly represents the system.
+
+Trace length distribution (events per case):
+  Min:      1
+  Max:      24
+  Mean:     5.4
+  Median:   5.0
+  Std:      1.5
+  P25:      5.0
+  P75:      6.0
+  P90:      6.0
+  P95:      8.0
+  P99:      11.0
+
+Trace variant frequency distribution:
+  Min freq: 1
+  Max freq: 4618
+  Mean freq: 106.1
+  Singletons (freq=1): 46
+  freq<=5: 70
+
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 17              | 12      ( 70.6%) |       0.30 | 5     ( 29.4%)
+N=2 (Lookback 1) | 34              | 24      ( 70.6%) |       0.30 | 10    ( 29.4%)
+N=3 (Lookback 2) | 54              | 37      ( 68.5%) |       0.30 | 16    ( 29.6%)
+N=4 (Lookback 3) | 80              | 44      ( 55.0%) |       0.36 | 28    ( 35.0%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
+Top 10 trace variants by frequency:
+  Variant 1: freq=4618, trace=('Declaration SUBMITTED by EMPLOYEE', 'Declaration APPROVED by ADMINISTRATION', 'Declaration FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 2: freq=2473, trace=('Declaration SUBMITTED by EMPLOYEE', 'Declaration APPROVED by ADMINISTRATION', 'Declaration APPROVED by BUDGET OWNER', 'Declaration FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 3: freq=1392, trace=('Declaration SUBMITTED by EMPLOYEE', 'Declaration FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 4: freq=575, trace=('Declaration SUBMITTED by EMPLOYEE', 'Declaration APPROVED by PRE_APPROVER', 'Declaration FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 5: freq=345, trace=('Declaration SUBMITTED by EMPLOYEE', 'Declaration REJECTED by ADMINISTRATION', 'Declaration REJECTED by EMPLOYEE', 'Declaration SUBMITTED by EMPLOYEE', 'Declaration APPROVED by ADMINISTRATION', 'Declaration FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 6: freq=188, trace=('Declaration SUBMITTED by EMPLOYEE', 'Declaration REJECTED by ADMINISTRATION', 'Declaration REJECTED by EMPLOYEE', 'Declaration SUBMITTED by EMPLOYEE', 'Declaration APPROVED by ADMINISTRATION', 'Declaration APPROVED by BUDGET OWNER', 'Declaration FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 7: freq=174, trace=('Declaration SUBMITTED by EMPLOYEE', 'Declaration REJECTED by ADMINISTRATION', 'Declaration REJECTED by EMPLOYEE')
+  Variant 8: freq=134, trace=('Declaration SAVED by EMPLOYEE',)
+  Variant 9: freq=77, trace=('Declaration SUBMITTED by EMPLOYEE', 'Declaration APPROVED by ADMINISTRATION', 'Declaration REJECTED by SUPERVISOR', 'Declaration REJECTED by EMPLOYEE', 'Declaration SUBMITTED by EMPLOYEE', 'Declaration APPROVED by ADMINISTRATION', 'Declaration FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
+  Variant 10: freq=57, trace=('Declaration SUBMITTED by EMPLOYEE', 'Declaration REJECTED by PRE_APPROVER', 'Declaration REJECTED by EMPLOYEE', 'Declaration SUBMITTED by EMPLOYEE', 'Declaration APPROVED by PRE_APPROVER', 'Declaration FINAL_APPROVED by SUPERVISOR', 'Request Payment', 'Payment Handled')
