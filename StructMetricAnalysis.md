@@ -291,7 +291,7 @@ Alpha's normalized cross-connectivity (0.088) is 3.4× Heuristics' (0.026) and 4
 
 Four-dimensional formula incorporating the best discriminators:
 
-$$\text{Gen\_Struct}_{\text{v2}} = 0.35 \cdot \text{ArcFlow} + 0.20 \cdot (1 - \text{Gini}) + 0.20 \cdot (1 - \text{Reach}) + 0.25 \cdot (1 - \frac{\text{Cyclomatic}}{\max(\text{Cyclomatic})})$$
+$$GenStruct_{v2} = 0.35 \cdot ArcFlow + 0.20 \cdot (1 - Gini) + 0.20 \cdot (1 - Reach) + 0.25 \cdot (1 - \frac{Cyclo}{\max(Cyclo)})$$
 
 | Miner | ArcFlow (0.35) | 1−Gini (0.20) | 1−Reach (0.20) | CycloNorm (0.25) | **v2** | Current |
 |---|---|---|---|---|---|---|
