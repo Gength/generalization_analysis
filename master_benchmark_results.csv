@@ -1,0 +1,8 @@
+Dataset,Miner,PM4Py_Baseline,Gen_Shadow_V1,Gen_Shadow_V2,PM4Py_Time_s,V1_Time_s,V2_Time_s
+BPI_2017,Alpha Miner,0.9824,0.4018,0.3834,25.9,17.77,23.71
+BPI_2017,Alpha+ Miner,0.9828,0.5992,0.8065,23.04,18.25,22.59
+BPI_2017,Heuristics (Default),0.917,0.9296,0.9332,58.48,20.37,24.84
+BPI_2017,Heuristics (Strict),0.9463,0.9395,0.9366,59.42,20.02,24.9
+BPI_2017,Inductive (Strict),0.9485,0.9665,0.9989,63.35,21.3,25.27
+BPI_2017,Inductive (Infrequent),0.9473,0.9426,0.9755,62.62,20.01,25.06
+BPI_2017,Flower Model (Max),0.9824,1.0,1.0,25.31,17.34,22.58
