@@ -210,8 +210,8 @@ Replay-based methods replay the original event log against the discovered model 
 
 ### 4.5 Cyclomatic Complexity (McCabe)
 
-| Miner | |P| | |T| | |A| | V(G) = A−P−T+2 | Assessment |
-|---|---|---|---|---|---|---|---|
+| Miner | Places | Trans | Arcs | V(G) = A−P−T+2 | Assessment |
+|---|---|---|---|---|---|
 | Inductive Miner (IM) | 55 | 87 | 184 | **44** | Moderate complexity |
 | Heuristics Miner | 43 | 82 | 183 | **60** | Highest — most independent paths |
 | Alpha Miner | 12 | 26 | 55 | **19** | Lowest — simplest structure |
