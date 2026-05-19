@@ -1,0 +1,5 @@
+Dataset,Miner,PM4Py_Baseline,Gen_Shadow (Pure),Runtime (s)
+BPI_2017,Alpha Miner,0.9824,0.3194,48.9
+BPI_2017,Heuristics Miner,0.9296,0.9383,77.7
+BPI_2017,Inductive Miner,0.9485,0.9752,141.8
+BPI_2017,Flower Model (Max Gen),0.9833,1.0,32.8
