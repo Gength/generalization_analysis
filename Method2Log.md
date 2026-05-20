@@ -26,3 +26,12 @@ Gen_Total = w*Gen_shadow + (1 - w)*Gen_struct
 The parameter w $\in$ [0, 1] allows for the calibration of the evaluation focus. By adjusting w, the metric can balance the reward for probabilistic flexibility against the penalty for structural "bloat".
 Alternatively, the default w value of 0.5 would be used.
 
+# Version History
+## V1
+Basic Version
+## V2
+### Mutated Path Generation:
+Introduce N-gram-based path generation to capture local dependencies in the process model, allowing for more realistic trace generation while still maintaining a balance between exploration and exploitation.
+## V2.1
+### Predictable Path Generation:
+replace frequency counts with ln(count+1) to reduce the dominance of extremely common paths and increase variability in the generated traces, while still respecting historical likelihoods.

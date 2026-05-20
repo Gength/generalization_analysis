@@ -101,6 +101,9 @@ def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length,
     if random.random() < p_unseen:
         # Mutation Triggered: The algorithm actively explores a logically valid but historically unseen path.
         # It picks a random activity from the entire known alphabet.
+        # Note: This ensures syntactic validity (it uses a real event name) 
+        # but purposefully ignores strict business logic to test the model's 
+        # robustness against unseen or anomalous behavior (Adversarial Generalization).
         next_node = random.choice(alphabet)
         had_mutation = True
     else:
@@ -108,7 +111,10 @@ def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length,
         if not valid_out_edges:
             return current_seq, had_mutation # Dead end reached
         # Weighted random choice based on how many times paths were taken in the past
-        next_node = random.choices(list(valid_out_edges.keys()), weights=list(valid_out_edges.values()), k=1)[0]
+        # TODO
+        # replace frequency counts with ln(count+1) to reduce the dominance of extremely common paths and increase variability in the generated traces, while still respecting historical likelihoods.
+        weights = [np.log(count + 1) for count in valid_out_edges.values()]
+        next_node = random.choices(list(valid_out_edges.keys()), weights=weights, k=1)[0]
         
     # 4. DFS Recursion
     # Pass a new list (current_seq + [next_node]) to avoid mutation side-effects and maintain immutability
