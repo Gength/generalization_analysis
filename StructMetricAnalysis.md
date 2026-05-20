@@ -266,10 +266,41 @@ Alpha's normalized cross-connectivity (0.088) is 3.4× Heuristics' (0.026) and 4
 - Business rule validation (e.g., "Does the simulated trace satisfy ordering constraints?")
 
 ---
+## 5. Runtime Analysis
 
-## 5. Recommendations
+*All timings measured on BPI Challenge 2017 (31,509 traces, 1.2M events)*
 
-### 5.1 Which Metrics to Keep — Updated
+| Metric | Type | IM | Heuristics | Alpha | Total |
+|---|---|---|---|---|---|
+| Model Discovery | — | 44.8s | 1.4s | 0.4s | 46.6s |
+| Arc Flow Density | Replay | 47.8s | 43.7s | 17.6s | 109.1s |
+| Transition Gini | Replay | 47.5s | 43.0s | 17.3s | 107.7s |
+| Token Variance | Replay | 47.2s | 37.9s | 16.8s | 101.9s |
+| Reachable Arc BFS | Structural | 0.1s | 0.1s | 0.1s | 0.2s |
+| 5 Basic Metrics | Structural | <0.1s | <0.1s | <0.1s | <0.1s |
+| Cyclomatic | Structural | <0.1s | <0.1s | <0.1s | <0.1s |
+| Block-Struct | Structural | 0.3s | <0.1s | <0.1s | 0.3s |
+| Cross-Conn | Structural | <0.1s | <0.1s | <0.1s | <0.1s |
+| **K-Fold CV (k=3)** | Replay | **221.3s** | 112.3s | 47.7s | 381.3s |
+| Simulation (5k) | Replay | 3.0s | 1.0s | 17.3s | 21.4s |
+| **TOTAL** | | **412.0s** | **239.4s** | **117.1s** | **768.6s** |
+
+**Key observations:**
+
+- **K-Fold CV dominates** (381s / 769s = 50%): 3 model discoveries + 6 token replays make it the most expensive by far. Justified only as the "gold standard" proof.
+- **Arc Flow / Gini / Token Variance are redundant in compute** (109+108+102 = 319s): each does a full token replay independently. Merging into a single replay pass would cut this to ~33% of current cost.
+- **Structural metrics are near-free** (<1s total): all five basic + cyclomatic + cross-conn + reachable BFS combined cost less than a single token replay.
+- **IM is 3.5× more expensive than Alpha** (412s vs 117s): IM's larger model (55P/87T vs 12P/26T) makes token replay slower per trace.
+- **Simulation anomaly**: Alpha's simulation (17.3s) is 10× slower than IM's (3.0s). Likely pm4py.play_out struggles with Alpha's non-free-choice structure.
+
+### Optimization: Merge replay calls
+
+The three replay-based metrics (arc flow, Gini, token variance) share the same `token_replay.apply()` call. Merging cuts replay cost from 319s to ~110s (65% reduction). Gen_Struct_v2 requires only ArcFlow + Gini from replay, making the merge straightforward.
+---
+
+## 6. Recommendations
+
+### 6.1 Which Metrics to Keep — Updated
 
 | Metric | Type | Keep? | Role |
 |---|---|---|---|
@@ -287,7 +318,7 @@ Alpha's normalized cross-connectivity (0.088) is 3.4× Heuristics' (0.026) and 4
 | XOR Entropy | — | ❌ Drop | No signal |
 | Density | — | ❌ Drop | Calibration-dependent |
 
-### 5.2 Proposed Gen_Struct_v2
+### 6.2 Proposed Gen_Struct_v2
 
 Four-dimensional formula incorporating the best discriminators:
 
@@ -300,8 +331,37 @@ $$GenStruct_{v2} = 0.35 \cdot ArcFlow + 0.20 \cdot (1 - Gini) + 0.20 \cdot (1 - 
 | Alpha | 0.331 | 0.132 | 0.000 | 0.171 | **0.634** | 0.946 |
 
 Alpha drops from 0.946 → 0.634 (corrected for underfitting via reachability). IM maintains lead with balanced scores across all four dimensions. Heuristics penalized by high Gini + high cyclomatic complexity.
+### 6.3 Runtime Comparison: Gen_Struct v1 vs v2 vs Full Hybrid
 
-### 5.3 The K-Fold CV Finding
+Per-miner runtime estimates based on measured timings:
+
+| Component | IM | Heuristics | Alpha | Notes |
+|---|---|---|---|---|
+| Model Discovery | 44.8s | 1.4s | 0.4s | One-time per experiment |
+| Single token_replay | ~48s | ~44s | ~18s | Core replay cost per replay call |
+| Reachable Arc BFS | 0.1s | 0.1s | 0.1s | Near-free |
+| Cyclomatic + Block-Struct + Cross-Conn | 0.3s | <0.1s | <0.1s | Near-free |
+
+**Per-miner runtime comparison:**
+
+| Metric | Components | IM | Heuristics | Alpha | Total |
+|---|---|---|---|---|---|
+| **Gen_Struct v1** (current) | Discovery + 1 replay | 92.6s | 45.1s | 18.0s | **155.7s** |
+| **Gen_Struct v2** (merged) | Discovery + 1 replay + BFS + cyclo | 94.9s | 46.5s | 18.5s | **159.9s** |
+| **Full Hybrid** (Gen_Struct + Gen_Shadow, K=5) | Discovery + 6 replays | 332.8s | 265.4s | 108.4s | **706.6s** |
+
+**Key insight**: Gen_Struct_v2 adds only **~4s overhead** (3%) compared to v1, while providing four discriminative dimensions instead of one. The full hybrid experiment (Gen_Struct + Gen_Shadow with 5 iterations) costs 4.4× more because each shadow log replay is as expensive as the structural replay.
+
+**Per-experiment total runtime (3 miners):**
+
+| Experiment | Total Time | Relative |
+|---|---|---|
+| Gen_Struct v1 (arc flow only) | ~2.6 min | 1.0× |
+| Gen_Struct v2 (arc flow + Gini + reach + cyclo) | ~2.7 min | **1.03×** |
+| Full Hybrid (struct + shadow, K=5) | ~11.8 min | 4.5× |
+| All 11 metrics (this analysis) | ~12.8 min | 4.9× |
+
+### 6.4 The K-Fold CV Finding
 
 The most important result: **zero drop-off for all miners**. This does NOT mean the metrics failed — it means BPI 2017's process is genuinely learnable. The 15,930 unique variants are not random; they are structured combinations of a well-defined loan approval process. IM achieves 1.0000 fitness on both train and test because it captures the complete process logic, not because it memorized traces.
 
@@ -309,7 +369,7 @@ Future work: apply these metrics to a log with known overfitting (e.g., a synthe
 
 ---
 
-## 6. Conclusion
+## 7. Conclusion
 
 | Question | Answer |
 |---|---|
@@ -321,4 +381,6 @@ Future work: apply these metrics to a log with known overfitting (e.g., a synthe
 | Does simulation coverage work? | **Needs refinement** — exact-match overlap is too strict; use n-gram overlap instead |
 | Recommended Gen_Struct_v2? | 0.35×ArcFlow + 0.20×(1−Gini) + 0.20×(1−Reach) + 0.25×(1−CycloNorm) |
 | Key takeaway | BPI 2017 is a well-structured process that all miners generalize to; the metrics correctly identify this |
+
+---
 

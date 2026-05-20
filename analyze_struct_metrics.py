@@ -603,35 +603,56 @@ def main():
     all_advanced = {}        # Cyclomatic, block-structured, cross-connectivity
     all_kfold = {}           # K-fold CV results
     all_simulation = {}      # Simulation coverage
+    all_timings = {}         # Per-metric timing records
     
     for miner_name, miner_fn in MINERS.items():
         t0 = time.time()
         net, im, fm = miner_fn(event_log)
+        model_discovery_time = time.time() - t0
+        
+        timings = {"model_discovery": model_discovery_time}
         
         # Pure structural metrics
+        t1 = time.time()
         metrics = compute_structural_metrics(net)
+        timings["structural_5"] = time.time() - t1
         
         # Advanced structural metrics (no replay)
         advanced = {}
+        t1 = time.time()
         advanced["cyclomatic"] = compute_cyclomatic_complexity(net)
+        timings["cyclomatic"] = time.time() - t1
+        t1 = time.time()
         advanced["block_struct"] = compute_block_structured_ratio(net, im, fm)
+        timings["block_struct"] = time.time() - t1
+        t1 = time.time()
         advanced["cross_conn"] = compute_cross_connectivity(net)
+        timings["cross_conn"] = time.time() - t1
         
         # Replay-based metrics
         replay = {}
+        t1 = time.time()
         replay["arc_flow"] = compute_arc_flow_density(event_log, net, im, fm)
+        timings["arc_flow"] = time.time() - t1
+        t1 = time.time()
         replay["transition"] = compute_transition_activation(event_log, net, im, fm)
+        timings["transition_gini"] = time.time() - t1
+        t1 = time.time()
         replay["token_var"] = compute_place_token_variance(event_log, net, im, fm)
+        timings["token_var"] = time.time() - t1
         
         # Reachable arc ratio
         print(f"       Computing reachable arc ratio for {miner_name} (max_depth=12)...")
+        t1 = time.time()
         path_cov = compute_path_coverage(event_log, net, im, fm, max_depth=12)
+        timings["reachable_arc"] = time.time() - t1
         
         metrics["runtime_s"] = time.time() - t0
         all_metrics[miner_name] = metrics
         all_advanced[miner_name] = advanced
         all_replay[miner_name] = replay
         all_path_coverage[miner_name] = path_cov
+        all_timings[miner_name] = timings
         print(f"  {miner_name:<25} | {metrics['n_places']:>4}P {metrics['n_trans']:>4}T {metrics['n_arcs']:>4}A | {metrics['runtime_s']:.1f}s")
     
     # ── K-Fold Cross-Validation (expensive: 2×K model discoveries per miner) ──
@@ -639,7 +660,9 @@ def main():
     KFOLD_K = 3
     for miner_name, miner_fn in MINERS.items():
         print(f"       K-Fold CV for {miner_name}...")
+        t1 = time.time()
         all_kfold[miner_name] = compute_kfold_cv_fitness(event_log, miner_fn, k=KFOLD_K, seed=42)
+        all_timings[miner_name]["kfold_cv"] = time.time() - t1
         kf = all_kfold[miner_name]
         print(f"         Train={kf['train_fitness_mean']:.4f} → Test={kf['test_fitness_mean']:.4f} | Drop-off={kf['drop_off_pct']:.1f}%")
     
@@ -647,7 +670,9 @@ def main():
     print("\n[2.6] Computing Simulation Coverage (5000 random walks per model)...")
     for miner_name, miner_fn in MINERS.items():
         net, im, fm = miner_fn(event_log)
+        t1 = time.time()
         all_simulation[miner_name] = compute_simulation_coverage(event_log, net, im, fm, n_sim=5000, seed=42)
+        all_timings[miner_name]["simulation"] = time.time() - t1
         sim = all_simulation[miner_name]
         print(f"       {miner_name}: {sim['n_sim_unique']} unique traces, {sim['overlap_count']} in-log ({sim['overlap_ratio']:.1%}), {sim['novel_count']} novel ({sim['novel_ratio']:.1%})")
     
@@ -762,6 +787,57 @@ def main():
         else:
             verdict = "⚠️ Moderate"
         print(f"  {name:<25} | {sim['n_sim_unique']:>10} | {sim['overlap_count']:>7} | {sim['novel_count']:>6} | {sim['overlap_ratio']:>6.1%} | {sim['novel_ratio']:>6.1%} | {verdict:>18}")
+    
+    # Table 9: Runtime Report
+    print(f"\n{'─' * 90}")
+    print(f"  ⏱️  Runtime Report (seconds)")
+    print(f"{'─' * 90}")
+    
+    metric_names = [
+        ("Model Discovery", "model_discovery"),
+        ("5 Structural Metrics", "structural_5"),
+        ("Cyclomatic", "cyclomatic"),
+        ("Block-Struct", "block_struct"),
+        ("Cross-Conn", "cross_conn"),
+        ("Arc Flow Density", "arc_flow"),
+        ("Transition Gini", "transition_gini"),
+        ("Token Variance", "token_var"),
+        ("Reachable Arc BFS", "reachable_arc"),
+        ("K-Fold CV (k=3)", "kfold_cv"),
+        ("Simulation (5k)", "simulation"),
+    ]
+    
+    # Print header
+    header = "  " + f"{'Metric':<25}"
+    for name in MINERS:
+        header += f" | {name.split('(')[0].strip():>12}"
+    header += f" | {'Total':>8}"
+    print(header)
+    print(f"  {'─' * (30 + 15 * len(MINERS))}")
+    
+    total_per_col = {name: 0.0 for name in MINERS}
+    for label, key in metric_names:
+        row = f"  {label:<25}"
+        row_total = 0.0
+        for name in MINERS:
+            t = all_timings[name].get(key, 0)
+            row_total += t
+            total_per_col[name] += t
+            row += f" | {t:>11.1f}s"
+        row += f" | {row_total:>7.1f}s"
+        print(row)
+    
+    # Total row
+    total_row = f"  {'─' * (30 + 15 * len(MINERS))}"
+    print(total_row)
+    row = f"  {'TOTAL':<25}"
+    grand_total = 0.0
+    for name in MINERS:
+        t = total_per_col[name]
+        grand_total += t
+        row += f" | {t:>11.1f}s"
+    row += f" | {grand_total:>7.1f}s"
+    print(row)
     
     print(f"\n{'=' * 90}\n")
 
