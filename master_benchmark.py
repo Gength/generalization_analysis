@@ -12,14 +12,17 @@ import pm4py
 from pm4py.algo.evaluation.generalization import algorithm as generalization_eval
 from pm4py.objects.petri_net.obj import PetriNet, Marking
 from pm4py.objects.petri_net.utils import petri_utils
+from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
 import shadow_alg_both as algo
 
 # ─── Configuration & Dataset Mapping ────────────────────────────────────────
 DATASETS = {
     "BPI_2017": "data/BPI-Challenge_2017/BPI Challenge 2017.xes.gz",
-    "BPI_2019": "data/BPI-Challenge_2019/BPI Challenge 2019.xes.gz",
-    "BPI_2020": "data/BPI-Challenge_2020/BPI Challenge 2020.xes.gz"
+    "BPI_2019": "data/BPI-Challenge_2019/BPI_Challenge_2019.xes.gz",
+    "Sepsis": "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz",
+    "Hospital_Billing": "data/Hospital Billing - Event Log_1_all/Hospital Billing - Event Log.xes.gz",
+    "Road_Traffic_Fine": "data/Road Traffic Fine Management Process_1_all/Road_Traffic_Fine_Management_Process.xes.gz"
 }
 
 # ─── Model Morphology Generators ────────────────────────────────────────────
@@ -84,9 +87,9 @@ MINERS = {
 # ─── Main Execution ─────────────────────────────────────────────────────────
 def run_master_benchmark():
     results = []
-    print("=" * 110)
-    print(" 🏆 EXTENDED PURE GENERALIZATION BENCHMARK (V1 vs V2 vs PM4Py)")
-    print("=" * 110)
+    print("=" * 125)
+    print(" 🏆 EXTENDED BENCHMARK (Fitness vs V1 vs V2 vs PM4Py Gen)")
+    print("=" * 125)
     
     for ds_name, path in DATASETS.items():
         print(f"\n📁 Dataset: {ds_name}")
@@ -100,10 +103,17 @@ def run_master_benchmark():
             clean_miner_name = miner_name.split('_')[-1]
             print(f"   ⚙️ Evaluating: {clean_miner_name}...")
             
-            # 1. Discover Model (THIS WAS MISSING!)
+            # 1. Discover Model
             net, im, fm = miner_fn(log)
             
-            # 2. PM4Py Baseline
+            # 2. PM4Py Original Log Fitness (How well does it replay the PAST?)
+            try:
+                fit_res = replay_fitness.apply(log, net, im, fm, variant=replay_fitness.Variants.TOKEN_BASED)
+                pm4py_fitness = fit_res['log_fitness']
+            except Exception:
+                pm4py_fitness = 0.0
+            
+            # 3. PM4Py Baseline Generalization
             t_pm4py_start = time.time()
             try:
                 pm4py_gen = generalization_eval.apply(log, net, im, fm)
@@ -111,25 +121,20 @@ def run_master_benchmark():
                 pm4py_gen = 0.0 
             t_pm4py_end = time.time()
                 
-            # 3. Gen_Shadow V1 (1-gram) -> We simulate V1 by setting max_n=1
+            # 4. Gen_Shadow V1 (1-gram)
             t_v1_start = time.time()
-            v1_results = algo.calculate_gen_shadow_stable(
-                log, net, im, fm, num_traces=500, iterations=3, safe_threshold=5, max_n=1
-            )
-            v1_shadow = v1_results[0] # Grab the 'overall_mean' from the tuple
+            v1_shadow = algo.calculate_gen_shadow_stable(log, net, im, fm, num_traces=500, iterations=3, safe_threshold=5, max_n=1)[0]
             t_v1_end = time.time()
             
-            # 4. Gen_Shadow V2 (6-gram Katz Backoff) -> max_n=6
+            # 5. Gen_Shadow V2 (6-gram Katz Backoff)
             t_v2_start = time.time()
-            v2_results = algo.calculate_gen_shadow_stable(
-                log, net, im, fm, num_traces=500, iterations=3, safe_threshold=5, max_n=6
-            )
-            v2_shadow = v2_results[0] # Grab the 'overall_mean' from the tuple
+            v2_shadow = algo.calculate_gen_shadow_stable(log, net, im, fm, num_traces=500, iterations=3, safe_threshold=5, max_n=6)[0]
             t_v2_end = time.time()
             
             results.append({
                 "Dataset": ds_name,
                 "Miner": clean_miner_name, 
+                "PM4Py_Fitness": round(pm4py_fitness, 4),    # <--- ADDED!
                 "PM4Py_Baseline": round(pm4py_gen, 4),
                 "Gen_Shadow_V1": round(v1_shadow, 4),
                 "Gen_Shadow_V2": round(v2_shadow, 4),
@@ -140,14 +145,14 @@ def run_master_benchmark():
 
     # Output Results
     df = pd.DataFrame(results)
-    print("\n" + "=" * 110)
+    print("\n" + "=" * 125)
     print(" 📊 FINAL BENCHMARK RESULTS")
-    print("=" * 110)
+    print("=" * 125)
     print(df.to_string(index=False))
-    print("=" * 110)
+    print("=" * 125)
     
-    df.to_csv("master_benchmark_results.csv", index=False)
-    print("\n✅ Saved to 'master_benchmark_results.csv'")
+    df.to_csv("master_benchmark_results_with_fitness.csv", index=False)
+    print("\n✅ Saved to 'master_benchmark_results_with_fitness.csv'")
 
 if __name__ == "__main__":
     run_master_benchmark()
