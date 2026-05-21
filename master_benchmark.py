@@ -1,20 +1,22 @@
 """
-Pure Generalization Benchmark (Extended)
-========================================
-Evaluates Gen_Shadow V1, Gen_Shadow V2, and PM4Py Baseline across 
-multiple datasets, detailed model morphologies, and profiles runtime.
+Generalization Benchmark — Multi-Algorithm, Multi-Dataset.
+
+Benchmarks v1 / v2 / v2.1 / v2.2 across datasets, recording:
+  - PM4Py Fitness (original log replay)
+  - PM4Py Baseline Generalization
+  - Gen_Shadow and Gen_Struct for each algorithm version
 """
 
 import time
 import os
 import pandas as pd
 import pm4py
-from pm4py.algo.evaluation.generalization import algorithm as generalization_eval
 from pm4py.objects.petri_net.obj import PetriNet, Marking
 from pm4py.objects.petri_net.utils import petri_utils
+from pm4py.algo.evaluation.generalization import algorithm as generalization_eval
 from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
-import shadow_alg_both as algo
+from HybridGen.algorithm import load_algorithm
 
 # ─── Configuration & Dataset Mapping ────────────────────────────────────────
 DATASETS = {
@@ -24,7 +26,16 @@ DATASETS = {
     "Hospital_Billing": "data/Hospital Billing - Event Log_1_all/Hospital Billing - Event Log.xes.gz",
     "Road_Traffic_Fine": "data/Road Traffic Fine Management Process_1_all/Road_Traffic_Fine_Management_Process.xes.gz"
 }
-
+# v1: DFG-based, no max_n. v2/v2.1/v2.2: N-gram, tested at N=3 and N=6.
+ALGORITHMS = {
+    "v1":    {"name": "v1",  "max_n": None, "label": "DFG + Good-Turing"},
+    "v2_N=3":    {"name": "v2",  "max_n": 3,    "label": "N-gram v2 + Katz"},
+    "v2_N=6":    {"name": "v2",  "max_n": 6,    "label": "N-gram v2 + Katz"},
+    "v2.1_N=3":  {"name": "v21", "max_n": 3,    "label": "N-gram v2.1 + Katz"},
+    "v2.1_N=6":  {"name": "v21", "max_n": 6,    "label": "N-gram v2.1 + Katz"},
+    "v2.2_N=3":  {"name": "v22", "max_n": 3,    "label": "N-gram v2.2 + Gen_Struct"},
+    "v2.2_N=6":  {"name": "v22", "max_n": 6,    "label": "N-gram v2.2 + Gen_Struct"},
+}
 # ─── Model Morphology Generators ────────────────────────────────────────────
 def discover_flower_model(log):
     net = PetriNet("Flower Model")
@@ -84,75 +95,96 @@ MINERS = {
     "09_Flower Model (Max)": discover_flower_model
 }
 
-# ─── Main Execution ─────────────────────────────────────────────────────────
+
+
+def is_event_log(obj):
+    return hasattr(obj, '__iter__') and not isinstance(obj, pd.DataFrame)
+
+
 def run_master_benchmark():
     results = []
-    print("=" * 125)
-    print(" 🏆 EXTENDED BENCHMARK (Fitness vs V1 vs V2 vs PM4Py Gen)")
-    print("=" * 125)
-    
-    for ds_name, path in DATASETS.items():
-        print(f"\n📁 Dataset: {ds_name}")
-        if not os.path.exists(path):
-            print(f"   ⚠️ Skipping {ds_name} - File not found")
-            continue
-            
-        log = pm4py.read_xes(path)
-        
-        for miner_name, miner_fn in MINERS.items():
-            clean_miner_name = miner_name.split('_')[-1]
-            print(f"   ⚙️ Evaluating: {clean_miner_name}...")
-            
-            # 1. Discover Model
-            net, im, fm = miner_fn(log)
-            
-            # 2. PM4Py Original Log Fitness (How well does it replay the PAST?)
-            try:
-                fit_res = replay_fitness.apply(log, net, im, fm, variant=replay_fitness.Variants.TOKEN_BASED)
-                pm4py_fitness = fit_res['log_fitness']
-            except Exception:
-                pm4py_fitness = 0.0
-            
-            # 3. PM4Py Baseline Generalization
-            t_pm4py_start = time.time()
-            try:
-                pm4py_gen = generalization_eval.apply(log, net, im, fm)
-            except Exception:
-                pm4py_gen = 0.0 
-            t_pm4py_end = time.time()
-                
-            # 4. Gen_Shadow V1 (1-gram)
-            t_v1_start = time.time()
-            v1_shadow = algo.calculate_gen_shadow_stable(log, net, im, fm, num_traces=500, iterations=3, safe_threshold=5, max_n=1)[0]
-            t_v1_end = time.time()
-            
-            # 5. Gen_Shadow V2 (6-gram Katz Backoff)
-            t_v2_start = time.time()
-            v2_shadow = algo.calculate_gen_shadow_stable(log, net, im, fm, num_traces=500, iterations=3, safe_threshold=5, max_n=6)[0]
-            t_v2_end = time.time()
-            
-            results.append({
-                "Dataset": ds_name,
-                "Miner": clean_miner_name, 
-                "PM4Py_Fitness": round(pm4py_fitness, 4),    # <--- ADDED!
-                "PM4Py_Baseline": round(pm4py_gen, 4),
-                "Gen_Shadow_V1": round(v1_shadow, 4),
-                "Gen_Shadow_V2": round(v2_shadow, 4),
-                "PM4Py_Time_s": round(t_pm4py_end - t_pm4py_start, 2),
-                "V1_Time_s": round(t_v1_end - t_v1_start, 2),
-                "V2_Time_s": round(t_v2_end - t_v2_start, 2)
-            })
+    print("=" * 130)
+    print("  BENCHMARK: Gen_Shadow + Gen_Struct across v1/v2/v2.1/v2.2")
+    print("=" * 130)
 
-    # Output Results
+    for ds_name, path in DATASETS.items():
+        print(f"\nDataset: {ds_name}")
+        if not os.path.exists(path):
+            print(f"  Skipping - file not found: {path}")
+            continue
+
+        log = pm4py.read_xes(path)
+        log = pm4py.convert_to_event_log(log)
+        print(f"  Loaded: {len(log)} traces, {sum(len(t) for t in log)} events")
+
+        for miner_label, miner_fn in MINERS.items():
+            print(f"  Miner: {miner_label}...")
+
+            t0 = time.time()
+            net, im, fm = miner_fn(log)
+            discovery_time = time.time() - t0
+
+
+            fit_res = replay_fitness.apply(log, net, im, fm, variant=replay_fitness.Variants.TOKEN_BASED)
+            pm4py_fitness = fit_res['log_fitness']
+
+
+            t1 = time.time()
+
+            pm4py_gen = generalization_eval.apply(log, net, im, fm)
+
+            pm4py_time = time.time() - t1
+
+            row = {
+                "Dataset": ds_name, "Miner": miner_label,
+                "PM4Py_Fitness": round(pm4py_fitness, 4),
+                "PM4Py_Baseline_Gen": round(pm4py_gen, 4),
+                "PM4Py_Time_s": round(pm4py_time, 2),
+                "Discovery_Time_s": round(discovery_time, 1),
+            }
+
+            for algo_key, algo_cfg in ALGORITHMS.items():
+                algo_mod = load_algorithm(algo_cfg["name"])
+                mn = algo_cfg["max_n"]  # None for v1, 3/6 for v2+
+
+                t1 = time.time()
+
+                gs = algo_mod.calculate_gen_struct(log, net, im, fm)
+
+                struct_time = time.time() - t1
+
+                t1 = time.time()
+
+                kwargs = dict(event_log=log, net=net, im=im, fm=fm,
+                                num_traces=500, iterations=3)
+                if mn is not None:
+                    kwargs["max_n"] = mn
+                shadow_mean, shadow_std, _ = algo_mod.calculate_gen_shadow_stable(**kwargs)[:3]
+
+                shadow_time = time.time() - t1
+
+                row[f"{algo_key}_Gen_Struct"] = round(gs, 4)
+                row[f"{algo_key}_Gen_Shadow"] = round(shadow_mean, 4)
+                row[f"{algo_key}_Struct_Time"] = round(struct_time, 1)
+                row[f"{algo_key}_Shadow_Time"] = round(shadow_time, 1)
+            print(row)
+            results.append(row)
+
     df = pd.DataFrame(results)
-    print("\n" + "=" * 125)
-    print(" 📊 FINAL BENCHMARK RESULTS")
-    print("=" * 125)
-    print(df.to_string(index=False))
-    print("=" * 125)
-    
-    df.to_csv("master_benchmark_results_with_fitness.csv", index=False)
-    print("\n✅ Saved to 'master_benchmark_results_with_fitness.csv'")
+    print("\n" + "=" * 130)
+    print("  RESULTS")
+    print("=" * 130)
+
+    key_cols = ["Dataset", "Miner", "PM4Py_Fitness"]
+    for algo_key in ALGORITHMS:
+        key_cols += [f"{algo_key}_Gen_Struct", f"{algo_key}_Gen_Shadow"]
+    print(df[key_cols].to_string(index=False))
+
+    out_path = "master_benchmark_results.csv"
+    df.to_csv(out_path, index=False)
+    print(f"\nSaved to {out_path}")
+    return df
+
 
 if __name__ == "__main__":
     run_master_benchmark()
