@@ -1,8 +1,22 @@
 """
-HybridGen Algorithm v2.2 — Gen_Struct v2.
+HybridGen Algorithm v2.2 EVAL — Gen_Struct v2 with all intermediate dimensions exposed.
+
+Same as v2.2 but calculate_gen_struct returns a dict with ALL raw dimension scores
+(ArcFlow, Gini, Reach, Cyclo) for offline coefficient tuning.
 
 Shadow log: N-gram + Katz Backoff (same as v2.1).
 Gen_Struct: multi-dimensional (ArcFlow + Gini + Reach + Cyclo).
+
+Return dict structure:
+  gen_struct       - final weighted score (same as v22)
+  arc_flow_score   - 0..1, replay arc usage density
+  gini_score       - 0..1, 1 - Gini(transition activation)
+  reach_score      - 0..1, 1 - reachable_arc_ratio
+  cyclo_score      - 0..1, 1 - normalized_cyclomatic
+  arc_flow_raw     - rare_arcs, total_arcs, num_traces
+  gini_raw         - raw Gini coefficient, n_transitions_used
+  reach_raw        - reachable_arcs, total_arcs
+  cyclo_raw        - n_places, n_trans, n_arcs, cyclomatic
 """
 
 import random
@@ -343,14 +357,43 @@ def calculate_gen_struct(event_log, net, initial_marking, final_marking):
     cyclo_score = 1.0 - cyclo_norm  # invert: lower complexity = better
     
     # ── 6. Weighted combination ─────────────────────────────────────
-    gen_struct = (
+    gen_struct = max(0.0, min(1.0, (
         0.35 * arc_flow_score +
         0.20 * gini_score +
         0.20 * reach_score +
         0.25 * cyclo_score
-    )
+    )))
     
-    return max(0.0, min(1.0, gen_struct))
+    # ── 7. Return ALL dimensions for offline analysis ───────────────
+    return {
+        "gen_struct":       gen_struct,
+        "arc_flow_score":   round(arc_flow_score, 6),
+        "gini_score":       round(gini_score, 6),
+        "reach_score":      round(reach_score, 6),
+        "cyclo_score":      round(cyclo_score, 6),
+        # Raw values for potential reweighting
+        "arc_flow_raw": {
+            "rare_arcs":   rare_arcs,
+            "total_arcs":  total_arcs,
+            "num_traces":  num_traces,
+        },
+        "gini_raw": {
+            "gini":               round(gini, 6),
+            "n_transitions_used": n,
+        },
+        "reach_raw": {
+            "reachable_arcs": len(reachable_arcs),
+            "total_arcs":     total_arcs,
+            "reach_ratio":    round(reach_ratio, 6),
+        },
+        "cyclo_raw": {
+            "n_places":    n_places,
+            "n_trans":     n_trans,
+            "n_arcs":      n_arcs,
+            "cyclomatic":  cyclomatic,
+            "cyclo_norm":  round(cyclo_norm, 6),
+        },
+    }
 
 # =====================================================================
 # 3. Core Evaluation Orchestrator
@@ -374,8 +417,9 @@ def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=100
     #2. Execute the process discovery algorithm provided
     net, im, fm = miner_fn(event_log)
     
-    #3. Calculate gen_struct
-    gen_struct = calculate_gen_struct(event_log, net, im, fm)
+    #3. Calculate gen_struct (v22_eval returns dict)
+    gs_result = calculate_gen_struct(event_log, net, im, fm)
+    gen_struct = gs_result["gen_struct"] if isinstance(gs_result, dict) else gs_result
     
     #4. Calculate gen_shadow
     # Using safe_threshold=5 optimal for sparse, highly variable logs like BPI 2017
@@ -417,4 +461,4 @@ def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=100
 # HybridGen Registry
 # =====================================================================
 from . import register_algorithm
-register_algorithm("v22")
+register_algorithm("v22_eval")

@@ -11,7 +11,11 @@ from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
 # Increase recursion depth slightly just to be safe with long traces
 # sys.setrecursionlimit(2000)
-
+__all__ = [
+    "calculate_gen_shadow_stable", 
+    "calculate_gen_struct",
+    "evaluate_miner",
+    ]
 # =====================================================================
 # 1. Generative Behavioral Analysis (Gen_shadow) with DFS & Katz Backoff
 # =====================================================================

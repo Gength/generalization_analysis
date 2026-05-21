@@ -8,7 +8,11 @@ from pm4py.objects.log.obj import EventLog, Trace, Event
 from pm4py.algo.conformance.tokenreplay import algorithm as token_replay
 from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
-
+__all__ = [
+    "calculate_gen_shadow_stable", 
+    "calculate_gen_struct",
+    "evaluate_miner",
+    ]
 #1. Generative Behavioral Analysis (Gen_shadow)
 
 def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100):

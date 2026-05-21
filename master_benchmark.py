@@ -33,9 +33,13 @@ ALGORITHMS = {
     "v2_N=6":    {"name": "v2",  "max_n": 6,    "label": "N-gram v2 + Katz"},
     "v2.1_N=3":  {"name": "v21", "max_n": 3,    "label": "N-gram v2.1 + Katz"},
     "v2.1_N=6":  {"name": "v21", "max_n": 6,    "label": "N-gram v2.1 + Katz"},
-    "v2.2_N=3":  {"name": "v22", "max_n": 3,    "label": "N-gram v2.2 + Gen_Struct"},
-    "v2.2_N=6":  {"name": "v22", "max_n": 6,    "label": "N-gram v2.2 + Gen_Struct"},
+    "v2.2_N=3":  {"name": "v22_eval", "max_n": 3,    "label": "N-gram v2.2 + Gen_Struct"},
+    "v2.2_N=6":  {"name": "v22_eval", "max_n": 6,    "label": "N-gram v2.2 + Gen_Struct"},
 }
+
+# v2.2 intermediate dimensions (populated when algo returns dict)
+STRUCT_DIMS = ["arc_flow_score", "gini_score", "reach_score", "cyclo_score"]
+
 # ─── Model Morphology Generators ────────────────────────────────────────────
 def discover_flower_model(log):
     net = PetriNet("Flower Model")
@@ -149,9 +153,23 @@ def run_master_benchmark():
 
                 t1 = time.time()
 
-                gs = algo_mod.calculate_gen_struct(log, net, im, fm)
+                gs_result = algo_mod.calculate_gen_struct(log, net, im, fm)
 
                 struct_time = time.time() - t1
+
+                # Handle dict return (v22_eval) vs float return (v1/v2/v21)
+                if isinstance(gs_result, dict):
+                    gs = gs_result["gen_struct"]
+                    # Store all intermediate dimensions
+                    for dim in STRUCT_DIMS:
+                        row[f"{algo_key}_Struct_{dim}"] = round(gs_result.get(dim, 0), 4)
+                    # Also store raw values for potential reweighting
+                    for raw_key in ["arc_flow_raw", "gini_raw", "reach_raw", "cyclo_raw"]:
+                        if raw_key in gs_result:
+                            for rk, rv in gs_result[raw_key].items():
+                                row[f"{algo_key}_Raw_{rk}"] = rv
+                else:
+                    gs = gs_result
 
                 t1 = time.time()
 
@@ -167,7 +185,6 @@ def run_master_benchmark():
                 row[f"{algo_key}_Gen_Shadow"] = round(shadow_mean, 4)
                 row[f"{algo_key}_Struct_Time"] = round(struct_time, 1)
                 row[f"{algo_key}_Shadow_Time"] = round(shadow_time, 1)
-            print(row)
             results.append(row)
 
     df = pd.DataFrame(results)
