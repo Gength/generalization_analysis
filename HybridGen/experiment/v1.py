@@ -10,12 +10,18 @@ algo = None  # injected by load_experiment(name, algo)
 
 
 def parse_args():
-    p = utils.base_parse_args("Hybrid Gen-Struct Eval - v1 (DFG + Good-Turing)", output_dir_default="output")
+    _ver = algo.__name__.split('.')[-1] if algo else "v1"       # v1, v2, v21
+    p = utils.base_parse_args(
+        f"Hybrid Gen-Struct Eval - {_ver} (DFG + Good-Turing)",
+        output_dir_default=f"output/{_ver}",
+    )
     return p.parse_args()
 
 
-def main():
-    args = parse_args()
+def main(args=None):
+    """Run experiment. If args is None, parse from CLI. Otherwise use provided Namespace."""
+    if args is None:
+        args = parse_args()
     t_start = time.time()
 
     active_miners = utils.resolve_miners(args.miner)

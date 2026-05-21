@@ -1,21 +1,24 @@
 """
 HybridGen: Hybrid Generative-Structural Generalization Evaluation.
 
-Usage:
-    from HybridGen.algorithm import load_algorithm
-    from HybridGen.experiment import load_experiment
+    CLI:
+        python -m HybridGen -a v2.1 -e v2 --miner all --weight 0.5
+        python -m HybridGen --list
 
-    algo = load_algorithm("v2.1")
-    exp  = load_experiment("v2", algo)
-    exp.main()
+    Python API:
+        from HybridGen.algorithm import load_algorithm
+        from HybridGen.experiment import load_experiment
 
-    # Or from CLI (auto-wires default algo):
-    #   python -m HybridGen.experiment.v2 --miner all --weight 0.5
+        algo = load_algorithm("v2.1")
+        exp  = load_experiment("v2", algo)
+        exp.main()                         # parse args from CLI
+        exp.main(args=namespace)            # or pass Namespace directly
+
+    Output directory defaults to ``output/{algorithm_version}``
+    (e.g., output/v21 for v2.1), overridable via ``--output-dir``.
 """
 
-# Import algorithm FIRST so registry is populated before experiment modules
-# try to call load_algorithm() at module level.
-from .algorithm import load_algorithm  # triggers algorithm module discovery
-from .experiment import load_experiment  # now safe
+from .algorithm import load_algorithm
+from .experiment import load_experiment
 
 __all__ = ["load_algorithm", "load_experiment"]
