@@ -1,3 +1,10 @@
+"""
+HybridGen Algorithm v2.2 — Gen_Struct v2.
+
+Shadow log: N-gram + Katz Backoff (same as v2.1).
+Gen_Struct: multi-dimensional (ArcFlow + Gini + Reach + Cyclo).
+"""
+
 import random
 import time
 import sys
@@ -246,55 +253,104 @@ def calculate_gen_shadow_stable(event_log, net, im, fm, num_traces, iterations=5
 
 def calculate_gen_struct(event_log, net, initial_marking, final_marking):
     """
-    Evaluates Structure (#OverfittingPenalty) via "Arc Flow Density".
-    Penalizes the model if it contains numerous rarely used arcs (Spaghetti Model).
+    Gen_Struct v2 — Multi-dimensional structural generalization.
+    
+    Combines four complementary dimensions:
+      ArcFlow  (0.35): replay-based arc usage density  (anti-overfit)
+      Gini     (0.20): transition activation equality   (anti-overfit)
+      Reach    (0.20): reachable arc ratio from BFS     (anti-underfit)
+      Cyclo    (0.25): normalized cyclomatic complexity (anti-spaghetti)
+    
+    Single token_replay shared by ArcFlow + Gini.
+    Reachable arc ratio and cyclomatic complexity are structural (no replay).
     """
 
-    #1. Replay the original log against the discovered model
+    # ── 1. Single token replay (shared by ArcFlow + Gini) ──────────
     replayed = token_replay.apply(event_log, net, initial_marking, final_marking)
-
-    #2. Initialize a counter for every arc in the Petri Net
-    arc_usage = {arc: 0 for arc in net.arcs}
+    num_traces = len(event_log)
     
-    #3. Track how many Traces use each arc
+    # ── 2. Arc Flow Density (existing metric) ──────────────────────
+    arc_usage = {arc: 0 for arc in net.arcs}
     for res in replayed:
         used_arcs = set()
-        
-        #Look at every transition that was fired to support this trace
         for t in res['activated_transitions']:
-            #Record the incoming and outgoing structural "wires" for that transition
             for arc in t.in_arcs:
                 used_arcs.add(arc)
             for arc in t.out_arcs:
                 used_arcs.add(arc)
-                
-        # Count an arc only once per trace
         for arc in used_arcs:
             arc_usage[arc] += 1
 
-    #Calculate the total number of structural wires in the model
     total_arcs = len(net.arcs)
-    
-    #Safety catch for completely broken or empty models
     if total_arcs == 0:
         return 0.0
-        
-    #4. Defining Bloat 
-    #An arc is "bloated" if it handles a negligible fraction of the log (i.e. 1%)
-    num_traces = len(event_log)
 
-    #We use max(2, ...) to ensure that paths created purely for a single outlier trace (count=1) are always penalized, regardless of how large the log is
     rare_threshold = max(2, int(num_traces * 0.01))
-
-    #Count how many arcs in the model fall below this usefulness threshold
-    rare_arcs = sum(1 for arc, count in arc_usage.items() if count < rare_threshold)
-
-    #5. Calculate the structural penalty
-    #i.e. If 80% of the model's arcs are only used to handle 1% of the exceptions, the overfit_penalty is 0.8
-    overfit_penalty = rare_arcs / total_arcs
-
-    #Ensure the score never drops below absolute 0
-    return max(0.0, 1.0 - overfit_penalty)
+    rare_arcs = sum(1 for count in arc_usage.values() if count < rare_threshold)
+    arc_flow_score = max(0.0, 1.0 - rare_arcs / total_arcs)
+    
+    # ── 3. Transition Activation Gini (from same replay) ───────────
+    from collections import Counter as _Counter
+    usage = _Counter()
+    for res in replayed:
+        fired = set(res['activated_transitions'])
+        for t in fired:
+            usage[t] += 1
+    
+    counts = sorted(usage.values())
+    n = len(counts)
+    gini = 0.0
+    if n > 0:
+        total = sum(counts)
+        if total > 0:
+            gini = (2 * sum((i + 1) * c for i, c in enumerate(counts))) / (n * total) - (n + 1) / n
+    gini_score = 1.0 - gini  # invert: low gini = uniform usage = better
+    
+    # ── 4. Reachable Arc Ratio (structural BFS, no replay) ─────────
+    from collections import deque as _deque
+    im_set = frozenset(initial_marking)
+    visited = {im_set: 0}
+    queue = _deque([(im_set, 0)])
+    reachable_arcs = set()
+    max_depth = 12
+    
+    while queue:
+        places, depth = queue.popleft()
+        if depth >= max_depth:
+            continue
+        for t in net.transitions:
+            t_inputs = frozenset(a.source for a in t.in_arcs)
+            if t_inputs.issubset(places):
+                for a in t.in_arcs:
+                    reachable_arcs.add(a)
+                for a in t.out_arcs:
+                    reachable_arcs.add(a)
+                nxt = frozenset((places - t_inputs) | frozenset(a.target for a in t.out_arcs))
+                if nxt not in visited:
+                    visited[nxt] = depth + 1
+                    queue.append((nxt, depth + 1))
+    
+    reach_ratio = len(reachable_arcs) / total_arcs if total_arcs > 0 else 1.0
+    reach_score = 1.0 - reach_ratio  # invert: low reachability = more latent structure = better
+    
+    # ── 5. Cyclomatic Complexity (structural, O(1)) ─────────────────
+    n_places = len(net.places)
+    n_trans = len(net.transitions)
+    n_arcs = len(net.arcs)
+    cyclomatic = max(0, n_arcs - n_places - n_trans + 2)
+    # Normalize: worst observed is 60 (Heuristics on BPI 2017), cap at 60
+    cyclo_norm = min(cyclomatic / 60.0, 1.0)
+    cyclo_score = 1.0 - cyclo_norm  # invert: lower complexity = better
+    
+    # ── 6. Weighted combination ─────────────────────────────────────
+    gen_struct = (
+        0.35 * arc_flow_score +
+        0.20 * gini_score +
+        0.20 * reach_score +
+        0.25 * cyclo_score
+    )
+    
+    return max(0.0, min(1.0, gen_struct))
 
 # =====================================================================
 # 3. Core Evaluation Orchestrator
@@ -361,4 +417,4 @@ def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=100
 # HybridGen Registry
 # =====================================================================
 from . import register_algorithm
-register_algorithm("v21")
+register_algorithm("v22")

@@ -10,14 +10,20 @@ algo = None  # injected by load_experiment(name, algo)
 
 
 def parse_args():
-    p = utils.base_parse_args("Hybrid Gen-Struct Eval - v2 (N-gram + Katz Backoff)", output_dir_default="output/v2")
+    _ver = algo.__name__.split('.')[-1] if algo else "v2"       # v2, v21
+    p = utils.base_parse_args(
+        f"Hybrid Gen-Struct Eval - {_ver} (N-gram + Katz Backoff)",
+        output_dir_default=f"output/{_ver}",
+    )
     p.add_argument("-n", "--max-n", type=int, default=3,
                    help="Maximum N-gram order. Backoff from max_n down to 1. Default: 3")
     return p.parse_args()
 
 
-def main():
-    args = parse_args()
+def main(args=None):
+    """Run experiment. If args is None, parse from CLI. Otherwise use provided Namespace."""
+    if args is None:
+        args = parse_args()
     t_start = time.time()
 
     active_miners = utils.resolve_miners(args.miner)
