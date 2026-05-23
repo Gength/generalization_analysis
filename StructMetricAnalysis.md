@@ -24,6 +24,19 @@ $$\text{Density} = \frac{|A|}{|P| \times |T|}$$
 
 $$\text{score} = e^{-(\text{density} - 0.2)^2 / 0.02}$$
 
+**Measured on BPI 2017**:
+
+| Miner | Density | Score |
+|---|---|---|
+| Flower Model | 2.0000 | 0.000 |
+| Alpha Miner | 0.1763 | 0.972 |
+| Heuristics Miner | 0.0519 | 0.334 |
+| Inductive Miner (IM) | 0.0385 | 0.271 |
+
+*Score = exp(−(d−0.2)²/0.02), higher = better.*
+
+**Assessment**: ⚠️ Calibration-dependent. Partially discriminative — Alpha (0.176) is an outlier, but IM (0.0385) and Heuristics (0.0519) are close. Density rises as model shrinks: Alpha's 0.176 is 3–4× denser than IM/Heuristics, approaching the "too simple" extreme. Flower's 2.0 (fully connected) is the opposite extreme. Can flag both underfitting and overfitting but requires careful thresholding.
+
 ### 1.2 Silent (τ) Transition Ratio
 
 Counts invisible transitions inserted by miners to route control flow, but which carry no semantic meaning.
@@ -33,6 +46,19 @@ $$\text{SilentRatio} = \frac{|\{\text{transitions with label = None}\}|}{|T|}$$
 **Penalty**: Linear — fewer silent transitions = higher score.
 
 $$\text{score} = 1.0 - \text{SilentRatio}$$
+
+**Measured on BPI 2017**:
+
+| Miner | Silent τ | Ratio | Score |
+|---|---|---|---|
+| Inductive Miner (IM) | 61/87 | 70.1% | 0.299 |
+| Heuristics Miner | 56/82 | 68.3% | 0.317 |
+| Alpha Miner | 0/26 | 0.0% | 1.000 |
+| Flower Model | 0/26 | 0.0% | 1.000 |
+
+*Score = 1 − SilentRatio, higher = better.*
+
+**Assessment**: ❌ IM ≈ Heuristics indistinguishable (70.1% vs 68.3%). Only discriminates vs Alpha/Flower (0% — they cannot express the routing complexity that requires silent transitions). ~70% of transitions are invisible τ-nodes in IM and Heuristics. This metric can detect extreme underfitting but cannot rank the two realistic miners.
 
 High silent ratios indicate the miner needed many "scaffolding" nodes to fit the log, a sign of overfitting. Silent transitions are a known weakness of Inductive Miner on complex logs.
 
@@ -46,6 +72,19 @@ $$\text{LabelDup} = \frac{|T|}{|\{\text{unique labels}\}|}$$
 
 $$\text{score} = 1.0 / \text{LabelDup}$$
 
+**Measured on BPI 2017**:
+
+| Miner | Label Dup | Score |
+|---|---|---|
+| Inductive Miner (IM) | 3.35× | 0.299 |
+| Heuristics Miner | 3.15× | 0.317 |
+| Alpha Miner | 1.00× | 1.000 |
+| Flower Model | 1.00× | 1.000 |
+
+*Score = 1/LabelDup, higher = better.*
+
+**Assessment**: ⚠️ Rewards underfitting. Only discriminates vs Alpha/Flower (perfect 1.00×). IM (3.35×) and Heuristics (3.15×) are close, indicating activity reuse across variant-specific branches. Alpha has perfect dup = 1.0, but only because it models so little — a false positive for generalization.
+
 ### 1.4 XOR-split Entropy
 
 For each place with $k > 1$ outgoing arcs, compute the entropy of a uniform split:
@@ -56,6 +95,21 @@ Higher entropy = more balanced branching = better generalization to unseen varia
 
 **Penalty**: Capped linear — $H_p / 3.0$, max 1.0 (3 bits ≈ 8-way balanced split).
 
+$$\text{score} = \min\left(\frac{H_p}{3.0},\ 1\right)$$
+
+**Measured on BPI 2017**:
+
+| Miner | XOR Entropy | Score |
+|---|---|---|
+| Flower Model | 4.70 | 1.000 |
+| Heuristics Miner | 1.63 | 0.543 |
+| Alpha Miner | 1.36 | 0.453 |
+| Inductive Miner (IM) | 1.13 | 0.377 |
+
+*Score = min(H/3.0, 1), higher = better.*
+
+**Assessment**: ❌ Non-discriminative (narrow 1.13–1.63 range among realistic miners). Flower's 4.70 is an outlier (26-way balanced split). Cannot distinguish IM vs Heuristics vs Alpha in practice.
+
 ### 1.5 Free-choice Ratio
 
 A place is **free-choice** if every outgoing transition has exactly one input place (pure XOR-split, no AND/XOR mixing). Non-free-choice constructs are harder to generalize.
@@ -63,6 +117,21 @@ A place is **free-choice** if every outgoing transition has exactly one input pl
 $$\text{FreeChoiceRatio} = \frac{|\{\text{free-choice places}\}|}{|P|}$$
 
 **Penalty**: None — ratio is used directly as score (higher = better).
+
+$$\text{score} = \text{FreeChoiceRatio}$$
+
+**Measured on BPI 2017**:
+
+| Miner | Free-Choice Ratio | Score |
+|---|---|---|
+| Flower Model | 100.0% | 1.000 |
+| Inductive Miner (IM) | 98.2% | 0.982 |
+| Heuristics Miner | 81.4% | 0.814 |
+| Alpha Miner | 58.3% | 0.583 |
+
+*Score = raw ratio (already [0,1]), higher = better.*
+
+**Assessment**: ✅ Best standalone structural metric. Correctly ranks IM (98.2%) > Heuristics (81.4%) ≫ Alpha (58.3%) and aligns with known model quality. Flower's 100% is trivially free-choice (single place). The only pure structural metric that cleanly separates all miners without misranking.
 
 ### 1.6 Cyclomatic Complexity (McCabe's Metric)
 
@@ -72,17 +141,91 @@ $$V(G) = |A| - |P| - |T| + 2$$
 
 Measures the number of linearly independent paths. Low (<10): simple. 10–30: moderate complexity. >30: high complexity, potential overfitting to log variants.
 
+**Penalty**: Linear normalization by worst observed complexity — higher complexity = lower score.
+
+$$\text{score} = 1 - \frac{V(G)}{\max(V(G))}, \quad \max(V(G)) = 60$$
+
+**Measured on BPI 2017**:
+
+| Miner | Places | Trans | Arcs | V(G) | Score |
+|---|---|---|---|---|---|
+| Inductive Miner (IM) | 55 | 87 | 184 | **44** | 0.267 |
+| Heuristics Miner | 43 | 82 | 183 | **60** | 0.000 |
+| Alpha Miner | 12 | 26 | 55 | **19** | 0.683 |
+| Flower Model | 1 | 26 | 52 | **27** | 0.550 |
+
+*Score = 1 − V(G)/max(V(G)), max=60, higher = better.*
+
+**Assessment**: Heuristics' V(G)=60 is 1.36× IM's 44 — confirming Heuristics creates the most independent paths by adding XOR-splits to differentiate log variants. Alpha's low V(G)=19 is misleading: it's simple because it *omits* behavior, not because it generalizes well. Flower's V(G)=27 is moderate but purely a function of 26 transitions in a fully-connected star topology.
+
 ### 1.7 Block-structured Ratio (Structuredness)
 
 Attempts to convert the Petri net to a Process Structure Tree (PST). If conversion succeeds: 100% block-structured (IM guarantees this). If it fails: heuristic based on free-choice place ratio. Higher = more logically coherent, fewer unexpected deadlocks or livelocks.
 
 $$\text{Structuredness} = \begin{cases} 1.0 & \text{if PST conversion succeeds} \\ \text{FreeChoiceRatio} & \text{otherwise (heuristic)} \end{cases}$$
 
-### 1.8 Cross-Connectivity
+**Measured on BPI 2017**:
+
+| Miner | PST Conversion | Structured Ratio | Score |
+|---|---|---|---|
+| Inductive Miner (IM) | ✅ Success | **100.0%** | 1.000 |
+| Flower Model | ✅ Success | **100.0%** | 1.000 |
+| Heuristics Miner | ❌ Failed | 81.4% | 0.814 |
+| Alpha Miner | ❌ Failed | 58.3% | 0.583 |
+
+*Score = raw ratio (already [0,1]), higher = better.*
+
+**Assessment**: IM's 100% is guaranteed by Inductive Miner's process tree representation. Flower Model's single-place net also trivially converts to a PST (100%). Heuristics at 81.4% and Alpha at 58.3% both fail PST conversion, indicating partially-to-fully unstructured crossing edges. This metric cleanly separates structured (IM, Flower) from unstructured miners (Heuristics, Alpha).
+
+### 1.8 Reachable Arc Ratio
+
+Performs BFS from the initial marking (depth-limited to 12 steps) to determine what fraction of all arcs is structurally reachable. Measures latent structural capacity.
+
+$$\text{ReachableArcRatio} = \frac{|\text{reachable arcs}|}{|A|}$$
+
+- **100% reachable**: All structure is directly accessible — model is trivially simple (underfit)
+- **~50% reachable**: ~half of arcs are structurally latent — model has generalization headroom
+- **Low reachability**: Model has deep latent structure representing unseen-but-plausible paths
+
+**Penalty**: Inverse — lower reachability = more latent generalization headroom = higher score.
+
+$$\text{score} = 1 - \text{ReachableArcRatio}$$
+
+**Measured on BPI 2017**:
+
+| Miner | Total Arcs | Reachable Arcs | Reach % | States Visited | Score |
+|---|---|---|---|---|---|
+| Inductive Miner (IM) | 184 | 96 | **52.2%** | 313 | 0.478 |
+| Heuristics Miner | 183 | 126 | 68.9% | 197 | 0.311 |
+| Alpha Miner | 55 | 55 | **100.0%** | 123 | 0.000 |
+| Flower Model | 52 | 52 | **100.0%** | 1 | 0.000 |
+
+*Score = 1 − ReachRatio, higher = better (lower reach = more generalization headroom).*
+
+**Assessment**: Strongly discriminative. Alpha's and Flower's 100% reachability confirms underfitting — every arc is directly accessible, leaving no latent capacity. IM's 52.2% is the sweet spot: ~48% of arcs are structurally present but not trivially reachable, representing generalization headroom. Heuristics' 68.9% is intermediate. Flower's 100% with only 1 state visited reveals its trivial topology (single place, all transitions in one step).
+
+### 1.9 Cross-Connectivity
 
 Proxy based on mean transition degree normalized by theoretical maximum (2 × |P|). High values = many long-distance edges = "Spaghetti" indicator (Mendling).
 
 $$\text{CrossConn} = \frac{\text{mean}(deg(t))}{2 \times |P|}$$
+
+**Penalty**: Inverse — lower cross-connectivity = less spaghetti-like structure = higher score.
+
+$$\text{score} = 1 - \text{CrossConn}$$
+
+**Measured on BPI 2017**:
+
+| Miner | Cross-Connectivity | Max Degree | Score |
+|---|---|---|---|
+| Flower Model | 1.0000 | 2 | 0.000 |
+| Alpha Miner | 0.0881 | 7 | 0.912 |
+| Heuristics Miner | 0.0260 | 3 | 0.974 |
+| Inductive Miner (IM) | 0.0192 | 5 | 0.981 |
+
+*Score = 1 − CrossConn, higher = better (lower connectivity = less spaghetti).*
+
+**Assessment**: Flower's 1.0000 is the theoretical maximum (every transition connects to the single place), confirming complete underfit. Among realistic miners, Alpha (0.088) is 3.4× higher than Heuristics (0.026) and 4.6× IM (0.019). Low cross-connectivity correlates with structural quality — IM's sparse connectivity reflects its well-organized process tree structure.
 
 ---
 
@@ -108,49 +251,69 @@ Generate $N$ random walks from the discovered model. Compare simulated traces to
 
 ## 3. Results
 
-### 2.1 Raw Structural Metrics
+### 3.1 Raw Structural Metrics
+
+#### 3.1.1 Basic Graph-Theoretic Metrics (§1.1–§1.5)
 
 | Miner | Places | Transitions | Arcs | Silent (τ) | Label Dup | Density | XOR Ent | Free-Choice |
 |---|---|---|---|---|---|---|---|---|
 | Inductive Miner (IM) | 55 | 87 | 184 | 61/87 (70.1%) | 3.35 | 0.0385 | 1.13 | 98.2% |
 | Heuristics Miner | 43 | 82 | 183 | 56/82 (68.3%) | 3.15 | 0.0519 | 1.63 | 81.4% |
 | Alpha Miner | 12 | 26 | 55 | 0/26 (0.0%) | 1.00 | 0.1763 | 1.36 | 58.3% |
+| Flower Model | 1 | 26 | 52 | 0/26 (0.0%) | 1.00 | 2.0000 | 4.70 | 100.0% |
 
-### 2.2 Per-Metric Assessment
+#### 3.1.2 Advanced Structural Metrics (§1.6–§1.9)
 
-| Metric | IM | Heuristics | Alpha | Discriminative? | Useful? |
+| Miner | Cyclomatic V(G) | Block-Structured | Reachable Arc % | Cross-Connectivity | States Visited (BFS) |
 |---|---|---|---|---|---|
-| Density | 0.0385 | 0.0519 | 0.1763 | Partially (α outlier) | ⚠️ Calibration-dependent |
-| Silent (τ) Ratio | 70.1% | 68.3% | 0.0% | Only vs Alpha | ❌ IM ≈ Heuristics indistinguishable |
-| Label Duplication | 3.35× | 3.15× | 1.00× | Only vs Alpha | ⚠️ Rewards underfitting |
-| XOR-split Entropy | 1.13 | 1.63 | 1.36 | No (narrow range) | ❌ Non-discriminative |
-| Free-choice Ratio | 98.2% | 81.4% | 58.3% | Yes (all three) | ✅ Best standalone metric |
+| Inductive Miner (IM) | **44** | **100.0%** (✅ PST) | **52.2%** | 0.0192 | 313 |
+| Heuristics Miner | **60** | 81.4% (❌ PST fail) | 68.9% | 0.0260 | 197 |
+| Alpha Miner | **19** | 58.3% (❌ PST fail) | **100.0%** | 0.0881 | 123 |
+| Flower Model | **27** | **100.0%** (✅ PST) | **100.0%** | 1.0000 | 1 |
 
-**Observations:**
+### 3.2 Per-Metric Assessment (Summary)
 
-- **Silent transitions dominate IM and Heuristics**: ~70% of transitions are invisible τ-nodes. Alpha uses none — because it cannot express the routing complexity that requires them. This metric can detect extreme underfitting but cannot rank the two realistic miners.
-- **Label duplication is high for both IM and Heuristics** (3.15–3.35×), indicating activity reuse across variant-specific branches. Alpha has perfect dup = 1.0, but only because it models so little — a false positive for generalization.
-- **Density rises as model shrinks**: Alpha's 0.176 is 3–4× denser than IM/Heuristics, approaching the "too simple" extreme. Can flag underfitting but requires careful thresholding.
-- **Free-choice ratio is the most discriminative standalone metric**: IM (98.2%) > Heuristics (81.4%) ≫ Alpha (58.3%). Correctly ranks all three miners and aligns with known model quality.
+*Detailed assessments with measured data have been distributed to the corresponding metric sections in Chapter 1 (§1.1–§1.9). See each metric's "Measured on BPI 2017" table and "Assessment" paragraph.*
+
+#### 3.2.1 Basic Graph-Theoretic Metrics (§1.1–§1.5)
+
+| Metric | IM | Heuristics | Alpha | Flower | Discriminative? | Verdict |
+|---|---|---|---|---|---|---|
+| Density (§1.1) | 0.0385 | 0.0519 | 0.1763 | 2.0000 | Partially (extremes stand out) | ⚠️ Calibration |
+| Silent Ratio (§1.2) | 70.1% | 68.3% | 0.0% | 0.0% | Only vs Alpha/Flower | ❌ IM≈Heuristics |
+| Label Duplication (§1.3) | 3.35× | 3.15× | 1.00× | 1.00× | Only vs Alpha/Flower | ⚠️ Rewards underfit |
+| XOR Entropy (§1.4) | 1.13 | 1.63 | 1.36 | 4.70 | Only Flower stands out | ❌ Non-discriminative |
+| Free-choice (§1.5) | 98.2% | 81.4% | 58.3% | 100.0% | Yes (all four) | ✅ Best standalone |
+
+#### 3.2.2 Advanced Structural Metrics (§1.6–§1.9)
+
+| Metric | IM | Heuristics | Alpha | Flower | Discriminative? | Verdict |
+|---|---|---|---|---|---|---|
+| Cyclomatic V(G) (§1.6) | 44 | 60 | 19 | 27 | Yes (IM vs Heuristics) | ✅ Good — Heuristics 1.36× IM |
+| Block-Structured (§1.7) | 100.0% | 81.4% | 58.3% | 100.0% | Yes (structured vs unstructured) | ✅ Good — clean separation |
+| Reachable Arc % (§1.8) | 52.2% | 68.9% | 100.0% | 100.0% | Yes (detects underfitting) | ✅ Core — unique signal |
+| Cross-Connectivity (§1.9) | 0.0192 | 0.0260 | 0.0881 | 1.0000 | Partially (Alpha anomalous) | ⚠️ Needs calibration |
 
 ---
 
-## 3. Key Finding: The Underfitting Blind Spot
+### 3.3 Key Finding: The Underfitting Blind Spot
 
 **Purely graph-theoretic metrics cannot distinguish between:**
 
 - **"Simple because well-generalized"** — a parsimonious model that captures the process essence
 - **"Simple because underfit"** — a model that omits essential behavior
 
-Alpha Miner scores highest on 4 out of 5 metrics (density, silent, label dup, XOR entropy), yet it is objectively the worst model (Gen_Total = 0.664 vs IM's 0.923). Every metric except free-choice ratio is fooled by Alpha's structural simplicity into awarding it the top score.
+Alpha Miner and Flower Model both score highest on 3 out of 5 basic metrics (density, silent, label dup; XOR entropy is won by Flower), yet they are the two worst models (Gen_Total = 0.664 and 0.534 respectively, vs IM's 0.923). The five basic metrics are fooled by structural simplicity into awarding top scores to underfit models. Only Free-choice Ratio correctly ranks all four miners among the basic set.
 
-**Conclusion**: Pure structural metrics alone are insufficient. They must be paired with log-driven validation.
+**Among the advanced structural metrics (§1.6–§1.9):** Reachable Arc Ratio uniquely identifies underfitting (Alpha & Flower = 100% reachable, IM = 52.2%). Cyclomatic Complexity correctly separates IM (44) from Heuristics (60) but misranks Alpha (19) as "simpler." Block-Structured Ratio cleanly separates structured (IM, Flower) from unstructured (Heuristics, Alpha) miners. Cross-Connectivity flags Flower (1.000) as extreme but is noisy among realistic miners.
+
+**Conclusion**: Pure structural metrics alone are insufficient. They must be paired with log-driven validation. Among the 10 structural metrics evaluated, Free-choice Ratio (§1.5), Reachable Arc Ratio (§1.8), and Block-Structured Ratio (§1.7) are the most discriminative standalone metrics.
 
 ---
 
-## 4. Evaluation of Replay-based Structural Methods
+## 4. Evaluation of Replay-based Methods
 
-Replay-based methods replay the original event log against the discovered model to measure *usage* of structural elements, not just their existence. We evaluate four approaches.
+Replay-based methods replay the original event log against the discovered model to measure *usage* of structural elements, not just their existence. (Structural methods Reachable Arc Ratio, Cyclomatic Complexity, Block-structured Ratio, and Cross-Connectivity are now in §1.8–§1.9 and §1.6–§1.7.)
 
 ### 4.1 Arc Flow Density (Current Gen_Struct)
 
@@ -158,13 +321,16 @@ Replay-based methods replay the original event log against the discovered model 
 
 **Measured on BPI 2017**:
 
-| Miner | Total Arcs | Rare Arcs (<1%) | Zero Arcs | Rare Arc % | Gen_Struct |
-|---|---|---|---|---|---|
-| Inductive Miner (IM) | 184 | 28 | 2 | 15.2% | 0.8478 |
-| Heuristics Miner | 183 | 46 | 5 | 25.1% | 0.7486 |
-| Alpha Miner | 55 | 3 | 0 | 5.5% | 0.9455 |
+| Miner | Total Arcs | Rare Arcs (<1%) | Zero Arcs | Rare Arc % | Gen_Struct | Score |
+|---|---|---|---|---|---|---|
+| Inductive Miner (IM) | 184 | 28 | 2 | 15.2% | 0.8478 | 0.8478 |
+| Heuristics Miner | 183 | 46 | 5 | 25.1% | 0.7486 | 0.7486 |
+| Alpha Miner | 55 | 3 | 0 | 5.5% | 0.9455 | 0.9455 |
+| Flower Model | 52 | 6 | 0 | 11.5% | 0.8846 | 0.8846 |
 
-**Assessment**: ✅ Effective against both Flower (many unused arcs) and Trace (single-trace arcs) models. Heuristics has 25.1% rare arcs — 1.65× IM's 15.2% — confirming its tendency toward path-specific overfitting. Alpha's 5.5% reflects its structural simplicity (few arcs total), not genuine generalization quality. The 2 zero-usage arcs in IM suggest dead code paths the model created but no trace ever traversed.
+*Score = Gen_Struct = 1 − (rare_arcs / total_arcs), higher = better.*
+
+**Assessment**: ✅ Effective against both Flower (many unused arcs) and Trace (single-trace arcs) models. Heuristics has 25.1% rare arcs — 1.65× IM's 15.2% — confirming its tendency toward path-specific overfitting. Alpha's 5.5% reflects its structural simplicity (few arcs total), not genuine generalization quality. Flower's 11.5% is moderate but misleading: all 52 arcs are trivially traversed. The 2 zero-usage arcs in IM suggest dead code paths the model created but no trace ever traversed.
 
 ### 4.2 Transition Activation Gini
 
@@ -172,13 +338,16 @@ Replay-based methods replay the original event log against the discovered model 
 
 **Measured on BPI 2017**:
 
-| Miner | Total T | Used T | Gini | Min Usage | Max Usage | Mean Usage |
-|---|---|---|---|---|---|---|
-| Inductive Miner (IM) | 87 | 86 | 0.3428 | 2 | 31,509 | 19,266 |
-| Heuristics Miner | 82 | 80 | **0.5501** | 1 | 31,509 | 11,570 |
-| Alpha Miner | 26 | 26 | 0.3376 | 2 | 31,509 | 18,823 |
+| Miner | Total T | Used T | Gini | Min Usage | Max Usage | Mean Usage | Score |
+|---|---|---|---|---|---|---|---|
+| Inductive Miner (IM) | 87 | 86 | 0.3428 | 2 | 31,509 | 19,266 | 0.6572 |
+| Heuristics Miner | 82 | 80 | **0.5501** | 1 | 31,509 | 11,570 | 0.4499 |
+| Alpha Miner | 26 | 26 | 0.3376 | 2 | 31,509 | 18,823 | 0.6624 |
+| Flower Model | 26 | 26 | 0.3376 | 2 | 31,509 | 18,823 | 0.6624 |
 
-**Assessment**: ✅ Discriminative in practice. Heuristics' Gini of 0.55 is 1.6× higher than IM's 0.34 — confirming that Heuristics concentrates trace flow through fewer transitions while leaving others barely used (min=1 trace). IM's fall-through semantics distribute activation more evenly. Alpha's low Gini (0.34) paired with only 26 transitions reflects underfit uniformity, not good generalization.
+*Score = 1 − Gini, higher = better (more uniform transition usage).*
+
+**Assessment**: Heuristics' Gini = 0.550 is significantly higher than IM's 0.343 — a 60% increase, indicating far more uneven transition usage (a few transitions handle most traces, many are rarely activated). This is a strong signal of variant-specific overfitting. Alpha and Flower Model share the same uniform transition usage pattern (Gini = 0.338) since their 26 transitions match the 26 activity labels exactly.
 
 ### 4.3 Place Token Occupancy Variance
 
@@ -186,77 +355,40 @@ Replay-based methods replay the original event log against the discovered model 
 
 **Measured on BPI 2017**:
 
-| Miner | Total Places | AND-split Places | Ratio |
-|---|---|---|---|
-| Inductive Miner (IM) | 55 | 0 | 0% |
-| Heuristics Miner | 43 | 0 | 0% |
-| Alpha Miner | 12 | 0 | 0% |
-
-**Assessment**: ❌ Non-discriminative on BPI 2017 — all three miners have zero AND-split places. The loan application process is predominantly sequential/XOR, making this metric irrelevant for this log. May have value on logs with genuine parallelism.
-
-### 4.4 Reachable Arc Ratio
-
-**Method**: BFS from initial marking (depth=12). What fraction of all arcs are reachable? 100% reachability = model too simple (all structure directly accessible). Low reachability = model has latent structure representing unseen-but-plausible paths — a sign of good generalization.
-
-**Measured on BPI 2017**:
-
-| Miner | Total Arcs | Reachable Arcs | Reach % | Reachable T | States Visited |
-|---|---|---|---|---|---|
-| Inductive Miner (IM) | 184 | 96 | **52.2%** | 45/87 | 313 |
-| Heuristics Miner | 183 | 126 | 68.9% | 60/82 | 197 |
-| Alpha Miner | 55 | 55 | **100.0%** | 26/26 | 123 |
-
-**Assessment**: ✅ Strongly discriminative. Alpha's 100% reachability confirms underfitting — every arc is directly accessible from the start, leaving no room for the model to represent unseen variants. IM's 52.2% is the sweet spot: ~48% of arcs are structurally present but not trivially reachable, representing latent generalization capacity. Heuristics' 68.9% is intermediate — better than Alpha but less generalization headroom than IM. The 313 vs 197 states visited shows IM explores a richer behavioral space.
-
-### 4.5 Cyclomatic Complexity (McCabe)
-
-| Miner | Places | Trans | Arcs | V(G) = A−P−T+2 | Assessment |
-|---|---|---|---|---|---|
-| Inductive Miner (IM) | 55 | 87 | 184 | **44** | Moderate complexity |
-| Heuristics Miner | 43 | 82 | 183 | **60** | Highest — most independent paths |
-| Alpha Miner | 12 | 26 | 55 | **19** | Lowest — simplest structure |
-
-Heuristics' V(G)=60 is 1.36× IM's 44 and 3.2× Alpha's 19. This confirms Heuristics creates the most complex control flow — it adds more decision points (XOR-splits) to differentiate log variants. IM's moderate complexity suggests it balances expressiveness with structural economy. Alpha's low complexity is misleading: it's simple because it *omits* behavior, not because it generalizes well.
-
-### 4.6 Block-structured Ratio (Structuredness)
-
-| Miner | PST Conversion | Structured Ratio | Method |
-|---|---|---|---|
-| Inductive Miner (IM) | ✅ Success | **100.0%** | Full PST conversion |
-| Heuristics Miner | ❌ Failed | 81.4% | Free-choice heuristic fallback |
-| Alpha Miner | ❌ Failed | 58.3% | Free-choice heuristic fallback |
-
-IM's 100% block-structured ratio is mathematically guaranteed — the Inductive Miner's underlying process tree representation ensures pure structured decomposition. Heuristics at 81.4% and Alpha at 58.3% both fail PST conversion, indicating non-structured crossing edges. This metric cleanly separates structured (IM) from partially-to-fully unstructured (Heuristics, Alpha) models.
-
-### 4.7 Cross-Connectivity
-
-| Miner | Mean Degree | Max Degree | Cross-Conn (norm.) |
-|---|---|---|---|
-| Inductive Miner (IM) | 2.11 | 5 | 0.019 |
-| Heuristics Miner | 2.23 | 3 | 0.026 |
-| Alpha Miner | 2.12 | 7 | **0.088** |
-
-Alpha's normalized cross-connectivity (0.088) is 3.4× Heuristics' (0.026) and 4.6× IM's (0.019). Despite having the fewest nodes, Alpha's small size inflates the ratio — each edge spans a larger fraction of the graph. Max degree of 7 (Alpha) vs 5 (IM) vs 3 (Heuristics) suggests Alpha creates more "hub" transitions. The metric is log-size-dependent and needs per-log calibration.
-
-### 4.8 K-Fold Cross-Validation Fitness (k=3)
-
-| Miner | Train Fitness | Test Fitness | Drop-off | Verdict |
+| Miner | Total Places | AND-split Places | Ratio | Score |
 |---|---|---|---|---|
-| Inductive Miner (IM) | **1.0000** | **1.0000** | 0.0000 (0.0%) | ✅ Perfect generalization |
-| Heuristics Miner | 0.9433 | 0.9433 | −0.0000 (−0.0%) | ✅ Perfect generalization |
-| Alpha Miner | 0.4341 | 0.4340 | 0.0001 (0.0%) | ⚠️ Consistently poor (underfit) |
+| Inductive Miner (IM) | 55 | 0 | 0% | 1.000 |
+| Heuristics Miner | 43 | 0 | 0% | 1.000 |
+| Alpha Miner | 12 | 0 | 0% | 1.000 |
+| Flower Model | 1 | 0 | 0% | 1.000 |
 
-**Critical finding**: All three miners show **near-zero drop-off** between training and test fitness. This is NOT a metric failure — it's a genuine property of BPI 2017: the 15,930 unique variants are combinatorial expressions of a well-structured loan approval process. The models learn the *underlying process patterns*, not specific trace sequences. IM achieves perfect 1.0000 fitness on both train and test — it captures the process logic so completely that unseen traces replay without error. Heuristics is slightly lower (0.9433) but equally stable. Alpha is consistently poor (0.434) — not overfitting, just underfitting.
+*Score = 1 − AND_split_ratio, higher = better (fewer AND-split places = simpler concurrency). Non-discriminative on BPI 2017 (all 1.000).*
+
+**Assessment**: ❌ Non-discriminative on BPI 2017 — all four miners have zero AND-split places. The loan application process is predominantly sequential/XOR, making this metric irrelevant for this log. May have value on logs with genuine parallelism.
+
+### 4.4 K-Fold Cross-Validation Fitness (k=3)
+
+| Miner | Train Fitness | Test Fitness | Drop-off | Score | Verdict |
+|---|---|---|---|---|---|
+| Inductive Miner (IM) | **1.0000** | **1.0000** | 0.0000 (0.0%) | **1.0000** | ✅ Perfect generalization |
+| Heuristics Miner | 0.9433 | 0.9433 | −0.0000 (−0.0%) | 0.9433 | ✅ Perfect generalization |
+| Alpha Miner | 0.4341 | 0.4340 | 0.0001 (0.0%) | 0.4340 | ⚠️ Consistently poor (underfit) |
+| Flower Model | **1.0000** | **1.0000** | 0.0000 (0.0%) | **1.0000** | ⚠️ Trivial: replays everything |
+
+*Score = Test Fitness, higher = better.*
+
+**Critical finding**: All four miners show **near-zero drop-off** between training and test fitness. This is NOT a metric failure — it's a genuine property of BPI 2017: the 15,930 unique variants are combinatorial expressions of a well-structured loan approval process. The models learn the *underlying process patterns*, not specific trace sequences. IM and Flower achieve perfect 1.0000 fitness on both train and test — though Flower's is trivial (replays everything). Heuristics is slightly lower (0.9433) but equally stable. Alpha is consistently poor (0.434) — not overfitting, just underfitting.
 
 **This is the gold standard result**: K-Fold CV proves that BPI 2017's process is learnable and that IM achieves true generalization, not memorization.
 
-### 4.9 State-Space Simulation Coverage (5000 random walks)
+### 4.5 State-Space Simulation Coverage (5000 random walks)
 
 | Miner | Unique Sim Traces | In-Log Matches | Novel | In-Log% | Analysis |
 |---|---|---|---|---|---|
-| Inductive Miner (IM) | 921 | 0 | 921 | 0% | See note below |
-| Heuristics Miner | 731 | 0 | 731 | 0% | See note below |
+| Inductive Miner (IM) | 943 | 0 | 943 | 0% | See note below |
+| Heuristics Miner | 708 | 0 | 708 | 0% | See note below |
 | Alpha Miner | 1000 | 0 | 1000 | 0% | See note below |
+| Flower Model | 942 | 0 | 942 | 0% | See note below |
 
 **Caveat**: 0% exact-match overlap is expected. With 15,930 unique variants averaging 38 events each, the probability of a random walk exactly reproducing a full observed trace is negligible. The simulated traces ARE plausible process fragments — they just don't happen to match full-length observed traces exactly.
 
@@ -270,20 +402,20 @@ Alpha's normalized cross-connectivity (0.088) is 3.4× Heuristics' (0.026) and 4
 
 *All timings measured on BPI Challenge 2017 (31,509 traces, 1.2M events)*
 
-| Metric | Type | IM | Heuristics | Alpha | Total |
-|---|---|---|---|---|---|
-| Model Discovery | — | 44.8s | 1.4s | 0.4s | 46.6s |
-| Arc Flow Density | Replay | 47.8s | 43.7s | 17.6s | 109.1s |
-| Transition Gini | Replay | 47.5s | 43.0s | 17.3s | 107.7s |
-| Token Variance | Replay | 47.2s | 37.9s | 16.8s | 101.9s |
-| Reachable Arc BFS | Structural | 0.1s | 0.1s | 0.1s | 0.2s |
-| 5 Basic Metrics | Structural | <0.1s | <0.1s | <0.1s | <0.1s |
-| Cyclomatic | Structural | <0.1s | <0.1s | <0.1s | <0.1s |
-| Block-Struct | Structural | 0.3s | <0.1s | <0.1s | 0.3s |
-| Cross-Conn | Structural | <0.1s | <0.1s | <0.1s | <0.1s |
-| **K-Fold CV (k=3)** | Replay | **221.3s** | 112.3s | 47.7s | 381.3s |
-| Simulation (5k) | Replay | 3.0s | 1.0s | 17.3s | 21.4s |
-| **TOTAL** | | **412.0s** | **239.4s** | **117.1s** | **768.6s** |
+| Metric | Type | IM | Heuristics | Alpha | Flower | Total |
+|---|---|---|---|---|---|---|
+| Model Discovery | — | 40.7s | 1.3s | 0.4s | 0.1s | 42.5s |
+| Arc Flow Density | Replay | 43.2s | 38.8s | 17.9s | 17.2s | 117.1s |
+| Transition Gini | Replay | 43.4s | 38.2s | 16.6s | 16.5s | 114.6s |
+| Token Variance | Replay | 42.8s | 37.2s | 16.4s | 15.1s | 111.5s |
+| Reachable Arc BFS | Structural | 0.1s | 0.1s | 0.1s | 0.1s | 0.3s |
+| 5 Basic Metrics | Structural | <0.1s | <0.1s | <0.1s | <0.1s | <0.1s |
+| Cyclomatic | Structural | <0.1s | <0.1s | <0.1s | <0.1s | <0.1s |
+| Block-Struct | Structural | 0.3s | <0.1s | <0.1s | <0.1s | 0.3s |
+| Cross-Conn | Structural | <0.1s | <0.1s | <0.1s | <0.1s | <0.1s |
+| **K-Fold CV (k=3)** | Replay | **206.2s** | 111.2s | 46.7s | 46.9s | 411.1s |
+| Simulation (5k) | Replay | 3.1s | 1.0s | 17.4s | 0.6s | 22.0s |
+| **TOTAL** | | **379.7s** | **227.8s** | **115.4s** | **96.4s** | **819.4s** |
 
 **Key observations:**
 
@@ -307,7 +439,7 @@ The three replay-based metrics (arc flow, Gini, token variance) share the same `
 | **K-Fold CV Drop-off** | Replay | ✅ Gold Standard | Irrefutable ML proof of generalization vs memorization |
 | Arc Flow Density | Replay | ✅ Core | 25% rare arcs (Heuristics) vs 15% (IM) measures bloat |
 | Reachable Arc Ratio | Structural | ✅ Core | IM 52% vs Alpha 100% uniquely detects underfitting |
-| Transition Gini | Replay | ✅ Supplement | Gini 0.55 (Heuristics) vs 0.34 (IM) — activation skew |
+| Transition Gini | Replay | ❌ Drop | IM=0.343, Alpha=0.338, Flower=0.338 — indistinguishable; only separates Heuristics (0.550) from the rest, cannot tell good from underfit |
 | Cyclomatic Complexity | Structural | ✅ Good | V(G)=60 (Heuristics) vs 44 (IM) — independent path count |
 | Block-structured Ratio | Structural | ✅ Good | IM 100% vs Heuristics 81% — clean structural separation |
 | Cross-Connectivity | Structural | ⚠️ Needs calib. | Alpha 0.088 anomalous due to small graph size |
@@ -318,19 +450,21 @@ The three replay-based metrics (arc flow, Gini, token variance) share the same `
 | XOR Entropy | — | ❌ Drop | No signal |
 | Density | — | ❌ Drop | Calibration-dependent |
 
-### 6.2 Proposed Gen_Struct_v2
+### 6.2 Proposed Gen_Struct (revised — Gini removed)
 
-Four-dimensional formula incorporating the best discriminators:
+Gini was dropped: it measures log-level transition frequency skew, not model-level structure. Across all 5 benchmark datasets, Alpha Miner and Flower Model always have identical Gini (both map activities 1:1 to transitions), so Gini contributes zero discriminative power between underfit models.
 
-$$GenStruct_{v2} = 0.35 \cdot ArcFlow + 0.20 \cdot (1 - Gini) + 0.20 \cdot (1 - Reach) + 0.25 \cdot (1 - \frac{Cyclo}{\max(Cyclo)})$$
+Three-dimensional equal-weight formula:
 
-| Miner | ArcFlow (0.35) | 1−Gini (0.20) | 1−Reach (0.20) | CycloNorm (0.25) | **v2** | Current |
-|---|---|---|---|---|---|---|
-| IM | 0.297 | 0.131 | 0.096 | 0.200 | **0.724** | 0.848 |
-| Heuristics | 0.262 | 0.090 | 0.062 | 0.000 | **0.414** | 0.749 |
-| Alpha | 0.331 | 0.132 | 0.000 | 0.171 | **0.634** | 0.946 |
+$$GenStruct = \frac{ArcFlow + (1 - Reach) + (1 - \frac{Cyclo}{\max(Cyclo)})}{3}$$
 
-Alpha drops from 0.946 → 0.634 (corrected for underfitting via reachability). IM maintains lead with balanced scores across all four dimensions. Heuristics penalized by high Gini + high cyclomatic complexity.
+| Miner | ArcFlow | 1−Reach | CycloNorm | **Gen_Struct** | v1 (ArcFlow only) |
+|---|---|---|---|---|---|
+| IM | 0.848 | 0.478 | 0.267 | **0.531** | 0.848 |
+| Heuristics | 0.749 | 0.311 | 0.000 | **0.353** | 0.749 |
+| Alpha | 0.946 | 0.000 | 0.683 | **0.543** | 0.946 |
+
+IM (0.531) and Alpha (0.543) are much closer than under v1 — Reach correctly penalizes Alpha's 100% reachability. The remaining gap (Alpha > IM by 0.012) is because Alpha's small graph size (12P/26T) earns high ArcFlow and Cyclo scores despite being an underfit model. This is expected: Gen_Struct measures structural quality, not behavioral fitness. Gen_Shadow (behavioral) fills this gap in the full hybrid score.
 ### 6.3 Runtime Comparison: Gen_Struct v1 vs v2 vs Full Hybrid
 
 Per-miner runtime estimates based on measured timings:
@@ -350,9 +484,9 @@ Per-miner runtime estimates based on measured timings:
 | **Gen_Struct v2** (merged) | Discovery + 1 replay + BFS + cyclo | 94.9s | 46.5s | 18.5s | **159.9s** |
 | **Full Hybrid** (Gen_Struct + Gen_Shadow, K=5) | Discovery + 6 replays | 332.8s | 265.4s | 108.4s | **706.6s** |
 
-**Key insight**: Gen_Struct_v2 adds only **~4s overhead** (3%) compared to v1, while providing four discriminative dimensions instead of one. The full hybrid experiment (Gen_Struct + Gen_Shadow with 5 iterations) costs 4.4× more because each shadow log replay is as expensive as the structural replay.
+**Key insight**: The updated Gen_Struct adds only **~4s overhead** (3%) compared to v1, while providing three discriminative dimensions (ArcFlow + Reach + Cyclo) instead of one. Gini was removed after determining it's a log-level metric with zero discriminative power between Alpha and Flower models. The full hybrid experiment (Gen_Struct + Gen_Shadow with 5 iterations) costs 4.4× more because each shadow log replay is as expensive as the structural replay.
 
-**Per-experiment total runtime (3 miners):**
+**Per-experiment total runtime (4 miners):**
 
 | Experiment | Total Time | Relative |
 |---|---|---|
@@ -377,9 +511,9 @@ Future work: apply these metrics to a log with known overfitting (e.g., a synthe
 | Which metric is the gold standard? | **K-Fold CV drop-off** — zero drop-off for all miners proves BPI 2017 is learnable, not memorizable |
 | Which structural metric is most discriminative? | **Block-structured ratio** — IM 100% vs Heuristics 81% cleanly separates structured from spaghetti |
 | Which replay metric is strongest? | **Arc flow density** — 25% rare arcs (Heuristics) vs 15% (IM) |
-| Which metric surprised by being discriminative? | **Transition Gini** — 0.55 (Heuristics) vs 0.34 (IM) |
+| Why was Gini removed from Gen_Struct? | **Gini = log-level metric** — Alpha and Flower always have identical Gini (1:1 label mapping), so it doesn't discriminate between underfit models |
 | Does simulation coverage work? | **Needs refinement** — exact-match overlap is too strict; use n-gram overlap instead |
-| Recommended Gen_Struct_v2? | 0.35×ArcFlow + 0.20×(1−Gini) + 0.20×(1−Reach) + 0.25×(1−CycloNorm) |
+| Recommended Gen_Struct? | v3: (ArcFlow + (1−Reach) + (1−CycloNorm)) / 3 — equal-weight, Gini removed |
 | Key takeaway | BPI 2017 is a well-structured process that all miners generalize to; the metrics correctly identify this |
 
 ---

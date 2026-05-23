@@ -36,4 +36,4 @@ Introduce N-gram-based path generation to capture local dependencies in the proc
 ### Predictable Path Generation:
 replace frequency counts with ln(count+1) to reduce the dominance of extremely common paths and increase variability in the generated traces, while still respecting historical likelihoods.
 ## V2.2
-add Gen_struct_v2
+add Gen_struct_v2 from `StructMetricAnalysis.md`.
