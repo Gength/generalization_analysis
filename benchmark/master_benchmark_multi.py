@@ -17,7 +17,7 @@ from pm4py.algo.evaluation.generalization import algorithm as generalization_eva
 from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
 from HybridGen.algorithm import load_algorithm
-from .master_benchmark_utils import discover_flower_model, discover_trace_model
+from benchmark.master_benchmark_utils import discover_flower_model, discover_trace_model
 
 # ─── Configuration & Dataset Mapping ────────────────────────────────────────
 DATASETS = {
