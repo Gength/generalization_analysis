@@ -46,7 +46,7 @@ def _evaluate_state(state_tuple, ngram_dict, safe_threshold):
         
     return p_unseen, out_edges
 
-def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length, safe_threshold, max_n, had_mutation=False):
+def generate_trace_dfs(current_seq, ngram_outgoings, ngram_termination_ends, ngram_termination_totals, ends, alphabet, max_length, safe_threshold, max_n, had_mutation=False):
     """
     Recursive DFS function to generate a single shadow trace.
     Naturally maintains the state context through the call stack.
@@ -54,6 +54,8 @@ def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length,
     Args:
         max_n: Maximum N-gram order (lookback = max_n - 1). Backoff from max_n down to 2,
                with absolute fallback to N=1.
+        ngram_termination_ends, ngram_termination_totals: [v23 FIX] N-gram termination
+               statistics for context-aware termination probability (Katz backoff).
     
     Returns:
         (sequence, had_mutation): The generated activity sequence and a boolean flag
@@ -61,17 +63,48 @@ def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length,
     """
     current_local = current_seq[-1]
     
-    # 1. Termination Checks
-    # Decision 1: Should the trace terminate here based on historical end frequency?
-    if current_local in ends:
-        times_as_end = ends[current_local]
-        # Total occurrences = times it was an end + times it transitioned elsewhere
-        out_edges_n1 = ngram_outgoings[1].get((current_local,), {})
-        total_occurrences = times_as_end + sum(out_edges_n1.values())
-        
-        # Probabilistic roll to stop the trace
-        if random.random() < (times_as_end / total_occurrences):
-            return current_seq, had_mutation
+    # =====================================================================
+    # [v23 FIX] Context-aware termination with Katz Backoff
+    #
+    # OLD BUG: Termination used only current_local (activity name), ignoring
+    # context. Activities like "Release A" had P_end=0.59 regardless of whether
+    # they appeared at step 3 or step 30. In the original log these activities
+    # ALWAYS appear in the last 20% of traces, but the DFS walker generated
+    # them early and terminated prematurely — causing shadow traces to be
+    # systematically shorter than originals.
+    #
+    # FIX: Apply the same Katz backoff strategy used for next-activity selection.
+    #   Try N=max_n -> ... -> N=2 using the last N activities as state.
+    #   If state has sufficient support (>= safe_threshold), compute
+    #   P_end = end_count / total_count. Fall back to N-1 if sparse.
+    #   Absolute fallback to N=1 (always available, like next-activity backoff).
+    #
+    # Result: A state (Leucocytes, Release A) vs (CRP, Release A) will have
+    # DIFFERENT termination probabilities based on their historical ending
+    # behavior, not a single flat probability for "Release A".
+    # =====================================================================
+    p_end = None
+    
+    # Try from highest N down to 2
+    for n in range(max_n, 1, -1):
+        if len(current_seq) >= n:
+            state = tuple(current_seq[-n:])
+            total = ngram_termination_totals[n].get(state, 0)
+            if total >= safe_threshold:
+                end_count = ngram_termination_ends[n].get(state, 0)
+                p_end = end_count / total
+                break
+    
+    # Absolute Fallback to N=1 (Local Marking, Lookback 0)
+    if p_end is None:
+        state = (current_local,)
+        total = ngram_termination_totals[1].get(state, 0)
+        end_count = ngram_termination_ends[1].get(state, 0)
+        p_end = end_count / total if total > 0 else 0.0
+    
+    # Probabilistic roll to stop the trace
+    if p_end > 0 and random.random() < p_end:
+        return current_seq, had_mutation
             
     # Safety catch: Prevent infinite loops in case of cyclic mutations
     if len(current_seq) >= max_length:
@@ -121,7 +154,9 @@ def generate_trace_dfs(current_seq, ngram_outgoings, ends, alphabet, max_length,
         
     # 4. DFS Recursion
     # Pass a new list (current_seq + [next_node]) to avoid mutation side-effects and maintain immutability
-    return generate_trace_dfs(current_seq + [next_node], ngram_outgoings, ends, alphabet, max_length, safe_threshold, max_n, had_mutation)
+    return generate_trace_dfs(current_seq + [next_node], ngram_outgoings,
+                              ngram_termination_ends, ngram_termination_totals,
+                              ends, alphabet, max_length, safe_threshold, max_n, had_mutation)
 
 def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100, safe_threshold=5, max_n=3):
     """
@@ -149,6 +184,17 @@ def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100, safe_t
     # v23: Also collect the set of original trace sequences for deduplication
     original_trace_seqs = set()
     
+    # =====================================================================
+    # [v23 FIX] Pre-compute N-gram termination statistics for context-aware
+    # termination. For each N-gram state (N=1..max_n), track:
+    #   - ngram_termination_totals[n][state] = total occurrences
+    #   - ngram_termination_ends[n][state]  = count as trace end
+    # These are used by generate_trace_dfs with Katz backoff to compute
+    # context-dependent P_end(state) rather than flat per-activity P_end.
+    # =====================================================================
+    ngram_termination_ends = {n: Counter() for n in range(1, max_n + 1)}
+    ngram_termination_totals = {n: Counter() for n in range(1, max_n + 1)}
+    
     # Extract every unique activity and path in the log
     for trace in event_log:
         seq = [event["concept:name"] for event in trace]
@@ -170,6 +216,15 @@ def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100, safe_t
                 if i >= n - 1:
                     state_tuple = tuple(seq[i - (n - 1) : i + 1])
                     ngram_outgoings[n][state_tuple][nxt_act] += 1
+        
+        # [v23 FIX] Collect N-gram termination statistics for context-aware P_end
+        for i in range(trace_len):
+            for n in range(1, max_n + 1):
+                if i >= n - 1:
+                    term_state = tuple(seq[i - n + 1 : i + 1])
+                    ngram_termination_totals[n][term_state] += 1
+                    if i == trace_len - 1:  # last activity = trace end
+                        ngram_termination_ends[n][term_state] += 1
 
     alphabet = list(alphabet)
     shadow_log = EventLog()
@@ -191,7 +246,9 @@ def generate_shadow_log(event_log, num_traces=1000, max_trace_length=100, safe_t
             
             # Execute the recursive DFS walker to build the sequence
             final_sequence, had_mutation = generate_trace_dfs(
-                [start_node], ngram_outgoings, ends, alphabet, max_trace_length, safe_threshold, max_n
+                [start_node], ngram_outgoings,
+                ngram_termination_ends, ngram_termination_totals,  # [v23 FIX] context-aware termination
+                ends, alphabet, max_trace_length, safe_threshold, max_n
             )
             
             # v23: Check if this trace matches any original trace exactly
