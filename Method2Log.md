@@ -36,4 +36,15 @@ Introduce N-gram-based path generation to capture local dependencies in the proc
 ### Predictable Path Generation:
 replace frequency counts with ln(count+1) to reduce the dominance of extremely common paths and increase variability in the generated traces, while still respecting historical likelihoods.
 ## V2.2
-add Gen_struct_v2 from `StructMetricAnalysis.md`.
+add Gen_struct_v2 from `./analysis/Structure/StructMetricAnalysis.md`.
+
+## V2.3
+### Structural Analysis Removed (Gen_struct Deprecated):
+Gen_struct is removed from this version. The evaluation relies solely on the Gen_shadow component, making the weight parameter `w` in `Gen_Total = w*Gen_shadow + (1-w)*Gen_struct` effectively ignored (Gen_total = Gen_shadow). This decision was made to eliminate the confounding influence of the structural penalty on the generalization score, allowing a pure measurement of the generative shadow log's replay fitness.
+
+### Trace Deduplication:
+V2.1 could generate shadow traces that are exact copies of original event log traces (empirically ~1.9% in the Sepsis dataset with 1000 shadow traces). V2.3 adds a check in `generate_shadow_log` that compares each generated trace against the set of all original trace sequences. If a match is found, the trace is discarded and regenerated (up to a safety cap of 100 retries). This ensures the shadow log contains only genuinely synthetic traces, preventing inflated fitness scores from replicated original behavior.
+
+### Context-Aware Termination via Katz Backoff:
+In V2.1, trace termination used only the current activity name (`current_local`) to compute `P_end`, regardless of where in the trace that activity appeared. Activities like `Release A` had a flat ~59% termination probability whether they occurred at position 3 or position 30 — but in the original log they always appeared in the last 20% of traces. This caused the DFS walker to terminate prematurely when "ending activities" were generated early, systematically shortening shadow traces.
+V2.3 fixes this by applying the same Katz backoff strategy used for next-activity selection to the termination decision. It now considers the last N activities (from N=max_n down to safe N=1) to compute a context-dependent `P_end(state)`. The same pre-computed N-gram termination statistics (`ngram_termination_ends` and `ngram_termination_totals`) support this backoff, ensuring termination probabilities are grounded in the historical ending behavior of the specific context, not just the isolated activity name.

@@ -17,6 +17,7 @@ from pm4py.algo.evaluation.generalization import algorithm as generalization_eva
 from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
 from HybridGen.algorithm import load_algorithm
+from .master_benchmark_utils import discover_flower_model, discover_trace_model
 
 # ─── Configuration & Dataset Mapping ────────────────────────────────────────
 DATASETS = {
@@ -38,53 +39,9 @@ ALGORITHMS = {
 }
 
 # v2.2 intermediate dimensions (populated when algo returns dict)
-STRUCT_DIMS = ["arc_flow_score", "gini_score", "reach_score", "cyclo_score"]
+STRUCT_DIMS = ["arc_flow_score", "reach_score", "cyclo_score"]
 
-# ─── Model Morphology Generators ────────────────────────────────────────────
-def discover_flower_model(log):
-    net = PetriNet("Flower Model")
-    p_mid = PetriNet.Place("mid")
-    net.places.add(p_mid)
-    
-    activities = log["concept:name"].unique() if isinstance(log, pd.DataFrame) else set(e["concept:name"] for t in log for e in t)
-    for act in activities:
-        t = PetriNet.Transition(f"t_{act}", act)
-        net.transitions.add(t)
-        petri_utils.add_arc_from_to(p_mid, t, net)
-        petri_utils.add_arc_from_to(t, p_mid, net)
-        
-    im, fm = Marking(), Marking()
-    im[p_mid] = 1; fm[p_mid] = 1 
-    return net, im, fm
 
-def discover_trace_model(log):
-    net = PetriNet("Trace Model")
-    p_start = PetriNet.Place("start")
-    p_end = PetriNet.Place("end")
-    net.places.update([p_start, p_end])
-    
-    if isinstance(log, pd.DataFrame):
-        variants = log.groupby('case:concept:name')['concept:name'].apply(tuple).unique()
-    else:
-        variants = set(tuple(e["concept:name"] for e in t) for t in log)
-        
-    for i, variant in enumerate(variants):
-        prev = p_start
-        for j, act in enumerate(variant):
-            t = PetriNet.Transition(f"t_{i}_{j}", act)
-            net.transitions.add(t)
-            petri_utils.add_arc_from_to(prev, t, net)
-            if j == len(variant) - 1:
-                petri_utils.add_arc_from_to(t, p_end, net)
-            else:
-                p_next = PetriNet.Place(f"p_{i}_{j}")
-                net.places.add(p_next)
-                petri_utils.add_arc_from_to(t, p_next, net)
-                prev = p_next
-
-    im, fm = Marking(), Marking()
-    im[p_start] = 1; fm[p_end] = 1
-    return net, im, fm
 
 # ─── Expanded Miner Dictionary ──────────────────────────────────────────────
 MINERS = {
@@ -164,7 +121,7 @@ def run_master_benchmark():
                     for dim in STRUCT_DIMS:
                         row[f"{algo_key}_Struct_{dim}"] = round(gs_result.get(dim, 0), 4)
                     # Also store raw values for potential reweighting
-                    for raw_key in ["arc_flow_raw", "gini_raw", "reach_raw", "cyclo_raw"]:
+                    for raw_key in ["arc_flow_raw", "reach_raw", "cyclo_raw"]:
                         if raw_key in gs_result:
                             for rk, rv in gs_result[raw_key].items():
                                 row[f"{algo_key}_Raw_{rk}"] = rv
@@ -197,7 +154,7 @@ def run_master_benchmark():
         key_cols += [f"{algo_key}_Gen_Struct", f"{algo_key}_Gen_Shadow"]
     print(df[key_cols].to_string(index=False))
 
-    out_path = "master_benchmark_results.csv"
+    out_path = "master_benchmark_results_multi.csv"
     df.to_csv(out_path, index=False)
     print(f"\nSaved to {out_path}")
     return df

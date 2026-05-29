@@ -14,14 +14,35 @@ import math
 import pm4py
 from pm4py.objects.log.obj import EventLog, Trace, Event
 from pm4py.algo.conformance.tokenreplay import algorithm as token_replay
+from pm4py.objects.petri_net.obj import PetriNet, Marking
+from pm4py.objects.petri_net.utils import petri_utils
 import numpy as np
 
 XES_PATH = "data/BPI-Challenge_2017/BPI Challenge 2017.xes.gz"
+
+def discover_flower_model(log):
+    """Create a Flower Model: single place connected to all activities."""
+    net = PetriNet("Flower Model")
+    p_mid = PetriNet.Place("mid")
+    net.places.add(p_mid)
+    
+    activities = set(e["concept:name"] for t in log for e in t)
+    for act in activities:
+        t = PetriNet.Transition(f"t_{act}", act)
+        net.transitions.add(t)
+        petri_utils.add_arc_from_to(p_mid, t, net)
+        petri_utils.add_arc_from_to(t, p_mid, net)
+        
+    im, fm = Marking(), Marking()
+    im[p_mid] = 1; fm[p_mid] = 1
+    return net, im, fm
+
 
 MINERS = {
     "Inductive Miner (IM)": lambda log: pm4py.discover_petri_net_inductive(log),
     "Heuristics Miner":    lambda log: pm4py.discover_petri_net_heuristics(log),
     "Alpha Miner":         lambda log: pm4py.discover_petri_net_alpha(log),
+    "Flower Model":        discover_flower_model,
 }
 
 
