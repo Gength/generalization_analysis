@@ -56,32 +56,38 @@ def compute_kfold_fitness(log, miner_fn, k=3, pick_one_out=False):
     """
     Compute cross-validated fitness.
     
+    Both modes are variant-based: traces are grouped by their unique activity
+    sequence (variant), ensuring that all traces of the same variant stay
+    together in either train or test — never split across folds.
+    
     Args:
         log: Event log
         miner_fn: Process discovery function
-        k: Number of folds (used only when pick_one_out=False)
-        pick_one_out: If True, use leave-one-variant-out (each unique trace variant
-                      becomes one fold, held out as test while all other variants train).
-                      If False (default), use standard random-split K-fold.
+        k: Number of variant groups (folds) to partition the variants into.
+           Used only when pick_one_out=False.
+        pick_one_out: If True, leave-one-variant-out (each variant is its own
+                      fold). If False (default), variants are split into k
+                      groups, each group serving as test in one fold.
     """
     try:
+        from collections import defaultdict
+        
+        # ── Group traces by variant (unique activity sequence) ──
+        variant_map = defaultdict(list)
+        for trace in log:
+            seq = tuple(e["concept:name"] for e in trace)
+            variant_map[seq].append(trace)
+        
+        variants = list(variant_map.keys())
+        n_variants = len(variants)
+        if n_variants <= 1:
+            print(f"       ⚠️ pick_one_out: only {n_variants} variant(s), skipping")
+            return 0.0
+        
         if pick_one_out:
-            # ── Variant-based: leave-one-variant-out ──
-            # Group traces by their activity sequence (variant)
-            from collections import defaultdict
-            variant_map = defaultdict(list)
-            for trace in log:
-                seq = tuple(e["concept:name"] for e in trace)
-                variant_map[seq].append(trace)
-            
-            variants = list(variant_map.keys())
-            n_variants = len(variants)
-            if n_variants <= 1:
-                print(f"       ⚠️ pick_one_out: only {n_variants} variant(s), skipping")
-                return 0.0
-            
+            # ── Leave-one-variant-out: each variant is one fold ──
             fitnesses = []
-            for idx, variant in enumerate(variants):
+            for variant in variants:
                 test_traces = variant_map[variant]
                 train_traces = [t for v in variants if v != variant for t in variant_map[v]]
                 
@@ -92,21 +98,21 @@ def compute_kfold_fitness(log, miner_fn, k=3, pick_one_out=False):
                 fit = replay_fitness.apply(test_log, net, im, fm,
                                            variant=replay_fitness.Variants.TOKEN_BASED)['log_fitness']
                 fitnesses.append(fit)
-            
             return np.mean(fitnesses)
         
         else:
-            # ── Standard random-split K-fold ──
-            traces = list(log)
-            random.shuffle(traces)
-            fold_size = len(traces) // k
+            # ── Variant-based K-fold: partition variants into k groups ──
+            random.shuffle(variants)
+            fold_size = max(1, n_variants // k)
             fitnesses = []
             
             for i in range(k):
                 start = i * fold_size
-                end = (i + 1) * fold_size if i < k - 1 else len(traces)
-                test_traces = traces[start:end]
-                train_traces = traces[:start] + traces[end:]
+                end = (i + 1) * fold_size if i < k - 1 else n_variants
+                test_variants = variants[start:end]
+                
+                test_traces = [t for v in test_variants for t in variant_map[v]]
+                train_traces = [t for v in variants if v not in test_variants for t in variant_map[v]]
                 
                 train_log = EventLog(train_traces)
                 test_log = EventLog(test_traces)
