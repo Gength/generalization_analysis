@@ -1,0 +1,62 @@
+Cases: 150370
+Events: 561,470
+
+A trace variant is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
+
+Unique activities: 11
+
+Unique trace variants: 231
+
+Log Representativeness:
+  TLRA (Trace-Based Log Representativeness Approx.): 0.9985
+  * Evaluates the probability that an additional trace has been seen previously in the log.
+  * Higher values (closer to 1.0) indicate the log already highly represents the system.
+
+Trace length distribution (events per case):
+  Min:      2
+  Max:      20
+  Mean:     3.7
+  Median:   5.0
+  Std:      1.6
+  P25:      2.0
+  P75:      5.0
+  P90:      5.0
+  P95:      6.0
+  P99:      6.0
+
+Trace variant frequency distribution:
+  Min freq: 1
+  Max freq: 56482
+  Mean freq: 651.0
+  Singletons (freq=1): 100
+  freq<=5: 161
+
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 11              | 11      (100.0%) |       0.00 | 0     (  0.0%)
+N=2 (Lookback 1) | 63              | 42      ( 66.7%) |       0.18 | 9     ( 14.3%)
+N=3 (Lookback 2) | 129             | 67      ( 51.9%) |       0.29 | 34    ( 26.4%)
+N=4 (Lookback 3) | 174             | 74      ( 42.5%) |       0.38 | 62    ( 35.6%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
+Top 10 trace variants by frequency:
+  Variant 1: freq=56482, trace=('Create Fine', 'Send Fine', 'Insert Fine Notification', 'Add penalty', 'Send for Credit Collection')
+  Variant 2: freq=46371, trace=('Create Fine', 'Payment')
+  Variant 3: freq=20385, trace=('Create Fine', 'Send Fine')
+  Variant 4: freq=9520, trace=('Create Fine', 'Send Fine', 'Insert Fine Notification', 'Add penalty', 'Payment')
+  Variant 5: freq=3736, trace=('Create Fine', 'Send Fine', 'Insert Fine Notification', 'Add penalty', 'Payment', 'Payment')
+  Variant 6: freq=3301, trace=('Create Fine', 'Send Fine', 'Insert Fine Notification', 'Payment', 'Add penalty', 'Payment')
+  Variant 7: freq=3131, trace=('Create Fine', 'Send Fine', 'Payment')
+  Variant 8: freq=2497, trace=('Create Fine', 'Send Fine', 'Insert Fine Notification', 'Insert Date Appeal to Prefecture', 'Add penalty', 'Send Appeal to Prefecture')
+  Variant 9: freq=1515, trace=('Create Fine', 'Send Fine', 'Insert Fine Notification', 'Add penalty', 'Payment', 'Send for Credit Collection')
+  Variant 10: freq=522, trace=('Create Fine', 'Send Fine', 'Insert Fine Notification', 'Payment', 'Add penalty', 'Send for Credit Collection')

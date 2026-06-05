@@ -1,0 +1,62 @@
+Cases: 1487
+Events: 6,660
+
+A trace variant is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
+
+Unique activities: 4
+
+Unique trace variants: 183
+
+Log Representativeness:
+  TLRA (Trace-Based Log Representativeness Approx.): 0.8769
+  * Evaluates the probability that an additional trace has been seen previously in the log.
+  * Higher values (closer to 1.0) indicate the log already highly represents the system.
+
+Trace length distribution (events per case):
+  Min:      1
+  Max:      35
+  Mean:     4.5
+  Median:   3.0
+  Std:      3.2
+  P25:      2.0
+  P75:      6.0
+  P90:      8.0
+  P95:      11.0
+  P99:      16.0
+
+Trace variant frequency distribution:
+  Min freq: 1
+  Max freq: 493
+  Mean freq: 8.1
+  Singletons (freq=1): 125
+  freq<=5: 164
+
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 4               | 4       (100.0%) |       0.00 | 0     (  0.0%)
+N=2 (Lookback 1) | 9               | 7       ( 77.8%) |       0.04 | 0     (  0.0%)
+N=3 (Lookback 2) | 19              | 14      ( 73.7%) |       0.11 | 2     ( 10.5%)
+N=4 (Lookback 3) | 36              | 25      ( 69.4%) |       0.10 | 3     (  8.3%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
+Top 10 trace variants by frequency:
+  Variant 1: freq=493, trace=('Accepted', 'Completed')
+  Variant 2: freq=230, trace=('Accepted', 'Accepted', 'Completed')
+  Variant 3: freq=142, trace=('Accepted', 'Queued', 'Accepted', 'Accepted', 'Accepted', 'Completed')
+  Variant 4: freq=95, trace=('Accepted', 'Accepted', 'Accepted', 'Completed')
+  Variant 5: freq=67, trace=('Accepted', 'Queued', 'Accepted', 'Completed')
+  Variant 6: freq=55, trace=('Accepted', 'Accepted', 'Accepted', 'Accepted', 'Completed')
+  Variant 7: freq=34, trace=('Accepted', 'Queued', 'Accepted', 'Accepted', 'Completed')
+  Variant 8: freq=23, trace=('Queued', 'Accepted', 'Completed')
+  Variant 9: freq=16, trace=('Accepted', 'Accepted', 'Accepted', 'Accepted', 'Accepted', 'Completed')
+  Variant 10: freq=15, trace=('Accepted', 'Accepted', 'Accepted', 'Accepted', 'Accepted', 'Accepted', 'Completed')

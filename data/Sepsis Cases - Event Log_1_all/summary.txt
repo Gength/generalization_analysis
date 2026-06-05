@@ -1,0 +1,62 @@
+Cases: 1050
+Events: 15,214
+
+A trace variant is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
+
+Unique activities: 16
+
+Unique trace variants: 846
+
+Log Representativeness:
+  TLRA (Trace-Based Log Representativeness Approx.): 0.1943
+  * Evaluates the probability that an additional trace has been seen previously in the log.
+  * Higher values (closer to 1.0) indicate the log already highly represents the system.
+
+Trace length distribution (events per case):
+  Min:      3
+  Max:      185
+  Mean:     14.5
+  Median:   13.0
+  Std:      11.5
+  P25:      9.0
+  P75:      16.0
+  P90:      23.0
+  P95:      30.0
+  P99:      51.5
+
+Trace variant frequency distribution:
+  Min freq: 1
+  Max freq: 35
+  Mean freq: 1.2
+  Singletons (freq=1): 784
+  freq<=5: 839
+
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 16              | 13      ( 81.2%) |       0.13 | 2     ( 12.5%)
+N=2 (Lookback 1) | 99              | 78      ( 78.8%) |       0.18 | 14    ( 14.1%)
+N=3 (Lookback 2) | 358             | 200     ( 55.9%) |       0.33 | 104   ( 29.1%)
+N=4 (Lookback 3) | 833             | 345     ( 41.4%) |       0.45 | 341   ( 40.9%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
+Top 10 trace variants by frequency:
+  Variant 1: freq=35, trace=('ER Registration', 'ER Triage', 'ER Sepsis Triage')
+  Variant 2: freq=24, trace=('ER Registration', 'ER Triage', 'ER Sepsis Triage', 'Leucocytes', 'CRP')
+  Variant 3: freq=22, trace=('ER Registration', 'ER Triage', 'ER Sepsis Triage', 'CRP', 'Leucocytes')
+  Variant 4: freq=13, trace=('ER Registration', 'ER Triage', 'ER Sepsis Triage', 'CRP', 'LacticAcid', 'Leucocytes', 'IV Liquid', 'IV Antibiotics')
+  Variant 5: freq=11, trace=('ER Registration', 'ER Triage', 'ER Sepsis Triage', 'Leucocytes', 'CRP', 'LacticAcid')
+  Variant 6: freq=9, trace=('ER Registration', 'ER Triage', 'ER Sepsis Triage', 'Leucocytes', 'CRP', 'LacticAcid', 'IV Liquid', 'IV Antibiotics')
+  Variant 7: freq=7, trace=('ER Registration', 'ER Triage', 'ER Sepsis Triage', 'Leucocytes', 'LacticAcid', 'CRP', 'IV Liquid', 'IV Antibiotics')
+  Variant 8: freq=5, trace=('ER Registration', 'ER Triage', 'ER Sepsis Triage', 'Leucocytes', 'CRP', 'Admission NC', 'Release A')
+  Variant 9: freq=5, trace=('ER Registration', 'ER Triage', 'ER Sepsis Triage', 'LacticAcid', 'Leucocytes', 'CRP', 'IV Liquid', 'IV Antibiotics')
+  Variant 10: freq=5, trace=('ER Registration', 'ER Triage', 'CRP', 'Leucocytes', 'ER Sepsis Triage')

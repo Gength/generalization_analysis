@@ -1,0 +1,62 @@
+Cases: 1143
+Events: 150,291
+
+A trace variant is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
+
+Unique activities: 624
+
+Unique trace variants: 981
+
+Log Representativeness:
+  TLRA (Trace-Based Log Representativeness Approx.): 0.1417
+  * Evaluates the probability that an additional trace has been seen previously in the log.
+  * Higher values (closer to 1.0) indicate the log already highly represents the system.
+
+Trace length distribution (events per case):
+  Min:      1
+  Max:      1814
+  Mean:     131.5
+  Median:   55.0
+  Std:      202.6
+  P25:      8.0
+  P75:      169.0
+  P90:      338.0
+  P95:      510.1
+  P99:      979.1
+
+Trace variant frequency distribution:
+  Min freq: 1
+  Max freq: 41
+  Mean freq: 1.2
+  Singletons (freq=1): 943
+  freq<=5: 973
+
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 624             | 310     ( 49.7%) |       0.46 | 228   ( 36.5%)
+N=2 (Lookback 1) | 4215            | 1284    ( 30.5%) |       0.61 | 2332  ( 55.3%)
+N=3 (Lookback 2) | 11816           | 2386    ( 20.2%) |       0.70 | 7743  ( 65.5%)
+N=4 (Lookback 3) | 22479           | 3275    ( 14.6%) |       0.75 | 16154 ( 71.9%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
+Top 10 trace variants by frequency:
+  Variant 1: freq=41, trace=('vervolgconsult poliklinisch', 'administratief tarief       - eerste pol')
+  Variant 2: freq=17, trace=('vervolgconsult poliklinisch', 'administratief tarief       - eerste pol', 'vervolgconsult poliklinisch', 'administratief tarief       - eerste pol')
+  Variant 3: freq=16, trace=('1e consult poliklinisch', 'administratief tarief       - eerste pol')
+  Variant 4: freq=10, trace=('vervolgconsult poliklinisch', 'administratief tarief       - eerste pol', 'vervolgconsult poliklinisch', 'administratief tarief       - eerste pol', 'vervolgconsult poliklinisch', 'administratief tarief       - eerste pol')
+  Variant 5: freq=8, trace=('vervolgconsult poliklinisch', 'administratief tarief       - eerste pol', 'vervolgconsult poliklinisch')
+  Variant 6: freq=7, trace=('verlosk.-gynaec.   jaarkaart kosten-out', 'vervolgconsult poliklinisch', 'administratief tarief       - eerste pol')
+  Variant 7: freq=7, trace=('verlosk.-gynaec.   jaarkaart kosten-out', 'vervolgconsult poliklinisch', 'administratief tarief       - eerste pol', 'vervolgconsult poliklinisch', 'administratief tarief       - eerste pol')
+  Variant 8: freq=7, trace=('vervolgconsult poliklinisch', 'vervolgconsult poliklinisch', 'administratief tarief       - eerste pol')
+  Variant 9: freq=5, trace=('vervolgconsult poliklinisch', 'administratief tarief       - eerste pol', 'vervolgconsult poliklinisch', 'administratief tarief       - eerste pol', 'vervolgconsult poliklinisch')
+  Variant 10: freq=5, trace=('verlosk.-gynaec. korte kaart kosten-out', '1e consult poliklinisch', 'administratief tarief       - eerste pol')

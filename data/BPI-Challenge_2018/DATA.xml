@@ -1,0 +1,117 @@
+<metadata>
+   <doi>doi:10.4121/uuid:3301445f-95e8-4ff0-98a4-901f1f204972</doi>
+   <name>BPI Challenge 2018.xes.gz</name>
+   <description>The European Union spends a large fraction of its budget on the Common Agricultural Policy (CAP). Among these spendings are direct payments, which are mainly aimed to provide a basic income for farmers decoupled from production. The rest of the CAP budget is spent for market related expenditures and rural development. The processes that govern the distribution of these funds are subject to complex regulations captured in EU and national law. The member states are required to operate an Integrated Administration and Control System (IACS), which includes IT systems to support the complex processes of subsidy distribution. The process considered in this dataset covers the handling of applications for EU direct payments for German farmers from the European Agricultural Guarantee Fund. The process repeats every year with minor changes due to changes in EU regulations. The dataset is extracted from the systems of data experts, Germany. Their tool profil c/s supports these processes at the level of federal ministries of agriculture and local departments. The workflows in profil c/s can be understood in terms of documents, where each document has a state that allows for certain actions. These actions can be executed manually at any point in time through document specific tools or they can be scheduled automatically. The latter may be either explicitly stated in the log or implicitly apparent if a large number of actions is performed by the same user at around the same time (batch processing). In total, the event log contains 2,514,266 events for 43,809 applications over a period of three years. The shortest case contains 24 events, the longest 2973 and on average there are 57 events per case referring to 14 activities.</description>
+   <language>English</language>
+   <log_type>Real-life</log_type>
+   <process_type>Implicitly structured</process_type>
+   <creation>
+   <insitute>Eindhoven University of Technology</insitute>
+   <person>B.F. van Dongen &amp; Florian Borchert</person>
+   <place>Germany</place>
+   <time>Wed Feb 07 11:49:52 CET 2018</time>
+   </creation>
+   <source>
+   <insitute>Eindhoven University of Technology &amp; data experts, Neubrandenburg, Germany</insitute>
+   <institute_type>Document management company</institute_type>
+   <model>EU Common Agricultural Policy</model>
+   <program>profil c/s</program>
+   </source>
+   <rights type="Public">
+   </rights>
+   <global_attributes>
+      <trace_level>
+         <attribute key="amount_applied0" default="0.0"/>
+         <attribute key="applicant" default="none"/>
+         <attribute key="application" default="none"/>
+         <attribute key="area" default="0.0"/>
+         <attribute key="basic payment" default="false"/>
+         <attribute key="concept:name" default="none"/>
+         <attribute key="cross_compliance" default="0.0"/>
+         <attribute key="department" default="none"/>
+         <attribute key="greening" default="false"/>
+         <attribute key="identity:id" default="AAE527A9-1929-49A2-AB4A-147CD5D2ADD5"/>
+         <attribute key="number_parcels" default="0"/>
+         <attribute key="payment_actual0" default="0.0"/>
+         <attribute key="penalty_ABP" default="false"/>
+         <attribute key="penalty_AGP" default="false"/>
+         <attribute key="penalty_AJLP" default="false"/>
+         <attribute key="penalty_AUVP" default="false"/>
+         <attribute key="penalty_AVBP" default="false"/>
+         <attribute key="penalty_AVGP" default="false"/>
+         <attribute key="penalty_AVJLP" default="false"/>
+         <attribute key="penalty_AVUVP" default="false"/>
+         <attribute key="penalty_B16" default="false"/>
+         <attribute key="penalty_B2" default="false"/>
+         <attribute key="penalty_B3" default="false"/>
+         <attribute key="penalty_B4" default="false"/>
+         <attribute key="penalty_B5" default="false"/>
+         <attribute key="penalty_B5F" default="false"/>
+         <attribute key="penalty_B6" default="false"/>
+         <attribute key="penalty_BGK" default="false"/>
+         <attribute key="penalty_BGKV" default="false"/>
+         <attribute key="penalty_BGP" default="false"/>
+         <attribute key="penalty_C16" default="false"/>
+         <attribute key="penalty_C4" default="false"/>
+         <attribute key="penalty_C9" default="false"/>
+         <attribute key="penalty_CC" default="false"/>
+         <attribute key="penalty_GP1" default="false"/>
+         <attribute key="penalty_JLP1" default="false"/>
+         <attribute key="penalty_JLP2" default="false"/>
+         <attribute key="penalty_JLP3" default="false"/>
+         <attribute key="penalty_JLP5" default="false"/>
+         <attribute key="penalty_JLP6" default="false"/>
+         <attribute key="penalty_JLP7" default="false"/>
+         <attribute key="penalty_V5" default="false"/>
+         <attribute key="penalty_amount0" default="0.0"/>
+         <attribute key="program-id" default="none"/>
+         <attribute key="redistribution" default="false"/>
+         <attribute key="rejected" default="false"/>
+         <attribute key="risk_factor" default="0.0"/>
+         <attribute key="selected_manually" default="false"/>
+         <attribute key="selected_random" default="false"/>
+         <attribute key="selected_risk" default="false"/>
+         <attribute key="small farmer" default="false"/>
+         <attribute key="year" default="none"/>
+         <attribute key="young farmer" default="false"/>
+      </trace_level>
+      <event_level>
+         <attribute key="activity" default="none"/>
+         <attribute key="concept:name" default="none"/>
+         <attribute key="docid" default="none"/>
+         <attribute key="docid_uuid" default="5302F7BA-6EA6-4E69-880B-C9C203EB86C9"/>
+         <attribute key="doctype" default="none"/>
+         <attribute key="eventid" default="none"/>
+         <attribute key="identity:id" default="9C25102D-21F3-4361-84C7-DA8BBF6953BC"/>
+         <attribute key="lifecycle:transition" default="none"/>
+         <attribute key="note" default="none"/>
+         <attribute key="org:resource" default="none"/>
+         <attribute key="subprocess" default="none"/>
+         <attribute key="success" default="false"/>
+         <attribute key="time:timestamp" default="1970-01-01T01:00:00+01:00"/>
+      </event_level>
+   </global_attributes>
+   <meta_extensions>
+   </meta_extensions>
+   <extensions>
+      <Concept prefix="concept" uri="http://www.xes-standard.org/concept.xesext">
+         <name>BPI Challenge 2018</name>
+      </Concept>
+      <Lifecycle prefix="lifecycle" uri="http://www.xes-standard.org/lifecycle.xesext">
+      </Lifecycle>
+      <MetaData_Time prefix="meta_time" uri="http://www.xes-standard.org/meta_time.xesext">
+         <duration_average>2.8977602621E7</duration_average>
+         <duration_max>8.7385045817E7</duration_max>
+         <duration_min>9828893.063</duration_min>
+         <duration_standard_deviation>1.3734464217E7</duration_standard_deviation>
+         <duration_total>1.269479793225363E12</duration_total>
+         <log_duration>1.17208982E8</log_duration>
+         <log_end_time>2018-01-19T13:03:02+01:00</log_end_time>
+         <log_start_time>2014-05-04T00:00:00+02:00</log_start_time>
+      </MetaData_Time>
+      <Organizational prefix="org" uri="http://www.xes-standard.org/org.xesext">
+      </Organizational>
+      <Time prefix="time" uri="http://www.xes-standard.org/time.xesext">
+      </Time>
+   </extensions>
+</metadata>

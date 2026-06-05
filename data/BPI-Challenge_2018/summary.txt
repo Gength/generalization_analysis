@@ -1,0 +1,62 @@
+Cases: 43809
+Events: 2,514,266
+
+A trace variant is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
+
+Unique activities: 41
+
+Unique trace variants: 28,457
+
+Log Representativeness:
+  TLRA (Trace-Based Log Representativeness Approx.): 0.3504
+  * Evaluates the probability that an additional trace has been seen previously in the log.
+  * Higher values (closer to 1.0) indicate the log already highly represents the system.
+
+Trace length distribution (events per case):
+  Min:      24
+  Max:      2973
+  Mean:     57.4
+  Median:   49.0
+  Std:      34.9
+  P25:      44.0
+  P75:      59.0
+  P90:      79.0
+  P95:      99.0
+  P99:      170.0
+
+Trace variant frequency distribution:
+  Min freq: 1
+  Max freq: 1182
+  Mean freq: 1.5
+  Singletons (freq=1): 26,602
+  freq<=5: 28,062
+
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 41              | 41      (100.0%) |       0.00 | 0     (  0.0%)
+N=2 (Lookback 1) | 593             | 423     ( 71.3%) |       0.23 | 102   ( 17.2%)
+N=3 (Lookback 2) | 3160            | 1642    ( 52.0%) |       0.38 | 1044  ( 33.0%)
+N=4 (Lookback 3) | 10323           | 4344    ( 42.1%) |       0.47 | 4348  ( 42.1%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
+Top 10 trace variants by frequency:
+  Variant 1: freq=1182, trace=('mail income', 'mail valid', 'initialize', 'begin editing', 'finish editing', 'create', 'initialize', 'begin editing', 'finish editing', 'initialize', 'performed', 'performed', 'initialize', 'begin editing', 'calculate')...
+  Variant 2: freq=987, trace=('mail income', 'mail valid', 'initialize', 'begin editing', 'finish editing', 'create', 'initialize', 'begin editing', 'finish editing', 'initialize', 'performed', 'performed', 'initialize', 'begin editing', 'calculate')...
+  Variant 3: freq=842, trace=('mail income', 'mail valid', 'initialize', 'begin editing', 'finish pre-check', 'initialize', 'begin editing', 'finish editing', 'finish editing', 'finish editing', 'create', 'initialize', 'performed', 'initialize', 'begin editing')...
+  Variant 4: freq=448, trace=('mail income', 'mail valid', 'initialize', 'begin editing', 'finish editing', 'create', 'initialize', 'begin editing', 'finish editing', 'initialize', 'performed', 'performed', 'initialize', 'begin editing', 'calculate')...
+  Variant 5: freq=443, trace=('mail income', 'mail valid', 'initialize', 'begin editing', 'finish editing', 'create', 'initialize', 'begin editing', 'finish editing', 'initialize', 'performed', 'performed', 'initialize', 'begin editing', 'calculate')...
+  Variant 6: freq=391, trace=('mail income', 'mail valid', 'initialize', 'begin editing', 'finish pre-check', 'finish editing', 'finish editing', 'create', 'initialize', 'begin editing', 'finish editing', 'initialize', 'performed', 'initialize', 'begin editing')...
+  Variant 7: freq=332, trace=('mail income', 'mail valid', 'initialize', 'begin editing', 'finish pre-check', 'initialize', 'begin editing', 'finish editing', 'finish editing', 'finish editing', 'create', 'initialize', 'performed', 'initialize', 'begin editing')...
+  Variant 8: freq=282, trace=('mail income', 'mail valid', 'initialize', 'begin editing', 'finish pre-check', 'initialize', 'begin editing', 'finish editing', 'finish editing', 'finish editing', 'create', 'initialize', 'performed', 'initialize', 'begin editing')...
+  Variant 9: freq=245, trace=('mail income', 'mail valid', 'mail valid', 'mail valid', 'initialize', 'begin editing', 'finish editing', 'initialize', 'begin editing', 'finish editing', 'finish editing', 'initialize', 'performed', 'performed', 'initialize')...
+  Variant 10: freq=225, trace=('mail income', 'mail valid', 'initialize', 'begin editing', 'finish pre-check', 'finish editing', 'initialize', 'begin editing', 'finish editing', 'finish editing', 'create', 'initialize', 'performed', 'initialize', 'begin editing')...

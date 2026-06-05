@@ -1,0 +1,62 @@
+Cases: 1053
+Events: 47,293
+
+A trace variant is defined as a unique, ordered sequence of activities executed from the beginning to the end of a process case.
+
+Unique activities: 356
+
+Unique trace variants: 1,049
+
+Log Representativeness:
+  TLRA (Trace-Based Log Representativeness Approx.): 0.0038
+  * Evaluates the probability that an additional trace has been seen previously in the log.
+  * Higher values (closer to 1.0) indicate the log already highly represents the system.
+
+Trace length distribution (events per case):
+  Min:      1
+  Max:      116
+  Mean:     44.9
+  Median:   44.0
+  Std:      15.0
+  P25:      39.0
+  P75:      52.0
+  P90:      63.0
+  P95:      69.4
+  P99:      81.5
+
+Trace variant frequency distribution:
+  Min freq: 1
+  Max freq: 3
+  Mean freq: 1.0
+  Singletons (freq=1): 1,046
+  freq<=5: 1,049
+
+N-gram State Sparsity & Good-Turing Mutation Probability:
+=====================================================================================
+N-gram (Order)  | Unique States   | Safe States (>5)     | Avg P_unseen | Collapse (P=1.0)
+=====================================================================================
+N=1 (Lookback 0) | 354             | 236     ( 66.7%) |       0.31 | 76    ( 21.5%)
+N=2 (Lookback 1) | 3499            | 1033    ( 29.5%) |       0.64 | 2029  ( 58.0%)
+N=3 (Lookback 2) | 8852            | 1431    ( 16.2%) |       0.74 | 6224  ( 70.3%)
+N=4 (Lookback 3) | 13694           | 1295    (  9.5%) |       0.80 | 10663 ( 77.9%)
+=====================================================================================
+
+[Diagnostic Guide]
+1. Safe States: % of states with total outgoing frequency > threshold (default 5).
+   -> If very low at N=3, it means most 3-level states lack sufficient historical support.
+2. Avg P_unseen: Average Good-Turing mutation probability.
+   -> If this spikes dramatically at higher N, the Shadow Log will degrade into a random walk.
+3. Collapse (P=1.0): % of states where the mutation probability is 100%.
+   -> This indicates total data sparsity: all historical paths from this state only occurred once.
+
+Top 10 trace variants by frequency:
+  Variant 1: freq=3, trace=('01_HOOFD_010', '01_HOOFD_011', '01_HOOFD_020', '02_DRZ_010', '04_BPT_005', '01_HOOFD_065_0', '01_HOOFD_090', '01_HOOFD_110_0', '01_HOOFD_180', '01_HOOFD_065_1', '01_HOOFD_015', '01_HOOFD_061', '01_HOOFD_065_2')
+  Variant 2: freq=2, trace=('01_HOOFD_010', '01_HOOFD_011', '01_HOOFD_020', '02_DRZ_010', '04_BPT_005', '01_HOOFD_065_0', '01_HOOFD_090', '01_HOOFD_110_0', '01_HOOFD_180', '01_HOOFD_061', '01_HOOFD_015', '01_HOOFD_065_1', '01_HOOFD_065_2')
+  Variant 3: freq=2, trace=('01_HOOFD_010', '01_HOOFD_015', '01_HOOFD_020', '01_HOOFD_040')
+  Variant 4: freq=1, trace=('01_HOOFD_010', '04_BPT_005', '01_HOOFD_065_0', '01_HOOFD_090', '01_HOOFD_110_0', '01_HOOFD_180', '01_HOOFD_011', '01_HOOFD_020', '02_DRZ_010', '01_HOOFD_065_1', '01_HOOFD_015', '01_HOOFD_061', '01_HOOFD_065_2', '01_HOOFD_200', '01_HOOFD_250_0')...
+  Variant 5: freq=1, trace=('01_HOOFD_011', '01_HOOFD_020', '02_DRZ_010', '04_BPT_005', '01_HOOFD_065_0', '01_HOOFD_090', '01_HOOFD_110_0', '01_HOOFD_180', '01_HOOFD_015', '01_HOOFD_010', '01_HOOFD_065_1', '01_HOOFD_061', '01_HOOFD_065_2')
+  Variant 6: freq=1, trace=('01_HOOFD_010', '01_HOOFD_012', '01_HOOFD_020', '02_DRZ_010', '04_BPT_005', '04_BPT_009', '04_BPT_020', '04_BPT_030', '01_HOOFD_065_0', '04_BPT_029', '01_HOOFD_015', '04_BPT_021', '01_HOOFD_065_1', '01_HOOFD_030_1', '01_HOOFD_030_2')...
+  Variant 7: freq=1, trace=('01_HOOFD_010', '01_HOOFD_011', '01_HOOFD_020', '02_DRZ_010', '04_BPT_005', '01_HOOFD_065_0', '01_HOOFD_090', '01_HOOFD_110_0', '01_HOOFD_180', '01_HOOFD_015', '01_HOOFD_065_1', '01_HOOFD_061', '01_HOOFD_065_2', '08_AWB45_010', '08_AWB45_020_0')...
+  Variant 8: freq=1, trace=('01_HOOFD_010', '01_HOOFD_011', '01_HOOFD_020', '02_DRZ_010', '04_BPT_005', '01_HOOFD_065_0', '01_HOOFD_015', '01_HOOFD_061', '01_HOOFD_090', '01_HOOFD_110_0', '01_HOOFD_180', '08_AWB45_005', '01_HOOFD_200', '01_HOOFD_250_0', '01_HOOFD_330')...
+  Variant 9: freq=1, trace=('01_HOOFD_011', '01_HOOFD_020', '02_DRZ_010', '04_BPT_005', '01_HOOFD_065_0', '01_HOOFD_090', '01_HOOFD_110_0', '01_HOOFD_180', '01_HOOFD_061', '01_HOOFD_065_1', '01_HOOFD_010', '01_HOOFD_015', '01_HOOFD_065_2', '08_AWB45_005', '01_HOOFD_200')...
+  Variant 10: freq=1, trace=('01_HOOFD_010', '01_HOOFD_180', '01_HOOFD_011', '01_HOOFD_020', '02_DRZ_010', '04_BPT_005', '01_HOOFD_065_0', '01_HOOFD_090', '01_HOOFD_110_0', '01_HOOFD_061', '01_HOOFD_065_1', '01_HOOFD_015', '01_HOOFD_065_2', '01_HOOFD_491', '01_HOOFD_200')...
