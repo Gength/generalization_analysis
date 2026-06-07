@@ -53,7 +53,7 @@ These are NOT generalization metrics per se, but provide empirical anchors for i
 | # | Method | Approach | Role |
 |---|--------|----------|------|
 | R1 | **K-Fold Cross-Validation Fitness** (5-fold, variant-based) | Split log by variants → discover on train → replay test on model. Average over 5 folds. | Empirical "ground truth" — measures actual generalization to held-out data. |
-| R2 | **Leave-One-Variant-Out Fitness** | Each variant held out in turn, model discovered on rest, fitness on held-out variant. | Finer-grained CV; catches fragile models that 3-fold might miss. |
+| R2 | **Leave-One-Variant-Out Fitness** | Each variant held out in turn, model discovered on rest, fitness on held-out variant. | Finer-grained CV; catches fragile models that K-fold might miss. **Parallelize across SLURM `krater` partition (40 nodes × 128 GB) for variant-heavy datasets (D3–D5).** |
 | R3 | **Naive Random Baseline** | Generate N random traces (uniform activity sampling, random length 1–max_trace_len) → token-replay on model. | Lower bound — any reasonable method should score above this. |
 
 ---
@@ -171,7 +171,8 @@ Covering the generalization spectrum from underfitting to overfitting:
 | M6 (Bootstrap Gen) | 100 bootstrap replicates | Mean ± 95% CI |
 | M7 (SpeciAL4PM) | 1 per N-gram (1–5 gram) | Profile; use C1 ratio as scalar |
 | M8 (Pattern-based) | 1 (deterministic given thresholds) | Single value |
-| R1, R2 (K-Fold CV) | **k=5 folds** × 3 shuffles | Mean ± std |
+| R1 (K-Fold CV) | k=5 folds × 3 shuffles | Mean ± std |
+| R2 (Leave-One-Variant-Out) | 1 pass per variant; parallelize across SLURM `krater` partition for D4/D5 | Single value per variant; aggregate by mean |
 | R3 (Random baseline) | 5 | Mean ± std |
 
 Seed all random number generators for reproducibility (`seed=42`).
@@ -191,65 +192,36 @@ Variant-based k-fold partitions trace variants (not individual traces) into k gr
 
 ### HybridGen v24 Hyperparameters
 
-#### Why max_n=6? Empirical Evidence from Mutation Analysis
+The choice of `max_n` was determined empirically. See `analysis/Mutation/MutationReport.md` for the full N-gram sweep (N=1..8) on BPI 2017. **Key conclusion: N=6 is the mutation peak (49× V1 baseline, 3.8% mutated traces).** Beyond N=6 the curse of dimensionality overtakes context benefit (mutation rate declines, backoffs double). N=6 also resolves a small-sample artifact in Alpha Miner that appeared at N=3.
 
-The choice of `max_n` was revised from 3 to 6 based on a systematic N-gram sweep experiment on BPI Challenge 2017 (see `analysis/Mutation/MutationReport.md`). The key finding: **N=6 is the empirical mutation peak**, not N=3.
-
-The algorithm's Katz backoff mechanism makes `max_n` an **upper bound**, not a fixed operating point. When states are sparse, the algorithm gracefully degrades to lower N — so increasing `max_n` never produces *worse* results than a lower value; it only adds richer context where the data supports it.
-
-**Empirical N-gram sweep on BPI 2017** (1,000 shadow traces, `safe_threshold=5`, seed=42):
-
-| Metric | N=1 | N=3 | **N=6** | N=8 |
-|--------|-----|-----|---------|-----|
-| Top-order usage | 100% | 92.6% | **80.0%** | 72.4% |
-| Mutation rate (×10⁻³) | 0.027 | 0.376 | **1.333** | 1.208 ↓ |
-| Mutated traces (of 1000) | 0 | 12 | **38** | 40 |
-| × V1 baseline | 1× | 14× | **49×** | 44× |
-| Backoff count | 0 | 466 | 3,788 | 7,514 |
-
-The mutation rate **peaks at N=6** (0.001333) and then *declines* at N=7 (0.001255) and N=8 (0.001208). This is the "Curse of Dimensionality overtaking Context Benefit": beyond N=6, states become so sparse that Katz backoff increasingly falls back to lower orders, reducing effective mutation. The 80% top-order usage at N=6 is still healthy — 4 out of 5 decisions use the richest available context.
-
-**Why this matters for generalization evaluation:**
-
-N=6 provides **38 mutated traces per 1,000** (3.8%) vs. only 12 (1.2%) at N=3. This larger mutation sample enables statistically robust stratified analysis:
-
-| Miner | N=3 Δ (Reg−Mut) | N=6 Δ (Reg−Mut) | Improvement |
-|-------|-----------------|-----------------|-------------|
-| Heuristics Miner | +0.0256 | **+0.0325** | +27% — mutation vulnerability becomes clearer |
-| Alpha Miner | −0.0195 | −0.0035 | Converged — N=3 result was a small-sample artifact |
-
-At N=3, Alpha Miner appeared to have an *inverse* mutation effect (mutated traces scored higher than regular traces — statistically implausible). With N=6's larger sample, this artifact disappeared. N=6 provides more reliable stratified metrics.
+The Katz backoff mechanism makes `max_n` an **upper bound**, not a fixed operating point — sparse datasets (D4/D5) gracefully degrade to lower effective N.
 
 **Per-dataset viability:**
 
 | Dataset | N=3 Safe States | N=6 Projected | Verdict |
 |---------|----------------|---------------|---------|
-| D1 Sepsis | 55.9% | ~30–40% top-order | Katz backoff handles sparsity; effective behavior ≈ N=2–3 |
-| D2 BPI 2013 Incident | 88.9% | >75% top-order | Excellent — 4 activities → tiny state space |
-| D3 BPI 2017 | 67.0% | **80.0% top-order** (measured) | N=6 is the empirical peak |
-| D4 BPI 2018 | 52.0% | ~25–35% top-order | Katz backoff handles sparsity; effective behavior ≈ N=2 |
-| D5 BPI 2019 | 51.5% | ~25–35% top-order | Katz backoff handles sparsity; effective behavior ≈ N=2 |
-
-For D4/D5, N=6 will use lower effective N due to backoff — but this is the *correct* behavior. The algorithm automatically uses less context when the data doesn't support more. Setting `max_n=6` does not force N=6; it merely *allows* N=6 when the data justifies it.
+| D1 Sepsis | 55.9% | ~30–40% top-order | Katz backoff → effective ≈ N=2–3 |
+| D2 BPI 2013 | 88.9% | >75% top-order | Excellent (4 activities) |
+| D3 BPI 2017 | 67.0% | **80.0%** (measured) | Empirical peak |
+| D4 BPI 2018 | 52.0% | ~25–35% | Katz backoff → effective ≈ N=2 |
+| D5 BPI 2019 | 51.5% | ~25–35% | Katz backoff → effective ≈ N=2 |
 
 **Recommended configuration (fixed across all datasets):**
 
 | Parameter | Value | Justification |
 |-----------|-------|---------------|
-| `max_n` | **6** | Empirical mutation peak on BPI 2017 (49× V1 baseline). Katz backoff gracefully degrades on sparser datasets — `max_n` is an upper bound, not a fixed operating point. |
-| `safe_threshold` | **5** | Well-tested in existing benchmarks. Threshold applies to total transition frequency (not unique outgoing count), so even 4-activity datasets (D2) are safe. |
-| `num_shadow_traces` | **min(1000, len(log))** | 1,000 shadow traces for D2–D5. For D1 (1,050 original traces), generate 1,000 — close to 1:1 ratio. At N=6, 1,000 traces yields ~38 mutated traces for stratified analysis. |
-| `iterations` | **5** | Algorithm default (`evaluate_miner` in v23.py:186). Each iteration generates a fresh shadow log → replays → scores. 5 iterations gives a tight mean ± std. |
+| `max_n` | **6** | Empirical mutation peak on BPI 2017. Katz backoff degrades gracefully on sparser datasets. |
+| `safe_threshold` | **5** | Well-tested; applies to total transition frequency, not unique outgoing count. |
+| `num_shadow_traces` | **min(1000, len(log))** | 1,000 traces → ~38 mutated at N=6 for stratified analysis. |
+| `iterations` | **5** | Algorithm default; 5 iterations produce tight mean ± std. |
 
-**Ablation experiments (M1a–M1c):**
+**Ablation experiments (M1a–M1c) — all run on all 5 datasets:**
 
-| Ablation | Configuration | Purpose |
-|----------|--------------|---------|
-| M1a (v1) | no `max_n` (1-gram DFG only) | Simplest baseline — no N-gram context at all |
-| M1b (v2.1 N=3) | `max_n=3`, flat per-activity termination | Isolate **context-aware termination**: compare M1b vs M1 to measure the v24 fix |
-| M1c (v2.1 N=6) | `max_n=6`, flat per-activity termination | Isolate **N=3→6 upgrade**: compare M1c vs M1b to measure N-gram depth benefit; compare M1c vs M1 to measure context-aware termination ON TOP OF N=6 |
-
-All three ablations run on **all 5 datasets** with the same `safe_threshold=5`, `num_shadow_traces=min(1000, len(log))`, `iterations=5`.
+| Ablation | Configuration | Isolates |
+|----------|--------------|----------|
+| M1a (v1) | 1-gram DFG only, no `max_n` | Simplest baseline |
+| M1b (v2.1 N=3) | `max_n=3`, flat termination | **Context-aware termination** (M1b vs M1) |
+| M1c (v2.1 N=6) | `max_n=6`, flat termination | **N=3→6 upgrade** (M1c vs M1b) and **v24 fix on top of N=6** (M1c vs M1) |
 
 ### Output Format
 
@@ -338,7 +310,7 @@ java -cp ... main.PatternGeneralization <path/> <log.xes> <model.pnml> AntiAlign
 
 **Estimated runtime per cell:** 1–10 min (ILP-based anti-alignment construction).
 
-**Fallback:** Timeout at 10 min per cell; record as "timed out" and exclude from analysis. For large logs (BPI 2017), anti-alignment computation may be infeasible — mark as "not applicable."
+**Fallback:** Let the computation run to completion without hard timeout. If runtime exceeds 10 min, emit a **warning** to stderr and append `⚠️ SLOW` to the cell's `Notes` field in the output CSV — but keep the score. The completed score is more valuable than either a -1 sentinel or a dropped row, even if it took 30+ minutes. For very large logs (BPI 2018), expect many cells to exceed 10 min; the `⚠️ SLOW` marker enables post-hoc filtering without data loss.
 
 ---
 
@@ -350,12 +322,20 @@ java -cp ... main.PatternGeneralization <path/> <log.xes> <model.pnml> AntiAlign
 - **Isolated environment**: Python 3.7, TensorFlow 1.15, PM4Py 1.2.6
 - Source: `./src/AVATAR/`
 
+**Data Leakage Risk:** AVATAR pre-trains a GAN on the event log's trace variants, then uses that GAN to generate synthetic variants whose replay fitness is measured against the discovered model. If both GAN training and model discovery use the **same** full log, the GAN may simply regenerate patterns the model already fits — overestimating generalization.
+
+**Mitigation (variant-based split):** Split the log's trace variants into two disjoint sets:
+- **GAN training set** (80% of variants, by instance count) — used to train the RelGAN.
+- **Model discovery set** (20% of variants) — used for per-miner model discovery.
+The GAN never sees the held-out variants, so any fit on those represents genuine generalization. This mirrors the K-fold train/test separation used in R1.
+
 **Integration Strategy:**
 
 1. **Environment isolation**: Conda env `avatar-env` with Python 3.7 + TF 1.15 + PM4Py 1.2.6.
-2. **Pre-train one GAN per dataset**: AVATAR's generator learns the log distribution, not the model. Train once per dataset, reuse checkpoint across all 7 miners.
-3. **Per-miner replay only**: Export Petri net as PNML → run `generalization.py` with the pre-trained checkpoint and the specific PNML.
-4. **Bridge**: `benchmark/bridges/avatar_bridge.py` — shells out to `avatar-env`, invokes the AVATAR pipeline, parses the score.
+2. **Split variants** 80/20 by instance count (not raw variant count — weight by frequency).
+3. **Pre-train GAN** on the 80% variant subset (one per dataset, reused across miners).
+4. **Per-miner discovery + replay**: Discover model from the 20% holdout subset → export as PNML → run `generalization.py` with the pre-trained checkpoint → parse score.
+5. **Bridge**: `benchmark/bridges/avatar_bridge.py` — shells out to `avatar-env`, invokes the AVATAR pipeline, parses the score.
 
 **Estimated runtime:**
 - GAN training per dataset: 2–6 hours (one-time, reusable).
@@ -471,7 +451,7 @@ Four variants:
 
 **Estimated runtime per cell:** 1–10 min (ILP-based pattern matching).
 
-**Fallback:** If lpsolve native library is unavailable on the platform, skip the method entirely (no fallback — pattern matching depends on ILP solver). For very large logs, set a 10-minute timeout.
+**Fallback:** If lpsolve native library is unavailable on the platform, skip the method entirely (no fallback — pattern matching depends on ILP solver). For very large logs, same convention as M4: no hard timeout; emit `⚠️ SLOW` warning to stderr + Notes field if runtime exceeds 10 min, but keep the score.
 
 ---
 
@@ -548,7 +528,8 @@ Step 1: D1 Sepsis — All Methods (current env + JDK + isolated AVATAR env)
   ├── M1, M1a–M1c (HybridGen variants) — ~2–5 min
   ├── M2 (PM4Py built-in) — < 1 s
   ├── M7 (SpeciAL4PM) — ~3–5 min
-  ├── R1, R2 (K-Fold CV) — ~5 min
+  ├── R1 (K-Fold CV, k=5) — ~3 min
+  ├── R2 (Leave-One-Variant-Out) — ~10 min (846 variants)
   ├── R3 (Random baseline) — ~30 s
   ├── M3 (Entropic Relevance) — ~30 s
   ├── M4 (Anti-Alignment) — ~5–10 min
@@ -561,7 +542,8 @@ Step 2: D2 BPI 2013 Incident — All Methods
   ├── M1–M1c (HybridGen) — ~5–10 min
   ├── M2 (PM4Py) — < 1 s
   ├── M7 (SpeciAL4PM) — ~5–10 min
-  ├── R1, R2 (K-Fold CV) — ~5–10 min
+  ├── R1 (K-Fold CV, k=5) — ~3 min
+  ├── R2 (Leave-One-Variant-Out) — ~15 min (1,511 variants)
   ├── R3 (Random baseline) — ~30 s
   ├── M3, M4, M6, M8 (Java methods) — ~20–40 min
   ├── M5 (AVATAR) — ~2–4 hours (GAN training)
@@ -585,13 +567,18 @@ Step 5: D3 BPI 2017 (heavy: variant explosion + deep traces)
   ├── M1–M1c (HybridGen) — ~15–30 min (N-gram state blowup)
   ├── M2 (PM4Py) — ~1 s
   ├── M3, M4, M6, M7, M8 — ~30–90 min
-  ├── R1, R2, R3 — ~10–20 min
+  ├── R1 (K-Fold CV, k=5) — ~5 min
+  ├── R2 (Leave-One-Variant-Out) — parallelize across SLURM `krater` (40 nodes, 15,930 variants → ~398 variants/node)
+  ├── R3 (Random baseline) — ~1 min
   ├── M5 (AVATAR) — ~4–8 hours
   └── Write config JSON for every cell
 
 Step 6: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
   ├── M1–M1c (HybridGen) — ~30–60 min (massive N-gram state space)
   ├── M2–M8 — ~2–6 hours combined
+  ├── R1 (K-Fold CV, k=5) — ~10 min
+  ├── R2 (Leave-One-Variant-Out) — parallelize across SLURM `krater` (40 nodes, 28K variants → ~700 variants/node)
+  ├── R3 (Random baseline) — ~1 min
   ├── M5 (AVATAR) — ~6–12 hours
   ├── ⚠️ Risk: PM4Py read_xes on 2.5M events may OOM even on 128GB
   └── Write config JSON for every cell
@@ -599,6 +586,9 @@ Step 6: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
 Step 7: D5 BPI 2019 (heavy: 251K cases in RAM)
   ├── M1–M1c (HybridGen) — ~15–30 min
   ├── M2–M8 — ~1–3 hours combined
+  ├── R1 (K-Fold CV, k=5) — ~5 min
+  ├── R2 (Leave-One-Variant-Out) — parallelize across SLURM `krater` (40 nodes, 11,973 variants → ~299 variants/node)
+  ├── R3 (Random baseline) — ~1 min
   ├── M5 (AVATAR) — ~4–8 hours
   └── Write config JSON for every cell
 
@@ -632,7 +622,7 @@ Step 8: Aggregate results across all 5 datasets
 |------|----------|------------|
 | AVATAR TF 1.15 + Python 3.7 vs. current Python 3.12 | High | Isolated conda env; bridge via subprocess + file I/O |
 | AVATAR GAN training too slow for 5 datasets | High | Pre-train one GAN per dataset (log-dependent, not model-dependent); reuse across miners |
-| Anti-Alignment ILP times out on large logs (BPI 2017) | High | 10-min timeout per cell; mark as "timed out"; exclude from large-log subset analysis |
+| Anti-Alignment ILP very slow on large logs (BPI 2017, BPI 2018) | High | No hard timeout; emit `⚠️ SLOW` to stderr + Notes if >10 min. Keep the score — a slow score beats a -1 or dropped row. |
 | BPI 2018 (D4) OOM on local machine (28K variants, 2.5M events, 158 MB) | High | Skip D4 on local; run exclusively on CIP-Pool 128GB machine |
 | BPI 2017 (D3) OOM on local machine (15,930 variants + deep traces) | High | Skip D3 on local; run exclusively on CIP-Pool 128GB machine |
 | BPI 2019 (D5) OOM on local machine (251K cases) | High | Skip D5 on local; run exclusively on CIP-Pool 128GB machine |
