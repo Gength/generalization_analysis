@@ -53,7 +53,7 @@ These are NOT generalization metrics per se, but provide empirical anchors for i
 | # | Method | Approach | Role |
 |---|--------|----------|------|
 | R1 | **K-Fold Cross-Validation Fitness** (5-fold, variant-based) | Split log by variants → discover on train → replay test on model. Average over 5 folds. | Empirical "ground truth" — measures actual generalization to held-out data. |
-| R2 | **Leave-One-Variant-Out Fitness** | Each variant held out in turn, model discovered on rest, fitness on held-out variant. | Finer-grained CV; catches fragile models that K-fold might miss. **Parallelize across SLURM `krater` partition (40 nodes × 128 GB) for variant-heavy datasets (D3–D5).** |
+| R2 | **Leave-One-Variant-Out Fitness** | Each variant held out in turn, model discovered on rest, fitness on held-out variant. | Finer-grained CV; catches fragile models that K-fold might miss. **Parallelize across SLURM `krater` partition (MaxJobs=15, MaxSubmit=30).** |
 | R3 | **Naive Random Baseline** | Generate N random traces (uniform activity sampling, random length 1–max_trace_len) → token-replay on model. | Lower bound — any reasonable method should score above this. |
 
 ---
@@ -457,6 +457,23 @@ Four variants:
 
 ## Execution Order & Dependencies
 
+### SLURM Resource Constraints (CIP-Pool `krater` Partition)
+
+From `sacctmgr`:
+- **MaxJobs**: 15 (running jobs)
+- **MaxSubmit**: 30 (queued + running)
+- **QOS**: normal
+
+R2 (Leave-One-Variant-Out) on variant-heavy datasets uses SLURM **array jobs** with `--array=0-29` (30 sub-jobs = MaxSubmit cap). Each array task processes a slice of variants:
+
+| Dataset | Variants | Array size | Variants/task | Wall time estimate |
+|---------|----------|-----------|---------------|-------------------|
+| D3 BPI 2017 | 15,930 | 30 | ~531 | ~10–20 min per task (10 min discovery × 531 variants) |
+| D4 BPI 2018 | 28,000 | 30 | ~933 | ~30–60 min per task |
+| D5 BPI 2019 | 11,973 | 30 | ~399 | ~8–15 min per task |
+
+Other methods (M1–M8) run as single-node jobs within the same partition. No array parallelization needed.
+
 ### JSON Config Recording Requirement
 
 **Every experiment run MUST produce a sidecar JSON file** recording the exact configuration used. Without this, a result is untrustworthy — you cannot know whether the score came from `max_n=3` or `max_n=6`, `iterations=5` or `iterations=1`, etc. Results without matching config JSONs are treated as invalid.
@@ -568,7 +585,7 @@ Step 5: D3 BPI 2017 (heavy: variant explosion + deep traces)
   ├── M2 (PM4Py) — ~1 s
   ├── M3, M4, M6, M7, M8 — ~30–90 min
   ├── R1 (K-Fold CV, k=5) — ~5 min
-  ├── R2 (Leave-One-Variant-Out) — parallelize across SLURM `krater` (40 nodes, 15,930 variants → ~398 variants/node)
+  ├── R2 (Leave-One-Variant-Out) — parallelize via SLURM array job (MaxSubmit=30 → ~531 variants/job, MaxJobs=15 running concurrently)
   ├── R3 (Random baseline) — ~1 min
   ├── M5 (AVATAR) — ~4–8 hours
   └── Write config JSON for every cell
@@ -577,7 +594,7 @@ Step 6: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
   ├── M1–M1c (HybridGen) — ~30–60 min (massive N-gram state space)
   ├── M2–M8 — ~2–6 hours combined
   ├── R1 (K-Fold CV, k=5) — ~10 min
-  ├── R2 (Leave-One-Variant-Out) — parallelize across SLURM `krater` (40 nodes, 28K variants → ~700 variants/node)
+  ├── R2 (Leave-One-Variant-Out) — parallelize via SLURM array job (MaxSubmit=30 → ~933 variants/job, MaxJobs=15 running)
   ├── R3 (Random baseline) — ~1 min
   ├── M5 (AVATAR) — ~6–12 hours
   ├── ⚠️ Risk: PM4Py read_xes on 2.5M events may OOM even on 128GB
@@ -587,7 +604,7 @@ Step 7: D5 BPI 2019 (heavy: 251K cases in RAM)
   ├── M1–M1c (HybridGen) — ~15–30 min
   ├── M2–M8 — ~1–3 hours combined
   ├── R1 (K-Fold CV, k=5) — ~5 min
-  ├── R2 (Leave-One-Variant-Out) — parallelize across SLURM `krater` (40 nodes, 11,973 variants → ~299 variants/node)
+  ├── R2 (Leave-One-Variant-Out) — parallelize via SLURM array job (MaxSubmit=30 → ~399 variants/job, MaxJobs=15 running)
   ├── R3 (Random baseline) — ~1 min
   ├── M5 (AVATAR) — ~4–8 hours
   └── Write config JSON for every cell
