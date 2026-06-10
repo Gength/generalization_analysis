@@ -1,0 +1,15 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Inductive_Strict",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-08T13:58:40Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.9024534736155712,
+    "runtime_s": 0.6000986099243164
+  },
+  "notes": ""
+}

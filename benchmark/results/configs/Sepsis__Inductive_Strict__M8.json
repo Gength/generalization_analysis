@@ -1,0 +1,22 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Inductive_Strict",
+  "method": "M8",
+  "method_label": "Pattern-based Generalization",
+  "timestamp": "2026-06-09T20:13:30Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "PatternGeneralization",
+    "oracle": "global",
+    "matching": "PartialMatching",
+    "noise_threshold": 0.02,
+    "solver": "gurobi_11.0",
+    "mode": "single"
+  },
+  "results": {
+    "raw_line": "",
+    "runtime_s": 0.008188962936401367
+  },
+  "notes": "STDERR: xvfb-run: error: Xvfb failed to start"
+}

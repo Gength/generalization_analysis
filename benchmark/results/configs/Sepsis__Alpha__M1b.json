@@ -1,0 +1,28 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Alpha",
+  "method": "M1b",
+  "method_label": "HybridGen v2.1 (N=3)",
+  "timestamp": "2026-06-08T13:57:34Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "max_n": 3,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.28373171657114415,
+    "std": 0.002436675877957898,
+    "raw_iterations": [
+      0.2840739127403406,
+      0.2830122554180253,
+      0.28100061772960755,
+      0.2881809252872121,
+      0.2823908716805353
+    ],
+    "runtime_s": 1.699718713760376
+  },
+  "notes": " \u26a0\ufe0f LOW_FITNESS"
+}

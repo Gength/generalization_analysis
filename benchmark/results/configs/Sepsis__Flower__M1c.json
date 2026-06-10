@@ -1,0 +1,28 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Flower",
+  "method": "M1c",
+  "method_label": "HybridGen v2.1 (N=6)",
+  "timestamp": "2026-06-08T13:59:20Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 1.0,
+    "std": 0.0,
+    "raw_iterations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "runtime_s": 1.761753797531128
+  },
+  "notes": "Flower model \u2014 all activities in one concurrent block; expected lowest gen score"
+}

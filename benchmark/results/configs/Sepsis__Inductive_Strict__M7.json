@@ -1,0 +1,34 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Inductive_Strict",
+  "method": "M7",
+  "method_label": "SpeciAL4PM",
+  "timestamp": "2026-06-08T14:15:01Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "n_grams": [
+      "1-gram",
+      "2-gram",
+      "3-gram",
+      "tv"
+    ]
+  },
+  "results": {
+    "c1_original": {
+      "1-gram": 1,
+      "2-gram": 0.9984836358103778,
+      "3-gram": 0.9914928721895836,
+      "tv": 0.2533968805142782
+    },
+    "c1_simulated": {
+      "1-gram": 1,
+      "2-gram": 0.9993942973295672,
+      "3-gram": 0.9687018796001335,
+      "tv": 0.0
+    },
+    "gen_score": 0.744253364489873,
+    "runtime_s": 0.9606673717498779
+  },
+  "notes": ""
+}

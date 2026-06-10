@@ -1,0 +1,25 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Alpha+",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-08T14:03:26Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.8292793973530698,
+    "std": 0.0017216643387072525,
+    "raw_shuffles": [
+      0.8292013364787125,
+      0.8272109121870596,
+      0.8314259433934377
+    ],
+    "runtime_s": 0
+  },
+  "notes": ""
+}

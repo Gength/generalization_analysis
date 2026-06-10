@@ -1,0 +1,20 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Alpha+",
+  "method": "M4",
+  "method_label": "Anti-Alignment Generalization",
+  "timestamp": "2026-06-10T10:24:52Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "solver": "gurobi_11.0",
+    "threads": "auto",
+    "mode": "single",
+    "timeout_s": 86400
+  },
+  "results": {
+    "score": -1,
+    "runtime_s": 48414.258236169815
+  },
+  "notes": "FAILED"
+}

@@ -1,0 +1,22 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Heuristics",
+  "method": "M8",
+  "method_label": "Pattern-based Generalization",
+  "timestamp": "2026-06-09T20:22:04Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "PatternGeneralization",
+    "oracle": "global",
+    "matching": "PartialMatching",
+    "noise_threshold": 0.02,
+    "solver": "gurobi_11.0",
+    "mode": "single"
+  },
+  "results": {
+    "raw_line": "",
+    "runtime_s": 120
+  },
+  "notes": "TIMEOUT"
+}

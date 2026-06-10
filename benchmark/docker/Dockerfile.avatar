@@ -1,0 +1,23 @@
+# Dockerfile for AVATAR (M5) — extends NVIDIA TF 1.15 GPU image
+# Build: docker build -t avatar-tf1 -f benchmark/docker/Dockerfile.avatar .
+# Usage: docker run --rm --gpus all -v /path/to/AVATAR:/workspace/src/AVATAR avatar-tf1 python -m avatar.training ...
+
+FROM nvcr.io/nvidia/tensorflow:22.12-tf1-py3
+
+LABEL description="AVATAR (RelGAN) benchmark environment — TF 1.15 GPU"
+
+# Install system build deps for pm4py deps (lxml, etc.)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libxml2-dev \
+    libxslt1-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install pm4py 1.2.6 + nltk data (the only missing packages)
+# sklearn (deprecated pypi package) is a transitive dep of pm4py 1.2.6 — suppress via env var.
+ENV SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+RUN pip install --no-cache-dir pm4py==1.2.6 \
+    && python -m nltk.downloader punkt \
+    && python -c "import pm4py; print('pm4py OK:', pm4py.__version__)" \
+    && echo "=== Dependencies installed ==="
+
+WORKDIR /workspace

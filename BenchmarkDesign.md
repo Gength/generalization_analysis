@@ -28,19 +28,18 @@ Compare **HybridGen v24** against 7 external generalization baselines across 5 r
 |---|--------|----------|----------|--------|---------|
 | M2 | **PM4Py Built-in** | Structural counting | Counts invisible transitions, token-replay deviations, and visited states in the reachability graph. `pm4py.algo.evaluation.generalization.apply()`. | Scalar [0,1] | < 1 s |
 | M3 | **Entropic Relevance** (Polyvyanyy et al. 2020) | Entropy-based | Computes the relevance of a stochastic process model (SDFA) to an event log via entropic relevance measure. Part of the Entropia tool. Requires model in SDFA JSON format. | Scalar [0,1] | ~seconds (Java subprocess) |
-| M4 | **Anti-Alignment Generalization** (van Dongen, 2017) | Adversarial | Constructs anti-alignments — model-valid traces maximally deviating from the log — then computes a generalization score from the fitness/precision trade-off. Implemented in ProM's AntiAlignments package. | Scalar [0,1] | ~minutes (Java subprocess) |
-| M5 | **AVATAR** (Theis & Darabi, 2020) | GAN-based | Trains a RelGAN on observed trace variants → generates synthetic variants → harmonic mean of token-replay fitness and alignment precision. | Scalar [0,1] | ~hours (GAN training + sampling + replay) |
-| M6 | **Bootstrap Generalization** (Polyvyanyy et al. 2022) | Bootstrap + breeding | Bootstrap resampling + genetic trace breeding (crossover at shared k-grams) + entropy-based precision/recall. Available in both Python (`bsgen_eval.py`) and Java (Entropia `-bgen`). | Scalar [0,1] per replicate; mean ± 95% CI | ~hours (Java subprocess per replicate) |
-| M7 | **SpeciAL4PM** (Kabierski et al. 2023) | Species diversity | Extracts N-gram "species" from the log → estimates Hill diversity profiles (D0/D1/D2) and coverage (C1) → simulates traces from the model → compares simulated vs. original diversity profiles. Generalization score = coverage ratio or profile divergence. | Coverage ratio or scalar [0,1] | ~minutes (PM4Py simulation + species estimation) |
-| M8 | **Pattern-based Generalization** (Reißner et al. 2020) | Pattern matching | Identifies concurrent patterns (via concurrency oracle + partial orders) and repetitive patterns (via tandem repeats) in the log → tests each pattern against the model's parallel blocks and loops → weighted average of pattern fulfillments. | Scalar [0,1] | ~minutes (Java subprocess) |
+| M4 | **Anti-Alignment Generalization** (van Dongen, 2017) | Adversarial | ❌ **Archived** — single-threaded O(n²~n³); Alpha+ ran 14h without completing one miner. Infeasible on real-life logs. | Scalar [0,1] | N/A |
+| M5 | **AVATAR** (Theis & Darabi, 2020) | GAN-based | ✅ D1 completed. RelGAN trained on 80% variants → samples → harmonic mean of token-replay fitness and ET Conformance precision. Multi-word activity fix applied. | Scalar [0,1] | ~4h (GAN training) |
+| M6 | **Bootstrap Generalization** (Polyvyanyy et al. 2022) | Bootstrap + breeding | ✅ D1 completed. BSGen bootstrap sampling + breeding → token replay fitness (replaces broken Entropia). 10 replicates. | Scalar [0,1] per replicate; mean ± 95% CI | ~2 min/cell |
+| M7 | **SpeciAL4PM** (Kabierski et al. 2023) | Species diversity | ✅ D1 completed. C1 coverage ratio between simulated and original log species profiles. | C1 ratio [0,1] | ~12 s/cell |
+| M8 | **Pattern-based Generalization** (Reißner et al. 2020) | Pattern matching | ❌ **Archived** — JAR catches all internal exceptions and returns "t/out". xvfb + stderr fixed but algorithm fundamentally too slow for real logs. | Scalar [0,1] | N/A |
 
 #### Repository & Local Path References
 
 | Method | Repository | Local Path |
 |--------|-----------|------------|
 | Entropic Relevance | [jbpt/codebase/jbpt-pm/entropia](https://github.com/jbpt/codebase/tree/master/jbpt-pm/entropia) | `./src/codebase/jbpt-pm/entropia/` |
-| Anti-Alignment Generalization | [promworkbench/AntiAlignments](https://github.com/promworkbench/AntiAlignments) | `./src/prom_workspace_link/packages/antialignments-6.14.4/AntiAlignments.jar` |
-| | | Deps: `./src/prom_workspace_link/packages/`, `./src/prom_workspace_link/lib/`, `./src/prom_workspace_link/dist/` |
+| Anti-Alignment Generalization | ❌ Archived | `archive/Tianhao/benchmark/` |
 | AVATAR | [Julian-Theis/AVATAR](https://github.com/Julian-Theis/AVATAR) | `./src/AVATAR/` |
 | Bootstrap Generalization | [lgbanuelos/bsgen](https://github.com/lgbanuelos/bsgen) + [jbpt/codebase](https://github.com/jbpt/codebase/tree/master/jbpt-pm/gen/bootstrap) | `./src/bsgen/` (Python), `./src/codebase/jbpt-pm/entropia/` (Java `-bgen`) |
 | SpeciAL4PM | [MartinKabierski/SpeciAL-core](https://github.com/MartinKabierski/SpeciAL-core) | `./src/SpeciAL-core/` |
@@ -166,11 +165,11 @@ Covering the generalization spectrum from underfitting to overfitting:
 | M1, M1a–M1c (HybridGen) | 5 | Mean ± std |
 | M2 (PM4Py built-in) | 1 (deterministic) | Single value |
 | M3 (Entropic Relevance) | 1 (deterministic) | Single value |
-| M4 (Anti-Alignment) | 1 (deterministic) | Single value |
-| M5 (AVATAR) | 3–5 sampling runs per checkpoint | Mean ± std |
-| M6 (Bootstrap Gen) | 100 bootstrap replicates | Mean ± 95% CI |
-| M7 (SpeciAL4PM) | 1 per N-gram (1–5 gram) | Profile; use C1 ratio as scalar |
-| M8 (Pattern-based) | 1 (deterministic given thresholds) | Single value |
+| M4 (Anti-Alignment) | — | ❌ Archived — infeasible |
+| M5 (AVATAR) | 2 sampling runs (target: 3–5) | Mean ± std |
+| M6 (Bootstrap Gen) | 10 bootstrap replicates (target: 100) | Mean ± 95% CI |
+| M7 (SpeciAL4PM) | 1 per N-gram (1–3 gram + trace variant) | Profile; C1 ratio |
+| M8 (Pattern-based) | — | ❌ Archived — JAR crashes |
 | R1 (K-Fold CV) | k=5 folds × 3 shuffles | Mean ± std |
 | R2 (Leave-One-Variant-Out) | 1 pass per variant; parallelize across SLURM `krater` partition for D4/D5 | Single value per variant; aggregate by mean |
 | R3 (Random baseline) | 5 | Mean ± std |
@@ -287,59 +286,44 @@ java -jar jbpt-pm-entropia-1.8.jar -r -rel=<log.xes> -ret=<model.sdfa.json>
 
 ### M4 — Anti-Alignment Generalization (AntiAlignments JAR)
 
-**What it computes:** Anti-alignments are model-valid traces that maximally deviate from the observed log. The generalization score is derived from the fitness/precision tension captured by these adversarial traces.
-
-**Dependencies:**
-- JDK 1.8+
-- AntiAlignments JAR: `./src/prom_workspace_link/packages/antialignments-6.14.4/AntiAlignments.jar`
-- ProM libraries: `./src/prom_workspace_link/packages/`, `./src/prom_workspace_link/lib/`, `./src/prom_workspace_link/dist/`
-
-**Integration Strategy:**
-
-The `PatternGeneralization.java` in `AutomataConformance` already wraps the Anti-Alignment computation via:
-```bash
-java -cp ... main.PatternGeneralization <path/> <log.xes> <model.pnml> AntiAlignmentsGeneralization [timeLimit] [timeUnit]
-```
-
-1. **Export** Petri net as PNML via `pm4py.write_pnml()`.
-2. **Export** event log as XES.
-3. **Invoke** via `subprocess.run()` with classpath pointing to all required ProM JARs.
-4. **Parse** the generalization score from stdout (CSV line: `log,model,approach,execution_time,generalization`).
-
-**Bridge script:** `benchmark/bridges/antialign_bridge.py`
-
-**Estimated runtime per cell:** 1–10 min (ILP-based anti-alignment construction).
-
-**Fallback:** Let the computation run to completion without hard timeout. If runtime exceeds 10 min, emit a **warning** to stderr and append `⚠️ SLOW` to the cell's `Notes` field in the output CSV — but keep the score. The completed score is more valuable than either a -1 sentinel or a dropped row, even if it took 30+ minutes. For very large logs (BPI 2018), expect many cells to exceed 10 min; the `⚠️ SLOW` marker enables post-hoc filtering without data loss.
+> ❌ **Archived** — The algorithm is inherently single-threaded O(n²~n³). On D1 Sepsis (1,050 traces), Alpha+ ran for 14 hours without completing a single miner. Verified working on mini dataset (10 traces, Gen=0.7125, 53ms) but infeasible on any real-life log. Scripts moved to `archive/Tianhao/benchmark/`.
 
 ---
 
 ### M5 — AVATAR (RelGAN)
 
-**What it computes:** Harmonic mean of token-replay fitness and alignment precision on GAN-generated synthetic trace variants.
+**What it computes:** Harmonic mean of token-replay fitness and ET Conformance precision on GAN-generated synthetic trace variants.
 
-**Dependencies:**
-- **Isolated environment**: Python 3.7, TensorFlow 1.15, PM4Py 1.2.6
-- Source: `./src/AVATAR/`
+**Docker Environment** (used instead of conda):
+- Image: `nvcr.io/nvidia/tensorflow:22.12-tf1-py3` + `pm4py==1.2.6`
+- Built as `avatar-tf1` via `benchmark/docker/Dockerfile.avatar`
+- Entry point: `benchmark/docker/run_avatar.py`
 
-**Data Leakage Risk:** AVATAR pre-trains a GAN on the event log's trace variants, then uses that GAN to generate synthetic variants whose replay fitness is measured against the discovered model. If both GAN training and model discovery use the **same** full log, the GAN may simply regenerate patterns the model already fits — overestimating generalization.
+**Data Leakage Mitigation (variant-based split):** Split variants 80/20 by instance count:
+- **GAN training set** (80%) — trains the RelGAN.
+- **Model discovery set** (20%) — per-miner model discovery.
+The GAN never sees held-out variants.
 
-**Mitigation (variant-based split):** Split the log's trace variants into two disjoint sets:
-- **GAN training set** (80% of variants, by instance count) — used to train the RelGAN.
-- **Model discovery set** (20% of variants) — used for per-miner model discovery.
-The GAN never sees the held-out variants, so any fit on those represents genuine generalization. This mirrors the K-fold train/test separation used in R1.
+**Actual D1 Results:**
 
-**Integration Strategy:**
+| Step | Detail | Runtime |
+|------|--------|---------|
+| GAN training | 5000 adv steps, suffix=4981 | ~4h |
+| Sampling | 10000 samples, naive strategy (5 runs planned, 2 completed) | ~2 min/run |
+| Generalization | 7 miners × 2 runs, Mean±Std reported | ~3 min/run |
 
-1. **Environment isolation**: Conda env `avatar-env` with Python 3.7 + TF 1.15 + PM4Py 1.2.6.
-2. **Split variants** 80/20 by instance count (not raw variant count — weight by frequency).
-3. **Pre-train GAN** on the 80% variant subset (one per dataset, reused across miners).
-4. **Per-miner discovery + replay**: Discover model from the 20% holdout subset → export as PNML → run `generalization.py` with the pre-trained checkpoint → parse score.
-5. **Bridge**: `benchmark/bridges/avatar_bridge.py` — shells out to `avatar-env`, invokes the AVATAR pipeline, parses the score.
+**Critical Fix — Multi-word Activity Names:** The AVATAR variant file format uses space-separated tokens, but real logs have multi-word activity names (e.g., "ER Registration"). The GAN treats each word as a separate token, but model transitions have full names. A **greedy longest-match decoder** reconstructs proper activity sequences from the GAN's token output. Without this fix, all fitness/precision scores are 0.
 
-**Estimated runtime:**
-- GAN training per dataset: 2–6 hours (one-time, reusable).
-- Per-miner replay: 5–15 min.
+**Per-miner results (D1 Sepsis, 2 runs):**
+| Miner | Mean ± Std |
+|-------|:---------:|
+| Inductive_Infrequent | 0.7506 ± 0.0023 |
+| Heuristics | 0.7460 ± 0.0014 |
+| Heuristics_Strict | 0.7044 ± 0.0015 |
+| Alpha+ | 0.5617 ± 0.0081 |
+| Inductive_Strict | 0.5347 ± 0.0092 |
+| Flower | 0.3967 ± 0.0074 |
+| Alpha | 0.3401 ± 0.0203 |
 
 ---
 
@@ -416,42 +400,7 @@ Values close to 1.0 indicate the model captures the log's diversity. Values < 1.
 
 ### M8 — Pattern-based Generalization (AutomataConformance)
 
-**What it computes:** Extracts concurrent patterns (via concurrency oracle + partial orders) and repetitive patterns (via tandem repeats) from the event log, then tests each pattern against the model's parallel blocks and loops. Each pattern is assigned a partial fulfillment score; the final generalization is the weighted average by trace count.
-
-**Dependencies:**
-- JDK 1.8+
-- Compiled JAR from `./src/AutomataConformance/`
-- lpsolve native library (`liblpsolve55j.jnilib` for macOS, `.so`/`.dll` for Linux/Windows)
-
-**CLI** (from `main.PatternGeneralization`):
-```bash
-java -cp <classpath> main.PatternGeneralization <path/> <log.xes> <model.pnml> PatternBasedGeneralization [global/local] [PartialMatching/ExactMatching] [noiseThreshold] [occurrence] [balance] [timeLimit] [timeUnit]
-```
-
-Four variants:
-- **Global + ExactMatching**: Uses global concurrency oracle, exact pattern matching.
-- **Global + PartialMatching**: Global oracle, partial matching (transitive closure).
-- **Local + ExactMatching**: Local concurrency oracle (threshold-based), exact matching.
-- **Local + PartialMatching**: Local oracle, partial matching.
-
-**Integration Strategy:**
-
-1. **Export** Petri net as PNML, log as XES.
-2. **Invoke** all four variants via `subprocess.run()` with a timeout.
-3. **Parse** the CSV output: `generalization concurrent pattern, generalization repetitive pattern, overall generalization`.
-4. **Primary score**: Use the `overall generalization` column. Optionally analyze the concurrent vs. repetitive decomposition.
-
-**Default parameters** (from the paper):
-- Global oracle: `noiseThreshold=0.02`
-- Local oracle: `occurrence=0.55`, `balance=0.1`
-- Partial matching: enabled (transitive closure)
-- Time limit: 10 min per cell
-
-**Bridge script:** `benchmark/bridges/pattern_gen_bridge.py`
-
-**Estimated runtime per cell:** 1–10 min (ILP-based pattern matching).
-
-**Fallback:** If lpsolve native library is unavailable on the platform, skip the method entirely (no fallback — pattern matching depends on ILP solver). For very large logs, same convention as M4: no hard timeout; emit `⚠️ SLOW` warning to stderr + Notes field if runtime exceeds 10 min, but keep the score.
+> ❌ **Archived** — The JAR catches all exceptions internally and returns "t/out". After fixing xvfb (`--auto-servernum`) and enabling stderr capture, all miners still return "t/out" within seconds. The underlying algorithm (ILP-based pattern matching) is too unstable for real-life logs. Scripts moved to `archive/Tianhao/benchmark/`.
 
 ---
 
@@ -528,49 +477,38 @@ Example: `Sepsis__Inductive_Strict__M1.json`
 | R1, R2 | `k` (folds), `shuffles`, `variant_based` (true) |
 | R3 | `num_traces`, `max_trace_length` |
 
-### Phase A: Local Machine — Smoke Test (D1 + D2)
+### Phase A: Local Machine — Smoke Test (D1 Completed, D2 Pending)
 
-All methods computed from scratch. No results reused from prior runs.
+D1 Sepsis completed. M4 and M8 archived as infeasible.
 
 ```
 Step 0: Environment Setup (local)
-  ├── Ensure JDK 1.8+ is available (for M3, M4, M6, M8)
-  ├── Build AutomataConformance JAR (M8)
-  ├── Create AVATAR conda env (Python 3.7 + TF 1.15) (M5)
-  ├── Install SpeciAL4PM as editable package (M7):
-  │     pip install -e ./src/SpeciAL-core/
-  └── Verify Entropia JAR (jbpt-pm-entropia-1.8.jar) works (M3, M6)
+  ├── Python: uv sync
+  ├── AVATAR Docker: docker build -t avatar-tf1 -f benchmark/docker/Dockerfile.avatar .
+  ├── SpeciAL4PM: pip install -e ./src/SpeciAL-core/
+  └── Entropia: java -jar src/codebase/jbpt-pm/entropia/jbpt-pm-entropia-1.7.jar -h
 
-Step 1: D1 Sepsis — All Methods (current env + JDK + isolated AVATAR env)
+Step 1: D1 Sepsis — Completed ✅
   ├── M1, M1a–M1c (HybridGen variants) — ~2–5 min
   ├── M2 (PM4Py built-in) — < 1 s
-  ├── M7 (SpeciAL4PM) — ~3–5 min
+  ├── M3 (Entropic Relevance) — ~1 min
+  ├── M5 (AVATAR) — ~4h (GAN training, Docker GPU)
+  ├── M6 (Bootstrap Gen) — ~2 min/cell
+  ├── M7 (SpeciAL4PM) — ~12 s/cell
   ├── R1 (K-Fold CV, k=5) — ~3 min
-  ├── R2 (Leave-One-Variant-Out) — ~10 min (846 variants)
+  ├── R2 (Leave-One-Variant-Out) — ~10 min
   ├── R3 (Random baseline) — ~30 s
-  ├── M3 (Entropic Relevance) — ~30 s
-  ├── M4 (Anti-Alignment) — ~5–10 min
-  ├── M6 (Bootstrap Gen) — ~10–20 min
-  ├── M8 (Pattern-based Gen) — ~5–10 min
-  ├── M5 (AVATAR) — ~2–3 hours (GAN training)
-  └── Write config JSON for every cell
+  └── ❌ M4, M8 archived — infeasible on real-life logs
 
-Step 2: D2 BPI 2013 Incident — All Methods
-  ├── M1–M1c (HybridGen) — ~5–10 min
-  ├── M2 (PM4Py) — < 1 s
-  ├── M7 (SpeciAL4PM) — ~5–10 min
-  ├── R1 (K-Fold CV, k=5) — ~3 min
-  ├── R2 (Leave-One-Variant-Out) — ~15 min (1,511 variants)
-  ├── R3 (Random baseline) — ~30 s
-  ├── M3, M4, M6, M8 (Java methods) — ~20–40 min
-  ├── M5 (AVATAR) — ~2–4 hours (GAN training)
-  └── Write config JSON for every cell
+Step 2: D2 BPI 2013 Incident — Not yet run
+  ├── Same methods as D1 (excl. M4, M8)
+  └── Estimated: ~30 min for fast methods + ~4h AVATAR
 
 Step 3: Validate pipeline
-  ├── All methods return valid scores for all 7 miners on D1, D2
-  ├── Config JSONs exist for every (dataset, miner, method) cell
-  ├── Config JSONs match the documented parameter schema
-  └── Fix any integration issues before Phase B
+  ├── D1: 7 miners × 11 methods = 77 configs (77/77 ✅)
+  ├── M4: all -1 (archived)
+  ├── M8: all -1 (archived)
+  └── Config JSONs are source of truth
 ```
 
 ### Phase B: CIP-Pool 128GB Machine — Heavy Datasets (D3–D5)
@@ -637,9 +575,10 @@ Step 8: Aggregate results across all 5 datasets
 
 | Risk | Severity | Mitigation |
 |------|----------|------------|
-| AVATAR TF 1.15 + Python 3.7 vs. current Python 3.12 | High | Isolated conda env; bridge via subprocess + file I/O |
-| AVATAR GAN training too slow for 5 datasets | High | Pre-train one GAN per dataset (log-dependent, not model-dependent); reuse across miners |
-| Anti-Alignment ILP very slow on large logs (BPI 2017, BPI 2018) | High | No hard timeout; emit `⚠️ SLOW` to stderr + Notes if >10 min. Keep the score — a slow score beats a -1 or dropped row. |
+| AVATAR TF 1.15 vs. current Python 3.12 | High | Docker image `avatar-tf1` (nvcr.io TF 1.15 + pm4py 1.2.6) |
+| AVATAR GAN training too slow for 5 datasets | High | Pre-train one GAN per dataset; reuse across miners |
+| AVATAR multi-word activity names | High | Greedy longest-match decoder (see M5 section) |
+| Anti-Alignment ILP very slow on large logs | High | ❌ **Archived** — 14h per miner, infeasible |
 | BPI 2018 (D4) OOM on local machine (28K variants, 2.5M events, 158 MB) | High | Skip D4 on local; run exclusively on CIP-Pool 128GB machine |
 | BPI 2017 (D3) OOM on local machine (15,930 variants + deep traces) | High | Skip D3 on local; run exclusively on CIP-Pool 128GB machine |
 | BPI 2019 (D5) OOM on local machine (251K cases) | High | Skip D5 on local; run exclusively on CIP-Pool 128GB machine |

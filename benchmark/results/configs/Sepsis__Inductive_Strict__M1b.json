@@ -1,0 +1,28 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Inductive_Strict",
+  "method": "M1b",
+  "method_label": "HybridGen v2.1 (N=3)",
+  "timestamp": "2026-06-08T13:58:46Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "max_n": 3,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.940736952835436,
+    "std": 0.0034527071035975426,
+    "raw_iterations": [
+      0.9428728852300741,
+      0.9428452191416917,
+      0.9384910989095454,
+      0.9350709621031049,
+      0.9444045987927644
+    ],
+    "runtime_s": 3.1677980422973633
+  },
+  "notes": ""
+}

@@ -1,0 +1,26 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Flower",
+  "method": "M5",
+  "method_label": "AVATAR (RelGAN)",
+  "timestamp": "2026-06-09T20:07:17Z",
+  "host": "docker",
+  "parameters": {
+    "GAN": "RelGAN",
+    "suffix": "4981",
+    "strategy": "naive",
+    "n_samples": 10000,
+    "n_runs": 2,
+    "decoding": "greedy_longest_match"
+  },
+  "results": {
+    "mean": 0.396654,
+    "std": 0.007434,
+    "raw_runs": [
+      0.404089,
+      0.38922
+    ],
+    "n_runs": 2
+  },
+  "notes": "2 sampling runs; multi-word activity fix."
+}

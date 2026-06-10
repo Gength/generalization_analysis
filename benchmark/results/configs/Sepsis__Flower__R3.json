@@ -1,0 +1,25 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Flower",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-08T13:59:23Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000
+  },
+  "results": {
+    "mean": 1.0,
+    "std": 0.0,
+    "raw_iterations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "runtime_s": 1.5482163429260254
+  },
+  "notes": "Flower model \u2014 all activities in one concurrent block; expected lowest gen score"
+}

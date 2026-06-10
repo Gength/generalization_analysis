@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+"""Run AVATAR (M5) via Docker — single command.
+Usage:  uv run python benchmark/docker/run_avatar.py [--quick]
+"""
+import subprocess, os, sys, json, time, glob, re
+from datetime import datetime, timezone
+from collections import defaultdict
+
+# =============================================================================
+# CONFIGURATION — Change these for your experiment
+# =============================================================================
+DATASET_KEY = "D1"            # Which dataset (D1-D5)
+QUICK_MODE = False              # True = 3 pre-epochs + 100 adv steps; False = 100 + 5000
+GPU_ID = "0"
+DOCKER_IMAGE = "avatar-tf1"
+
+DATASETS = {
+    "D1": {
+        "system_name": "sepsis",
+        "log_path": "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz",
+        "config_dir": "benchmark/results/configs",
+    },
+}
+
+PROJ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+AVATAR_DIR = "src/AVATAR"
+
+# =============================================================================
+# EXECUTION — Do not edit below this line
+# =============================================================================
+
+info = DATASETS.get(DATASET_KEY, list(DATASETS.values())[0])
+SYSTEM_NAME = info["system_name"]
+LOG_PATH = os.path.join(PROJ, info["log_path"])
+CONFIG_DIR = os.path.join(PROJ, info["config_dir"])
+AVATAR_ABS = os.path.join(PROJ, AVATAR_DIR)
+VARIANT_DIR = os.path.join(AVATAR_ABS, "data/variants")
+os.makedirs(VARIANT_DIR, exist_ok=True)
+variant_file = os.path.join(VARIANT_DIR, f"{SYSTEM_NAME}_train.txt")
+
+import pm4py
+if not os.path.exists(variant_file):
+    print(f"Creating variant file: {variant_file}")
+    log = pm4py.read_xes(LOG_PATH)
+    log = pm4py.convert_to_event_log(log)
+    variant_map = defaultdict(list)
+    for t in log:
+        seq = tuple(e["concept:name"] for e in t)
+        variant_map[seq].append(t)
+    with open(variant_file, "w") as f:
+        for v in variant_map:
+            f.write(" ".join(v) + "\n")
+    print(f"  Wrote {len(variant_map)} variants")
+else:
+    print(f"Variant file exists: {variant_file}")
+
+npre = "3" if QUICK_MODE else "100"
+nadv = "100" if QUICK_MODE else "5000"
+mode = "QUICK" if QUICK_MODE else "FULL"
+print(f"AVATAR {mode}: {npre} pre-epochs, {nadv} adv steps")
+
+AVATAR_ABS = os.path.join(PROJ, AVATAR_DIR)
+docker_cmd = [
+    "docker", "run", "--rm", "--gpus", "all",
+    "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
+    "-w", "/workspace/src/AVATAR",
+    "-e", "AVATAR_NPRE_EPOCHS=" + npre,
+    "-e", "AVATAR_NADV_STEPS=" + nadv,
+    "-e", "AVATAR_BATCH_SIZE=16",
+    "-e", "CUDA_VISIBLE_DEVICES=0",
+    "avatar-tf1",
+    "python", "-u", "-m", "avatar.training",
+    "-s", SYSTEM_NAME, "-j", "0", "-gpu", "0", "-n", "10000",
+]
+
+print(f"Training with Docker image 'avatar-tf1'...")
+t0 = time.time()
+r = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=7200)
+print(f"Training: {time.time()-t0:.0f}s  Exit={r.returncode}")
+
+# Show last output
+lines = r.stdout.strip().split("\n")
+for l in lines[-5:]:
+    print(f"  {l}")
+if r.stderr:
+    err = [l for l in r.stderr.split("\n") if "Traceback" in l or "Error" in l or "error" in l]
+    for l in err[-3:]:
+        print(f"  ERR: {l}")
+
+# Find checkpoint suffix
+ckpts = glob.glob(os.path.join(AVATAR_ABS, "data/avatar/sgans/sepsis/0/tf_logs/ckpt/*.meta"))
+if ckpts:
+    suffixes = []
+    for f in ckpts:
+        m = re.search(r'\.(\d+)\.meta$', f)
+        if m: suffixes.append(int(m.group(1)))
+    suffix = str(max(suffixes)) if suffixes else "5000"
+    print(f"Checkpoint: suffix={suffix}")
+else:
+    print("No checkpoints found!")
+    sys.exit(1)
+
+# Sampling
+print("\nSampling...")
+docker_cmd = [
+    "docker", "run", "--rm", "--gpus", "all",
+    "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
+    "-w", "/workspace/src/AVATAR",
+    "-e", "CUDA_VISIBLE_DEVICES=0",
+    "avatar-tf1",
+    "python", "-u", "-m", "avatar.sampling",
+    "-s", SYSTEM_NAME, "-j", "0", "-sfx", suffix, "-gpu", "0",
+    "-strategy", "naive", "-n_n", "10000",
+]
+t0 = time.time()
+r = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=600)
+print(f"Sampling: {time.time()-t0:.0f}s  Exit={r.returncode}")
+
+# Generalization for each miner
+miners = [
+    ("Alpha", pm4py.discover_petri_net_alpha),
+    ("Alpha+", pm4py.discover_petri_net_alpha_plus),
+    ("Heuristics", pm4py.discover_petri_net_heuristics),
+    ("Heuristics_Strict", lambda l: pm4py.discover_petri_net_heuristics(l, dependency_threshold=0.99)),
+    ("Inductive_Strict", lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.0)),
+    ("Inductive_Infrequent", lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.2)),
+    ("Flower", lambda l: (None, None, None)),
+]
+
+from pm4py.objects.log.obj import EventLog
+
+# Load discovery log
+log = pm4py.read_xes(LOG_PATH)
+log = pm4py.convert_to_event_log(log)
+# 80/20 split
+variant_map2 = defaultdict(list)
+for t in log:
+    variant_map2[tuple(e["concept:name"] for e in t)].append(t)
+variants = list(variant_map2.keys())
+split = int(len(variants) * 0.8)
+discovery_variants = variants[split:]
+disc_traces = []
+for v in discovery_variants:
+    disc_traces.extend(variant_map2[v])
+discovery_log = EventLog(disc_traces)
+
+os.makedirs(CONFIG_DIR, exist_ok=True)
+PNML_DIR = os.path.join(AVATAR_ABS, "data/pns", SYSTEM_NAME)
+os.makedirs(PNML_DIR, exist_ok=True)
+
+from pm4py.objects.petri_net.obj import PetriNet, Marking
+from pm4py.objects.petri_net.utils import petri_utils
+
+def flower_model(log):
+    acts = set(e["concept:name"] for t in log for e in t)
+    net = PetriNet("Flower")
+    p = PetriNet.Place("p0")
+    net.places.add(p)
+    im = Marking({p: 1})
+    fm = Marking({p: 1})
+    for a in acts:
+        t = PetriNet.Transition(a, a)
+        net.transitions.add(t)
+        petri_utils.add_arc_from_to(p, t, net)
+        petri_utils.add_arc_from_to(t, p, net)
+    return net, im, fm
+
+for name, miner_fn in miners:
+    print(f"\n[{name}] ", end="", flush=True)
+    try:
+        if name == "Flower":
+            net, im, fm = flower_model(discovery_log)
+        else:
+            net, im, fm = miner_fn(discovery_log)
+        pm4py.write_pnml(net, im, fm, f"{PNML_DIR}/{name}.pnml")
+    except Exception as e:
+        print(f"Discovery error: {e}")
+        continue
+
+    # Run generalization in Docker
+    docker_cmd = [
+        "docker", "run", "--rm", "--gpus", "all",
+        "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
+        "-w", "/workspace/src/AVATAR",
+        "-e", "CUDA_VISIBLE_DEVICES=0",
+        "avatar-tf1",
+        "python", "-u", "-m", "avatar.generalization",
+        "-s", SYSTEM_NAME, "-sfx", suffix, "-j", "0",
+        "-pn", f"{name}.pnml", "-strategy", "naive",
+    ]
+    t0 = time.time()
+    r = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=300)
+    elapsed = time.time() - t0
+
+    score = -1
+    for line in r.stdout.split("\n"):
+        if "AVATAR Generalization=" in line:
+            try: score = float(line.split("=")[-1].strip())
+            except: pass
+
+    config = {
+        "dataset": "Sepsis", "miner": name, "method": "M5",
+        "method_label": "AVATAR (RelGAN)",
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "host": "docker", "seed": 42,
+        "parameters": {"GAN": "RelGAN", "suffix": suffix, "strategy": "naive",
+                       "npre_epochs": npre, "nadv_steps": nadv, "env": "docker-tf1.15"},
+        "results": {"score": score, "runtime_s": elapsed},
+        "notes": "",
+    }
+    path = os.path.join(CONFIG_DIR, f"Sepsis__{name}__M5.json")
+    with open(path, "w") as f:
+        json.dump(config, f, indent=2)
+    marker = "✅" if score >= 0 else "❌"
+    print(f"{marker} score={score:.4f} ({elapsed:.0f}s)")
+    print(f"  -> {path}")
+
+print("\nDone!")
