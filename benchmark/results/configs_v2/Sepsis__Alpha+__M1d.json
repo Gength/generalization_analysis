@@ -1,0 +1,31 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Alpha+",
+  "method": "M1d",
+  "method_label": "HybridGen v25 (Katz proposal)",
+  "timestamp": "2026-06-12T09:08:14Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v25",
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.651156943116636,
+    "std": 0.011904925990886701,
+    "raw_iterations": [
+      0.6532158150572505,
+      0.6309326568570317,
+      0.6469411708765015,
+      0.6660315637024443,
+      0.6586635090899515
+    ],
+    "runtime_s": 3.673914670944214,
+    "duplicates_kept": 0,
+    "truncated_traces": 0
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

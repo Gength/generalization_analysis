@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Heuristics",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-11T20:35:22Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.9956271712284223,
+    "std": 0.00016284723045243595,
+    "raw_shuffles": [
+      0.995613878357797,
+      0.9954347038636306,
+      0.9958329314638391
+    ],
+    "runtime_s": 5.436500072479248
+  },
+  "notes": "computed by version_comparison.py [copied from configs/]"
+}

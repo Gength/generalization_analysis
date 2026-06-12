@@ -1,0 +1,25 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Trace_Filtered",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-12T09:01:35Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.64113169260466,
+    "std": 0.00921797816339501,
+    "raw_shuffles": [
+      0.6521638644263608,
+      0.6416301782332954,
+      0.6296010351543236
+    ],
+    "runtime_s": 9.959241390228271
+  },
+  "notes": "computed by run_m1_family.py"
+}

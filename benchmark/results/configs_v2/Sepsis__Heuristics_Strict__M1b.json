@@ -1,0 +1,29 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Heuristics_Strict",
+  "method": "M1b",
+  "method_label": "HybridGen v2.1 (N=3)",
+  "timestamp": "2026-06-12T09:06:46Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v21",
+    "max_n": 3,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.8464707684628701,
+    "std": 0.0013417374292724494,
+    "raw_iterations": [
+      0.8466491168996764,
+      0.84785438050462,
+      0.8456197173938556,
+      0.8443720234520675,
+      0.8478586040641309
+    ],
+    "runtime_s": 6.953797340393066
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

@@ -1,0 +1,25 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Heuristics_Strict",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-08T14:03:30Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.9328705727450898,
+    "std": 0.0009877948775400638,
+    "raw_shuffles": [
+      0.9325811921627984,
+      0.9318317081202784,
+      0.9341988179521925
+    ],
+    "runtime_s": 0
+  },
+  "notes": "[copied from configs/]"
+}

@@ -1,0 +1,37 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Inductive_Strict",
+  "method": "M1f",
+  "method_label": "HybridGen v26 (MLE weighting)",
+  "timestamp": "2026-06-12T09:13:36Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v26",
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5,
+    "successor_weighting": "mle"
+  },
+  "results": {
+    "mean": 0.9999760209580957,
+    "std": 1.375064840138668e-05,
+    "raw_iterations": [
+      0.9999627586206896,
+      0.9999622507122506,
+      1.0,
+      0.9999772043010753,
+      0.9999778911564625
+    ],
+    "runtime_s": 2.9560437202453613,
+    "gen_accept": 0.9984,
+    "gen_accept_std": 0.0008000000000000007,
+    "gen_shadow_regular": 1.0,
+    "gen_shadow_mutated": 0.9982533556696465,
+    "duplicates_kept": 0,
+    "truncated_traces": 0,
+    "max_trace_length_used": 246
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

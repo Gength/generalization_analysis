@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Inductive_Strict",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-11T20:35:32Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.9999766021533386,
+    "std": 1.0983147262758779e-05,
+    "raw_shuffles": [
+      0.9999875104079934,
+      0.999961571921846,
+      0.9999807241301764
+    ],
+    "runtime_s": 5.09762167930603
+  },
+  "notes": "computed by version_comparison.py [copied from configs/]"
+}

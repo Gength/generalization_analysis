@@ -1,0 +1,30 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Trace_Filtered",
+  "method": "M1b",
+  "method_label": "HybridGen v2.1 (N=3)",
+  "timestamp": "2026-06-12T09:06:25Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v21",
+    "max_n": 3,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5,
+    "trace_model_top_k": 50
+  },
+  "results": {
+    "mean": 0.49555685853178116,
+    "std": 0.006166481376410669,
+    "raw_iterations": [
+      0.4921492976724013,
+      0.49348597748033646,
+      0.5029411631794016,
+      0.5022812747513808,
+      0.48692657957538565
+    ],
+    "runtime_s": 17.1121609210968
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

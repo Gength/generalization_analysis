@@ -1,0 +1,36 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Heuristics",
+  "method": "M1e",
+  "method_label": "HybridGen v26 (log weighting)",
+  "timestamp": "2026-06-12T09:09:11Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v26",
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.8456745946249115,
+    "std": 0.002727904273774854,
+    "raw_iterations": [
+      0.8483558077452148,
+      0.8450707116965536,
+      0.8447633680163775,
+      0.8488427757992467,
+      0.8413403098671649
+    ],
+    "runtime_s": 6.737160682678223,
+    "gen_accept": 0.0018000000000000002,
+    "gen_accept_std": 0.0011661903789690602,
+    "gen_shadow_regular": 0.837374120729171,
+    "gen_shadow_mutated": 0.8534173548200654,
+    "duplicates_kept": 0,
+    "truncated_traces": 0,
+    "max_trace_length_used": 370
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

@@ -1,0 +1,36 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Heuristics_Strict",
+  "method": "M1e",
+  "method_label": "HybridGen v26 (log weighting)",
+  "timestamp": "2026-06-12T09:13:07Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v26",
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.9664275912504336,
+    "std": 0.0011975723722440483,
+    "raw_iterations": [
+      0.9677560318992475,
+      0.966370754456234,
+      0.9656686204157718,
+      0.9646390410897413,
+      0.9677035083911741
+    ],
+    "runtime_s": 2.6383609771728516,
+    "gen_accept": 0.5149999999999999,
+    "gen_accept_std": 0.014764823060233414,
+    "gen_shadow_regular": 0.9653755991773622,
+    "gen_shadow_mutated": 0.977183118190404,
+    "duplicates_kept": 0,
+    "truncated_traces": 0,
+    "max_trace_length_used": 246
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

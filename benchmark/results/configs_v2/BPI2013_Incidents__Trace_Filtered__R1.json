@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Trace_Filtered",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-12T09:03:16Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.6340296947566494,
+    "std": 0.03156906726290108,
+    "raw_shuffles": [
+      0.6753938858484003,
+      0.5987989984784632,
+      0.6278961999430844
+    ],
+    "runtime_s": 20.56591010093689
+  },
+  "notes": "computed by run_m1_family.py"
+}

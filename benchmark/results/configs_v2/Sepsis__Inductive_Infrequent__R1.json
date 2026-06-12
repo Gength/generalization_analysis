@@ -1,0 +1,25 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Inductive_Infrequent",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-08T14:03:37Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.9845565485703897,
+    "std": 0.002440806563755372,
+    "raw_shuffles": [
+      0.9811287580209154,
+      0.9866225716404058,
+      0.9859183160498478
+    ],
+    "runtime_s": 0
+  },
+  "notes": "[copied from configs/]"
+}

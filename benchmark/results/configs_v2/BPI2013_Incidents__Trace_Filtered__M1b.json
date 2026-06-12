@@ -1,0 +1,30 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Trace_Filtered",
+  "method": "M1b",
+  "method_label": "HybridGen v2.1 (N=3)",
+  "timestamp": "2026-06-12T09:11:32Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v21",
+    "max_n": 3,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5,
+    "trace_model_top_k": 50
+  },
+  "results": {
+    "mean": 0.6037954827902346,
+    "std": 0.002602270167294194,
+    "raw_iterations": [
+      0.6012529020384344,
+      0.6023003363790292,
+      0.6020074605239613,
+      0.6051284574104819,
+      0.6082882575992662
+    ],
+    "runtime_s": 11.210541486740112
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}
