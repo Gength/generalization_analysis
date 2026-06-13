@@ -1,26 +1,57 @@
-# Generalization Benchmark Design
+# Generalization Benchmark Design — Methodology v2
+
+> **Status.** This document defines **Methodology v2** of the generalization benchmark.
+> It **supersedes** the previous `BenchmarkDesign.md` (Methodology v1). All v1 sections
+> not explicitly restated below — external methods M2–M8, reference metrics R1–R3, datasets
+> D1–D5, statistical protocol, SLURM execution plan, risks — are **inherited unchanged**,
+> with v2-specific overrides noted inline.
+>
+> Construct definition follows [`Method_GenShadow.md`](Method_GenShadow.md) (authoritative):
+> generalization = acceptance of future *valid* behavior, strictly separated from precision.
+>
+> v1 results in `benchmark/results/configs/` remain valid; v2 results live in
+> **`benchmark/results/configs_v2/`**.
+
+---
+
+## What changed vs. Methodology v1 (summary)
+
+| # | Change | Why |
+|---|--------|-----|
+| 1 | Tier 1 extended: **M1d (v25), M1e (v26-log), M1f (v26-mle)** added | New algorithm versions fixing probe defects found in v24 (see [`WhatChanged_v25_v26.md`](WhatChanged_v25_v26.md)) |
+| 2 | Eighth miner added: **Filtered Trace Model** (top-50 variants) | The 0.0 pole (memorization), opposite of the Flower Model's 1.0 pole |
+| 3 | Pole interpretation corrected | Flower ≈ 1.0 is **correct** for a pure generalization metric (construct-purity litmus), not a failure; Trace low is the overfitting pole |
+| 4 | Reporting: **mean ± std for every M1 version** + acceptance + probe-integrity counters | Transparency; v26 metrics expose `gen_accept`, `duplicates_kept`, `truncated_traces` |
+| 5 | Agreement protocol: **Spearman + MAE + spread** vs R1, poles excluded | Spearman alone is a low bar (even the random floor achieves 1.0 on D1) |
+| 6 | New runner: `benchmark/run_m1_family.py` writes official config JSONs to `configs_v2/` | One command per dataset, model discovery cached, R1 copied/computed automatically |
+| 7 | M1f (v26-mle) recommended as headline candidate | Best calibration across all criteria; only mode ranking D2 correctly |
+
+---
 
 ## Objective
 
-Compare **HybridGen v24** against 7 external generalization baselines across 5 real-world event logs (selected from a catalog of 20+) and 7 process discovery algorithms. The benchmark produces a structured CSV of per-method generalization scores, enabling quantitative ranking, correlation analysis, and qualitative assessment of each method's discriminative power.
+Compare **HybridGen v24–v26** against 7 external generalization baselines across 5 real-world event logs (selected from a catalog of 20+) and 8 process discovery configurations. The benchmark produces a structured CSV of per-method generalization scores, enabling quantitative ranking, correlation analysis, and qualitative assessment of each method's discriminative power.
 
 ---
 
 ## Methods Under Comparison
 
-### Tier 1 — Our Method
+### Tier 1 — Our Method (v2)
 
-| # | Method | Approach | Output | Key Innovation |
-|---|--------|----------|--------|----------------|
-| M1 | **HybridGen v24** | N-gram (N=6) + Katz backoff + context-aware termination + Good-Turing estimation. Generates shadow log by DFS walk, replays on model via token replay. Deduplication ensures no shadow trace copies an original. | Scalar [0,1] | N=6 is the empirical mutation peak on BPI 2017 (49× V1 baseline, 3.8% mutated traces); Katz backoff gracefully degrades on sparser datasets. |
+| # | Method | Algorithm | Key property |
+|---|--------|-----------|--------------|
+| M1  | HybridGen v24 | uniform mutation proposal, ln-damped sampling | v1-methodology baseline (unchanged, for continuity) |
+| M1a | HybridGen v1 | 1-gram DFG + Good–Turing | simplest ablation |
+| M1b | HybridGen v2.1, N=3 | flat termination | isolates context-aware termination |
+| M1c | HybridGen v2.1, N=6 | flat termination | isolates N=3→6 upgrade |
+| M1d | **HybridGen v25** | **Katz-consistent mutation proposal** | mutations drawn from backed-off lower-order context instead of uniform alphabet noise; probe-integrity counters |
+| M1e | **HybridGen v26 (log)** | v25 + acceptance rate + data-driven length cap | ln-damped sampling retained (stress-test mode) |
+| M1f | **HybridGen v26 (mle)** | v26 with `successor_weighting='mle'` | samples the estimated future distribution itself — **headline candidate** (best calibration & only mode ranking D2 correctly) |
 
-**Ablation baselines** (our own earlier versions, quantifying v24's incremental gains):
-
-| # | Method | Approach | Why Include |
-|---|--------|----------|-------------|
-| M1a | **HybridGen v1** | DFG + Good-Turing (1-gram, no backoff, flat termination). | Establishes the simplest baseline in our method family. |
-| M1b | **HybridGen v2.1 (N=3)** | N-gram + Katz backoff + log-weighted probabilities. Pre-v23, flat per-activity termination, `max_n=3`. | Isolates the contribution of **context-aware termination** (v24's key fix) by holding N=3 constant. |
-| M1c | **HybridGen v2.1 (N=6)** | Same as M1b but with `max_n=6`. Pre-v23, flat termination, deeper context. | Isolates the contribution of **N=3→6 upgrade**. Comparing M1c vs M1 reveals the marginal benefit of context-aware termination ON TOP OF N=6. |
+All M1 versions report **mean ± std over 5 iterations** of 1,000 shadow traces, seed 42,
+`max_n=6` (except M1a/M1b by design), `safe_threshold=5`. M1e/M1f additionally report
+`gen_accept` (perfect-replay rate), the regular/mutated openness profile, and the
+probe-integrity counters `duplicates_kept` / `truncated_traces`.
 
 ### Tier 2 — External Generalization Baselines
 
@@ -28,11 +59,11 @@ Compare **HybridGen v24** against 7 external generalization baselines across 5 r
 |---|--------|----------|----------|--------|---------|
 | M2 | **PM4Py Built-in** | Structural counting | Counts invisible transitions, token-replay deviations, and visited states in the reachability graph. `pm4py.algo.evaluation.generalization.apply()`. | Scalar [0,1] | < 1 s |
 | M3 | **Entropic Relevance** (Polyvyanyy et al. 2020) | Entropy-based | Computes the relevance of a stochastic process model (SDFA) to an event log via entropic relevance measure. Part of the Entropia tool. Requires model in SDFA JSON format. | Scalar [0,1] | ~seconds (Java subprocess) |
-| M4 | **Anti-Alignment Generalization** (van Dongen, 2017) | Adversarial | ❌ **Archived** — single-threaded O(n²~n³); Alpha+ ran 14h without completing one miner. Infeasible on real-life logs. | Scalar [0,1] | N/A |
+| M4 | **Anti-Alignment Generalization** (van Dongen, 2017) | Adversarial | ❌ **Archived** — infeasible on real-life logs (see [Archived Methods](#archived-methods)). | Scalar [0,1] | N/A |
 | M5 | **AVATAR** (Theis & Darabi, 2020) | GAN-based | ✅ D1 completed. RelGAN trained on 80% variants → samples → harmonic mean of token-replay fitness and ET Conformance precision. Multi-word activity fix applied. | Scalar [0,1] | ~4h (GAN training) |
 | M6 | **Bootstrap Generalization** (Polyvyanyy et al. 2022) | Bootstrap + breeding | ✅ D1 completed. BSGen bootstrap sampling + breeding → token replay fitness (replaces broken Entropia). 10 replicates. | Scalar [0,1] per replicate; mean ± 95% CI | ~2 min/cell |
 | M7 | **SpeciAL4PM** (Kabierski et al. 2023) | Species diversity | ✅ D1 completed. C1 coverage ratio between simulated and original log species profiles. | C1 ratio [0,1] | ~12 s/cell |
-| M8 | **Pattern-based Generalization** (Reißner et al. 2020) | Pattern matching | ❌ **Archived** — JAR catches all internal exceptions and returns "t/out". xvfb + stderr fixed but algorithm fundamentally too slow for real logs. | Scalar [0,1] | N/A |
+| M8 | **Pattern-based Generalization** (Reißner et al. 2020) | Pattern matching | ❌ **Archived** — too slow/unstable for real logs (see [Archived Methods](#archived-methods)). | Scalar [0,1] | N/A |
 
 #### Repository & Local Path References
 
@@ -114,7 +145,7 @@ From the full catalog, 5 datasets are selected for the actual benchmark, chosen 
 Phase A: Local Machine (development, debugging, smoke test)
   ├── D1 Sepsis — 1,050 cases, ~14 min for all fast methods
   └── D2 BPI 2013 Incident — 7,554 cases, still runs locally
-      Goal: validate all 8 methods + 3 reference metrics + 7 miners
+      Goal: validate all 8 methods + 3 reference metrics + 8 miners
             end-to-end before scaling up. Both D1 and D2 are small enough
             for local iteration.
 
@@ -133,36 +164,61 @@ Phase B: CIP-Pool 128GB Machine (full benchmark)
 
 ---
 
-## Process Discovery Algorithms (Miners)
+## Process Discovery Configurations (v2: eight, spanning both poles)
 
-Covering the generalization spectrum from underfitting to overfitting:
-
-| # | Miner | PM4Py Call | Expected Generalization |
-|---|-------|-----------|------------------------|
+| # | Miner | Construction | Role |
+|---|-------|--------------|------|
+| 0 | **Filtered Trace Model** | one isolated path per variant, **top-50 variants by frequency** (identical to `master_benchmark_v24.py`) | **0.0 pole** — pure memorization; accepts nothing unseen |
 | 1 | Alpha Miner | `pm4py.discover_petri_net_alpha()` | Low (overfits to noise on real logs) |
 | 2 | Alpha+ Miner | `pm4py.discover_petri_net_alpha_plus()` | Low–Moderate |
 | 3 | Heuristics (Default) | `pm4py.discover_petri_net_heuristics(log)` | Moderate |
 | 4 | Heuristics (Strict) | `pm4py.discover_petri_net_heuristics(log, dependency_threshold=0.99)` | Moderate–High |
 | 5 | Inductive (Strict) | `pm4py.discover_petri_net_inductive(log, noise_threshold=0.0)` | High (block-structured) |
 | 6 | Inductive (Infrequent) | `pm4py.discover_petri_net_inductive(log, noise_threshold=0.2)` | High (filters infrequent paths) |
-| 7 | Flower Model | Manual construction (all activities in one concurrent block) | Lowest (maximum permissiveness) |
+| 7 | Flower Model | Manual construction (all activities in one loop) | **1.0 pole** — accepts everything |
+
+**Why top-50 for the Trace Model.** A full trace model has one branch per variant
+(Sepsis: ~12,000 transitions; BPI 2017: ~600,000), which makes token replay intractable —
+this is why v1 archived it. Capping at the 50 most frequent variants keeps the net at
+~750 transitions (seconds per cell) while preserving the semantics that matter: the model
+memorizes a fixed set of observed traces and rejects everything else. The cap is recorded
+in every config JSON (`trace_model_top_k: 50`).
+
+**Pole interpretation (corrected vs v1).** Under the pure-generalization construct
+(see [`Method_GenShadow.md`](Method_GenShadow.md)):
+
+- **Flower ≈ 1.0 is the expected, correct score** — the litmus for construct purity.
+  A metric scoring Flower < 1 is contaminated with precision/structure.
+- **Trace Model low is the expected, correct score** — the memorization pole. It will not
+  reach exactly 0.0 under token replay (partial credit grants unseen traces some fitness;
+  the v1 "ultimate" runs measured ~0.53–0.63 on Sepsis), so it is a *low anchor*, not a
+  literal zero. Its perfect-replay acceptance (`gen_accept`, M1e/M1f) **is** ≈ 0.
+- Both poles are **excluded from agreement statistics** (Pearson/Spearman/MAE/spread are
+  computed over the six real miners) and reported separately as litmus checks.
 
 ---
 
 ## Evaluation Protocol
 
-### Per Cell: (Dataset × Miner × Method)
+### Per Cell: (Dataset × Miner × Method) — v2
 
-1. **Discover model** on full event log.
-2. **Compute PM4Py fitness** (token replay) — sanity check; flag models with fitness < 0.5.
-3. **Compute generalization score** for each applicable method.
-4. **Record runtime** per method (wall-clock, excluding model discovery).
+1. **Discover model** once per miner on the full log (cached across methods).
+2. **Evaluate** with the per-method protocol; **record mean, std, and raw per-iteration scores**.
+3. **Write one config JSON per cell** to `benchmark/results/configs_v2/`
+   (`{Dataset}__{Miner}__{Method}.json`, v1 schema + new optional result fields:
+   `gen_accept`, `gen_accept_std`, `gen_shadow_regular`, `gen_shadow_mutated`,
+   `duplicates_kept`, `truncated_traces`, `max_trace_length_used`).
+4. **Ground truth**: R1 (variant-based 5-fold CV, 3 shuffles, seed 42) — copied from v1 configs
+   where present, computed fresh for new miners (e.g. Trace_Filtered), and re-written to
+   `configs_v2/` so v2 is self-contained.
+5. **Agreement reporting** per method: **Pearson, Spearman, MAE, spread** over the six real
+   miners, plus the two pole litmus values. Never report Spearman alone.
 
 ### Statistical Rigor
 
 | Method(s) | Iterations | Reporting |
 |-----------|-----------|-----------|
-| M1, M1a–M1c (HybridGen) | 5 | Mean ± std |
+| M1, M1a–M1f (HybridGen) | 5 | Mean ± std; M1e/M1f additionally add `gen_accept`, `duplicates_kept`, `truncated_traces` |
 | M2 (PM4Py built-in) | 1 (deterministic) | Single value |
 | M3 (Entropic Relevance) | 1 (deterministic) | Single value |
 | M4 (Anti-Alignment) | — | ❌ Archived — infeasible |
@@ -189,7 +245,7 @@ Variant-based k-fold partitions trace variants (not individual traces) into k gr
 
 **Choice: k=5.** Provides an 80/20 train/test split per fold (standard in ML), works for all 5 datasets (D1's 846 variants → ~169 per test fold is sufficient), and produces 5 scores to average. k=6 is also defensible but k=5 is more conventional.
 
-### HybridGen v24 Hyperparameters
+### HybridGen Hyperparameters
 
 The choice of `max_n` was determined empirically. See `analysis/Mutation/MutationReport.md` for the full N-gram sweep (N=1..8) on BPI 2017. **Key conclusion: N=6 is the mutation peak (49× V1 baseline, 3.8% mutated traces).** Beyond N=6 the curse of dimensionality overtakes context benefit (mutation rate declines, backoffs double). N=6 also resolves a small-sample artifact in Alpha Miner that appeared at N=3.
 
@@ -224,9 +280,60 @@ The Katz backoff mechanism makes `max_n` an **upper bound**, not a fixed operati
 
 ### Output Format
 
-**Config JSONs** (one per cell): `benchmark/results/configs/{Dataset}__{Miner}__{Method}.json`
+**Config JSONs** (one per cell):
 
-Every (dataset, miner, method) cell produces a JSON file recording the exact configuration and results. See the JSON schema in the Execution Order section. Config JSONs are the **source of truth** — the CSVs below are derived from them.
+- v1 methodology: `benchmark/results/configs/{Dataset}__{Miner}__{Method}.json`
+- v2 methodology: `benchmark/results/configs_v2/{Dataset}__{Miner}__{Method}.json`
+
+Every (dataset, miner, method) cell produces a JSON file recording the exact configuration and results. Config JSONs are the **source of truth** — the CSVs below are derived from them.
+
+v2 schema adds these optional result fields to the v1 schema:
+`gen_accept`, `gen_accept_std`, `gen_shadow_regular`, `gen_shadow_mutated`,
+`duplicates_kept`, `truncated_traces`, `max_trace_length_used`.
+
+**Required fields per method (v1 schema):**
+
+```json
+{
+  "dataset": "Sepsis",
+  "miner": "Inductive (Strict)",
+  "method": "M1",
+  "method_label": "HybridGen v24",
+  "timestamp": "2026-06-05T14:30:00Z",
+  "host": "local|cip-pool",
+  "seed": 42,
+  "parameters": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.8523,
+    "std": 0.0142,
+    "raw_iterations": [0.841, 0.855, 0.867, 0.842, 0.856],
+    "runtime_s": 45.2
+  },
+  "notes": ""
+}
+```
+
+**Method-specific parameter schemas:**
+
+| Method(s) | Parameters to Record |
+|-----------|---------------------|
+| M1, M1a–M1c | `max_n`, `safe_threshold`, `num_shadow_traces`, `iterations` |
+| M1d (v25) | same as M1 + `duplicates_kept`, `truncated_traces` |
+| M1e, M1f (v26) | same as M1d + `successor_weighting` (`"log"` or `"mle"`), `gen_accept`, `gen_accept_std`, `gen_shadow_regular`, `gen_shadow_mutated`, `max_trace_length_used` |
+| M2 | (none — deterministic) |
+| M3 | `jar_version`, `sdfa_conversion_method` |
+| M4 | `jar_version`, `timeout_s` |
+| M5 | `checkpoint_epoch`, `temperature`, `strategy` (naive/mh), `n_samples` |
+| M6 | `n`, `m`, `g`, `k`, `p`, `jar_version` |
+| M7 | `n_gram_range` (e.g., [1,5]), `simulation_repeats` |
+| M8 | `oracle` (global/local), `matching` (exact/partial), `noise_threshold`, `occurrence`, `balance` |
+| R1, R2 | `k` (folds), `shuffles`, `variant_based` (true) |
+| R3 | `num_traces`, `max_trace_length` |
 
 **Primary CSV**: `benchmark/results/generalization_benchmark_v24.csv`
 
@@ -237,6 +344,12 @@ Dataset, Miner, Method, N, Mean, Std, CI_Lower, CI_Upper, Runtime_s, Notes
 **Raw CSV**: `benchmark/results/generalization_benchmark_v24_raw.csv` — per-iteration scores.
 
 **Reference CSV**: `benchmark/results/reference_metrics_v24.csv` — R1–R3 scores.
+
+---
+
+## How to Run (v2)
+
+Please refer to `BenchmarkGuide.md` for detailed instructions on setting up the environment, running the benchmark, and interpreting results.
 
 ---
 
@@ -284,11 +397,7 @@ java -jar jbpt-pm-entropia-1.8.jar -r -rel=<log.xes> -ret=<model.sdfa.json>
 
 ---
 
-### M4 — Anti-Alignment Generalization (AntiAlignments JAR)
 
-> ❌ **Archived** — The algorithm is inherently single-threaded O(n²~n³). On D1 Sepsis (1,050 traces), Alpha+ ran for 14 hours without completing a single miner. Verified working on mini dataset (10 traces, Gen=0.7125, 53ms) but infeasible on any real-life log. Scripts moved to `archive/Tianhao/benchmark/`.
-
----
 
 ### M5 — AVATAR (RelGAN)
 
@@ -398,11 +507,7 @@ Values close to 1.0 indicate the model captures the log's diversity. Values < 1.
 
 ---
 
-### M8 — Pattern-based Generalization (AutomataConformance)
 
-> ❌ **Archived** — The JAR catches all exceptions internally and returns "t/out". After fixing xvfb (`--auto-servernum`) and enabling stderr capture, all miners still return "t/out" within seconds. The underlying algorithm (ILP-based pattern matching) is too unstable for real-life logs. Scripts moved to `archive/Tianhao/benchmark/`.
-
----
 
 ## Execution Order & Dependencies
 
@@ -427,55 +532,12 @@ Other methods (M1–M8) run as single-node jobs within the same partition. No ar
 
 **Every experiment run MUST produce a sidecar JSON file** recording the exact configuration used. Without this, a result is untrustworthy — you cannot know whether the score came from `max_n=3` or `max_n=6`, `iterations=5` or `iterations=1`, etc. Results without matching config JSONs are treated as invalid.
 
-Config JSONs are written to `benchmark/results/configs/` with the naming convention:
+Config JSONs are written to:
 
-```
-{Dataset}__{Miner}__{Method}.json
-```
+- v1: `benchmark/results/configs/{Dataset}__{Miner}__{Method}.json`
+- v2: `benchmark/results/configs_v2/{Dataset}__{Miner}__{Method}.json`
 
 Example: `Sepsis__Inductive_Strict__M1.json`
-
-**Required fields per method:**
-
-```json
-{
-  "dataset": "Sepsis",
-  "miner": "Inductive (Strict)",
-  "method": "M1",
-  "method_label": "HybridGen v24",
-  "timestamp": "2026-06-05T14:30:00Z",
-  "host": "local|cip-pool",
-  "seed": 42,
-  "parameters": {
-    "max_n": 6,
-    "safe_threshold": 5,
-    "num_shadow_traces": 1000,
-    "iterations": 5
-  },
-  "results": {
-    "mean": 0.8523,
-    "std": 0.0142,
-    "raw_iterations": [0.841, 0.855, 0.867, 0.842, 0.856],
-    "runtime_s": 45.2
-  },
-  "notes": ""
-}
-```
-
-**Method-specific parameter schemas:**
-
-| Method(s) | Parameters to Record |
-|-----------|---------------------|
-| M1, M1a–M1c | `max_n`, `safe_threshold`, `num_shadow_traces`, `iterations` |
-| M2 | (none — deterministic) |
-| M3 | `jar_version`, `sdfa_conversion_method` |
-| M4 | `jar_version`, `timeout_s` |
-| M5 | `checkpoint_epoch`, `temperature`, `strategy` (naive/mh), `n_samples` |
-| M6 | `n`, `m`, `g`, `k`, `p`, `jar_version` |
-| M7 | `n_gram_range` (e.g., [1,5]), `simulation_repeats` |
-| M8 | `oracle` (global/local), `matching` (exact/partial), `noise_threshold`, `occurrence`, `balance` |
-| R1, R2 | `k` (folds), `shuffles`, `variant_based` (true) |
-| R3 | `num_traces`, `max_trace_length` |
 
 ### Phase A: Local Machine — Smoke Test (D1 Completed, D2 Pending)
 
@@ -490,6 +552,7 @@ Step 0: Environment Setup (local)
 
 Step 1: D1 Sepsis — Completed ✅
   ├── M1, M1a–M1c (HybridGen variants) — ~2–5 min
+  ├── M1d, M1e, M1f (v25/v26, via run_m1_family.py) — ~2–5 min
   ├── M2 (PM4Py built-in) — < 1 s
   ├── M3 (Entropic Relevance) — ~1 min
   ├── M5 (AVATAR) — ~4h (GAN training, Docker GPU)
@@ -505,7 +568,7 @@ Step 2: D2 BPI 2013 Incident — Not yet run
   └── Estimated: ~30 min for fast methods + ~4h AVATAR
 
 Step 3: Validate pipeline
-  ├── D1: 7 miners × 11 methods = 77 configs (77/77 ✅)
+  ├── D1: 8 miners × 11 methods = 88 configs (88/88 ✅)
   ├── M4: all -1 (archived)
   ├── M8: all -1 (archived)
   └── Config JSONs are source of truth
@@ -519,7 +582,7 @@ Transfer codebase to the 128GB machine. All methods computed from scratch.
 Step 4: Re-run Environment Setup on CIP-Pool machine
 
 Step 5: D3 BPI 2017 (heavy: variant explosion + deep traces)
-  ├── M1–M1c (HybridGen) — ~15–30 min (N-gram state blowup)
+  ├── M1–M1f (HybridGen) — ~15–30 min (N-gram state blowup)
   ├── M2 (PM4Py) — ~1 s
   ├── M3, M4, M6, M7, M8 — ~30–90 min
   ├── R1 (K-Fold CV, k=5) — ~5 min
@@ -529,7 +592,7 @@ Step 5: D3 BPI 2017 (heavy: variant explosion + deep traces)
   └── Write config JSON for every cell
 
 Step 6: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
-  ├── M1–M1c (HybridGen) — ~30–60 min (massive N-gram state space)
+  ├── M1–M1f (HybridGen) — ~30–60 min (massive N-gram state space)
   ├── M2–M8 — ~2–6 hours combined
   ├── R1 (K-Fold CV, k=5) — ~10 min
   ├── R2 (Leave-One-Variant-Out) — parallelize via SLURM array job (MaxSubmit=30 → ~933 variants/job, MaxJobs=15 running)
@@ -539,7 +602,7 @@ Step 6: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
   └── Write config JSON for every cell
 
 Step 7: D5 BPI 2019 (heavy: 251K cases in RAM)
-  ├── M1–M1c (HybridGen) — ~15–30 min
+  ├── M1–M1f (HybridGen) — ~15–30 min
   ├── M2–M8 — ~1–3 hours combined
   ├── R1 (K-Fold CV, k=5) — ~5 min
   ├── R2 (Leave-One-Variant-Out) — parallelize via SLURM array job (MaxSubmit=30 → ~399 variants/job, MaxJobs=15 running)
@@ -563,9 +626,9 @@ Step 8: Aggregate results across all 5 datasets
 
 1. **Leaderboard table**: Rank all methods (M1–M8) by mean score per dataset, with miner-level breakdown.
 2. **Correlation matrix**: Pairwise Pearson/Spearman correlation between all generalization methods (M1–M8) plus reference metrics (R1–R2). Cluster methods by paradigm (structural / entropy / adversarial / generative / pattern-based / diversity).
-3. **Agreement with ground truth**: Scatter plot of each method vs. R1 (K-Fold CV fitness). Methods correlating most strongly with K-fold fitness capture "true" generalization.
-4. **Discriminative power**: Per method, compute the spread (max − min) across miners on the same dataset. A good metric cleanly separates Flower Model (low) from Inductive Miner (high).
-5. **Ablation delta table**: M1 vs. M1a vs. M1b — quantify the incremental contribution of Katz backoff, log weighting, and context-aware termination.
+3. **Agreement with ground truth**: Scatter plot of each method vs. R1 (K-Fold CV fitness). Methods correlating most strongly with K-fold fitness capture "true" generalization. Compute **Pearson, Spearman, MAE, spread** over the six real miners; exclude poles.
+4. **Discriminative power**: Per method, compute the spread (max − min) across miners on the same dataset. A good metric cleanly separates Trace Model (low) from Flower Model (high).
+5. **Ablation delta table**: M1 vs. M1a vs. M1b — quantify the incremental contribution of Katz backoff, log weighting, and context-aware termination. Extended to M1d–M1f for v25/v26 deltas.
 6. **Runtime comparison**: Bar chart of per-method wall-clock time. Highlight cost-to-value ratio of heavy methods (AVATAR, Bootstrap Gen) vs. lightweight methods (HybridGen, PM4Py, Entropic Relevance).
 7. **Paradigm agreement analysis**: Do methods within the same paradigm (e.g., M3 + M6 entropy-based, M5 + M4 adversarial, M7 + M8 pattern-based) agree more with each other than with methods from other paradigms?
 
@@ -596,6 +659,28 @@ Step 8: Aggregate results across all 5 datasets
 
 ---
 
+## Archived Methods
+
+### M4 — Anti-Alignment Generalization (AntiAlignments JAR)
+
+> ❌ **Archived** — The algorithm is inherently single-threaded O(n²~n³). On D1 Sepsis (1,050 traces), Alpha+ ran for 14 hours without completing a single miner. Verified working on mini dataset (10 traces, Gen=0.7125, 53ms) but infeasible on any real-life log. Scripts moved to `archive/Tianhao/benchmark/`.
+
+### M8 — Pattern-based Generalization (AutomataConformance)
+
+> ❌ **Archived** — The JAR catches all exceptions internally and returns "t/out". After fixing xvfb (`--auto-servernum`) and enabling stderr capture, all miners still return "t/out" within seconds. The underlying algorithm (ILP-based pattern matching) is too unstable for real-life logs. Scripts moved to `archive/Tianhao/benchmark/`.
+
+---
+
+## Decision Log
+
+- **2026-06-11** — M1f (v26-mle) is the recommended headline configuration: it dominates all
+  other M1 versions on every agreement criterion on D1 (4 seeds) and D2 (2 seeds), is the
+  only mode that ranks D2 correctly (Spearman 1.0 vs 0.943), and costs the same runtime.
+  `'log'` weighting is retained as M1e for rare-behavior stress-testing.
+  *Pending: practical partner sign-off before the report/benchmark headline switches from M1 (v24) to M1f.*
+
+---
+
 ## References
 
 - **Entropic Relevance**: Polyvyanyy, A., et al. (2020). "Entropic Relevance: A Mechanism for Measuring Stochastic Process Model Quality." *arXiv:2007.09310*. [jbpt/codebase](https://github.com/jbpt/codebase/tree/master/jbpt-pm/entropia)
@@ -605,5 +690,7 @@ Step 8: Aggregate results across all 5 datasets
 - **SpeciAL4PM**: Kabierski, M., et al. (2023). "Addressing the Log Representativeness Problem Using Species Discovery." *ICPM 2023*. [MartinKabierski/SpeciAL-core](https://github.com/MartinKabierski/SpeciAL-core)
 - **Pattern-based Generalization**: Reißner, D., et al. (2020). "Scalable Conformance Checking of Process Models." *Journal of Systems and Software*. [reissnda/AutomataConformance](https://github.com/reissnda/AutomataConformance)
 - **PM4Py baseline**: van der Aalst, W. M. P. (2016). *Process Mining: Data Science in Action*. Springer.
-- `ExperimentDesign.md` — Our experimental strategy document.
 - `Method2Log.md`, `Method2Log_Geng.md` — Method 2 development logs.
+- `ExperimentDesign.md` — archived at `archive/Tianhao/ExperimentDesign.md`
+- `Method_GenShadow.md` — Gen_shadow metric specification (authoritative).
+- `WhatChanged_v25_v26.md` — v25/v26 technical summary.

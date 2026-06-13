@@ -48,3 +48,25 @@ V2.1 could generate shadow traces that are exact copies of original event log tr
 ### Context-Aware Termination via Katz Backoff:
 In V2.1, trace termination used only the current activity name (`current_local`) to compute `P_end`, regardless of where in the trace that activity appeared. Activities like `Release A` had a flat ~59% termination probability whether they occurred at position 3 or position 30 — but in the original log they always appeared in the last 20% of traces. This caused the DFS walker to terminate prematurely when "ending activities" were generated early, systematically shortening shadow traces.
 V2.3 fixes this by applying the same Katz backoff strategy used for next-activity selection to the termination decision. It now considers the last N activities (from N=max_n down to safe N=1) to compute a context-dependent `P_end(state)`. The same pre-computed N-gram termination statistics (`ngram_termination_ends` and `ngram_termination_totals`) support this backoff, ensuring termination probabilities are grounded in the historical ending behavior of the specific context, not just the isolated activity name.
+
+## V2.5 (v25)
+### Katz-Backoff Mutation Proposal:
+v25 completes the Katz backoff idea introduced in V2.3, extending it from the mutation rate (how often to insert a never-seen continuation) to the mutation proposal (which activity to insert when a mutation fires). Previously, the inserted activity was drawn uniformly from the whole alphabet (`random.choice(alphabet)`), which became a binding constraint on sparse logs (e.g. ~50% of shadow traces on Sepsis carry at least one mutation vs. ~4% on BPI 2017). In v25, the new activity is drawn from the next-shorter context's continuation distribution, restricted to activities never seen after the current context — mirroring how Katz backoff redistributes unseen probability mass in language models. Injected events are now plausible-but-novel by construction.
+
+### Transparency Counters (no behavior change):
+- `duplicates_kept`: reports if the dedup retry cap (100) was ever exhausted.
+- `truncated_traces`: reports walks cut by the length cap.
+
+## V2.6 (v26)
+### Acceptance Rate (`gen_accept`):
+Besides mean replay fitness (which grants partial credit), v26 reports the fraction of shadow traces the model replays *perfectly*. This provides interpretable bounds: the Trace Model scores exactly 0.0, the Flower Model exactly 1.0. Reported alongside the existing fitness score — nothing is replaced.
+
+### Data-Driven Length Cap:
+Replaces the fixed 100-trace length cap with `2 × longest observed trace` (critical for datasets like Sepsis, which has traces up to length 185).
+
+### `successor_weighting` Switch:
+Two sampling modes for successor selection:
+- `'log'` (default, v2.1 behavior): ln-damped sampling that up-weights rare paths, retained as the stress-test mode.
+- `'mle'`: samples proportionally to raw frequencies, so the shadow log represents the expected future using the same statistics as the Good–Turing estimate.
+
+Benchmarked against the R1 variant-based 5-fold CV ground truth, v26-mle achieves **MAE 0.024** (Sepsis) and **0.021** (BPI 2013) — roughly one-third of v24's calibration error — and resolves the ranking disagreement on BPI 2013 (rank correlation 1.000). Full results in [WhatChanged_v25_v26.md](WhatChanged_v25_v26.md).
