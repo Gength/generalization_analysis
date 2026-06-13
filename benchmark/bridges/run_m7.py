@@ -7,7 +7,7 @@ does NOT import pm4py.
 
 Reads manifest.json for model list.
 """
-import os, sys, json, time
+import os, sys, json, time, argparse
 from datetime import datetime, timezone
 from functools import partial
 
@@ -26,7 +26,7 @@ import pm4py  # SpeciAL4PM's dependency
 # =============================================================================
 DATASET_KEY = "D1"            # Which dataset (D1-D5)
 MINER_LIST = None              # None = all miners, or ["Alpha", ...]
-OUTPUT_DIR = "benchmark/results/configs"
+OUTPUT_DIR = "benchmark/results/configs_v2"
 SEED = 42
 
 DATASETS = {

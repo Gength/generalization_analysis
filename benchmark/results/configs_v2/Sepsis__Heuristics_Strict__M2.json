@@ -1,0 +1,15 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Heuristics_Strict",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-08T13:58:18Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.9004269595985982,
+    "runtime_s": 0.5922796726226807
+  },
+  "notes": ""
+}

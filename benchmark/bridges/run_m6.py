@@ -9,7 +9,7 @@ Reference: Polyvyanyy, Moffat, García-Bañuelos (CAiSE 2022)
 
 Reads pre-exported models from benchmark/models/manifest.json
 """
-import os, sys, json, copy, random, math, time
+import os, sys, json, copy, random, math, time, argparse
 from datetime import datetime, timezone
 from collections import defaultdict
 from functools import reduce
@@ -48,6 +48,14 @@ DATASETS = {
 random.seed(SEED)
 np.random.seed(SEED)
 
+# ── CLI override for MINER_LIST ─────────────────────────────────────────────
+_cli = argparse.ArgumentParser(description="M6 Bootstrap Generalization")
+_cli.add_argument("--miners", nargs="*", default=None,
+                  help="Restrict to specific miners (default: all)")
+_args, _ = _cli.parse_known_args()
+if _args.miners is not None:
+    MINER_LIST = _args.miners
+
 # =============================================================================
 # EXECUTION — Do not edit below this line
 # =============================================================================
@@ -56,7 +64,7 @@ info = DATASETS.get(DATASET_KEY, list(DATASETS.values())[0])
 DATASET = info["name"]
 LOG_PATH = info["log_path"]
 MODEL_DIR = info["model_dir"]
-CONFIG_DIR = "benchmark/results/configs"
+CONFIG_DIR = "benchmark/results/configs_v2"
 os.makedirs(CONFIG_DIR, exist_ok=True)
 
 # ─── Load log ───────────────────────────────────────────────────────────────

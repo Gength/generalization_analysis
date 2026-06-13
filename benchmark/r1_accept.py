@@ -14,42 +14,7 @@ PATHS = {"D1": ("Sepsis", "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Ev
 NAME, LOG_PATH = PATHS[DATASET]
 SEED = 42
 
-def flower_miner(log):
-    net = PetriNet("Flower"); p = PetriNet.Place("mid"); net.places.add(p)
-    for act in set(e["concept:name"] for t in log for e in t):
-        tr = PetriNet.Transition(f"t_{act}", act); net.transitions.add(tr)
-        petri_utils.add_arc_from_to(p, tr, net); petri_utils.add_arc_from_to(tr, p, net)
-    im, fm = Marking(), Marking(); im[p] = 1; fm[p] = 1
-    return net, im, fm
-
-def trace_miner(log, top_k=50):
-    net = PetriNet("Trace"); ps, pe = PetriNet.Place("start"), PetriNet.Place("end")
-    net.places.update([ps, pe])
-    vc = defaultdict(int)
-    for t in log: vc[tuple(e["concept:name"] for e in t)] += 1
-    top = [v for v, c in sorted(vc.items(), key=lambda i: i[1], reverse=True)[:top_k]]
-    for i, variant in enumerate(top):
-        prev = ps
-        for j, act in enumerate(variant):
-            t = PetriNet.Transition(f"t_{i}_{j}", act); net.transitions.add(t)
-            petri_utils.add_arc_from_to(prev, t, net)
-            if j == len(variant) - 1: petri_utils.add_arc_from_to(t, pe, net)
-            else:
-                pn = PetriNet.Place(f"p_{i}_{j}"); net.places.add(pn)
-                petri_utils.add_arc_from_to(t, pn, net); prev = pn
-    im, fm = Marking(), Marking(); im[ps] = 1; fm[pe] = 1
-    return net, im, fm
-
-MINERS = {
-    "Trace_Filtered": trace_miner,
-    "Alpha": lambda l: pm4py.discover_petri_net_alpha(l),
-    "Alpha+": lambda l: pm4py.discover_petri_net_alpha_plus(l),
-    "Heuristics": lambda l: pm4py.discover_petri_net_heuristics(l),
-    "Heuristics_Strict": lambda l: pm4py.discover_petri_net_heuristics(l, dependency_threshold=0.99),
-    "Inductive_Strict": lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.0),
-    "Inductive_Infrequent": lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.2),
-    "Flower": flower_miner,
-}
+from miners import MINERS
 
 log = pm4py.read_xes(LOG_PATH)
 log = pm4py.convert_to_event_log(log)

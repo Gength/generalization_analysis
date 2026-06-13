@@ -1,0 +1,22 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Trace_Filtered",
+  "method": "M5",
+  "method_label": "AVATAR (RelGAN)",
+  "timestamp": "2026-06-13T21:34:52Z",
+  "host": "docker",
+  "seed": 42,
+  "parameters": {
+    "GAN": "RelGAN",
+    "checkpoint_suffix": "4981",
+    "strategy": "naive",
+    "n_samples": 10000,
+    "env": "docker-tf1.15",
+    "trace_model_top_k": 50
+  },
+  "results": {
+    "score": 0.0,
+    "runtime_s": 16.39557981491089
+  },
+  "notes": "Single run. Reuses existing GAN checkpoint from full D1 training. Discovery on 80/20 variant split."
+}

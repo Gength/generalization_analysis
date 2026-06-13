@@ -1,0 +1,25 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Heuristics_Strict",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-08T13:58:39Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000
+  },
+  "results": {
+    "mean": 0.6211928292500789,
+    "std": 0.003385908668235853,
+    "raw_iterations": [
+      0.6205275837277351,
+      0.6166167383055838,
+      0.6227935183380152,
+      0.6266702942675275,
+      0.619356011611533
+    ],
+    "runtime_s": 5.328802108764648
+  },
+  "notes": ""
+}

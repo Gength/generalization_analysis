@@ -1,13 +1,13 @@
 """
-Demo: D1 Sepsis — Full Benchmark Run
-======================================
-Runs all 8 methods + 3 reference metrics on Sepsis (1,050 traces).
-Output: benchmark/results/configs/{Dataset}__{Miner}__{Method}.json
+Demo: D1 Sepsis — Full Benchmark Run (Methodology v2)
+=========================================================
+Runs all M1-family methods (M1–M1f) + M2 + R3 on Sepsis (1,050 traces).
+Output: benchmark/results/configs_v2/{Dataset}__{Miner}__{Method}.json
 """
 
-import os, sys, json, time, random, subprocess
+import os, sys, json, time, random, argparse
 from datetime import datetime, timezone
-from collections import defaultdict
+
 
 import numpy as np
 import pm4py
@@ -40,11 +40,19 @@ DATASETS = {
         "name": "Sepsis",
         "log_path": "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz",
         "results_dir": "benchmark/results",
-        "config_dir": "benchmark/results/configs",
+        "config_dir": "benchmark/results/configs_v2",
     },
 }
 random.seed(SEED)
 np.random.seed(SEED)
+
+# ── CLI override for MINER_LIST ─────────────────────────────────────────────
+_cli = argparse.ArgumentParser(description="D1 Sepsis benchmark (M1–M1f + M2 + R3)")
+_cli.add_argument("--miners", nargs="*", default=None,
+                  help="Restrict to specific miners (default: all)")
+_args, _ = _cli.parse_known_args()
+if _args.miners is not None:
+    MINER_LIST = _args.miners
 
 # =============================================================================
 # EXECUTION — Do not edit below this line
@@ -73,39 +81,13 @@ log = pm4py.read_xes(LOG_PATH)
 log = pm4py.convert_to_event_log(log)
 print(f"    {len(log)} traces, {sum(len(t) for t in log)} events")
 
-MINERS = {
-    "Alpha": pm4py.discover_petri_net_alpha,
-    "Alpha+": pm4py.discover_petri_net_alpha_plus,
-    "Heuristics": pm4py.discover_petri_net_heuristics,
-    "Heuristics_Strict": lambda l: pm4py.discover_petri_net_heuristics(l, dependency_threshold=0.99),
-    "Inductive_Strict": lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.0),
-    "Inductive_Infrequent": lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.2),
-}
-
-# Special: Flower Model
-def discover_flower_model(log):
-    from pm4py.objects.petri_net.obj import PetriNet, Marking
-    from pm4py.objects.petri_net.utils import petri_utils
-    net = PetriNet("Flower Model")
-    p_mid = PetriNet.Place("mid")
-    net.places.add(p_mid)
-    activities = set(e["concept:name"] for t in log for e in t)
-    for act in activities:
-        t = PetriNet.Transition(f"t_{act}", act)
-        net.transitions.add(t)
-        petri_utils.add_arc_from_to(p_mid, t, net)
-        petri_utils.add_arc_from_to(t, p_mid, net)
-    im, fm = Marking(), Marking()
-    im[p_mid] = 1
-    fm[p_mid] = 1
-    return net, im, fm
-
-MINERS["Flower"] = discover_flower_model
+from miners import MINERS  # defined in benchmark/miners.py, imported here to avoid circular imports
 
 # =========================================================================
 # Helpers
 # =========================================================================
-FLOWER_MODEL_NOTE = "Flower model — all activities in one concurrent block; expected lowest gen score"
+FLOWER_MODEL_NOTE = "Flower model — all activities in one loop; Gen ≈ 1.0 (construct-purity litmus)"
+TRACE_MODEL_NOTE = "Filtered Trace Model — top-50 variants; 0.0 pole (memorization)"
 
 def write_config(dataset, miner, method, method_label, params, results, notes=""):
     """Write a JSON config file for one cell."""
@@ -142,6 +124,8 @@ for miner_name, miner_fn in target_miners.items():
     notes = ""
     if miner_name == "Flower":
         notes = FLOWER_MODEL_NOTE
+    if miner_name == "Trace_Filtered":
+        notes = TRACE_MODEL_NOTE
 
     # --- 2a. Discover model ---
     t0 = time.time()
@@ -265,7 +249,86 @@ for miner_name, miner_fn in target_miners.items():
                   "mean": m1_mean, "std": m1_std,
                   "raw_iterations": m1_raw, "runtime_s": m1_time}, notes)
 
-    # --- 2g. R3: Naive Random Baseline ---
+    # --- 2g. M1d: HybridGen v25 (Katz-consistent mutation proposal) ---
+    v25 = load_algorithm("v25")
+    t0 = time.time()
+    try:
+        m1d_result = v25.evaluate_miner(
+            log, miner_name, miner_fn,
+            w=0.5, num_shadow_traces=HPARAMS["num_shadow_traces"],
+            iterations=HPARAMS["iterations"], seed=SEED, max_n=HPARAMS["max_n"],
+        )
+        m1d_time = time.time() - t0
+        m1d_mean = m1d_result["gen_shadow_mean"]
+        m1d_std = m1d_result["gen_shadow_std"]
+        m1d_raw = m1d_result.get("gen_shadow_raw_iterations")
+    except Exception as e:
+        m1d_mean = m1d_std = 0.0; m1d_raw = []; m1d_time = 0
+        notes += " ⚠️ M1d_ERROR"
+        m1d_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
+    print(f"    M1d (v25 Katz): {m1d_mean:.4f} ± {m1d_std:.4f} ({m1d_time:.1f}s)")
+    write_config(DATASET_NAME, miner_name, "M1d", "HybridGen v25 (Katz proposal)",
+                 HPARAMS,
+                 {"gen_total": m1d_result.get("gen_total", m1d_mean),
+                  "mean": m1d_mean, "std": m1d_std,
+                  "raw_iterations": m1d_raw, "runtime_s": m1d_time}, notes)
+
+    # --- 2h. M1e: HybridGen v26 (log weighting) ---
+    v26 = load_algorithm("v26")
+    t0 = time.time()
+    try:
+        m1e_result = v26.evaluate_miner(
+            log, miner_name, miner_fn,
+            w=0.5, num_shadow_traces=HPARAMS["num_shadow_traces"],
+            iterations=HPARAMS["iterations"], seed=SEED, max_n=HPARAMS["max_n"],
+            successor_weighting="log",
+        )
+        m1e_time = time.time() - t0
+        m1e_mean = m1e_result["gen_shadow_mean"]
+        m1e_std = m1e_result["gen_shadow_std"]
+        m1e_raw = m1e_result.get("gen_shadow_raw_iterations")
+    except Exception as e:
+        m1e_mean = m1e_std = 0.0; m1e_raw = []; m1e_time = 0
+        notes += " ⚠️ M1e_ERROR"
+        m1e_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
+    print(f"    M1e (v26 log): {m1e_mean:.4f} ± {m1e_std:.4f} ({m1e_time:.1f}s)")
+    write_config(DATASET_NAME, miner_name, "M1e", "HybridGen v26 (log weighting)",
+                 {"max_n": HPARAMS["max_n"], "safe_threshold": HPARAMS["safe_threshold"],
+                  "num_shadow_traces": HPARAMS["num_shadow_traces"],
+                  "iterations": HPARAMS["iterations"],
+                  "successor_weighting": "log"},
+                 {"gen_total": m1e_result.get("gen_total", m1e_mean),
+                  "mean": m1e_mean, "std": m1e_std,
+                  "raw_iterations": m1e_raw, "runtime_s": m1e_time}, notes)
+
+    # --- 2i. M1f: HybridGen v26 (MLE weighting) ---
+    t0 = time.time()
+    try:
+        m1f_result = v26.evaluate_miner(
+            log, miner_name, miner_fn,
+            w=0.5, num_shadow_traces=HPARAMS["num_shadow_traces"],
+            iterations=HPARAMS["iterations"], seed=SEED, max_n=HPARAMS["max_n"],
+            successor_weighting="mle",
+        )
+        m1f_time = time.time() - t0
+        m1f_mean = m1f_result["gen_shadow_mean"]
+        m1f_std = m1f_result["gen_shadow_std"]
+        m1f_raw = m1f_result.get("gen_shadow_raw_iterations")
+    except Exception as e:
+        m1f_mean = m1f_std = 0.0; m1f_raw = []; m1f_time = 0
+        notes += " ⚠️ M1f_ERROR"
+        m1f_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
+    print(f"    M1f (v26 mle): {m1f_mean:.4f} ± {m1f_std:.4f} ({m1f_time:.1f}s)")
+    write_config(DATASET_NAME, miner_name, "M1f", "HybridGen v26 (MLE weighting)",
+                 {"max_n": HPARAMS["max_n"], "safe_threshold": HPARAMS["safe_threshold"],
+                  "num_shadow_traces": HPARAMS["num_shadow_traces"],
+                  "iterations": HPARAMS["iterations"],
+                  "successor_weighting": "mle"},
+                 {"gen_total": m1f_result.get("gen_total", m1f_mean),
+                  "mean": m1f_mean, "std": m1f_std,
+                  "raw_iterations": m1f_raw, "runtime_s": m1f_time}, notes)
+
+    # --- 2j. R3: Naive Random Baseline ---
     t0 = time.time()
     try:
         activities = list(set(e["concept:name"] for t in log for e in t))
@@ -295,6 +358,51 @@ for miner_name, miner_fn in target_miners.items():
                  {"mean": r3_mean, "std": r3_std,
                   "raw_iterations": r3_scores, "runtime_s": r3_time}, notes)
 
+    # --- 2k. R2: Sampled Leave-One-Variant-Out ---
+    R2_VARIANTS_SAMPLED = 50
+    t0 = time.time()
+    try:
+        variant_groups = defaultdict(list)
+        for t in log:
+            variant_groups[tuple(e["concept:name"] for e in t)].append(t)
+        all_variants = list(variant_groups.keys())
+        sampled = random.sample(all_variants, min(R2_VARIANTS_SAMPLED, len(all_variants)))
+        r2_fits = []
+        for held_out_variant in sampled:
+            train_log = EventLog()
+            test_traces = []
+            for variant, traces in variant_groups.items():
+                if variant == held_out_variant:
+                    test_traces = traces
+                else:
+                    for t in traces:
+                        train_log.append(t)
+            # Discover model on training log
+            r2_net, r2_im, r2_fm = miner_fn(train_log)
+            # Token replay on held-out traces
+            test_log = EventLog()
+            for t in test_traces:
+                test_log.append(t)
+            replayed = token_replay.apply(test_log, r2_net, r2_im, r2_fm)
+            fit = sum(r["trace_fitness"] for r in replayed) / len(replayed) if replayed else 0.0
+            r2_fits.append(fit)
+        r2_mean = float(np.mean(r2_fits))
+        r2_std = float(np.std(r2_fits))
+        r2_time = time.time() - t0
+    except Exception as e:
+        r2_mean = r2_std = 0.0; r2_time = 0; r2_fits = []
+        notes += " ⚠️ R2_ERROR"
+    print(f"    R2 (LOVO sampled {R2_VARIANTS_SAMPLED}/{len(all_variants)}): {r2_mean:.4f} ± {r2_std:.4f} ({r2_time:.1f}s)")
+    write_config(DATASET_NAME, miner_name, "R2", "Leave-One-Variant-Out",
+                 {"k": len(all_variants), "variants_sampled": R2_VARIANTS_SAMPLED,
+                  "variant_based": True},
+                 {"mean": r2_mean, "std": r2_std,
+                  "raw_fits": r2_fits, "runtime_s": r2_time}, notes)
+
 print(f"\n{'=' * 70}")
 print(f"Completed! Config JSONs in {CONFIG_DIR}/")
+print(f"Methods: M1 (v24), M1a (v1), M1b (v2.1 N=3), M1c (v2.1 N=6),")
+print(f"         M1d (v25 Katz), M1e (v26 log), M1f (v26 mle),")
+print(f"         M2 (PM4Py built-in), R2 (LOVO sampled), R3 (random baseline)")
+print(f"Miners: 8 (incl. Trace_Filtered top-50)")
 print(f"{'=' * 70}")

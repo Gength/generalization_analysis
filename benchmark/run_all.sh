@@ -41,5 +41,5 @@ bash benchmark/m5.sh
 echo ""
 echo "=========================================="
 echo "Completed: $(date)"
-echo "Configs in benchmark/results/configs/"
+echo "Configs in benchmark/results/configs/ (v1) and configs_v2/ (v2)"
 echo "=========================================="

@@ -17,7 +17,7 @@ from pm4py.algo.evaluation.generalization import algorithm as generalization_eva
 from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
 from HybridGen.algorithm import load_algorithm
-from benchmark.master_benchmark_utils import discover_flower_model, discover_trace_model
+from miners import MINERS  # defined in benchmark/miners.py, imported here to avoid circular imports
 
 # ─── Configuration & Dataset Mapping ────────────────────────────────────────
 DATASETS = {
@@ -40,23 +40,6 @@ ALGORITHMS = {
 
 # v2.2 intermediate dimensions (populated when algo returns dict)
 STRUCT_DIMS = ["arc_flow_score", "reach_score", "cyclo_score"]
-
-
-
-# ─── Expanded Miner Dictionary ──────────────────────────────────────────────
-MINERS = {
-    #"01_Trace Model (Min)": discover_trace_model,
-    "02_Alpha Miner": pm4py.discover_petri_net_alpha,
-    "03_Alpha+ Miner": pm4py.discover_petri_net_alpha_plus,
-    "04_Heuristics (Default)": pm4py.discover_petri_net_heuristics,
-    "05_Heuristics (Strict)": lambda log: pm4py.discover_petri_net_heuristics(log, dependency_threshold=0.99),
-    "06_Inductive (Strict)": lambda log: pm4py.discover_petri_net_inductive(log, noise_threshold=0.0),
-    "07_Inductive (Infrequent)": lambda log: pm4py.discover_petri_net_inductive(log, noise_threshold=0.2),
-    #"08_ILP Miner": pm4py.discover_petri_net_ilp, # Warning: Can be slow on massive logs
-    "09_Flower Model (Max)": discover_flower_model
-}
-
-
 
 def is_event_log(obj):
     return hasattr(obj, '__iter__') and not isinstance(obj, pd.DataFrame)

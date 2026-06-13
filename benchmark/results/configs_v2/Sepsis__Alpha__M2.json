@@ -1,0 +1,15 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Alpha",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-08T13:57:30Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.9131789227698267,
+    "runtime_s": 0.2629086971282959
+  },
+  "notes": " \u26a0\ufe0f LOW_FITNESS"
+}

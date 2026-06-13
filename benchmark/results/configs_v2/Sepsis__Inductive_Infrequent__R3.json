@@ -1,0 +1,25 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Inductive_Infrequent",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-08T13:59:14Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000
+  },
+  "results": {
+    "mean": 0.6930198056412442,
+    "std": 0.0014621614898553746,
+    "raw_iterations": [
+      0.6942236733377792,
+      0.6923524081994458,
+      0.69404288733826,
+      0.694047246729271,
+      0.6904328126014649
+    ],
+    "runtime_s": 4.496775388717651
+  },
+  "notes": ""
+}

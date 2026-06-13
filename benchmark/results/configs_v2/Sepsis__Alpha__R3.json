@@ -1,0 +1,25 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Alpha",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-08T13:57:39Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000
+  },
+  "results": {
+    "mean": 0.2779371586702896,
+    "std": 0.00354218516150679,
+    "raw_iterations": [
+      0.27801332625744424,
+      0.2712826047531663,
+      0.2803293520450958,
+      0.2786228116528476,
+      0.28143769864289425
+    ],
+    "runtime_s": 1.532421350479126
+  },
+  "notes": " \u26a0\ufe0f LOW_FITNESS"
+}

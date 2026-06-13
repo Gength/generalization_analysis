@@ -1,0 +1,15 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Trace_Filtered",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-13T22:07:35Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.048919475487089525,
+    "runtime_s": 1.767087697982788
+  },
+  "notes": "Filtered Trace Model \u2014 top-50 variants; 0.0 pole (memorization)"
+}

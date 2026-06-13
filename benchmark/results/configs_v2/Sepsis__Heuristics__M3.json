@@ -1,0 +1,20 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Heuristics",
+  "method": "M3",
+  "method_label": "Entropic Relevance",
+  "timestamp": "2026-06-08T14:41:48Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "entropia-1.7",
+    "flag": "-r",
+    "model": "DFG"
+  },
+  "results": {
+    "entropic_relevance_raw": 29.86915402386056,
+    "runtime_s": 0.35573649406433105,
+    "note": "Unbounded entropic relevance. Same for all miners (DFG-based)."
+  },
+  "notes": ""
+}

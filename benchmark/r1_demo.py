@@ -39,33 +39,8 @@ log = pm4py.read_xes(LOG_PATH)
 log = pm4py.convert_to_event_log(log)
 print(f"Loaded {len(log)} traces")
 
-MINERS = {
-    "Alpha": pm4py.discover_petri_net_alpha,
-    "Alpha+": pm4py.discover_petri_net_alpha_plus,
-    "Heuristics": pm4py.discover_petri_net_heuristics,
-    "Heuristics_Strict": lambda l: pm4py.discover_petri_net_heuristics(l, dependency_threshold=0.99),
-    "Inductive_Strict": lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.0),
-    "Inductive_Infrequent": lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.2),
-}
 
-def discover_flower_model(log):
-    from pm4py.objects.petri_net.obj import PetriNet, Marking
-    from pm4py.objects.petri_net.utils import petri_utils
-    net = PetriNet("Flower Model")
-    p_mid = PetriNet.Place("mid")
-    net.places.add(p_mid)
-    activities = set(e["concept:name"] for t in log for e in t)
-    for act in activities:
-        t = PetriNet.Transition(f"t_{act}", act)
-        net.transitions.add(t)
-        petri_utils.add_arc_from_to(p_mid, t, net)
-        petri_utils.add_arc_from_to(t, p_mid, net)
-    im, fm = Marking(), Marking()
-    im[p_mid] = 1
-    fm[p_mid] = 1
-    return net, im, fm
-MINERS["Flower"] = discover_flower_model
-
+from miners import MINERS
 K = 5
 SHUFFLES = 3
 

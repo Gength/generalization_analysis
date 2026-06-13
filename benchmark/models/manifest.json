@@ -5,6 +5,12 @@
   "xes_file": "benchmark/models/sepsis.xes.gz",
   "dfg_json": "benchmark/models/sepsis_dfg.json",
   "miners": {
+    "Trace_Filtered": {
+      "pnml": "benchmark/models/Trace_Filtered.pnml",
+      "n_transitions": 472,
+      "n_places": 424,
+      "fitness": 0.6002361421824509
+    },
     "Alpha": {
       "pnml": "benchmark/models/Alpha.pnml",
       "n_transitions": 16,
@@ -21,7 +27,7 @@
       "pnml": "benchmark/models/Heuristics.pnml",
       "n_transitions": 74,
       "n_places": 33,
-      "fitness": 0.89721291069021
+      "fitness": 0.8972414060726303
     },
     "Heuristics_Strict": {
       "pnml": "benchmark/models/Heuristics_Strict.pnml",

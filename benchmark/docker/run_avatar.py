@@ -2,7 +2,7 @@
 """Run AVATAR (M5) via Docker — single command.
 Usage:  uv run python benchmark/docker/run_avatar.py [--quick]
 """
-import subprocess, os, sys, json, time, glob, re
+import subprocess, os, sys, json, time, glob, re, argparse
 from datetime import datetime, timezone
 from collections import defaultdict
 
@@ -13,17 +13,31 @@ DATASET_KEY = "D1"            # Which dataset (D1-D5)
 QUICK_MODE = False              # True = 3 pre-epochs + 100 adv steps; False = 100 + 5000
 GPU_ID = "0"
 DOCKER_IMAGE = "avatar-tf1"
+MINER_LIST = None
+EVAL_ONLY = False
 
 DATASETS = {
     "D1": {
         "system_name": "sepsis",
         "log_path": "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz",
-        "config_dir": "benchmark/results/configs",
+        "config_dir": "benchmark/results/configs_v2",
     },
 }
 
 PROJ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 AVATAR_DIR = "src/AVATAR"
+
+# ── CLI ─────────────────────────────────────────────────────────────────────
+_cli = argparse.ArgumentParser(description="AVATAR (M5) via Docker")
+_cli.add_argument("--miners", nargs="*", default=None,
+                  help="Restrict to specific miners (default: all)")
+_cli.add_argument("--eval-only", action="store_true",
+                  help="Skip training/sampling, reuse existing checkpoint")
+_args, _ = _cli.parse_known_args()
+if _args.miners is not None:
+    MINER_LIST = _args.miners
+if _args.eval_only:
+    EVAL_ONLY = True
 
 # =============================================================================
 # EXECUTION — Do not edit below this line
@@ -39,7 +53,10 @@ os.makedirs(VARIANT_DIR, exist_ok=True)
 variant_file = os.path.join(VARIANT_DIR, f"{SYSTEM_NAME}_train.txt")
 
 import pm4py
-if not os.path.exists(variant_file):
+
+if EVAL_ONLY:
+    print(f"--eval-only: reusing existing artifacts (variant, checkpoint, sampling)")
+elif not os.path.exists(variant_file):
     print(f"Creating variant file: {variant_file}")
     log = pm4py.read_xes(LOG_PATH)
     log = pm4py.convert_to_event_log(log)
@@ -57,64 +74,83 @@ else:
 npre = "3" if QUICK_MODE else "100"
 nadv = "100" if QUICK_MODE else "5000"
 mode = "QUICK" if QUICK_MODE else "FULL"
-print(f"AVATAR {mode}: {npre} pre-epochs, {nadv} adv steps")
 
 AVATAR_ABS = os.path.join(PROJ, AVATAR_DIR)
-docker_cmd = [
-    "docker", "run", "--rm", "--gpus", "all",
-    "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
-    "-w", "/workspace/src/AVATAR",
-    "-e", "AVATAR_NPRE_EPOCHS=" + npre,
-    "-e", "AVATAR_NADV_STEPS=" + nadv,
-    "-e", "AVATAR_BATCH_SIZE=16",
-    "-e", "CUDA_VISIBLE_DEVICES=0",
-    "avatar-tf1",
-    "python", "-u", "-m", "avatar.training",
-    "-s", SYSTEM_NAME, "-j", "0", "-gpu", "0", "-n", "10000",
-]
 
-print(f"Training with Docker image 'avatar-tf1'...")
-t0 = time.time()
-r = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=7200)
-print(f"Training: {time.time()-t0:.0f}s  Exit={r.returncode}")
-
-# Show last output
-lines = r.stdout.strip().split("\n")
-for l in lines[-5:]:
-    print(f"  {l}")
-if r.stderr:
-    err = [l for l in r.stderr.split("\n") if "Traceback" in l or "Error" in l or "error" in l]
-    for l in err[-3:]:
-        print(f"  ERR: {l}")
-
-# Find checkpoint suffix
-ckpts = glob.glob(os.path.join(AVATAR_ABS, "data/avatar/sgans/sepsis/0/tf_logs/ckpt/*.meta"))
-if ckpts:
-    suffixes = []
-    for f in ckpts:
-        m = re.search(r'\.(\d+)\.meta$', f)
-        if m: suffixes.append(int(m.group(1)))
-    suffix = str(max(suffixes)) if suffixes else "5000"
-    print(f"Checkpoint: suffix={suffix}")
+if EVAL_ONLY:
+    # Find suffix from existing sampling output
+    from benchmark.miners import filtered_trace_miner
+    variant_dir_samples = os.path.join(AVATAR_ABS, "data/avatar/variants")
+    sampled_files = glob.glob(os.path.join(variant_dir_samples, f"{SYSTEM_NAME}_relgan_*_j0_naive.txt"))
+    suffix = None
+    for f in sampled_files:
+        m = re.search(r'_relgan_(\d+)_j0_naive\.txt$', f)
+        if m:
+            ckpts = glob.glob(os.path.join(AVATAR_ABS, "data/avatar/sgans/sepsis/0/tf_logs/ckpt/*.meta"))
+            if any(f"adv_model-{m.group(1)}." in c for c in ckpts):
+                suffix = m.group(1)
+                break
+    if suffix:
+        print(f"--eval-only: suffix={suffix} (reusing existing checkpoint + sampling)")
+    else:
+        print("--eval-only failed: no matching checkpoint+sampling pair found!")
+        sys.exit(1)
 else:
-    print("No checkpoints found!")
-    sys.exit(1)
+    # Full training + sampling
+    print(f"AVATAR {mode}: {npre} pre-epochs, {nadv} adv steps")
+    docker_cmd = [
+        "docker", "run", "--rm", "--gpus", "all",
+        "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
+        "-w", "/workspace/src/AVATAR",
+        "-e", "AVATAR_NPRE_EPOCHS=" + npre,
+        "-e", "AVATAR_NADV_STEPS=" + nadv,
+        "-e", "AVATAR_BATCH_SIZE=16",
+        "-e", "CUDA_VISIBLE_DEVICES=0",
+        "avatar-tf1",
+        "python", "-u", "-m", "avatar.training",
+        "-s", SYSTEM_NAME, "-j", "0", "-gpu", "0", "-n", "10000",
+    ]
+    print(f"Training with Docker image 'avatar-tf1'...")
+    t0 = time.time()
+    r = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=7200)
+    print(f"Training: {time.time()-t0:.0f}s  Exit={r.returncode}")
+    lines = r.stdout.strip().split("\n")
+    for l in lines[-5:]:
+        print(f"  {l}")
+    if r.stderr:
+        err = [l for l in r.stderr.split("\n") if "Traceback" in l or "Error" in l or "error" in l]
+        for l in err[-3:]:
+            print(f"  ERR: {l}")
 
-# Sampling
-print("\nSampling...")
-docker_cmd = [
-    "docker", "run", "--rm", "--gpus", "all",
-    "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
-    "-w", "/workspace/src/AVATAR",
-    "-e", "CUDA_VISIBLE_DEVICES=0",
-    "avatar-tf1",
-    "python", "-u", "-m", "avatar.sampling",
-    "-s", SYSTEM_NAME, "-j", "0", "-sfx", suffix, "-gpu", "0",
-    "-strategy", "naive", "-n_n", "10000",
-]
-t0 = time.time()
-r = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=600)
-print(f"Sampling: {time.time()-t0:.0f}s  Exit={r.returncode}")
+    # Find checkpoint suffix from checkpoints
+    ckpts = glob.glob(os.path.join(AVATAR_ABS, "data/avatar/sgans/sepsis/0/tf_logs/ckpt/*.meta"))
+    if ckpts:
+        suffixes = []
+        for f in ckpts:
+            m = re.search(r'\.(\d+)\.meta$', f)
+            if m: suffixes.append(int(m.group(1)))
+        suffix = str(max(suffixes)) if suffixes else "5000"
+        print(f"Checkpoint: suffix={suffix}")
+    else:
+        print("No checkpoints found!")
+        sys.exit(1)
+
+    print("\nSampling...")
+    docker_cmd = [
+        "docker", "run", "--rm", "--gpus", "all",
+        "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
+        "-w", "/workspace/src/AVATAR",
+        "-e", "CUDA_VISIBLE_DEVICES=0",
+        "avatar-tf1",
+        "python", "-u", "-m", "avatar.sampling",
+        "-s", SYSTEM_NAME, "-j", "0", "-sfx", suffix, "-gpu", "0",
+        "-strategy", "naive", "-n_n", "10000",
+    ]
+    t0 = time.time()
+    r = subprocess.run(docker_cmd, capture_output=True, text=True, timeout=600)
+    print(f"Sampling: {time.time()-t0:.0f}s  Exit={r.returncode}")
+
+    from benchmark.miners import filtered_trace_miner
 
 # Generalization for each miner
 miners = [
@@ -125,6 +161,7 @@ miners = [
     ("Inductive_Strict", lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.0)),
     ("Inductive_Infrequent", lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.2)),
     ("Flower", lambda l: (None, None, None)),
+    ("Trace_Filtered", lambda l: filtered_trace_miner(l, top_k=50)),
 ]
 
 from pm4py.objects.log.obj import EventLog
@@ -164,6 +201,9 @@ def flower_model(log):
         petri_utils.add_arc_from_to(p, t, net)
         petri_utils.add_arc_from_to(t, p, net)
     return net, im, fm
+
+if MINER_LIST is not None:
+    miners = [(n, f) for n, f in miners if n in MINER_LIST]
 
 for name, miner_fn in miners:
     print(f"\n[{name}] ", end="", flush=True)

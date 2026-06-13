@@ -1,0 +1,27 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Trace_Filtered",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-13T21:27:17Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5,
+    "trace_model_top_k": 50
+  },
+  "results": {
+    "mean": 0.27962859021623065,
+    "std": 0.003273369653804739,
+    "raw_iterations": [
+      0.28294035251874244,
+      0.28363313035828075,
+      0.2747975222099276,
+      0.27865357341427266,
+      0.27811837257992966
+    ],
+    "runtime_s": 8.700763463973999
+  },
+  "notes": "Trace_Filtered top-50 variants (0.0 pole). "
+}
