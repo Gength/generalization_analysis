@@ -90,12 +90,12 @@ ln-damped modes invert this pair, the mle mode matches R1 exactly. The Flower mo
 
 ## Impact on the lock-in
 
-Minimal by design. v2.4 remains in the benchmark unchanged (method M1), so every existing
-number stays valid and comparable; v2.5/v2.6 enter as additional methods (M1d–M1f) next to
+Minimal by design. v2.4 remains in the benchmark unchanged (method M1d), so every existing
+number stays valid and comparable; v2.5/v2.6 enter as additional methods (M1e–M1g) next to
 the existing ablations. The only open decision is which configuration is the *headline*
-(proposal: M1f = v2.6-mle — best calibration and rank fidelity on both datasets at identical
+(proposal: M1g = v2.6-mle — best calibration and rank fidelity on both datasets at identical
 cost; decision log in `BenchmarkDesign_v2.md`, pending team agreement). Re-running the full
-M1 family on a dataset is one command and ~5 min:
+M1a–M1g family on a dataset is one command and ~5 min:
 
 ```
 $env:PYTHONUTF8 = '1'

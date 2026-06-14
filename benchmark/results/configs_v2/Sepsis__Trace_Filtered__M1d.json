@@ -2,12 +2,12 @@
   "dataset": "Sepsis",
   "miner": "Trace_Filtered",
   "method": "M1d",
-  "method_label": "HybridGen v25 (Katz proposal)",
-  "timestamp": "2026-06-12T09:08:08Z",
+  "method_label": "HybridGen v2.4 (uniform proposal)",
+  "timestamp": "2026-06-12T09:04:47Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "algorithm_version": "v25",
+    "algorithm_version": "v2.4",
     "max_n": 6,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
@@ -15,18 +15,10 @@
     "trace_model_top_k": 50
   },
   "results": {
-    "mean": 0.5084837523485385,
-    "std": 0.0015341368728666372,
-    "raw_iterations": [
-      0.5064769565641947,
-      0.5072459220329607,
-      0.5103496311616683,
-      0.5101155830804845,
-      0.5082306689033841
-    ],
-    "runtime_s": 16.294079542160034,
-    "duplicates_kept": 0,
-    "truncated_traces": 0
+    "mean": 0.5106354164615846,
+    "std": 0.0038979261993197425,
+    "raw_iterations": null,
+    "runtime_s": 15.341010332107544
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

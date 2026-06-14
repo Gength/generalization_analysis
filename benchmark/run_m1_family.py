@@ -1,7 +1,7 @@
 """
 M1-family benchmark runner — Benchmark Methodology v2 (see BenchmarkDesign_v2.md).
 
-Runs ALL HybridGen versions (M1, M1a-M1f) across EIGHT miners — the original
+Runs ALL HybridGen versions (M1a–M1g) across EIGHT miners — the original
 seven plus the Filtered Trace Model (top-50 variants, the 0.0 pole opposite the
 Flower Model) — under the official protocol (seed 42, 5 iterations x 1000 shadow
 traces), and writes one config JSON per cell in the official schema.
@@ -13,10 +13,10 @@ Method mapping (Methodology v2):
   M1a  = HybridGen v1.0 (1-gram DFG)
   M1b  = HybridGen v2.1 (N=3, flat termination)
   M1c  = HybridGen v2.1 (N=6, flat termination)
-  M1   = HybridGen v2.4 (uniform mutation proposal, ln-damped)   [v1-methodology baseline]
-  M1d  = HybridGen v2.5 (Katz-consistent mutation proposal)
-  M1e  = HybridGen v2.6 (acceptance + data-driven cap, ln-damped sampling)
-  M1f  = HybridGen v2.6 (successor_weighting='mle')               [headline candidate]
+  M1d  = HybridGen v2.4 (uniform mutation proposal, ln-damped)   [v1-methodology baseline]
+  M1e  = HybridGen v2.5 (Katz-consistent mutation proposal)
+  M1f  = HybridGen v2.6 (acceptance + data-driven cap, ln-damped sampling)
+  M1g  = HybridGen v2.6 (successor_weighting='mle')               [headline candidate]
 
 Ground truth R1 (variant-based 5-fold CV, 3 shuffles, seed 42) is copied from
 the v1 configs where available and computed fresh otherwise (e.g. for the new
@@ -25,7 +25,7 @@ Trace_Filtered miner); R1 configs are also written to configs_v2/.
 Usage:
   uv run python benchmark/run_m1_family.py --dataset D1
   uv run python benchmark/run_m1_family.py --dataset D2
-  uv run python benchmark/run_m1_family.py --dataset D1 --methods M1d M1e M1f
+  uv run python benchmark/run_m1_family.py --dataset D1 --methods M1e M1f M1g
 
 Summary printed at the end: per-method mean +- std for every miner, plus
 agreement with R1 (Pearson / Spearman / MAE / spread over the six real miners)
@@ -64,10 +64,10 @@ METHODS = {
     "M1a": {"version": "v1.0", "kwargs": {},                                "label": "HybridGen v1.0 (1-gram DFG)"},
     "M1b": {"version": "v2.1", "kwargs": {"max_n": 3},                      "label": "HybridGen v2.1 (N=3)"},
     "M1c": {"version": "v2.1", "kwargs": {"max_n": 6},                      "label": "HybridGen v2.1 (N=6)"},
-    "M1":  {"version": "v2.4", "kwargs": {},                                "label": "HybridGen v2.4 (uniform proposal)"},
-    "M1d": {"version": "v2.5", "kwargs": {},                                "label": "HybridGen v2.5 (Katz proposal)"},
-    "M1e": {"version": "v2.6", "kwargs": {},                                "label": "HybridGen v2.6 (log weighting)"},
-    "M1f": {"version": "v2.6", "kwargs": {"successor_weighting": "mle"},    "label": "HybridGen v2.6 (MLE weighting)"},
+    "M1d": {"version": "v2.4", "kwargs": {},                                "label": "HybridGen v2.4 (uniform proposal)"},
+    "M1e": {"version": "v2.5", "kwargs": {},                                "label": "HybridGen v2.5 (Katz proposal)"},
+    "M1f": {"version": "v2.6", "kwargs": {},                                "label": "HybridGen v2.6 (log weighting)"},
+    "M1g": {"version": "v2.6", "kwargs": {"successor_weighting": "mle"},    "label": "HybridGen v2.6 (MLE weighting)"},
 }
 
 # ── Miners (Methodology v2: original seven + Filtered Trace Model) ──────────

@@ -2,17 +2,16 @@
   "dataset": "BPI2013_Incidents",
   "miner": "Flower",
   "method": "M1f",
-  "method_label": "HybridGen v26 (MLE weighting)",
-  "timestamp": "2026-06-12T09:13:40Z",
+  "method_label": "HybridGen v2.6 (log weighting)",
+  "timestamp": "2026-06-12T09:13:14Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "algorithm_version": "v26",
+    "algorithm_version": "v2.6",
     "max_n": 6,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
-    "iterations": 5,
-    "successor_weighting": "mle"
+    "iterations": 5
   },
   "results": {
     "mean": 1.0,
@@ -24,7 +23,7 @@
       1.0,
       1.0
     ],
-    "runtime_s": 1.6546525955200195,
+    "runtime_s": 1.7324955463409424,
     "gen_accept": 1.0,
     "gen_accept_std": 0.0,
     "gen_shadow_regular": 1.0,

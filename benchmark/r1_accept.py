@@ -48,7 +48,7 @@ for miner_name, miner_fn in MINERS.items():
     results[miner_name] = (float(np.mean(shuffle_accepts)), float(np.std(shuffle_accepts)))
     print(f"R1_accept[{miner_name}] = {results[miner_name][0]:.4f} +- {results[miner_name][1]:.4f}", flush=True)
 
-# Correlate with M1f gen_accept from configs_v2
+# Correlate with M1g gen_accept from configs_v2
 def pearson(x, y):
     x, y = np.asarray(x, float), np.asarray(y, float)
     if x.std() == 0 or y.std() == 0: return float("nan")
@@ -57,7 +57,7 @@ def spearman(x, y):
     return pearson(np.argsort(np.argsort(x)), np.argsort(np.argsort(y)))
 
 real = ["Alpha", "Alpha+", "Heuristics", "Heuristics_Strict", "Inductive_Infrequent", "Inductive_Strict"]
-for method in ("M1e", "M1f"):
+for method in ("M1f", "M1g"):
     gen_acc = {}
     for m in MINERS:
         with open(f"benchmark/results/configs_v2/{NAME}__{m}__{method}.json", encoding="utf-8") as f:

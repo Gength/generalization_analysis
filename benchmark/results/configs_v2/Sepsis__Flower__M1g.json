@@ -1,9 +1,9 @@
 {
   "dataset": "Sepsis",
   "miner": "Flower",
-  "method": "M1f",
-  "method_label": "HybridGen v2.6 (log weighting)",
-  "timestamp": "2026-06-12T09:09:31Z",
+  "method": "M1g",
+  "method_label": "HybridGen v2.6 (MLE weighting)",
+  "timestamp": "2026-06-12T09:10:23Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -11,7 +11,8 @@
     "max_n": 6,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
-    "iterations": 5
+    "iterations": 5,
+    "successor_weighting": "mle"
   },
   "results": {
     "mean": 1.0,
@@ -23,7 +24,7 @@
       1.0,
       1.0
     ],
-    "runtime_s": 3.132506847381592,
+    "runtime_s": 3.1480014324188232,
     "gen_accept": 1.0,
     "gen_accept_std": 0.0,
     "gen_shadow_regular": 1.0,

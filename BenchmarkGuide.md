@@ -14,13 +14,19 @@ bash benchmark/m3.sh
 
 ## 1. Overview
 
-Compare **HybridGen v2.4–v2.6** (M1–M1f) against external generalization baselines on 5 event logs (D1–D5) with 8 miner configurations. See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the full methodology v2 specification.
+Compare **HybridGen v2.4–v2.6** (M1a–M1g) against external generalization baselines on 5 event logs (D1–D5) with 8 miner configurations. See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the full methodology v2 specification.
 
 ### Methods (v2)
 
 | ID | Method | Type | Status | Script |
 |----|--------|------|--------|--------|
-| M1–M1f | **HybridGen v2.4–v2.6** | Python | ✅ D1/D2 complete (all 8 miners incl. Trace_Filtered) | `bash benchmark/m1.sh` (v1) or `uv run python benchmark/run_m1_family.py` (v2) |
+| M1a | HybridGen v1.0 | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
+| M1b | HybridGen v2.1 (N=3) | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
+| M1c | HybridGen v2.1 (N=6) | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
+| M1d | HybridGen v2.4 | Python | ✅ D1/D2 complete (baseline) | `uv run python benchmark/run_m1_family.py` |
+| M1e | HybridGen v2.5 | Python | ✅ D1/D2 complete | `uv run python benchmark/run_m1_family.py` |
+| M1f | HybridGen v2.6 (log) | Python | ✅ D1/D2 complete | `uv run python benchmark/run_m1_family.py` |
+| M1g | HybridGen v2.6 (mle) | Python | ✅ D1/D2 complete (headline) | `uv run python benchmark/run_m1_family.py` |
 | M2 | PM4Py Built-in Gen | Python | ✅ | `bash benchmark/m1.sh` |
 | M3 | Entropic Relevance | Java (Entropia) | ✅ | `bash benchmark/m3.sh` |
 | M5 | AVATAR (RelGAN) | Docker TF1.15 GPU | ✅ D1 complete (2 runs) | `bash benchmark/m5.sh` |
@@ -98,7 +104,7 @@ bash benchmark/m5.sh
 bash benchmark/prepare.sh
 
 # Step 2: Run individual methods:
-bash benchmark/m1.sh   # M1-M1f, M2, R3  (~3 min)
+bash benchmark/m1.sh   # M1a-M1g, M2, R3  (~3 min)
 bash benchmark/r1.sh   # R1 K-Fold CV     (~3 min)
 bash benchmark/m3.sh   # M3 Entropic      (~1 min)
 bash benchmark/m6.sh   # M6 Bootstrap     (~2 min)
@@ -109,12 +115,12 @@ bash benchmark/m5.sh   # M5 AVATAR        (~4h, FULL)
 ### M1-family runner (v2 methodology)
 
 ```bash
-# All 7 M1 versions (M1–M1f), 8 miners, config JSONs + agreement stats:
+# All 7 M1 versions (M1a–M1g), 8 miners, config JSONs + agreement stats:
 uv run python benchmark/run_m1_family.py --dataset D1
 uv run python benchmark/run_m1_family.py --dataset D2
 
 # Only the new versions:
-uv run python benchmark/run_m1_family.py --dataset D1 --methods M1d M1e M1f
+uv run python benchmark/run_m1_family.py --dataset D1 --methods M1e M1f M1g
 ```
 
 Results go to `benchmark/results/configs_v2/`. See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the protocol.
@@ -131,7 +137,7 @@ bash benchmark/run_all.sh
 
 ## 5. Results (D1 Sepsis)
 
-| Miner | M1a | M1b | M1c | M1 | M1d | M1e | M1f | M2 | M3* | M5 | M6 | M7 | R1 | R2 | R3 |
+| Miner | M1a | M1b | M1c | M1d | M1e | M1f | M1g | M2 | M3* | M5 | M6 | M7 | R1 | R2 | R3 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Alpha | 0.2665 | 0.2837 | 0.2948 | 0.2862 | 0.2849 | 0.2849 | 0.2724 | 0.9132 | 29.87 | 0.3401 | 0.2521 | 0.7885 | 0.2748 | 0.3059 | 0.2779 |
 | Alpha+ | 0.6033 | 0.5523 | 0.6299 | 0.6358 | 0.6512 | 0.6512 | 0.7591 | 0.9189 | 29.87 | 0.5617 | 0.7828 | 0.7500 | 0.8293 | 0.7753 | 0.3820 |
@@ -142,7 +148,7 @@ bash benchmark/run_all.sh
 | Flower | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.9132 | 29.87 | 0.3967 | 1.0000 | 0.8208 | 1.0000 | 1.0000 | 1.0000 |
 | Trace_Filtered | 0.5620 | 0.4956 | 0.5173 | 0.5106 | 0.5085 | 0.5085 | 0.5687 | 0.0376 | 29.87 | 0.0000 | 0.5819 | 1.0000 | 0.6411 | 0.6058 | 0.2796 |
 
-> **M1d–M1f (v2.5/v2.6)**: Added 2026-06-12. All values from v2 methodology runner (`uv run python benchmark/run_m1_family.py --dataset D1`), seed 42, 5 iterations. Source: `benchmark/results/configs_v2/Sepsis__*__M1{d,e,f}.json`. M1d (v2.5 Katz proposal) and M1e (v2.6 log-weighted) produce identical Gen_shadow means on the 7 regular miners by design — M1e adds `gen_accept`, `gen_shadow_regular`/`_mutated`, and probe-integrity counters. M1f (v2.6 MLE-weighted) is the headline candidate.
+> **M1e–M1g (v2.5/v2.6)**: Added 2026-06-12. All values from v2 methodology runner (`uv run python benchmark/run_m1_family.py --dataset D1`), seed 42, 5 iterations. Source: `benchmark/results/configs_v2/Sepsis__*__M1{e,f,g}.json`. M1e (v2.5 Katz proposal) and M1f (v2.6 log-weighted) produce identical Gen_shadow means on the 7 regular miners by design — M1f adds `gen_accept`, `gen_shadow_regular`/`_mutated`, and probe-integrity counters. M1g (v2.6 MLE-weighted) is the headline candidate.
 >
 > **M5 std**: Alpha=±0.020, Alpha+=±0.008, Heuristics=±0.001, Heuristics_Strict=±0.002, Inductive_Strict=±0.009, Inductive_Infrequent=±0.002, Flower=±0.007 (2 runs). Multi-word activity fix applied (greedy longest-match decoding for GAN output).
 >
@@ -150,7 +156,7 @@ bash benchmark/run_all.sh
 >
 > **M4/M8 (D1)**: Archived — not feasible on real-life logs (see [Archived Methods](BenchmarkDesign.md#archived-methods)).
 >
-> **Trace_Filtered row**: M1–M1f + R1 from v2 configs (`configs_v2/`). M2/R3 computed 2026-06-13 via `benchmark/run_trace_filtered_externals.py`. M3 is DFG-based (same 29.87 as all miners). M6 (bootstrap, 10 reps) and M7 (SpeciAL4PM C1 ratio) computed 2026-06-13 via `benchmark/run_m6_m7_trace_filtered.py`. R2 (sampled LOVO, 50/846 variants, seed 42) via `benchmark/run_r2_trace_filtered.py`. **M5 (AVATAR) on Trace_Filtered**: 0.0000 — strongest memorization pole signal across all methods. Reuses existing GAN checkpoint suffix=4981. Run via: `uv run python benchmark/docker/run_avatar.py --miners Trace_Filtered --eval-only`.
+> **Trace_Filtered row**: M1a–M1g + R1 from v2 configs (`configs_v2/`). M2/R3 computed 2026-06-13 via `benchmark/run_trace_filtered_externals.py`. M3 is DFG-based (same 29.87 as all miners). M6 (bootstrap, 10 reps) and M7 (SpeciAL4PM C1 ratio) computed 2026-06-13 via `benchmark/run_m6_m7_trace_filtered.py`. R2 (sampled LOVO, 50/846 variants, seed 42) via `benchmark/run_r2_trace_filtered.py`. **M5 (AVATAR) on Trace_Filtered**: 0.0000 — strongest memorization pole signal across all methods. Reuses existing GAN checkpoint suffix=4981. Run via: `uv run python benchmark/docker/run_avatar.py --miners Trace_Filtered --eval-only`.
 >
 > **M1a note**: Alpha row shows 0.6033 in table — this is the Alpha+ score. See config JSON for per-miner breakdown.
 >
@@ -167,7 +173,7 @@ Every (dataset, miner, method) cell produces a JSON config:
 {
   "dataset": "Sepsis",
   "miner": "Inductive_Strict",
-  "method": "M1",
+  "method": "M1d",
   "results": { "mean": 0.9582, "std": 0.0020, "runtime_s": 3.87 },
   "parameters": { "max_n": 6 },
   "notes": ""
@@ -194,7 +200,7 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 | Date | Change |
 |------|--------|
 | 2026-06-13 | **Trace_Filtered D1 complete (all 15 methods).** Finished M2 (0.0376), M3 (29.87), **M5 (0.0000)** , M6 (0.5819 ± 0.0120), M7 (1.0000), R2 (0.6058 ± 0.0947), R3 (0.2796 ± 0.0033) for Trace_Filtered on D1 Sepsis. M5 = 0.0000 is the strongest memorization pole signal. All functionality added directly to existing scripts: `demo_d1.py` got `--miners` CLI + R2; `bridges/run_m6.py` / `run_m7.py` got `--miners`; `docker/run_avatar.py` got `--miners`, `--eval-only`, + Trace_Filtered miner entry. `01_prepare_models.py` regenerated all PNMLs incl. Trace_Filtered. No new scripts created. |
-| 2026-06-12 | **Methodology v2 sync.** M1 family expanded to M1–M1f (v2.4–v2.6). Added Trace_Filtered miner (0.0 pole). v2.5/v2.6 results in `configs_v2/`. Updated BenchmarkDesign.md with merged v2 spec. |\n| 2026-06-10 | **Full English documentation.** Archived M4 (`archive/Tianhao/benchmark/m4.sh`) and M8 (`archive/Tianhao/benchmark/m8.sh`) — both infeasible on real-life logs. Removed `build/` and `lib/` directories (M4 compile artifacts). Cleaned up stale CSV files. |
+| 2026-06-12 | **Methodology v2 sync.** M1 family expanded to M1a–M1g (v2.4–v2.6). Added Trace_Filtered miner (0.0 pole). v2.5/v2.6 results in `configs_v2/`. Updated BenchmarkDesign.md with merged v2 spec. |\n| 2026-06-10 | **Full English documentation.** Archived M4 (`archive/Tianhao/benchmark/m4.sh`) and M8 (`archive/Tianhao/benchmark/m8.sh`) — both infeasible on real-life logs. Removed `build/` and `lib/` directories (M4 compile artifacts). Cleaned up stale CSV files. |
 | 2026-06-09 | **M5: AVATAR RelGAN on D1 Sepsis completed.** Built Docker image `avatar-tf1` (nvcr.io TF 1.15 + pm4py 1.2.6). Trained GAN (5000 adv steps, checkpoint suffix=4981). Fixed multi-word activity bug via greedy longest-match decoding. 2 sampling runs → Mean±Std for all 7 miners. Results table updated. |
 | 2026-06-09 | **M4: Gurobi 11.0 integration complete.** Repackaged EfficientStorage JAR with updated Gurobi imports (`com.gurobi.gurobi.*`). Mini dataset Alpha=0.7125 in 21ms. Full Sepsis: Alpha+ ran 14h without completing — single-thread bottleneck. HPC execution strategy documented. |
 | 2026-06-09 | **M8: xvfb fix + diagnosis.** Added `--auto-servernum` to xvfb-run after Docker reconfiguration. Enabled stderr capture in m8.sh. Core issue: PatternBasedGeneralization too slow/unstable for real-life logs. **Skipped.** |

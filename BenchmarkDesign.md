@@ -18,13 +18,13 @@
 
 | # | Change | Why |
 |---|--------|-----|
-| 1 | Tier 1 extended: **M1d (v2.5), M1e (v2.6-log), M1f (v2.6-mle)** added | New algorithm versions fixing probe defects found in v2.4 (see [`WhatChanged_v25_v26.md`](WhatChanged_v25_v26.md)) |
+| 1 | Tier 1 extended: **M1e (v2.5), M1f (v2.6-log), M1g (v2.6-mle)** added | New algorithm versions fixing probe defects found in v2.4 (see [`WhatChanged_v25_v26.md`](WhatChanged_v25_v26.md)) |
 | 2 | Eighth miner added: **Filtered Trace Model** (top-50 variants) | The 0.0 pole (memorization), opposite of the Flower Model's 1.0 pole |
 | 3 | Pole interpretation corrected | Flower ≈ 1.0 is **correct** for a pure generalization metric (construct-purity litmus), not a failure; Trace low is the overfitting pole |
 | 4 | Reporting: **mean ± std for every M1 version** + acceptance + probe-integrity counters | Transparency; v2.6 metrics expose `gen_accept`, `duplicates_kept`, `truncated_traces` |
 | 5 | Agreement protocol: **Spearman + MAE + spread** vs R1, poles excluded | Spearman alone is a low bar (even the random floor achieves 1.0 on D1) |
 | 6 | New runner: `benchmark/run_m1_family.py` writes official config JSONs to `configs_v2/` | One command per dataset, model discovery cached, R1 copied/computed automatically |
-| 7 | M1f (v2.6-mle) recommended as headline candidate | Best calibration across all criteria; only mode ranking D2 correctly |
+| 7 | M1g (v2.6-mle) recommended as headline candidate | Best calibration across all criteria; only mode ranking D2 correctly |
 
 ---
 
@@ -43,13 +43,13 @@ Compare **HybridGen v2.4–v2.6** against 7 external generalization baselines ac
 | M1a | HybridGen v1 | 1-gram DFG + Good–Turing | simplest ablation |
 | M1b | HybridGen v2.1, N=3 | flat termination | isolates context-aware termination |
 | M1c | HybridGen v2.1, N=6 | flat termination | isolates N=3→6 upgrade |
-| M1  | HybridGen v2.4 | uniform mutation proposal, ln-damped sampling | v1-methodology baseline (unchanged, for continuity) |
-| M1d | HybridGen v2.5 | Katz-consistent mutation proposal | mutations drawn from backed-off lower-order context instead of uniform alphabet noise; probe-integrity counters |
-| M1e | HybridGen v2.6 (log) | v2.5 + acceptance rate + data-driven length cap | ln-damped sampling retained (stress-test mode) |
-| M1f | HybridGen v2.6 (mle) | v2.6 with `successor_weighting='mle'` | samples the estimated future distribution itself — **headline candidate** |
+| M1d | HybridGen v2.4 | uniform mutation proposal, ln-damped sampling | v1-methodology baseline (unchanged, for continuity) |
+| M1e | HybridGen v2.5 | Katz-consistent mutation proposal | mutations drawn from backed-off lower-order context instead of uniform alphabet noise; probe-integrity counters |
+| M1f | HybridGen v2.6 (log) | v2.5 + acceptance rate + data-driven length cap | ln-damped sampling retained (stress-test mode) |
+| M1g | HybridGen v2.6 (mle) | v2.6 with `successor_weighting='mle'` | samples the estimated future distribution itself — **headline candidate** |
 
-All M1 versions report **mean ± std over 5 iterations** of 1,000 shadow traces, seed 42,
-`max_n=6` (except M1a/M1b by design), `safe_threshold=5`. M1e/M1f additionally report
+All M1a–M1g versions report **mean ± std over 5 iterations** of 1,000 shadow traces, seed 42,
+`max_n=6` (except M1a/M1b by design), `safe_threshold=5`. M1f/M1g additionally report
 `gen_accept` (perfect-replay rate), the regular/mutated openness profile, and the
 probe-integrity counters `duplicates_kept` / `truncated_traces`.
 
@@ -192,7 +192,7 @@ in every config JSON (`trace_model_top_k: 50`).
 - **Trace Model low is the expected, correct score** — the memorization pole. It will not
   reach exactly 0.0 under token replay (partial credit grants unseen traces some fitness;
   the v1 "ultimate" runs measured ~0.53–0.63 on Sepsis), so it is a *low anchor*, not a
-  literal zero. Its perfect-replay acceptance (`gen_accept`, M1e/M1f) **is** ≈ 0.
+  literal zero. Its perfect-replay acceptance (`gen_accept`, M1f/M1g) **is** ≈ 0.
 - Both poles are **excluded from agreement statistics** (Pearson/Spearman/MAE/spread are
   computed over the six real miners) and reported separately as litmus checks.
 
@@ -218,7 +218,7 @@ in every config JSON (`trace_model_top_k: 50`).
 
 | Method(s) | Iterations | Reporting |
 |-----------|-----------|-----------|
-| M1, M1a–M1f (HybridGen) | 5 | Mean ± std; M1e/M1f additionally add `gen_accept`, `duplicates_kept`, `truncated_traces` |
+| M1a–M1g (HybridGen) | 5 | Mean ± std; M1f/M1g additionally add `gen_accept`, `duplicates_kept`, `truncated_traces` |
 | M2 (PM4Py built-in) | 1 (deterministic) | Single value |
 | M3 (Entropic Relevance) | 1 (deterministic) | Single value |
 | M4 (Anti-Alignment) | — | ❌ Archived — infeasible |
@@ -275,8 +275,8 @@ The Katz backoff mechanism makes `max_n` an **upper bound**, not a fixed operati
 | Ablation | Configuration | Isolates |
 |----------|--------------|----------|
 | M1a (v1) | 1-gram DFG only, no `max_n` | Simplest baseline |
-| M1b (v2.1 N=3) | `max_n=3`, flat termination | **Context-aware termination** (M1b vs M1) |
-| M1c (v2.1 N=6) | `max_n=6`, flat termination | **N=3→6 upgrade** (M1c vs M1b) and **v2.4 fix on top of N=6** (M1c vs M1) |
+| M1b (v2.1 N=3) | `max_n=3`, flat termination | **Context-aware termination** (M1b vs M1d) |
+| M1c (v2.1 N=6) | `max_n=6`, flat termination | **N=3→6 upgrade** (M1c vs M1b) and **v2.4 fix on top of N=6** (M1c vs M1d) |
 
 ### Output Format
 
@@ -297,7 +297,7 @@ v2 schema adds these optional result fields to the v1 schema:
 {
   "dataset": "Sepsis",
   "miner": "Inductive (Strict)",
-  "method": "M1",
+  "method": "M1d",
   "method_label": "HybridGen v2.4",
   "timestamp": "2026-06-05T14:30:00Z",
   "host": "local|cip-pool",
@@ -322,9 +322,9 @@ v2 schema adds these optional result fields to the v1 schema:
 
 | Method(s) | Parameters to Record |
 |-----------|---------------------|
-| M1, M1a–M1c | `max_n`, `safe_threshold`, `num_shadow_traces`, `iterations` |
-| M1d (v2.5) | same as M1 + `duplicates_kept`, `truncated_traces` |
-| M1e, M1f (v2.6) | same as M1d + `successor_weighting` (`"log"` or `"mle"`), `gen_accept`, `gen_accept_std`, `gen_shadow_regular`, `gen_shadow_mutated`, `max_trace_length_used` |
+| M1a–M1d | `max_n`, `safe_threshold`, `num_shadow_traces`, `iterations` |
+| M1e (v2.5) | same as M1d + `duplicates_kept`, `truncated_traces` |
+| M1f, M1g (v2.6) | same as M1e + `successor_weighting` (`"log"` or `"mle"`), `gen_accept`, `gen_accept_std`, `gen_shadow_regular`, `gen_shadow_mutated`, `max_trace_length_used` |
 | M2 | (none — deterministic) |
 | M3 | `jar_version`, `sdfa_conversion_method` |
 | M4 | `jar_version`, `timeout_s` |
@@ -551,8 +551,8 @@ Step 0: Environment Setup (local)
   └── Entropia: java -jar src/codebase/jbpt-pm/entropia/jbpt-pm-entropia-1.7.jar -h
 
 Step 1: D1 Sepsis — Completed ✅
-  ├── M1, M1a–M1c (HybridGen variants) — ~2–5 min
-  ├── M1d, M1e, M1f (v2.5/v2.6, via run_m1_family.py) — ~2–5 min
+  ├── M1a–M1d (HybridGen variants) — ~2–5 min
+  ├── M1e, M1f, M1g (v2.5/v2.6, via run_m1_family.py) — ~2–5 min
   ├── M2 (PM4Py built-in) — < 1 s
   ├── M3 (Entropic Relevance) — ~1 min
   ├── M5 (AVATAR) — ~4h (GAN training, Docker GPU)
@@ -582,7 +582,7 @@ Transfer codebase to the 128GB machine. All methods computed from scratch.
 Step 4: Re-run Environment Setup on CIP-Pool machine
 
 Step 5: D3 BPI 2017 (heavy: variant explosion + deep traces)
-  ├── M1–M1f (HybridGen) — ~15–30 min (N-gram state blowup)
+  ├── M1a–M1g (HybridGen) — ~15–30 min (N-gram state blowup)
   ├── M2 (PM4Py) — ~1 s
   ├── M3, M4, M6, M7, M8 — ~30–90 min
   ├── R1 (K-Fold CV, k=5) — ~5 min
@@ -592,7 +592,7 @@ Step 5: D3 BPI 2017 (heavy: variant explosion + deep traces)
   └── Write config JSON for every cell
 
 Step 6: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
-  ├── M1–M1f (HybridGen) — ~30–60 min (massive N-gram state space)
+  ├── M1a–M1g (HybridGen) — ~30–60 min (massive N-gram state space)
   ├── M2–M8 — ~2–6 hours combined
   ├── R1 (K-Fold CV, k=5) — ~10 min
   ├── R2 (Leave-One-Variant-Out) — parallelize via SLURM array job (MaxSubmit=30 → ~933 variants/job, MaxJobs=15 running)
@@ -602,7 +602,7 @@ Step 6: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
   └── Write config JSON for every cell
 
 Step 7: D5 BPI 2019 (heavy: 251K cases in RAM)
-  ├── M1–M1f (HybridGen) — ~15–30 min
+  ├── M1a–M1g (HybridGen) — ~15–30 min
   ├── M2–M8 — ~1–3 hours combined
   ├── R1 (K-Fold CV, k=5) — ~5 min
   ├── R2 (Leave-One-Variant-Out) — parallelize via SLURM array job (MaxSubmit=30 → ~399 variants/job, MaxJobs=15 running)
@@ -628,7 +628,7 @@ Step 8: Aggregate results across all 5 datasets
 2. **Correlation matrix**: Pairwise Pearson/Spearman correlation between all generalization methods (M1–M8) plus reference metrics (R1–R2). Cluster methods by paradigm (structural / entropy / adversarial / generative / pattern-based / diversity).
 3. **Agreement with ground truth**: Scatter plot of each method vs. R1 (K-Fold CV fitness). Methods correlating most strongly with K-fold fitness capture "true" generalization. Compute **Pearson, Spearman, MAE, spread** over the six real miners; exclude poles.
 4. **Discriminative power**: Per method, compute the spread (max − min) across miners on the same dataset. A good metric cleanly separates Trace Model (low) from Flower Model (high).
-5. **Ablation delta table**: M1 vs. M1a vs. M1b — quantify the incremental contribution of Katz backoff, log weighting, and context-aware termination. Extended to M1d–M1f for v2.5/v2.6 deltas.
+5. **Ablation delta table**: M1d vs. M1a vs. M1b — quantify the incremental contribution of Katz backoff, log weighting, and context-aware termination. Extended to M1e–M1g for v2.5/v2.6 deltas.
 6. **Runtime comparison**: Bar chart of per-method wall-clock time. Highlight cost-to-value ratio of heavy methods (AVATAR, Bootstrap Gen) vs. lightweight methods (HybridGen, PM4Py, Entropic Relevance).
 7. **Paradigm agreement analysis**: Do methods within the same paradigm (e.g., M3 + M6 entropy-based, M5 + M4 adversarial, M7 + M8 pattern-based) agree more with each other than with methods from other paradigms?
 
@@ -673,11 +673,11 @@ Step 8: Aggregate results across all 5 datasets
 
 ## Decision Log
 
-- **2026-06-11** — M1f (v2.6-mle) is the recommended headline configuration: it dominates all
-  other M1 versions on every agreement criterion on D1 (4 seeds) and D2 (2 seeds), is the
+- **2026-06-11** — M1g (v2.6-mle) is the recommended headline configuration: it dominates all
+  other M1a–M1g versions on every agreement criterion on D1 (4 seeds) and D2 (2 seeds), is the
   only mode that ranks D2 correctly (Spearman 1.0 vs 0.943), and costs the same runtime.
-  `'log'` weighting is retained as M1e for rare-behavior stress-testing.
-  *Pending: practical partner sign-off before the report/benchmark headline switches from M1 (v2.4) to M1f.*
+  `'log'` weighting is retained as M1f for rare-behavior stress-testing.
+  *Pending: practical partner sign-off before the report/benchmark headline switches from M1d (v2.4) to M1g.*
 
 ---
 

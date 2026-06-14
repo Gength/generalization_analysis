@@ -2,12 +2,12 @@
   "dataset": "BPI2013_Incidents",
   "miner": "Alpha",
   "method": "M1e",
-  "method_label": "HybridGen v26 (log weighting)",
-  "timestamp": "2026-06-12T09:13:00Z",
+  "method_label": "HybridGen v2.5 (Katz proposal)",
+  "timestamp": "2026-06-12T09:12:34Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "algorithm_version": "v26",
+    "algorithm_version": "v2.5",
     "max_n": 6,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
@@ -23,14 +23,9 @@
       0.27778431980129586,
       0.279719163277796
     ],
-    "runtime_s": 1.8438701629638672,
-    "gen_accept": 0.0002,
-    "gen_accept_std": 0.0004,
-    "gen_shadow_regular": 0.2928130566887629,
-    "gen_shadow_mutated": 0.15479886911139085,
+    "runtime_s": 1.8724102973937988,
     "duplicates_kept": 0,
-    "truncated_traces": 0,
-    "max_trace_length_used": 246
+    "truncated_traces": 0
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

@@ -47,7 +47,7 @@ generalization_analysis/
 │   ├── run_m1_family.py             # ★ M1-family runner (v2 methodology)
 │   ├── version_comparison.py        #   Multi-seed cross-version comparison
 │   ├── version_comparison_analysis.ipynb  # Post-hoc analysis notebook
-│   ├── demo_d1.py                   #   D1 Sepsis full run (M1–M1f + M2 + R3)
+│   ├── demo_d1.py                   #   D1 Sepsis full run (M1a–M1g + M2 + R3)
 │   ├── r1_accept.py                 #   R1 ground truth (acceptance-based)
 │   ├── 01_prepare_models.py         #   Model discovery for all miners
 │   ├── run_all.sh                   #   Full pipeline entry point
@@ -112,7 +112,7 @@ Replay the shadow log on the model via PM4Py token replay.
 | **v2.6 (log)** | v2.5 + acceptance rate + data-driven length cap | ✅ Stress-test mode |
 | **v2.6 (mle)** | v2.6 with `successor_weighting='mle'` | **🏆 Headline candidate** |
 
-> **Latest recommendation (2026-06-11):** v2.6-mle (M1f) dominates all other versions
+> **Latest recommendation (2026-06-11):** v2.6-mle (M1g) dominates all other versions
 > on every agreement criterion vs. ground truth, is the only mode that ranks D2
 > correctly (Spearman 1.0 vs 0.943), and costs the same runtime.
 
@@ -132,7 +132,7 @@ Replay the shadow log on the model via PM4Py token replay.
 
 | Tier | Methods | What |
 |------|---------|------|
-| **T1** | M1–M1f (HybridGen v1→v2.6) | Our method family + ablations |
+| **T1** | M1a–M1g (HybridGen v1→v2.6) | Our method family + ablations |
 | **T2** | M2–M7 (PM4Py, Entropic, AVATAR, Bootstrap, SpeciAL4PM) | External baselines |
 | **T3** | R1–R3 (K-Fold CV, Leave-One-Out, Random) | Reference / sanity checks |
 
@@ -153,12 +153,12 @@ uv run python benchmark/run_m1_family.py --dataset D1
 uv run python benchmark/run_m1_family.py --dataset D2
 
 # Only new versions (v2.5/v2.6)
-uv run python benchmark/run_m1_family.py --dataset D1 --methods M1d M1e M1f
+uv run python benchmark/run_m1_family.py --dataset D1 --methods M1e M1f M1g
 
 # Multi-seed robustness check
 uv run python benchmark/version_comparison.py --dataset D1 --seeds 42 1 7 99
 
-# Legacy demo (M1–M1f via shell script)
+# Legacy demo (M1a–M1g via shell script)
 bash benchmark/m1.sh
 ```
 

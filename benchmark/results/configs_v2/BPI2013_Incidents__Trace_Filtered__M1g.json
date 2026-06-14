@@ -1,9 +1,9 @@
 {
   "dataset": "BPI2013_Incidents",
   "miner": "Trace_Filtered",
-  "method": "M1f",
-  "method_label": "HybridGen v2.6 (log weighting)",
-  "timestamp": "2026-06-12T09:12:58Z",
+  "method": "M1g",
+  "method_label": "HybridGen v2.6 (MLE weighting)",
+  "timestamp": "2026-06-12T09:13:24Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -12,23 +12,24 @@
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5,
+    "successor_weighting": "mle",
     "trace_model_top_k": 50
   },
   "results": {
-    "mean": 0.5664022065665301,
-    "std": 0.003445019759548422,
+    "mean": 0.5970998773745401,
+    "std": 0.003883502853718601,
     "raw_iterations": [
-      0.5616461756401059,
-      0.562888955467899,
-      0.5694310082004933,
-      0.5698806674681448,
-      0.5681642260560076
+      0.594488362971027,
+      0.5909297836833055,
+      0.6005480243389185,
+      0.5982824773637141,
+      0.6012507385157356
     ],
-    "runtime_s": 9.504902601242065,
+    "runtime_s": 9.510727643966675,
     "gen_accept": 0.0,
     "gen_accept_std": 0.0,
-    "gen_shadow_regular": 0.5609678937336614,
-    "gen_shadow_mutated": 0.6212764685627106,
+    "gen_shadow_regular": 0.5962410700716196,
+    "gen_shadow_mutated": 0.6528503174597498,
     "duplicates_kept": 0,
     "truncated_traces": 0,
     "max_trace_length_used": 246

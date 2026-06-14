@@ -1,7 +1,7 @@
 """
 Demo: D1 Sepsis — Full Benchmark Run (Methodology v2)
 =========================================================
-Runs all M1-family methods (v1.0/v2.1/v2.1/v2.4/v2.5/v2.6/v2.6) + M2 + R3 on Sepsis (1,050 traces).
+Runs all M1-family methods (M1a–M1g: v1.0→v2.6) + M2 + R3 on Sepsis (1,050 traces).
 Output: benchmark/results/configs_v2/{Dataset}__{Miner}__{Method}.json
 """
 
@@ -47,7 +47,7 @@ random.seed(SEED)
 np.random.seed(SEED)
 
 # ── CLI override for MINER_LIST ─────────────────────────────────────────────
-_cli = argparse.ArgumentParser(description="D1 Sepsis benchmark (M1–M1f + M2 + R3)")
+_cli = argparse.ArgumentParser(description="D1 Sepsis benchmark (M1a–M1g + M2 + R3)")
 _cli.add_argument("--miners", nargs="*", default=None,
                   help="Restrict to specific miners (default: all)")
 _args, _ = _cli.parse_known_args()
@@ -159,7 +159,7 @@ for miner_name, miner_fn in target_miners.items():
     write_config(DATASET_NAME, miner_name, "M2", "PM4Py Built-in Gen",
                  {}, {"score": m2_score, "runtime_s": m2_time}, notes)
 
-    # --- 2c. M1a: HybridGen v1 (1-gram, no max_n) ---
+    # --- 2c. M1a: HybridGen v1.0 (1-gram, no max_n) ---
     v1 = load_algorithm("v1.0")
     t0 = time.time()
     try:
@@ -172,8 +172,8 @@ for miner_name, miner_fn in target_miners.items():
     except Exception as e:
         m1a_mean = m1a_std = 0.0; m1a_raw = []; m1a_time = 0
         notes += " ⚠️ M1a_ERROR"
-    print(f"    M1a (v1): {m1a_mean:.4f} ± {m1a_std:.4f} ({m1a_time:.1f}s)")
-    write_config(DATASET_NAME, miner_name, "M1a", "HybridGen v1",
+    print(f"    M1a (v1.0): {m1a_mean:.4f} ± {m1a_std:.4f} ({m1a_time:.1f}s)")
+    write_config(DATASET_NAME, miner_name, "M1a", "HybridGen v1.0",
                  {"safe_threshold": HPARAMS["safe_threshold"],
                   "num_shadow_traces": HPARAMS["num_shadow_traces"],
                   "iterations": HPARAMS["iterations"]},
@@ -225,108 +225,108 @@ for miner_name, miner_fn in target_miners.items():
                  {"mean": m1c_mean, "std": m1c_std,
                   "raw_iterations": m1c_raw, "runtime_s": m1c_time}, notes)
 
-    # --- 2f. M1: HybridGen v24 (N=6, context-aware termination) ---
+    # --- 2f. M1d: HybridGen v2.4 (N=6, context-aware termination) ---
     v24 = load_algorithm("v2.3")  # v2.3 = latest (v2.4 is bug-compatible)
     t0 = time.time()
     try:
-        m1_result = v24.evaluate_miner(
+        m1g_result = v24.evaluate_miner(
             log, miner_name, miner_fn,
             w=0.5, num_shadow_traces=HPARAMS["num_shadow_traces"],
             iterations=HPARAMS["iterations"], seed=SEED, max_n=HPARAMS["max_n"],
         )
-        m1_time = time.time() - t0
-        m1_mean = m1_result["gen_shadow_mean"]
-        m1_std = m1_result["gen_shadow_std"]
-        m1_raw = m1_result["gen_shadow_raw_iterations"]
+        m1g_time = time.time() - t0
+        m1g_mean = m1g_result["gen_shadow_mean"]
+        m1g_std = m1g_result["gen_shadow_std"]
+        m1g_raw = m1g_result["gen_shadow_raw_iterations"]
     except Exception as e:
-        m1_mean = m1_std = 0.0; m1_raw = []; m1_time = 0
-        notes += " ⚠️ M1_ERROR"
-        m1_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
-    print(f"    M1 (v24 N=6): {m1_mean:.4f} ± {m1_std:.4f} ({m1_time:.1f}s)")
-    write_config(DATASET_NAME, miner_name, "M1", "HybridGen v24 (N=6)",
+        m1g_mean = m1g_std = 0.0; m1g_raw = []; m1g_time = 0
+        notes += " ⚠️ M1g_ERROR"
+        m1g_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
+    print(f"    M1d (v2.4 N=6): {m1g_mean:.4f} ± {m1g_std:.4f} ({m1g_time:.1f}s)")
+    write_config(DATASET_NAME, miner_name, "M1d", "HybridGen v2.4 (N=6)",
                  HPARAMS,
-                 {"gen_total": m1_result.get("gen_total", m1_mean),
-                  "mean": m1_mean, "std": m1_std,
-                  "raw_iterations": m1_raw, "runtime_s": m1_time}, notes)
+                 {"gen_total": m1g_result.get("gen_total", m1g_mean),
+                  "mean": m1g_mean, "std": m1g_std,
+                  "raw_iterations": m1g_raw, "runtime_s": m1g_time}, notes)
 
-    # --- 2g. M1d: HybridGen v25 (Katz-consistent mutation proposal) ---
+    # --- 2g. M1e: HybridGen v2.5 (Katz-consistent mutation proposal) ---
     v25 = load_algorithm("v2.5")
     t0 = time.time()
     try:
-        m1d_result = v25.evaluate_miner(
+        m1g_result = v25.evaluate_miner(
             log, miner_name, miner_fn,
             w=0.5, num_shadow_traces=HPARAMS["num_shadow_traces"],
             iterations=HPARAMS["iterations"], seed=SEED, max_n=HPARAMS["max_n"],
         )
-        m1d_time = time.time() - t0
-        m1d_mean = m1d_result["gen_shadow_mean"]
-        m1d_std = m1d_result["gen_shadow_std"]
-        m1d_raw = m1d_result.get("gen_shadow_raw_iterations")
+        m1g_time = time.time() - t0
+        m1g_mean = m1g_result["gen_shadow_mean"]
+        m1g_std = m1g_result["gen_shadow_std"]
+        m1g_raw = m1g_result.get("gen_shadow_raw_iterations")
     except Exception as e:
-        m1d_mean = m1d_std = 0.0; m1d_raw = []; m1d_time = 0
-        notes += " ⚠️ M1d_ERROR"
-        m1d_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
-    print(f"    M1d (v25 Katz): {m1d_mean:.4f} ± {m1d_std:.4f} ({m1d_time:.1f}s)")
-    write_config(DATASET_NAME, miner_name, "M1d", "HybridGen v25 (Katz proposal)",
+        m1g_mean = m1g_std = 0.0; m1g_raw = []; m1g_time = 0
+        notes += " ⚠️ M1g_ERROR"
+        m1g_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
+    print(f"    M1e (v2.5 Katz): {m1g_mean:.4f} ± {m1g_std:.4f} ({m1g_time:.1f}s)")
+    write_config(DATASET_NAME, miner_name, "M1e", "HybridGen v2.5 (Katz proposal)",
                  HPARAMS,
-                 {"gen_total": m1d_result.get("gen_total", m1d_mean),
-                  "mean": m1d_mean, "std": m1d_std,
-                  "raw_iterations": m1d_raw, "runtime_s": m1d_time}, notes)
+                 {"gen_total": m1g_result.get("gen_total", m1g_mean),
+                  "mean": m1g_mean, "std": m1g_std,
+                  "raw_iterations": m1g_raw, "runtime_s": m1g_time}, notes)
 
-    # --- 2h. M1e: HybridGen v26 (log weighting) ---
+    # --- 2h. M1f: HybridGen v2.6 (log weighting) ---
     v26 = load_algorithm("v2.6")
     t0 = time.time()
     try:
-        m1e_result = v26.evaluate_miner(
+        m1g_result = v26.evaluate_miner(
             log, miner_name, miner_fn,
             w=0.5, num_shadow_traces=HPARAMS["num_shadow_traces"],
             iterations=HPARAMS["iterations"], seed=SEED, max_n=HPARAMS["max_n"],
             successor_weighting="log",
         )
-        m1e_time = time.time() - t0
-        m1e_mean = m1e_result["gen_shadow_mean"]
-        m1e_std = m1e_result["gen_shadow_std"]
-        m1e_raw = m1e_result.get("gen_shadow_raw_iterations")
+        m1g_time = time.time() - t0
+        m1g_mean = m1g_result["gen_shadow_mean"]
+        m1g_std = m1g_result["gen_shadow_std"]
+        m1g_raw = m1g_result.get("gen_shadow_raw_iterations")
     except Exception as e:
-        m1e_mean = m1e_std = 0.0; m1e_raw = []; m1e_time = 0
-        notes += " ⚠️ M1e_ERROR"
-        m1e_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
-    print(f"    M1e (v26 log): {m1e_mean:.4f} ± {m1e_std:.4f} ({m1e_time:.1f}s)")
-    write_config(DATASET_NAME, miner_name, "M1e", "HybridGen v26 (log weighting)",
+        m1g_mean = m1g_std = 0.0; m1g_raw = []; m1g_time = 0
+        notes += " ⚠️ M1g_ERROR"
+        m1g_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
+    print(f"    M1f (v2.6 log): {m1g_mean:.4f} ± {m1g_std:.4f} ({m1g_time:.1f}s)")
+    write_config(DATASET_NAME, miner_name, "M1f", "HybridGen v2.6 (log weighting)",
                  {"max_n": HPARAMS["max_n"], "safe_threshold": HPARAMS["safe_threshold"],
                   "num_shadow_traces": HPARAMS["num_shadow_traces"],
                   "iterations": HPARAMS["iterations"],
                   "successor_weighting": "log"},
-                 {"gen_total": m1e_result.get("gen_total", m1e_mean),
-                  "mean": m1e_mean, "std": m1e_std,
-                  "raw_iterations": m1e_raw, "runtime_s": m1e_time}, notes)
+                 {"gen_total": m1g_result.get("gen_total", m1g_mean),
+                  "mean": m1g_mean, "std": m1g_std,
+                  "raw_iterations": m1g_raw, "runtime_s": m1g_time}, notes)
 
-    # --- 2i. M1f: HybridGen v26 (MLE weighting) ---
+    # --- 2i. M1g: HybridGen v2.6 (MLE weighting) ---
     t0 = time.time()
     try:
-        m1f_result = v26.evaluate_miner(
+        m1g_result = v26.evaluate_miner(
             log, miner_name, miner_fn,
             w=0.5, num_shadow_traces=HPARAMS["num_shadow_traces"],
             iterations=HPARAMS["iterations"], seed=SEED, max_n=HPARAMS["max_n"],
             successor_weighting="mle",
         )
-        m1f_time = time.time() - t0
-        m1f_mean = m1f_result["gen_shadow_mean"]
-        m1f_std = m1f_result["gen_shadow_std"]
-        m1f_raw = m1f_result.get("gen_shadow_raw_iterations")
+        m1g_time = time.time() - t0
+        m1g_mean = m1g_result["gen_shadow_mean"]
+        m1g_std = m1g_result["gen_shadow_std"]
+        m1g_raw = m1g_result.get("gen_shadow_raw_iterations")
     except Exception as e:
-        m1f_mean = m1f_std = 0.0; m1f_raw = []; m1f_time = 0
-        notes += " ⚠️ M1f_ERROR"
-        m1f_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
-    print(f"    M1f (v26 mle): {m1f_mean:.4f} ± {m1f_std:.4f} ({m1f_time:.1f}s)")
-    write_config(DATASET_NAME, miner_name, "M1f", "HybridGen v26 (MLE weighting)",
+        m1g_mean = m1g_std = 0.0; m1g_raw = []; m1g_time = 0
+        notes += " ⚠️ M1g_ERROR"
+        m1g_result = {"gen_total": 0, "gen_shadow_mean": 0, "gen_shadow_std": 0}
+    print(f"    M1g (v2.6 mle): {m1g_mean:.4f} ± {m1g_std:.4f} ({m1g_time:.1f}s)")
+    write_config(DATASET_NAME, miner_name, "M1g", "HybridGen v2.6 (MLE weighting)",
                  {"max_n": HPARAMS["max_n"], "safe_threshold": HPARAMS["safe_threshold"],
                   "num_shadow_traces": HPARAMS["num_shadow_traces"],
                   "iterations": HPARAMS["iterations"],
                   "successor_weighting": "mle"},
-                 {"gen_total": m1f_result.get("gen_total", m1f_mean),
-                  "mean": m1f_mean, "std": m1f_std,
-                  "raw_iterations": m1f_raw, "runtime_s": m1f_time}, notes)
+                 {"gen_total": m1g_result.get("gen_total", m1g_mean),
+                  "mean": m1g_mean, "std": m1g_std,
+                  "raw_iterations": m1g_raw, "runtime_s": m1g_time}, notes)
 
     # --- 2j. R3: Naive Random Baseline ---
     t0 = time.time()
@@ -402,7 +402,7 @@ for miner_name, miner_fn in target_miners.items():
 print(f"\n{'=' * 70}")
 print(f"Completed! Config JSONs in {CONFIG_DIR}/")
 print(f"Methods: M1a (v1.0), M1b (v2.1 N=3), M1c (v2.1 N=6),")
-print(f"         M1 (v2.4), M1d (v2.5 Katz), M1e (v2.6 log), M1f (v2.6 mle),")
+print(f"         M1d (v2.4), M1e (v2.5 Katz), M1f (v2.6 log), M1g (v2.6 mle),")
 print(f"         M2 (PM4Py built-in), R2 (LOVO sampled), R3 (random baseline)")
 print(f"Miners: 8 (incl. Trace_Filtered top-50)")
 print(f"{'=' * 70}")

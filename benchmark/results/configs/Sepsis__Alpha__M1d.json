@@ -1,8 +1,8 @@
 {
   "dataset": "Sepsis",
   "miner": "Alpha",
-  "method": "M1",
-  "method_label": "HybridGen v24 (N=6)",
+  "method": "M1d",
+  "method_label": "HybridGen v2.4 (N=6)",
   "timestamp": "2026-06-08T13:57:37Z",
   "host": "local",
   "seed": 42,

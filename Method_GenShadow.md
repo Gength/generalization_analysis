@@ -198,7 +198,7 @@ accepting it. With uniform proposals, a small fraction of the score (bounded by 
 share) rewards openness to noise rather than openness to plausible novelty.
 
 **Candidate refinements — (1) and (3) are implemented in v2.5
-(`HybridGen/algorithm/v25.py`), not yet benchmarked (benchmark M1 remains v2.4):**
+(`HybridGen/algorithm/v25.py`), not yet benchmarked (benchmark M1d remains v2.4):**
 
 1. **Katz-consistent proposal** *(preferred direction)*: draw the mutated activity from the
    backed-off lower-order successor distribution, restricted to activities unseen at the current
@@ -280,8 +280,8 @@ hold up:
 
 | | D1 Pearson | D1 MAE | D2 Pearson | D2 MAE |
 |---|---|---|---|---|
-| M1e (log) `gen_accept` | 0.999 | 0.173 | 0.847 | 0.242 |
-| **M1f (mle) `gen_accept`** | **0.998** | **0.076** | **0.997** | **0.021** |
+| M1f (log) `gen_accept` | 0.999 | 0.173 | 0.847 | 0.242 |
+| **M1g (mle) `gen_accept`** | **0.998** | **0.076** | **0.997** | **0.021** |
 
 Key facts this resolves:
 - The near-zero acceptances on D1 are **true properties of the nets**, not metric failures:
