@@ -417,4 +417,4 @@ def evaluate_miner(event_log, miner_name, miner_fn, w=0.5, num_shadow_traces=100
 # HybridGen Registry
 # =====================================================================
 from . import register_algorithm
-register_algorithm("v22")
+register_algorithm("v2.2")

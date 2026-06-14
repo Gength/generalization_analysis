@@ -28,9 +28,9 @@ from pm4py.objects.log.obj import EventLog, Trace, Event
 
 # --- IMPORT ALGORITHMS FROM HYBRIDGEN REGISTRY ---
 from HybridGen.algorithm import load_algorithm
-algo_v21 = load_algorithm("v21")
-algo_v23 = load_algorithm("v23")
-algo_v24 = load_algorithm("v24")
+algo_v21 = load_algorithm("v2.1")
+algo_v23 = load_algorithm("v2.3")
+algo_v24 = load_algorithm("v2.4")
 
 # ─── CONFIGURATION ──────────────────────────────────────────────────────────
 DATASETS = {

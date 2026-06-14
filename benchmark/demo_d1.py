@@ -1,13 +1,13 @@
 """
 Demo: D1 Sepsis — Full Benchmark Run (Methodology v2)
 =========================================================
-Runs all M1-family methods (M1–M1f) + M2 + R3 on Sepsis (1,050 traces).
+Runs all M1-family methods (v1.0/v2.1/v2.1/v2.4/v2.5/v2.6/v2.6) + M2 + R3 on Sepsis (1,050 traces).
 Output: benchmark/results/configs_v2/{Dataset}__{Miner}__{Method}.json
 """
 
 import os, sys, json, time, random, argparse
 from datetime import datetime, timezone
-
+from collections import defaultdict
 
 import numpy as np
 import pm4py
@@ -160,7 +160,7 @@ for miner_name, miner_fn in target_miners.items():
                  {}, {"score": m2_score, "runtime_s": m2_time}, notes)
 
     # --- 2c. M1a: HybridGen v1 (1-gram, no max_n) ---
-    v1 = load_algorithm("v1")
+    v1 = load_algorithm("v1.0")
     t0 = time.time()
     try:
         m1a_mean, m1a_std, m1a_raw = v1.calculate_gen_shadow_stable(
@@ -181,7 +181,7 @@ for miner_name, miner_fn in target_miners.items():
                   "raw_iterations": m1a_raw, "runtime_s": m1a_time}, notes)
 
     # --- 2d. M1b: HybridGen v2.1 (N=3, flat termination) ---
-    v21 = load_algorithm("v21")
+    v21 = load_algorithm("v2.1")
     t0 = time.time()
     try:
         m1b_mean, m1b_std, m1b_raw = v21.calculate_gen_shadow_stable(
@@ -226,7 +226,7 @@ for miner_name, miner_fn in target_miners.items():
                   "raw_iterations": m1c_raw, "runtime_s": m1c_time}, notes)
 
     # --- 2f. M1: HybridGen v24 (N=6, context-aware termination) ---
-    v24 = load_algorithm("v23")  # v23 = latest (v24 is bug-compatible)
+    v24 = load_algorithm("v2.3")  # v2.3 = latest (v2.4 is bug-compatible)
     t0 = time.time()
     try:
         m1_result = v24.evaluate_miner(
@@ -250,7 +250,7 @@ for miner_name, miner_fn in target_miners.items():
                   "raw_iterations": m1_raw, "runtime_s": m1_time}, notes)
 
     # --- 2g. M1d: HybridGen v25 (Katz-consistent mutation proposal) ---
-    v25 = load_algorithm("v25")
+    v25 = load_algorithm("v2.5")
     t0 = time.time()
     try:
         m1d_result = v25.evaluate_miner(
@@ -274,7 +274,7 @@ for miner_name, miner_fn in target_miners.items():
                   "raw_iterations": m1d_raw, "runtime_s": m1d_time}, notes)
 
     # --- 2h. M1e: HybridGen v26 (log weighting) ---
-    v26 = load_algorithm("v26")
+    v26 = load_algorithm("v2.6")
     t0 = time.time()
     try:
         m1e_result = v26.evaluate_miner(
@@ -401,8 +401,8 @@ for miner_name, miner_fn in target_miners.items():
 
 print(f"\n{'=' * 70}")
 print(f"Completed! Config JSONs in {CONFIG_DIR}/")
-print(f"Methods: M1 (v24), M1a (v1), M1b (v2.1 N=3), M1c (v2.1 N=6),")
-print(f"         M1d (v25 Katz), M1e (v26 log), M1f (v26 mle),")
+print(f"Methods: M1a (v1.0), M1b (v2.1 N=3), M1c (v2.1 N=6),")
+print(f"         M1 (v2.4), M1d (v2.5 Katz), M1e (v2.6 log), M1f (v2.6 mle),")
 print(f"         M2 (PM4Py built-in), R2 (LOVO sampled), R3 (random baseline)")
 print(f"Miners: 8 (incl. Trace_Filtered top-50)")
 print(f"{'=' * 70}")

@@ -22,7 +22,7 @@ generalization_analysis/
 ├── pyproject.toml                    # Python project config (uv package manager)
 │
 ├── Method_GenShadow.md               # ★ Authoritative metric specification
-├── WhatChanged_v25_v26.md            # v25/v26 technical summary
+├── WhatChanged_v25_v26.md            # v2.5/v2.6 technical summary
 ├── BenchmarkDesign.md                # Benchmark methodology v2 (supersedes v1)
 ├── BenchmarkGuide.md                 # Quick-start guide for running benchmarks
 │
@@ -90,8 +90,8 @@ A stochastic walker generates synthetic traces:
 |------|-----------|
 | **Context resolution** | Katz-style backoff — try the deepest context first; fall back if support < τ=5 |
 | **Novelty estimation** | Good–Turing `p_unseen(s) = N₁(s) / N(s)` — probability the next event is unseen |
-| **Mutation** | With probability `p_unseen`, insert a novel activity. **v25+**: drawn from backed-off lower-order context (Katz-consistent); **v24-**: uniform over alphabet |
-| **Exploitation** | Otherwise, sample successor proportionally to `ln(f+1)` (log) or raw frequency (MLE, v26+) |
+| **Mutation** | With probability `p_unseen`, insert a novel activity. **v2.5+**: drawn from backed-off lower-order context (Katz-consistent); **v2.4-**: uniform over alphabet |
+| **Exploitation** | Otherwise, sample successor proportionally to `ln(f+1)` (log) or raw frequency (MLE, v2.6+) |
 | **Termination** | Context-aware `p_end(s)` resolved with same backoff |
 
 ### 3. Replay & Score
@@ -107,12 +107,12 @@ Replay the shadow log on the model via PM4Py token replay.
 | v1 | 1-gram DFG + Good–Turing | Historical |
 | v2–v22 | N-gram + backoff evolution | Historical |
 | **v23** | Context-aware termination; fixed mutation rate over-estimation | Historical |
-| **v24** | Stable baseline; uniform mutation proposal, ln-damped sampling | **v1 benchmark baseline** |
-| **v25** | Katz-consistent mutation proposal; probe-integrity counters | ✅ |
-| **v26 (log)** | v25 + acceptance rate + data-driven length cap | ✅ Stress-test mode |
-| **v26 (mle)** | v26 with `successor_weighting='mle'` | **🏆 Headline candidate** |
+| **v2.4** | Stable baseline; uniform mutation proposal, ln-damped sampling | **v1 benchmark baseline** |
+| **v2.5** | Katz-consistent mutation proposal; probe-integrity counters | ✅ |
+| **v2.6 (log)** | v2.5 + acceptance rate + data-driven length cap | ✅ Stress-test mode |
+| **v2.6 (mle)** | v2.6 with `successor_weighting='mle'` | **🏆 Headline candidate** |
 
-> **Latest recommendation (2026-06-11):** v26-mle (M1f) dominates all other versions
+> **Latest recommendation (2026-06-11):** v2.6-mle (M1f) dominates all other versions
 > on every agreement criterion vs. ground truth, is the only mode that ranks D2
 > correctly (Spearman 1.0 vs 0.943), and costs the same runtime.
 
@@ -132,7 +132,7 @@ Replay the shadow log on the model via PM4Py token replay.
 
 | Tier | Methods | What |
 |------|---------|------|
-| **T1** | M1–M1f (HybridGen v1→v26) | Our method family + ablations |
+| **T1** | M1–M1f (HybridGen v1→v2.6) | Our method family + ablations |
 | **T2** | M2–M7 (PM4Py, Entropic, AVATAR, Bootstrap, SpeciAL4PM) | External baselines |
 | **T3** | R1–R3 (K-Fold CV, Leave-One-Out, Random) | Reference / sanity checks |
 
@@ -152,7 +152,7 @@ uv run python benchmark/run_m1_family.py --dataset D1
 # D2 BPI 2013 Incidents
 uv run python benchmark/run_m1_family.py --dataset D2
 
-# Only new versions (v25/v26)
+# Only new versions (v2.5/v2.6)
 uv run python benchmark/run_m1_family.py --dataset D1 --methods M1d M1e M1f
 
 # Multi-seed robustness check
@@ -170,13 +170,13 @@ Results → `benchmark/results/configs_v2/` per (dataset, miner, method).
 
 | Metric | Pearson vs R1 | Spearman vs R1 | MAE |
 |--------|:------------:|:--------------:|:---:|
-| HybridGen v26-mle | **0.996** | **0.943** | **0.023** |
-| HybridGen v24 | 0.989 | 0.886 | 0.031 |
+| HybridGen v2.6-mle | **0.996** | **0.943** | **0.023** |
+| HybridGen v2.4 | 0.989 | 0.886 | 0.031 |
 | PM4Py Built-in | **−0.429** | **−0.371** | 0.167 |
 
 - PM4Py's built-in generalization metric correlates **negatively** with held-out fitness.
-- v25's Katz-consistent mutation proposal reduces calibration error by ≈3×.
-- v26-mle is the only mode that ranks D2 correctly (Spearman 1.0).
+- v2.5's Katz-consistent mutation proposal reduces calibration error by ≈3×.
+- v2.6-mle is the only mode that ranks D2 correctly (Spearman 1.0).
 - The flower model scores 1.0 under Gen_shadow — this is **correct** for a pure generalization construct (see `Method_GenShadow.md` §1).
 
 ---
@@ -188,7 +188,7 @@ Results → `benchmark/results/configs_v2/` per (dataset, miner, method).
 | `Method_GenShadow.md` | **Authoritative** metric specification & design rationale |
 | `BenchmarkDesign.md` | Benchmark methodology v2 — full protocol, methods, datasets |
 | `BenchmarkGuide.md` | Quick-start guide for running experiments |
-| `WhatChanged_v25_v26.md` | v25/v26 plain-language technical summary |
+| `WhatChanged_v25_v26.md` | v2.5/v2.6 plain-language technical summary |
 | `report/main.pdf` | Preliminary LaTeX paper (LNCS format) |
 
 Archived / historical:

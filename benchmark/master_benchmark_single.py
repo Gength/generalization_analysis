@@ -18,8 +18,8 @@ from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 from HybridGen.algorithm import load_algorithm
 from benchmark.master_benchmark_utils import discover_flower_model, compute_kfold_fitness
 # Load the algorithms dynamically from the registry
-algo_v1 = load_algorithm("v1")
-algo_v21 = load_algorithm("v21")  # Using V2.1 to get the logarithmic ln(x+1) scaling!
+algo_v1 = load_algorithm("v1.0")
+algo_v21 = load_algorithm("v2.1")  # Using V2.1 to get the logarithmic ln(x+1) scaling!
 # ─── Configuration & Dataset Mapping ────────────────────────────────────────
 DATASETS = {
     "BPI_2017": "data/BPI-Challenge_2017/BPI Challenge 2017.xes.gz",

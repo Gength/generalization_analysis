@@ -10,13 +10,13 @@ Results go to a NEW directory (benchmark/results/configs_v2/) so the original
 benchmark results (configs/) are never overwritten.
 
 Method mapping (Methodology v2):
-  M1   = HybridGen v24  (uniform mutation proposal, ln-damped)   [v1-methodology baseline]
-  M1a  = HybridGen v1   (1-gram DFG)
+  M1a  = HybridGen v1.0 (1-gram DFG)
   M1b  = HybridGen v2.1 (N=3, flat termination)
   M1c  = HybridGen v2.1 (N=6, flat termination)
-  M1d  = HybridGen v25  (Katz-consistent mutation proposal)
-  M1e  = HybridGen v26  (acceptance + data-driven cap, ln-damped sampling)
-  M1f  = HybridGen v26  (successor_weighting='mle')               [headline candidate]
+  M1   = HybridGen v2.4 (uniform mutation proposal, ln-damped)   [v1-methodology baseline]
+  M1d  = HybridGen v2.5 (Katz-consistent mutation proposal)
+  M1e  = HybridGen v2.6 (acceptance + data-driven cap, ln-damped sampling)
+  M1f  = HybridGen v2.6 (successor_weighting='mle')               [headline candidate]
 
 Ground truth R1 (variant-based 5-fold CV, 3 shuffles, seed 42) is copied from
 the v1 configs where available and computed fresh otherwise (e.g. for the new
@@ -61,13 +61,13 @@ DATASETS = {
 }
 
 METHODS = {
-    "M1":  {"version": "v24", "kwargs": {},                                "label": "HybridGen v24 (uniform proposal)"},
-    "M1a": {"version": "v1",  "kwargs": {},                                "label": "HybridGen v1 (1-gram DFG)"},
-    "M1b": {"version": "v21", "kwargs": {"max_n": 3},                      "label": "HybridGen v2.1 (N=3)"},
-    "M1c": {"version": "v21", "kwargs": {"max_n": 6},                      "label": "HybridGen v2.1 (N=6)"},
-    "M1d": {"version": "v25", "kwargs": {},                                "label": "HybridGen v25 (Katz proposal)"},
-    "M1e": {"version": "v26", "kwargs": {},                                "label": "HybridGen v26 (log weighting)"},
-    "M1f": {"version": "v26", "kwargs": {"successor_weighting": "mle"},    "label": "HybridGen v26 (MLE weighting)"},
+    "M1a": {"version": "v1.0", "kwargs": {},                                "label": "HybridGen v1.0 (1-gram DFG)"},
+    "M1b": {"version": "v2.1", "kwargs": {"max_n": 3},                      "label": "HybridGen v2.1 (N=3)"},
+    "M1c": {"version": "v2.1", "kwargs": {"max_n": 6},                      "label": "HybridGen v2.1 (N=6)"},
+    "M1":  {"version": "v2.4", "kwargs": {},                                "label": "HybridGen v2.4 (uniform proposal)"},
+    "M1d": {"version": "v2.5", "kwargs": {},                                "label": "HybridGen v2.5 (Katz proposal)"},
+    "M1e": {"version": "v2.6", "kwargs": {},                                "label": "HybridGen v2.6 (log weighting)"},
+    "M1f": {"version": "v2.6", "kwargs": {"successor_weighting": "mle"},    "label": "HybridGen v2.6 (MLE weighting)"},
 }
 
 # ── Miners (Methodology v2: original seven + Filtered Trace Model) ──────────

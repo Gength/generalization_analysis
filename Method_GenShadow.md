@@ -57,7 +57,7 @@ structural component defunct (`w` effectively 1); see §8.
 
 ---
 
-## 3. Generation algorithm (v24)
+## 3. Generation algorithm (v2.4)
 
 The shadow log is produced by a stochastic trace generator learned **from the log only** —
 the model under evaluation is consulted exclusively at replay time, keeping the probe
@@ -89,7 +89,7 @@ event is something never observed after `s`.
 
 **3.5 Step decision.**
 - With probability `p_unseen(s)`: **mutate** — append an activity the context has not produced
-  before. Proposal distribution: v24 draws uniformly from the alphabet; **v25 draws
+  before. Proposal distribution: v2.4 draws uniformly from the alphabet; **v2.5 draws
   Katz-consistently** from the deepest lower-order successor distribution restricted to
   activities unseen at the resolved order (see §6).
 - Otherwise: **exploit** — sample a successor with probability ∝ `ln(f + 1)`.
@@ -181,7 +181,7 @@ do (0.076 vs 0.28; 0.67 vs 0.49). This is why all three criteria are reported.
 
 ## 6. Open design question: the mutation proposal distribution
 
-**Current behavior (v24).** When the walker decides to mutate, the inserted activity is drawn
+**Current behavior (v2.4).** When the walker decides to mutate, the inserted activity is drawn
 **uniformly from the entire alphabet** (`random.choice(alphabet)`). The metric then treats the
 resulting trace as a regular sample of future behavior: mean fitness implicitly weights mutated
 traces by their empirical share (~4 % at N=6 on BPI 2017; less on sparse logs where backoff
@@ -197,8 +197,8 @@ behavior — and a metric defined over valid future behavior should not reward a
 accepting it. With uniform proposals, a small fraction of the score (bounded by the mutated-trace
 share) rewards openness to noise rather than openness to plausible novelty.
 
-**Candidate refinements — (1) and (3) are implemented in v25
-(`HybridGen/algorithm/v25.py`), not yet benchmarked (benchmark M1 remains v24):**
+**Candidate refinements — (1) and (3) are implemented in v2.5
+(`HybridGen/algorithm/v25.py`), not yet benchmarked (benchmark M1 remains v2.4):**
 
 1. **Katz-consistent proposal** *(preferred direction)*: draw the mutated activity from the
    backed-off lower-order successor distribution, restricted to activities unseen at the current
@@ -214,26 +214,26 @@ share) rewards openness to noise rather than openness to plausible novelty.
    with precision also suggests not silently blending "recombination acceptance" with
    "noise tolerance". The pair forms an *openness profile* of the model.
 
-Options (1) and (3) compose, and v25 implements both: Katz-consistent proposal plus separate
+Options (1) and (3) compose, and v2.5 implements both: Katz-consistent proposal plus separate
 `gen_shadow_regular` / `gen_shadow_mutated` reporting, along with two transparency counters —
-`duplicates_kept` (dedup retry cap exhausted; v24 silently kept the duplicate) and
+`duplicates_kept` (dedup retry cap exhausted; v2.4 silently kept the duplicate) and
 `truncated_traces` (walks cut at `max_trace_length`, which are incomplete process instances).
 The mutation *rate* is untouched (`p_unseen` is identical), so the N-sweep calibration carries
 over up to second-order trajectory effects.
 
 **Impact is dataset-dependent — the "thin tail" framing only holds on dense logs.** The
-mutated-trace share is ≈ 4 % at N=6 on BPI 2017, but **≈ 49 % on Sepsis** (v25 smoke test,
+mutated-trace share is ≈ 4 % at N=6 on BPI 2017, but **≈ 49 % on Sepsis** (v2.5 smoke test,
 500 traces × 3 iterations): on sparse logs the backoff resolves at low orders where singleton
 continuations are common, so the per-step Good–Turing mass is high and compounds over ~14
 decisions per trace. On such logs the proposal distribution materially shapes the score.
-v24 → v25 on Sepsis: Inductive-strict 0.959 → 0.965, Heuristics 0.833 → 0.846; under the
+v2.4 → v2.5 on Sepsis: Inductive-strict 0.959 → 0.965, Heuristics 0.833 → 0.846; under the
 Katz-consistent proposal, mutated traces replay slightly *better* than regular ones
 (IM: 0.970 vs 0.959) — injected events are now plausible by construction, as intended.
 The stratified BPI 2017 analysis under uniform proposals (`Method2Log_Geng.md`) showed the
 per-miner sensitivity the other way: IM Δ = +0.004, Heuristics Δ = +0.033, Alpha Δ = −0.004
 (regular − mutated fitness).
 
-**v26 — acceptance and probe integrity** (`HybridGen/algorithm/v26.py`) adds, on top of v25:
+**v2.6 — acceptance and probe integrity** (`HybridGen/algorithm/v26.py`) adds, on top of v2.5:
 (a) `gen_accept` — the fraction of shadow traces the model replays *perfectly*
 (pm4py `trace_is_fit`), the direct operationalization of "accepts future valid behavior";
 mean fitness stays as `gen_total`, both reported stratified;
@@ -250,9 +250,9 @@ Incidents over seeds {42, 7}; flower litmus = 1.0 for every version on both data
 
 | Version | D1 Pearson | D1 Spearman | D1 MAE | D2 Pearson | D2 Spearman | D2 MAE | s/cell |
 |---|---|---|---|---|---|---|---|
-| v24 (uniform, ln-damped) | 0.970±.001 | 1.00 | 0.077±.001 | 0.985 | 0.943 | 0.047 | 2.4–4.9 |
-| v25 / v26-log (Katz) | 0.975±.000 | 1.00 | 0.067±.000 | 0.987 | 0.943 | 0.045 | 2.4–5.1 |
-| **v26-mle** | **0.996±.001** | 1.00 | **0.024±.001** | **0.993** | **1.000** | **0.021** | 2.4–5.2 |
+| v2.4 (uniform, ln-damped) | 0.970±.001 | 1.00 | 0.077±.001 | 0.985 | 0.943 | 0.047 | 2.4–4.9 |
+| v2.5 / v2.6-log (Katz) | 0.975±.000 | 1.00 | 0.067±.000 | 0.987 | 0.943 | 0.045 | 2.4–5.1 |
+| **v2.6-mle** | **0.996±.001** | 1.00 | **0.024±.001** | **0.993** | **1.000** | **0.021** | 2.4–5.2 |
 
 Readings:
 - The Katz-consistent proposal improves calibration moderately; **MLE sampling improves it
@@ -266,8 +266,8 @@ Readings:
 - `duplicates_kept = 0` on D2 despite TLRA 0.80 — the dedup retry cap did not bite;
   re-check on D5 (TLRA 0.95).
 - Runtime is version-independent (~2.4 s/cell on D2, ~5 s/cell on D1 for the full
-  5×1000-trace protocol); v26's additions cost ≤ 6 % over v24.
-- v25 ≡ v26-log behaviorally (the old length cap never binds on D1/D2; `truncated = 0`).
+  5×1000-trace protocol); v2.6's additions cost ≤ 6 % over v2.4.
+- v2.5 ≡ v2.6-log behaviorally (the old length cap never binds on D1/D2; `truncated = 0`).
 
 **Decision (recommended): make `'mle'` the headline mode** — it dominates on every measured
 criterion on both datasets with no runtime cost — and keep `'log'` as the documented

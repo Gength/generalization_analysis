@@ -12,10 +12,10 @@ HybridGen: Hybrid Generative-Structural Generalization Evaluation.
         algo = load_algorithm("v2.1")
         exp  = load_experiment("v2", algo)
         exp.main()                         # parse args from CLI
-        exp.main(args=namespace)            # or pass Namespace directly
+        exp.main(args=namespace)           # or pass Namespace directly
 
     Output directory defaults to ``output/{algorithm_version}``
-    (e.g., output/v21 for v2.1), overridable via ``--output-dir``.
+    (e.g., output/v2.1 for v2.1), overridable via ``--output-dir``.
 """
 
 from .algorithm import load_algorithm
