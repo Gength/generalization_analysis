@@ -3,15 +3,25 @@ Step 1: Model Discovery — Export PNML + DFG JSON + XES for all miners.
 This is the ONLY script that depends on pm4py (our project's tooling).
 All bridge scripts read pre-exported files independently.
 """
-import os, json, shutil
+import os, sys, json, shutil, argparse
 from collections import Counter
 from miners import MINERS
 
 import pm4py
 
 SEED = 42
-DATASET = "Sepsis"
-LOG_PATH = "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz"
+
+# ── CLI ─────────────────────────────────────────────────────────────────────
+_cli = argparse.ArgumentParser(description="Model discovery — export PNML + DFG")
+_cli.add_argument("--dataset", default="D1", help="Dataset key (D1–D5)")
+_args = _cli.parse_args()
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from datasets import get_info
+
+info = get_info(_args.dataset)
+DATASET = info["name"]
+LOG_PATH = info["log_path"]
 MODEL_DIR = "benchmark/models"
 os.makedirs(MODEL_DIR, exist_ok=True)
 
@@ -51,12 +61,13 @@ def export_dfg_json(log, path):
     with open(path, "w") as f:
         json.dump({"nodes": nodes, "arcs": arcs}, f, indent=2)
 
-dfg_path = f"{MODEL_DIR}/sepsis_dfg.json"
+slug = DATASET.lower().replace(" ", "_")
+dfg_path = f"{MODEL_DIR}/{slug}_dfg.json"
 export_dfg_json(log, dfg_path)
 print(f"  DFG JSON → {dfg_path}")
 
 # ─── Copy XES to model dir (so JAR tools find all files under same path) ────
-xes_target = f"{MODEL_DIR}/sepsis.xes.gz"
+xes_target = f"{MODEL_DIR}/{slug}.xes.gz"
 if os.path.abspath(LOG_PATH) != os.path.abspath(xes_target):
     shutil.copy2(LOG_PATH, xes_target)
 print(f"  XES → {xes_target}")

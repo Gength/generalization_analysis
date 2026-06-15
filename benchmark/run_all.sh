@@ -24,7 +24,7 @@ echo "Started: $(date)"
 echo ""
 
 echo "[prepare] Discovering models..."
-bash benchmark/prepare.sh
+bash benchmark/prepare.sh --dataset "$DATASET"
 
 echo "[m1]     HybridGen methods (M1a-M1g)..."
 bash benchmark/m1.sh --dataset "$DATASET"
