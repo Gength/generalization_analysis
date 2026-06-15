@@ -20,11 +20,11 @@ echo ""
 echo "[prepare] Discovering models..."
 bash benchmark/prepare.sh
 
-echo "[m1]     HybridGen methods + PM4Py baseline + R3..."
+echo "[m1]     HybridGen methods (M1a-M1g)..."
 bash benchmark/m1.sh
 
-echo "[r1]     K-Fold Cross-Validation..."
-bash benchmark/r1.sh
+echo "[reference]     Reference / Sanity-Check Metrics (R1-R3)..."
+bash benchmark/reference.sh
 
 echo "[m3]     Entropic Relevance..."
 bash benchmark/m3.sh

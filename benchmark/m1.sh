@@ -1,3 +1,3 @@
 #!/bin/bash
-# M1a-M1g, M2, R3: Our methods + PM4Py baseline (v2 methodology)
-uv run python benchmark/demo_d1.py
+# M1 family (M1a-M1g): Our HybridGen method versions (v2 methodology)
+uv run python benchmark/run_m1_family.py --dataset D1

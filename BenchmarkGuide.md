@@ -23,18 +23,18 @@ Compare **HybridGen v2.4–v2.6** (M1a–M1g) against external generalization ba
 | M1a | HybridGen v1.0 | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
 | M1b | HybridGen v2.1 (N=3) | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
 | M1c | HybridGen v2.1 (N=6) | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
-| M1d | HybridGen v2.4 | Python | ✅ D1/D2 complete (baseline) | `uv run python benchmark/run_m1_family.py` |
-| M1e | HybridGen v2.5 | Python | ✅ D1/D2 complete | `uv run python benchmark/run_m1_family.py` |
-| M1f | HybridGen v2.6 (log) | Python | ✅ D1/D2 complete | `uv run python benchmark/run_m1_family.py` |
-| M1g | HybridGen v2.6 (mle) | Python | ✅ D1/D2 complete (headline) | `uv run python benchmark/run_m1_family.py` |
-| M2 | PM4Py Built-in Gen | Python | ✅ | `bash benchmark/m1.sh` |
+| M1d | HybridGen v2.4 | Python | ✅ D1/D2 complete (baseline) | `bash benchmark/m1.sh` |
+| M1e | HybridGen v2.5 | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
+| M1f | HybridGen v2.6 (log) | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
+| M1g | HybridGen v2.6 (mle) | Python | ✅ D1/D2 complete (headline) | `bash benchmark/m1.sh` |
+| M2 | PM4Py Built-in Gen | Python | ✅ | `bash benchmark/m1.sh` *(legacy)* |
 | M3 | Entropic Relevance | Java (Entropia) | ✅ | `bash benchmark/m3.sh` |
 | M5 | AVATAR (RelGAN) | Docker TF1.15 GPU | ✅ D1 complete (2 runs) | `bash benchmark/m5.sh` |
 | M6 | Bootstrap Gen (adapted) | Python (bsgen) | ✅ | `bash benchmark/m6.sh` |
 | M7 | SpeciAL4PM | Python (special4pm) | ✅ | `bash benchmark/m7.sh` |
-| R1 | K-Fold CV (k=5) | Python | ✅ | `bash benchmark/r1.sh` |
-| R2 | Leave-One-Variant-Out | Python | ✅ | Included in `m1.sh` |
-| R3 | Naive Random Baseline | Python | ✅ | Included in `m1.sh` |
+| R1 | K-Fold CV (k=5) | Python | ✅ | `bash benchmark/reference.sh` |
+| R2 | Leave-One-Variant-Out | Python | ✅ | `bash benchmark/reference.sh` |
+| R3 | Naive Random Baseline | Python | ✅ | `bash benchmark/reference.sh` |
 
 > **Archived** (not feasible on real-life logs, see [Archived Methods](BenchmarkDesign.md#archived-methods)):
 > - M4 Anti-Alignment Gen — `archive/Tianhao/benchmark/m4.sh`
@@ -97,20 +97,22 @@ bash benchmark/m5.sh
 
 ## 4. Running
 
-### Per-method scripts (v1 methodology)
+### Per-method scripts
 
 ```bash
 # Step 1: Prepare models (required before any method):
 bash benchmark/prepare.sh
 
-# Step 2: Run individual methods:
-bash benchmark/m1.sh   # M1a-M1g, M2, R3  (~3 min)
-bash benchmark/r1.sh   # R1 K-Fold CV     (~3 min)
-bash benchmark/m3.sh   # M3 Entropic      (~1 min)
-bash benchmark/m6.sh   # M6 Bootstrap     (~2 min)
-bash benchmark/m7.sh   # M7 SpeciAL4PM    (~2 min)
-bash benchmark/m5.sh   # M5 AVATAR        (~4h, FULL)
+# Step 2: Run individual method families:
+bash benchmark/m1.sh         # M1a-M1g: HybridGen family (~3 min)
+bash benchmark/reference.sh  # R1-R3:   Reference/sanity metrics (~5 min)
+bash benchmark/m3.sh         # M3:      Entropic Relevance (~1 min)
+bash benchmark/m6.sh         # M6:      Bootstrap Gen (~2 min)
+bash benchmark/m7.sh         # M7:      SpeciAL4PM (~2 min)
+bash benchmark/m5.sh         # M5:      AVATAR RelGAN (~4h, FULL)
 ```
+
+> **M2 (PM4Py Built-in Gen)** was historically part of the monolithic `demo_d1.py` runner (now removed). No dedicated shell script exists; M2 can be run ad-hoc via `uv run python -c "from miners import MINERS; ..."` if needed. The M1-family v2 runner is `benchmark/run_m1_family.py`.
 
 ### M1-family runner (v2 methodology)
 
@@ -125,6 +127,28 @@ uv run python benchmark/run_m1_family.py --dataset D1 --methods M1e M1f M1g
 
 Results go to `benchmark/results/configs_v2/`. See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the protocol.
 
+### R-family runner (R1–R3 reference metrics)
+
+```bash
+# All 3 reference methods (R1–R3), 8 miners, config JSONs:
+uv run python benchmark/run_r_family.py --dataset D1
+uv run python benchmark/run_r_family.py --dataset D2
+
+# Only selected methods:
+uv run python benchmark/run_r_family.py --dataset D1 --methods R1 R3
+
+# R2 with variant sampling (default 0 = all variants, i.e. 100%%):
+uv run python benchmark/run_r_family.py --dataset D1 --r2-sample 50
+```
+
+| Method | What | Detail |
+|--------|------|--------|
+| **R1** | K-Fold CV (k=5) | Variant-based, 3 shuffles, reports mean ± std. Uses [`benchmark/utils.py`](benchmark/utils.py) `compute_kfold_fitness()`. |
+| **R2** | Leave-One-Variant-Out | Each variant held out in turn; LOVO fitness over all (or sampled) variants. `--r2-sample N` caps evaluation to N random variants for fast iteration. Default = all variants (100%%). |
+| **R3** | Naive Random Baseline | Uniform random activity traces, length sampled from log distribution. 5 iterations of 1,000 traces. |
+
+Results go to `benchmark/results/configs_v2/` alongside M1 configs. The legacy `r1.sh` has been removed — `reference.sh` is the unified entry point for R1–R3.
+
 Archived methods in `archive/Tianhao/benchmark/` (see [Archived Methods](BenchmarkDesign.md#archived-methods)).
 
 ### Full pipeline (sequential)
@@ -132,6 +156,8 @@ Archived methods in `archive/Tianhao/benchmark/` (see [Archived Methods](Benchma
 ```bash
 bash benchmark/run_all.sh
 ```
+
+The pipeline calls `prepare.sh`, `m1.sh`, `reference.sh`, `m3.sh`, `m6.sh`, `m7.sh`, and optionally `m5.sh`.
 
 ---
 
@@ -199,6 +225,7 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 
 | Date | Change |
 |------|--------|
+| 2026-06-16 | **Benchmark script restructuring.** `m1.sh` now runs only M1a–M1g via `run_m1_family.py`. Created `run_r_family.py` (unified R1–R3 runner using `compute_kfold_fitness` from `utils.py`) and `reference.sh`. R2 adds `--r2-sample` option (default 0 = all variants). Removed `demo_d1.py`, `r1_demo.py`, `r1.sh`. Updated `BenchmarkGuide.md` and `REASONIX.md`. |
 | 2026-06-13 | **Trace_Filtered D1 complete (all 15 methods).** Finished M2 (0.0376), M3 (29.87), **M5 (0.0000)** , M6 (0.5819 ± 0.0120), M7 (1.0000), R2 (0.6058 ± 0.0947), R3 (0.2796 ± 0.0033) for Trace_Filtered on D1 Sepsis. M5 = 0.0000 is the strongest memorization pole signal. All functionality added directly to existing scripts: `demo_d1.py` got `--miners` CLI + R2; `bridges/run_m6.py` / `run_m7.py` got `--miners`; `docker/run_avatar.py` got `--miners`, `--eval-only`, + Trace_Filtered miner entry. `01_prepare_models.py` regenerated all PNMLs incl. Trace_Filtered. No new scripts created. |
 | 2026-06-12 | **Methodology v2 sync.** M1 family expanded to M1a–M1g (v2.4–v2.6). Added Trace_Filtered miner (0.0 pole). v2.5/v2.6 results in `configs_v2/`. Updated BenchmarkDesign.md with merged v2 spec. |\n| 2026-06-10 | **Full English documentation.** Archived M4 (`archive/Tianhao/benchmark/m4.sh`) and M8 (`archive/Tianhao/benchmark/m8.sh`) — both infeasible on real-life logs. Removed `build/` and `lib/` directories (M4 compile artifacts). Cleaned up stale CSV files. |
 | 2026-06-09 | **M5: AVATAR RelGAN on D1 Sepsis completed.** Built Docker image `avatar-tf1` (nvcr.io TF 1.15 + pm4py 1.2.6). Trained GAN (5000 adv steps, checkpoint suffix=4981). Fixed multi-word activity bug via greedy longest-match decoding. 2 sampling runs → Mean±Std for all 7 miners. Results table updated. |
