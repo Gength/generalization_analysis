@@ -16,24 +16,24 @@ DOCKER_IMAGE = "avatar-tf1"
 MINER_LIST = None
 EVAL_ONLY = False
 
-DATASETS = {
-    "D1": {
-        "system_name": "sepsis",
-        "log_path": "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz",
-        "config_dir": "benchmark/results/configs_v2",
-    },
-}
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from datasets import DATASETS, get_info, CONFIG_DIR_V2
 
 PROJ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 AVATAR_DIR = "src/AVATAR"
 
 # ── CLI ─────────────────────────────────────────────────────────────────────
 _cli = argparse.ArgumentParser(description="AVATAR (M5) via Docker")
+_cli.add_argument("--dataset", default=None, choices=list(DATASETS.keys()),
+                  help="Override DATASET_KEY (default: D1)")
 _cli.add_argument("--miners", nargs="*", default=None,
                   help="Restrict to specific miners (default: all)")
 _cli.add_argument("--eval-only", action="store_true",
                   help="Skip training/sampling, reuse existing checkpoint")
 _args, _ = _cli.parse_known_args()
+if _args.dataset:
+    DATASET_KEY = _args.dataset
 if _args.miners is not None:
     MINER_LIST = _args.miners
 if _args.eval_only:
@@ -43,10 +43,10 @@ if _args.eval_only:
 # EXECUTION — Do not edit below this line
 # =============================================================================
 
-info = DATASETS.get(DATASET_KEY, list(DATASETS.values())[0])
+info = get_info(DATASET_KEY)
 SYSTEM_NAME = info["system_name"]
 LOG_PATH = os.path.join(PROJ, info["log_path"])
-CONFIG_DIR = os.path.join(PROJ, info["config_dir"])
+CONFIG_DIR = os.path.join(PROJ, CONFIG_DIR_V2)
 AVATAR_ABS = os.path.join(PROJ, AVATAR_DIR)
 VARIANT_DIR = os.path.join(AVATAR_ABS, "data/variants")
 os.makedirs(VARIANT_DIR, exist_ok=True)

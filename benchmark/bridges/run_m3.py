@@ -4,24 +4,34 @@ M3 — Entropic Relevance (Entropia JAR)
 Reads manifest.json, calls Entropia with -r flag.
 No pm4py dependency.
 """
-import os, sys, json, subprocess, time
+import os, sys, json, subprocess, time, argparse
 from datetime import datetime, timezone
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from datasets import get_info, CONFIG_DIR_V2
 
 # =============================================================================
 # CONFIGURATION — Change these for your experiment
 # =============================================================================
 DATASET_KEY = "D1"          # Which dataset (D1-D5). None = read from manifest.json
 MINER_LIST = None            # None = all miners, or ["Alpha", ...]
-CONFIG_DIR = "benchmark/results/configs"
+CONFIG_DIR = "benchmark/results/configs_v2"
 SEED = 42
 
-DATASETS = {
-    "D1": {
-        "name": "Sepsis",
-        "manifest": "benchmark/models/manifest.json",
-    },
-    # Add D2-D5 here as needed
-}
+from datasets import DATASETS
+
+# ── CLI ─────────────────────────────────────────────────────────────────────
+_cli = argparse.ArgumentParser(description="M3 Entropic Relevance")
+_cli.add_argument("--dataset", default=None, choices=list(DATASETS.keys()),
+                  help="Override DATASET_KEY (default: D1)")
+_cli.add_argument("--miners", nargs="*", default=None,
+                  help="Restrict to specific miners (default: all)")
+_cli_args, _ = _cli.parse_known_args()
+if _cli_args.dataset:
+    DATASET_KEY = _cli_args.dataset
+if _cli_args.miners is not None:
+    MINER_LIST = _cli_args.miners
+
 os.makedirs(CONFIG_DIR, exist_ok=True)
 
 # =============================================================================
@@ -30,10 +40,8 @@ os.makedirs(CONFIG_DIR, exist_ok=True)
 
 ENTROPIA_JAR = "src/codebase/jbpt-pm/entropia/jbpt-pm-entropia-1.7.jar"
 
-if DATASET_KEY and DATASET_KEY in DATASETS:
-    manifest_path = DATASETS[DATASET_KEY]["manifest"]
-else:
-    manifest_path = "benchmark/models/manifest.json"
+info = get_info(DATASET_KEY)
+manifest_path = info["manifest"]
 
 with open(manifest_path) as f:
     manifest = json.load(f)

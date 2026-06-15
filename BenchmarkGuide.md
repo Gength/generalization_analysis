@@ -114,6 +114,18 @@ bash benchmark/m5.sh         # M5:      AVATAR RelGAN (~4h, FULL)
 
 > **M2 (PM4Py Built-in Gen)** was historically part of the monolithic `demo_d1.py` runner (now removed). No dedicated shell script exists; M2 can be run ad-hoc via `uv run python -c "from miners import MINERS; ..."` if needed. The M1-family v2 runner is `benchmark/run_m1_family.py`.
 
+### Dataset registry
+
+All benchmark scripts share a **single source of truth** for dataset definitions in [`benchmark/datasets.py`](benchmark/datasets.py). It defines D1–D5 with `name`, `log_path`, and `system_name` (for AVATAR). Import via `from datasets import DATASETS, get_info`. Never define inline `DATASETS` dicts.
+
+```python
+from datasets import DATASETS, get_info
+
+info = get_info("D3")
+print(info["name"], info["log_path"])
+# → BPI2017 data/BPI-Challenge_2017/BPI Challenge 2017.xes.gz
+```
+
 ### M1-family runner (v2 methodology)
 
 ```bash
@@ -225,7 +237,7 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 
 | Date | Change |
 |------|--------|
-| 2026-06-16 | **Benchmark script restructuring.** `m1.sh` now runs only M1a–M1g via `run_m1_family.py`. Created `run_r_family.py` (unified R1–R3 runner using `compute_kfold_fitness` from `utils.py`) and `reference.sh`. R2 adds `--r2-sample` option (default 0 = all variants). Removed `demo_d1.py`, `r1_demo.py`, `r1.sh`. Updated `BenchmarkGuide.md` and `REASONIX.md`. |
+| 2026-06-16 | **Benchmark script restructuring.** `m1.sh` now runs only M1a–M1g via `run_m1_family.py`. Created `run_r_family.py` (unified R1–R3 runner using `compute_kfold_fitness` from `utils.py`) and `reference.sh`. R2 adds `--r2-sample` option (default 0 = all variants). Removed `demo_d1.py`, `r1_demo.py`, `r1.sh`. **Created `benchmark/datasets.py`** — canonical D1–D5 definitions; all scripts now import from it. `--dataset` CLI added to all bridge scripts. |
 | 2026-06-13 | **Trace_Filtered D1 complete (all 15 methods).** Finished M2 (0.0376), M3 (29.87), **M5 (0.0000)** , M6 (0.5819 ± 0.0120), M7 (1.0000), R2 (0.6058 ± 0.0947), R3 (0.2796 ± 0.0033) for Trace_Filtered on D1 Sepsis. M5 = 0.0000 is the strongest memorization pole signal. All functionality added directly to existing scripts: `demo_d1.py` got `--miners` CLI + R2; `bridges/run_m6.py` / `run_m7.py` got `--miners`; `docker/run_avatar.py` got `--miners`, `--eval-only`, + Trace_Filtered miner entry. `01_prepare_models.py` regenerated all PNMLs incl. Trace_Filtered. No new scripts created. |
 | 2026-06-12 | **Methodology v2 sync.** M1 family expanded to M1a–M1g (v2.4–v2.6). Added Trace_Filtered miner (0.0 pole). v2.5/v2.6 results in `configs_v2/`. Updated BenchmarkDesign.md with merged v2 spec. |\n| 2026-06-10 | **Full English documentation.** Archived M4 (`archive/Tianhao/benchmark/m4.sh`) and M8 (`archive/Tianhao/benchmark/m8.sh`) — both infeasible on real-life logs. Removed `build/` and `lib/` directories (M4 compile artifacts). Cleaned up stale CSV files. |
 | 2026-06-09 | **M5: AVATAR RelGAN on D1 Sepsis completed.** Built Docker image `avatar-tf1` (nvcr.io TF 1.15 + pm4py 1.2.6). Trained GAN (5000 adv steps, checkpoint suffix=4981). Fixed multi-word activity bug via greedy longest-match decoding. 2 sampling runs → Mean±Std for all 7 miners. Results table updated. |

@@ -41,12 +41,7 @@ NUM_SHADOW_TRACES = 1000
 ITERATIONS = 5
 CONFIG_DIR = "benchmark/results/configs"
 
-DATASETS = {
-    "D1": {"name": "Sepsis",
-           "log_path": "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz"},
-    "D2": {"name": "BPI2013_Incidents",
-           "log_path": "data/BPI-Challenge_2013/Incident_Management_Log.xes.gz"},
-}
+from datasets import DATASETS
 
 VERSIONS = [
     ("v24", "v24", {}),

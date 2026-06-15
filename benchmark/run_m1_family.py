@@ -53,12 +53,7 @@ TRACE_TOP_K = 50
 CONFIG_DIR_V1 = "benchmark/results/configs"
 CONFIG_DIR_V2 = "benchmark/results/configs_v2"
 
-DATASETS = {
-    "D1": {"name": "Sepsis",
-           "log_path": "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz"},
-    "D2": {"name": "BPI2013_Incidents",
-           "log_path": "data/BPI-Challenge_2013/Incident_Management_Log.xes.gz"},
-}
+from datasets import DATASETS
 
 METHODS = {
     "M1a": {"version": "v1.0", "kwargs": {},                                "label": "HybridGen v1.0 (1-gram DFG)"},

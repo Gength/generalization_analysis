@@ -36,23 +36,22 @@ K = 2                          # subtrace length for crossover
 P = 1.0                        # breeding probability
 N_SAMPLE = 200                 # sample size per replicate
 
-DATASETS = {
-    "D1": {
-        "name": "Sepsis",
-        "log_path": "data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz",
-        "manifest": "benchmark/models/manifest.json",
-        "model_dir": "benchmark/models",
-    },
-}
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from datasets import DATASETS, get_info, CONFIG_DIR_V2
 
 random.seed(SEED)
 np.random.seed(SEED)
 
-# ── CLI override for MINER_LIST ─────────────────────────────────────────────
+# ── CLI override ────────────────────────────────────────────────────────────
 _cli = argparse.ArgumentParser(description="M6 Bootstrap Generalization")
+_cli.add_argument("--dataset", default=None, choices=list(DATASETS.keys()),
+                  help="Override DATASET_KEY (default: D1)")
 _cli.add_argument("--miners", nargs="*", default=None,
                   help="Restrict to specific miners (default: all)")
 _args, _ = _cli.parse_known_args()
+if _args.dataset:
+    DATASET_KEY = _args.dataset
 if _args.miners is not None:
     MINER_LIST = _args.miners
 
@@ -60,11 +59,11 @@ if _args.miners is not None:
 # EXECUTION — Do not edit below this line
 # =============================================================================
 
-info = DATASETS.get(DATASET_KEY, list(DATASETS.values())[0])
+info = get_info(DATASET_KEY)
 DATASET = info["name"]
 LOG_PATH = info["log_path"]
 MODEL_DIR = info["model_dir"]
-CONFIG_DIR = "benchmark/results/configs_v2"
+CONFIG_DIR = CONFIG_DIR_V2
 os.makedirs(CONFIG_DIR, exist_ok=True)
 
 # ─── Load log ───────────────────────────────────────────────────────────────
