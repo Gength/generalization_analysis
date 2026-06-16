@@ -3,11 +3,11 @@
   "miner": "Trace_Filtered",
   "method": "M1c",
   "method_label": "HybridGen v2.1 (N=6)",
-  "timestamp": "2026-06-12T09:12:02Z",
+  "timestamp": "2026-06-15T16:19:43Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "algorithm_version": "v21",
+    "algorithm_version": "v2.1",
     "max_n": 6,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
@@ -15,16 +15,16 @@
     "trace_model_top_k": 50
   },
   "results": {
-    "mean": 0.6124271322745025,
-    "std": 0.0018617535412440251,
+    "mean": 0.6051607989174432,
+    "std": 0.001510395334701924,
     "raw_iterations": [
-      0.6094798837778813,
-      0.6144460276461284,
-      0.6121546422733589,
-      0.6116540262419728,
-      0.614401081433171
+      0.604903429235469,
+      0.6050590645726205,
+      0.6035366241942816,
+      0.6043186934254962,
+      0.6079861831593484
     ],
-    "runtime_s": 11.916868686676025
+    "runtime_s": 7.515963077545166
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

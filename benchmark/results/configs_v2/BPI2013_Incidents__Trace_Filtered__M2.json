@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Trace_Filtered",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-16T12:10:45Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.06047962453986577,
+    "runtime_s": 3.2341368198394775
+  },
+  "notes": ""
+}

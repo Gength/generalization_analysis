@@ -3,12 +3,12 @@
   "miner": "Flower",
   "method": "M1d",
   "method_label": "HybridGen v2.4 (uniform proposal)",
-  "timestamp": "2026-06-12T09:10:53Z",
+  "timestamp": "2026-06-15T16:20:13Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "algorithm_version": "v2.4",
-    "max_n": 6,
+    "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
@@ -17,7 +17,7 @@
     "mean": 1.0,
     "std": 0.0,
     "raw_iterations": null,
-    "runtime_s": 1.6956958770751953
+    "runtime_s": 1.0818727016448975
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

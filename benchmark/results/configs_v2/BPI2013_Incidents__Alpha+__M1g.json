@@ -3,12 +3,12 @@
   "miner": "Alpha+",
   "method": "M1g",
   "method_label": "HybridGen v2.6 (MLE weighting)",
-  "timestamp": "2026-06-12T09:13:27Z",
+  "timestamp": "2026-06-15T16:20:54Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "algorithm_version": "v2.6",
-    "max_n": 6,
+    "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5,
@@ -24,7 +24,7 @@
       0.6397162929589681,
       0.6329879532514229
     ],
-    "runtime_s": 1.7453739643096924,
+    "runtime_s": 1.1829779148101807,
     "gen_accept": 0.0,
     "gen_accept_std": 0.0,
     "gen_shadow_regular": 0.6265246968602685,

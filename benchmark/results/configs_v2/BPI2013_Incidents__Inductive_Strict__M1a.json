@@ -2,12 +2,12 @@
   "dataset": "BPI2013_Incidents",
   "miner": "Inductive_Strict",
   "method": "M1a",
-  "method_label": "HybridGen v1 (1-gram DFG)",
-  "timestamp": "2026-06-12T09:11:16Z",
+  "method_label": "HybridGen v1.0 (1-gram DFG)",
+  "timestamp": "2026-06-15T16:19:12Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "algorithm_version": "v1",
+    "algorithm_version": "v1.0",
     "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
@@ -23,7 +23,7 @@
       0.9999710648148148,
       1.0
     ],
-    "runtime_s": 3.267338514328003
+    "runtime_s": 2.4170210361480713
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

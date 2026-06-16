@@ -3,7 +3,7 @@
   "miner": "Heuristics_Strict",
   "method": "R1",
   "method_label": "K-Fold CV (k=5)",
-  "timestamp": "2026-06-11T20:35:27Z",
+  "timestamp": "2026-06-15T17:34:19Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -12,14 +12,14 @@
     "variant_based": true
   },
   "results": {
-    "mean": 0.9983268613398569,
-    "std": 0.00048276719702851367,
+    "mean": 0.9983330887922949,
+    "std": 0.00047194401666534545,
     "raw_shuffles": [
       0.9980832690382823,
-      0.9978963049376943,
-      0.9990010100435942
+      0.9989939924194309,
+      0.9979220049191714
     ],
-    "runtime_s": 5.3300793170928955
+    "runtime_s": 3.5340816974639893
   },
-  "notes": "computed by version_comparison.py [copied from configs/]"
+  "notes": ""
 }

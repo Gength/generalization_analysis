@@ -1,0 +1,25 @@
+# Dockerfile for AVATAR (M5) TF2 — NVIDIA TF2 GPU image
+# Build: docker build -t avatar-tf2 -f benchmark/docker/Dockerfile.avatar.tf2 .
+# Usage: docker run --rm --gpus all -v /path/to/AVATAR_tf2:/workspace/src/AVATAR avatar-tf2 python -m avatar.training ...
+
+FROM nvcr.io/nvidia/tensorflow:25.02-tf2-py3
+
+LABEL description="AVATAR (RelGAN) benchmark environment — TF2 GPU (compat.v1 mode)"
+
+# Install system build deps for pm4py deps (lxml, etc.)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libxml2-dev \
+    libxslt1-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install pm4py (latest 2.x) + nltk data for evaluation metrics
+RUN pip install --no-cache-dir pm4py nltk \
+    && python -m nltk.downloader punkt punkt_tab \
+    && echo "=== Dependencies installed ==="
+
+# Patch pm4py psutil issue in containers (PID 0 doesn't exist)
+RUN CONST_PATH=$(find /usr/local/lib -path '*/pm4py/util/constants.py' | head -1) \
+    && sed -i 's/parent_name = str(psutil.Process(parent_pid).name())/parent_name = "docker_container"/' $CONST_PATH \
+    && python3 -c "import pm4py; print('pm4py OK:', pm4py.__version__)"
+
+WORKDIR /workspace

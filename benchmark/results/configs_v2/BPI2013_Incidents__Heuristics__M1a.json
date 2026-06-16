@@ -2,12 +2,12 @@
   "dataset": "BPI2013_Incidents",
   "miner": "Heuristics",
   "method": "M1a",
-  "method_label": "HybridGen v1 (1-gram DFG)",
-  "timestamp": "2026-06-12T09:11:11Z",
+  "method_label": "HybridGen v1.0 (1-gram DFG)",
+  "timestamp": "2026-06-15T16:19:08Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "algorithm_version": "v1",
+    "algorithm_version": "v1.0",
     "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
@@ -23,7 +23,7 @@
       0.9963558973721943,
       0.9974893077098721
     ],
-    "runtime_s": 2.7016899585723877
+    "runtime_s": 2.025761604309082
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

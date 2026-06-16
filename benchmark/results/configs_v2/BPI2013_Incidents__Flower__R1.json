@@ -3,7 +3,7 @@
   "miner": "Flower",
   "method": "R1",
   "method_label": "K-Fold CV (k=5)",
-  "timestamp": "2026-06-11T20:35:39Z",
+  "timestamp": "2026-06-15T17:34:27Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -19,7 +19,7 @@
       1.0,
       1.0
     ],
-    "runtime_s": 1.9033708572387695
+    "runtime_s": 1.4184036254882812
   },
-  "notes": "computed by version_comparison.py [copied from configs/]"
+  "notes": ""
 }

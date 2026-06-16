@@ -3,13 +3,13 @@
   "miner": "Alpha+",
   "method": "M2",
   "method_label": "PM4Py Built-in Gen",
-  "timestamp": "2026-06-08T13:57:40Z",
+  "timestamp": "2026-06-16T12:13:32Z",
   "host": "local",
   "seed": 42,
   "parameters": {},
   "results": {
     "score": 0.9188890052402672,
-    "runtime_s": 0.3328361511230469
+    "runtime_s": 0.3866884708404541
   },
   "notes": ""
 }

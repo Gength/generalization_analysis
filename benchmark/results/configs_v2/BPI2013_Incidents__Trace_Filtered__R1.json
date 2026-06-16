@@ -3,7 +3,7 @@
   "miner": "Trace_Filtered",
   "method": "R1",
   "method_label": "K-Fold CV (k=5)",
-  "timestamp": "2026-06-12T09:03:16Z",
+  "timestamp": "2026-06-15T17:34:05Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -12,14 +12,14 @@
     "variant_based": true
   },
   "results": {
-    "mean": 0.6340296947566494,
-    "std": 0.03156906726290108,
+    "mean": 0.6528670253692733,
+    "std": 0.0322279007932968,
     "raw_shuffles": [
-      0.6753938858484003,
-      0.5987989984784632,
-      0.6278961999430844
+      0.6891312189676491,
+      0.6586438721123775,
+      0.6108259850277933
     ],
-    "runtime_s": 20.56591010093689
+    "runtime_s": 10.378004789352417
   },
-  "notes": "computed by run_m1_family.py"
+  "notes": ""
 }

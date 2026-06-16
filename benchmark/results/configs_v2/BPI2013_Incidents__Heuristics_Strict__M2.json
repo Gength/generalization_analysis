@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Heuristics_Strict",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-16T12:10:48Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.9294662224524112,
+    "runtime_s": 0.8345696926116943
+  },
+  "notes": ""
+}

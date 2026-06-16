@@ -3,12 +3,12 @@
   "miner": "Inductive_Infrequent",
   "method": "M1e",
   "method_label": "HybridGen v2.5 (Katz proposal)",
-  "timestamp": "2026-06-12T09:12:47Z",
+  "timestamp": "2026-06-15T16:20:28Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "algorithm_version": "v2.5",
-    "max_n": 6,
+    "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
@@ -23,7 +23,7 @@
       0.9580719048330855,
       0.9598507213350759
     ],
-    "runtime_s": 2.8148117065429688,
+    "runtime_s": 1.860494613647461,
     "duplicates_kept": 0,
     "truncated_traces": 0
   },

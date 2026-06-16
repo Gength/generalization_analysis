@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Flower",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-16T12:10:50Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.8824986163548602,
+    "runtime_s": 0.39306163787841797
+  },
+  "notes": ""
+}

@@ -3,13 +3,13 @@
   "miner": "Heuristics",
   "method": "M2",
   "method_label": "PM4Py Built-in Gen",
-  "timestamp": "2026-06-08T13:57:52Z",
+  "timestamp": "2026-06-16T12:13:33Z",
   "host": "local",
   "seed": 42,
   "parameters": {},
   "results": {
-    "score": 0.8413894545208539,
-    "runtime_s": 0.6757657527923584
+    "score": 0.8298173166775276,
+    "runtime_s": 0.6690549850463867
   },
   "notes": ""
 }

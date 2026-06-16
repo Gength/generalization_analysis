@@ -1,0 +1,22 @@
+{
+  "dataset": "BPI Challenge 2013 Incidents",
+  "miner": "Flower",
+  "method": "M5",
+  "method_label": "AVATAR (RelGAN)",
+  "timestamp": "2025-06-16T13:38:00Z",
+  "host": "docker",
+  "seed": 42,
+  "parameters": {
+    "GAN": "RelGAN",
+    "suffix": "4981",
+    "strategy": "naive",
+    "npre_epochs": "100",
+    "nadv_steps": "5000",
+    "env": "docker-tf1.15"
+  },
+  "results": {
+    "score": 0.7404115120222525,
+    "runtime_s": 60
+  },
+  "notes": ""
+}

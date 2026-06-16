@@ -3,7 +3,7 @@
   "miner": "Inductive_Strict",
   "method": "R1",
   "method_label": "K-Fold CV (k=5)",
-  "timestamp": "2026-06-11T20:35:32Z",
+  "timestamp": "2026-06-15T17:34:22Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -12,14 +12,14 @@
     "variant_based": true
   },
   "results": {
-    "mean": 0.9999766021533386,
-    "std": 1.0983147262758779e-05,
+    "mean": 0.99998725209007,
+    "std": 1.3111578059787027e-06,
     "raw_shuffles": [
       0.9999875104079934,
-      0.999961571921846,
-      0.9999807241301764
+      0.9999887131059652,
+      0.999985532756251
     ],
-    "runtime_s": 5.09762167930603
+    "runtime_s": 3.456691026687622
   },
-  "notes": "computed by version_comparison.py [copied from configs/]"
+  "notes": ""
 }

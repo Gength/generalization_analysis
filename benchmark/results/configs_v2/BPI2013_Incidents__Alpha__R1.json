@@ -3,7 +3,7 @@
   "miner": "Alpha",
   "method": "R1",
   "method_label": "K-Fold CV (k=5)",
-  "timestamp": "2026-06-11T20:35:09Z",
+  "timestamp": "2026-06-15T17:34:07Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -12,14 +12,14 @@
     "variant_based": true
   },
   "results": {
-    "mean": 0.21075009480695864,
-    "std": 0.001718988990285722,
+    "mean": 0.21504953712123168,
+    "std": 0.0031809476439837317,
     "raw_shuffles": [
       0.2107219405083375,
-      0.2086589902005324,
-      0.21286935371200605
+      0.21614958144404403,
+      0.21827708941131346
     ],
-    "runtime_s": 2.8722193241119385
+    "runtime_s": 1.9916212558746338
   },
-  "notes": "computed by version_comparison.py [copied from configs/]"
+  "notes": ""
 }

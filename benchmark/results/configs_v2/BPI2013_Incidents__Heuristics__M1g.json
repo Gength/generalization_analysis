@@ -3,12 +3,12 @@
   "miner": "Heuristics",
   "method": "M1g",
   "method_label": "HybridGen v2.6 (MLE weighting)",
-  "timestamp": "2026-06-12T09:13:30Z",
+  "timestamp": "2026-06-15T16:20:56Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "algorithm_version": "v2.6",
-    "max_n": 6,
+    "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5,
@@ -24,7 +24,7 @@
       0.9931753726249749,
       0.9932657942732785
     ],
-    "runtime_s": 2.6304075717926025,
+    "runtime_s": 1.7421517372131348,
     "gen_accept": 0.836,
     "gen_accept_std": 0.006811754546370567,
     "gen_shadow_regular": 0.9939168658266947,

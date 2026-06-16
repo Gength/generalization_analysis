@@ -1,0 +1,20 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Heuristics",
+  "method": "M3",
+  "method_label": "Entropic Relevance",
+  "timestamp": "2026-06-15T16:21:04Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "entropia-1.7",
+    "flag": "-r",
+    "model": "DFG"
+  },
+  "results": {
+    "entropic_relevance_raw": 0.0,
+    "runtime_s": 1.0296225547790527,
+    "note": "Unbounded entropic relevance. Same for all miners (DFG-based)."
+  },
+  "notes": ""
+}

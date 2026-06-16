@@ -3,27 +3,27 @@
   "miner": "Inductive_Strict",
   "method": "M1b",
   "method_label": "HybridGen v2.1 (N=3)",
-  "timestamp": "2026-06-12T09:11:45Z",
+  "timestamp": "2026-06-15T16:19:32Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "algorithm_version": "v21",
+    "algorithm_version": "v2.1",
     "max_n": 3,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
   },
   "results": {
-    "mean": 0.9996854270067983,
-    "std": 4.290705487393731e-05,
+    "mean": 0.9996782616027579,
+    "std": 4.51480290103545e-05,
     "raw_iterations": [
       0.9996645778983119,
-      0.9997313621143835,
-      0.9997361813815009,
+      0.9997035843366057,
+      0.9997437571390766,
       0.9996720880083924,
-      0.999622925631403
+      0.9996073006314029
     ],
-    "runtime_s": 3.4707884788513184
+    "runtime_s": 2.2027218341827393
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

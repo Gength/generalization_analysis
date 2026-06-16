@@ -1,0 +1,22 @@
+{
+  "dataset": "BPI Challenge 2013 Incidents",
+  "miner": "Trace_Filtered",
+  "method": "M5",
+  "method_label": "AVATAR (RelGAN)",
+  "timestamp": "2025-06-16T13:40:00Z",
+  "host": "docker",
+  "seed": 42,
+  "parameters": {
+    "GAN": "RelGAN",
+    "suffix": "4981",
+    "strategy": "naive",
+    "npre_epochs": "100",
+    "nadv_steps": "5000",
+    "env": "docker-tf1.15"
+  },
+  "results": {
+    "score": 0.0,
+    "runtime_s": 30
+  },
+  "notes": "Fitness=0.0 (Trace_Filtered has very limited 50-trace model, generated traces cannot match)"
+}

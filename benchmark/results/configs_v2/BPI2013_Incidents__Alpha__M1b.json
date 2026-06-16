@@ -3,27 +3,27 @@
   "miner": "Alpha",
   "method": "M1b",
   "method_label": "HybridGen v2.1 (N=3)",
-  "timestamp": "2026-06-12T09:11:34Z",
+  "timestamp": "2026-06-15T16:19:25Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "algorithm_version": "v21",
+    "algorithm_version": "v2.1",
     "max_n": 3,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
   },
   "results": {
-    "mean": 0.38304555983164257,
-    "std": 0.006867873031375298,
+    "mean": 0.38298976003993673,
+    "std": 0.007311386561137193,
     "raw_iterations": [
-      0.3760727416598331,
-      0.38316166494139,
-      0.3790331468347386,
-      0.395964650819563,
-      0.38099559490268786
+      0.37489848994057373,
+      0.3825436806252868,
+      0.37884852259741403,
+      0.3965433136120845,
+      0.3821147934243245
     ],
-    "runtime_s": 2.021920919418335
+    "runtime_s": 1.5153474807739258
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

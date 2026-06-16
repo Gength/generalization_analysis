@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Inductive_Strict",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-16T12:10:49Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.871132170779936,
+    "runtime_s": 0.9597988128662109
+  },
+  "notes": ""
+}

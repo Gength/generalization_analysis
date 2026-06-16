@@ -3,12 +3,12 @@
   "miner": "Heuristics_Strict",
   "method": "M1f",
   "method_label": "HybridGen v2.6 (log weighting)",
-  "timestamp": "2026-06-12T09:13:07Z",
+  "timestamp": "2026-06-15T16:20:41Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "algorithm_version": "v2.6",
-    "max_n": 6,
+    "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
@@ -23,7 +23,7 @@
       0.9646390410897413,
       0.9677035083911741
     ],
-    "runtime_s": 2.6383609771728516,
+    "runtime_s": 1.7562425136566162,
     "gen_accept": 0.5149999999999999,
     "gen_accept_std": 0.014764823060233414,
     "gen_shadow_regular": 0.9653755991773622,

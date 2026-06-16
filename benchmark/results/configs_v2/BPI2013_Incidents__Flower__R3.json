@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Flower",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-15T17:49:50Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 1.0,
+    "std": 0.0,
+    "runtime_s": 0.6526877880096436
+  },
+  "notes": ""
+}

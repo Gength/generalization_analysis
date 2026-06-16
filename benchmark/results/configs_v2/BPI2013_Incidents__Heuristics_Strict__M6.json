@@ -1,0 +1,37 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Heuristics_Strict",
+  "method": "M6",
+  "method_label": "Bootstrap Generalization (adapted)",
+  "timestamp": "2026-06-15T17:31:43Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "generations": 10,
+    "k": 2,
+    "p": 1.0,
+    "replicates": 10,
+    "sample_size": 200,
+    "source": "bsgen (breeding + token replay)"
+  },
+  "results": {
+    "gen_score": 0.9981699527298591,
+    "std": 0.0009648535591445918,
+    "ci_95": 0.000598022431661711,
+    "n_replicates": 10,
+    "raw_fitnesses": [
+      0.9977777777777778,
+      0.9983805668016195,
+      1.0,
+      0.9992354740061162,
+      0.9988412514484357,
+      0.9966380276428838,
+      0.9981167608286252,
+      0.9973353635325466,
+      0.9971110193974412,
+      0.9982632858631469
+    ],
+    "runtime_s": 31.452351331710815
+  },
+  "notes": ""
+}

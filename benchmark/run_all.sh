@@ -29,6 +29,9 @@ bash benchmark/prepare.sh --dataset "$DATASET"
 echo "[m1]     HybridGen methods (M1a-M1g)..."
 bash benchmark/m1.sh --dataset "$DATASET"
 
+echo "[m2]     PM4Py Built-in Generalization..."
+bash benchmark/m2.sh --dataset "$DATASET"
+
 echo "[m3]     Entropic Relevance..."
 bash benchmark/m3.sh --dataset "$DATASET"
 

@@ -3,21 +3,21 @@
   "miner": "Heuristics",
   "method": "M1d",
   "method_label": "HybridGen v2.4 (uniform proposal)",
-  "timestamp": "2026-06-12T09:10:43Z",
+  "timestamp": "2026-06-15T16:20:06Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "algorithm_version": "v2.4",
-    "max_n": 6,
+    "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
   },
   "results": {
-    "mean": 0.9526623601181109,
-    "std": 0.0010337170804383868,
+    "mean": 0.9527010070115978,
+    "std": 0.0007521516918212234,
     "raw_iterations": null,
-    "runtime_s": 2.6679251194000244
+    "runtime_s": 1.7769982814788818
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

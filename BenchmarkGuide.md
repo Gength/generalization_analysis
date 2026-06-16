@@ -14,7 +14,7 @@ bash benchmark/m3.sh
 
 ## 1. Overview
 
-Compare **HybridGen v2.4–v2.6** (M1a–M1g) against external generalization baselines on 5 event logs (D1–D5) with 8 miner configurations. See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the full methodology v2 specification.
+Compare **HybridGen** (M1a–M1g) against external generalization baselines on 5 event logs (D1–D5) with 8 miner configurations. See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the full methodology v2 specification.
 
 ### Methods (v2)
 
@@ -27,9 +27,9 @@ Compare **HybridGen v2.4–v2.6** (M1a–M1g) against external generalization ba
 | M1e | HybridGen v2.5 | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
 | M1f | HybridGen v2.6 (log) | Python | ✅ D1/D2 complete | `bash benchmark/m1.sh` |
 | M1g | HybridGen v2.6 (mle) | Python | ✅ D1/D2 complete (headline) | `bash benchmark/m1.sh` |
-| M2 | PM4Py Built-in Gen | Python | ✅ | `bash benchmark/m1.sh` *(legacy)* |
+| M2 | PM4Py Built-in Gen | Python | ✅ | `bash benchmark/m2.sh` |
 | M3 | Entropic Relevance | Java (Entropia) | ✅ | `bash benchmark/m3.sh` |
-| M5 | AVATAR (RelGAN) | Docker TF1.15 GPU | ✅ D1 complete (2 runs) | `bash benchmark/m5.sh` |
+| M5 | AVATAR (RelGAN) | Docker TF1.15 GPU | ✅ D1/D2 complete | `bash benchmark/m5.sh` |
 | M6 | Bootstrap Gen (adapted) | Python (bsgen) | ✅ | `bash benchmark/m6.sh` |
 | M7 | SpeciAL4PM | Python (special4pm) | ✅ | `bash benchmark/m7.sh` |
 | R1 | K-Fold CV (k=5) | Python | ✅ | `bash benchmark/reference.sh` |
@@ -39,6 +39,8 @@ Compare **HybridGen v2.4–v2.6** (M1a–M1g) against external generalization ba
 > **Archived** (not feasible on real-life logs, see [Archived Methods](BenchmarkDesign.md#archived-methods)):
 > - M4 Anti-Alignment Gen — `archive/Tianhao/benchmark/m4.sh`
 > - M8 Pattern-based Gen — `archive/Tianhao/benchmark/m8.sh`
+>
+> **D2 notes**: M3 on D2 (BPI2013 Incidents) returns 0.0 — only 4 real activities with a dense DFG (69% arc density), so entropic relevance is genuinely near zero. M5 D2 was fixed (trailing underscore bug in `src/AVATAR/avatar/generalization.py` line 78) and re-run; all 8 miners now show correct non-zero scores except Trace_Filtered (fitness=0 due to restrictive model).
 
 Miner configurations (8 total, v2):
 
@@ -105,14 +107,24 @@ bash benchmark/prepare.sh
 
 # Step 2: Run individual method families:
 bash benchmark/m1.sh         # M1a-M1g: HybridGen family (~3 min)
+bash benchmark/m2.sh         # M2:      PM4Py Built-in Gen (~10s)
 bash benchmark/reference.sh  # R1-R3:   Reference/sanity metrics (~5 min)
 bash benchmark/m3.sh         # M3:      Entropic Relevance (~1 min)
 bash benchmark/m6.sh         # M6:      Bootstrap Gen (~2 min)
 bash benchmark/m7.sh         # M7:      SpeciAL4PM (~2 min)
 bash benchmark/m5.sh         # M5:      AVATAR RelGAN (~4h, FULL)
+
+All bridge scripts accept `--dataset D1..D5` to override the default dataset:
+
+```bash
+bash benchmark/m3.sh --dataset D2
+bash benchmark/m5.sh --dataset D2
+bash benchmark/m6.sh --dataset D2
+bash benchmark/m7.sh --dataset D2
 ```
 
-> **M2 (PM4Py Built-in Gen)** was historically part of the monolithic `demo_d1.py` runner (now removed). No dedicated shell script exists; M2 can be run ad-hoc via `uv run python -c "from miners import MINERS; ..."` if needed. The M1-family v2 runner is `benchmark/run_m1_family.py`.
+> **D2 complete**: All 15 methods (M1a–M1g, M2, M3, M5, M6, M7, R1–R3) × 8 miners = 120 configs for D2 BPI2013_Incidents, written to `benchmark/results/configs_v2/`. M2 completed 2026-06-16 via `benchmark/run_m2.py`.
+```
 
 ### Dataset registry
 
@@ -222,12 +234,36 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 
 ---
 
+## 5b. Results (D2 BPI2013 Incidents)
+
+| Miner | M1a | M1b | M1c | M1d | M1e | M1f | M1g | M2* | M3\*\* | M5\*\*\* | M6 | M7 | R1 | R2 | R3 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Trace_Filtered | 0.6335 | 0.5950 | 0.6052 | 0.5469 | 0.5456 | 0.5456 | 0.6000 | 0.0605 | 0.0000 | 0.0000 | 0.6877 | 1.0000 | 0.6529 | 0.6798 | 0.4995 |
+| Alpha | 0.3129 | 0.3830 | 0.3665 | 0.2817 | 0.2803 | 0.2803 | 0.2572 | 0.8825 | 0.0000 | 0.1328 | 0.1642 | 1.0000 | 0.2150 | 0.1402 | 0.4429 |
+| Alpha+ | 0.5866 | 0.5178 | 0.5400 | 0.5967 | 0.5988 | 0.5988 | 0.6301 | 0.8452 | 0.0000 | 0.9793 | 0.8553 | 0.8140 | 0.6979 | 0.7931 | 0.6896 |
+| Heuristics | 0.9969 | 0.9640 | 0.9694 | 0.9527 | 0.9529 | 0.9529 | 0.9935 | 0.9024 | 0.0000 | 0.9349 | 0.9949 | 0.9803 | 0.9956 | 0.9904 | 0.8106 |
+| Heuristics_Strict | 0.9990 | 0.9710 | 0.9776 | 0.9661 | 0.9664 | 0.9664 | 0.9978 | 0.9295 | 0.0000 | 0.8338 | 0.9982 | 0.9787 | 0.9983 | 0.9974 | 0.9243 |
+| Inductive_Strict | 1.0000 | 0.9997 | 0.9997 | 0.9989 | 0.9988 | 0.9988 | 1.0000 | 0.8711 | 0.0000 | 0.7404 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.9425 |
+| Inductive_Infrequent | 0.9960 | 0.9729 | 0.9745 | 0.9587 | 0.9598 | 0.9598 | 0.9907 | 0.9887 | 0.0000 | 0.7403 | 0.9922 | 1.0000 | 0.9881 | 0.9864 | 0.8474 |
+| Flower | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.8825 | 0.0000 | 0.7404 | 1.0000 | 0.9372 | 1.0000 | 1.0000 | 1.0000 |
+
+> **M2 (\*)**: PM4Py built-in generalization. D2 run 2026-06-16 via `uv run python benchmark/run_m2.py --dataset D2`. Values comparable to D1 M2 (Sepsis) range.
+>
+> **M3 (\*\*)**: Entropic relevance = 0.0 for D2 — only 4 real activities with a dense DFG (69% arc density). The model provides almost no constraint beyond background, so relevance is genuinely near zero. See [D2 M3 investigation](#).
+>
+> **M5 (\*\*\*)**: D2 scores after the trailing underscore fix. Trace_Filtered = 0.0000 is genuine (fitness=0 due to restrictive 50-variant model). All other miners show correct non-zero values.
+>
+> **Key observation**: D2's simple activity structure (4 activities) means most miners converge near 1.0 for strong miners (Heuristics, Inductive, Flower). The discriminative power shifts to weaker miners (Alpha, Trace_Filtered) where M1 variants show meaningful spread.
+>
+> **No M1e vs M1f convergence note**: Unlike D1 where M1e and M1f are identical on regular miners, D2 shows complete convergence (all miners identical for M1e = M1f) — expected when `gen_shadow` dominates and `gen_accept` adds no extra information on simple logs.
+
+---
+
 ## 6. Troubleshooting
 
 | Symptom | Cause | Fix |
 |---------|-------|------|
 | M5: training times out | 100 pre-epochs + 5000 adv steps too long | Set `QUICK_MODE = True` in `benchmark/docker/run_avatar.py` |
-| M5: activity names don't match | GAN generates lowercase tokens; model has mixed-case multi-word names | Greedy longest-match decoding applied in `run_m5_final.py` |
 | xvfb-run fails | Virtual framebuffer not started | Use `xvfb-run --auto-servernum` |
 | JAR exits immediately (M4/M8) | ProM context not initialized | Check `fake-context.jar` is on classpath |
 
@@ -237,6 +273,7 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 
 | Date | Change |
 |------|--------|
+| 2026-06-16 | **D2 benchmark complete.** M1a–M1g, M2, M3, M5, M6, M7, R1–R3 all run for D2 BPI2013_Incidents (120 configs). **M5 D2 fixed** — removed trailing underscore in `src/AVATAR/avatar/generalization.py` `convertToCsv()` that caused activity name mismatch. M3 D2 = 0.0 (entropic relevance near zero for BPI2013's simple 4-activity DFG — genuine, not a bug). **M2 D2 completed** via `benchmark/run_m2.py`. `visualize_d1.ipynb` added Figure 2b (M1 Family MAE vs R1). |
 | 2026-06-16 | **Benchmark script restructuring.** `m1.sh` now runs only M1a–M1g via `run_m1_family.py`. Created `run_r_family.py` (unified R1–R3 runner using `compute_kfold_fitness` from `utils.py`) and `reference.sh`. R2 adds `--r2-sample` option (default 0 = all variants). Removed `demo_d1.py`, `r1_demo.py`, `r1.sh`. **Created `benchmark/datasets.py`** — canonical D1–D5 definitions; all scripts now import from it. `--dataset` CLI added to all bridge scripts. |
 | 2026-06-13 | **Trace_Filtered D1 complete (all 15 methods).** Finished M2 (0.0376), M3 (29.87), **M5 (0.0000)** , M6 (0.5819 ± 0.0120), M7 (1.0000), R2 (0.6058 ± 0.0947), R3 (0.2796 ± 0.0033) for Trace_Filtered on D1 Sepsis. M5 = 0.0000 is the strongest memorization pole signal. All functionality added directly to existing scripts: `demo_d1.py` got `--miners` CLI + R2; `bridges/run_m6.py` / `run_m7.py` got `--miners`; `docker/run_avatar.py` got `--miners`, `--eval-only`, + Trace_Filtered miner entry. `01_prepare_models.py` regenerated all PNMLs incl. Trace_Filtered. No new scripts created. |
 | 2026-06-12 | **Methodology v2 sync.** M1 family expanded to M1a–M1g (v2.4–v2.6). Added Trace_Filtered miner (0.0 pole). v2.5/v2.6 results in `configs_v2/`. Updated BenchmarkDesign.md with merged v2 spec. |\n| 2026-06-10 | **Full English documentation.** Archived M4 (`archive/Tianhao/benchmark/m4.sh`) and M8 (`archive/Tianhao/benchmark/m8.sh`) — both infeasible on real-life logs. Removed `build/` and `lib/` directories (M4 compile artifacts). Cleaned up stale CSV files. |

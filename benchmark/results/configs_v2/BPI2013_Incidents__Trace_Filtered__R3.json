@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Trace_Filtered",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-15T17:49:43Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.4995050896110934,
+    "std": 0.003948137228404917,
+    "runtime_s": 3.974287986755371
+  },
+  "notes": ""
+}

@@ -3,27 +3,27 @@
   "miner": "Inductive_Infrequent",
   "method": "M1b",
   "method_label": "HybridGen v2.1 (N=3)",
-  "timestamp": "2026-06-12T09:11:48Z",
+  "timestamp": "2026-06-15T16:19:34Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "algorithm_version": "v21",
+    "algorithm_version": "v2.1",
     "max_n": 3,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
   },
   "results": {
-    "mean": 0.9727859245110169,
-    "std": 0.0009813807372621214,
+    "mean": 0.9728994153761409,
+    "std": 0.0010211925234841848,
     "raw_iterations": [
-      0.9736279481277827,
-      0.9729134775253989,
-      0.9737831254225989,
-      0.97256468749794,
-      0.9710403839813639
+      0.9739571606471117,
+      0.9728774608760201,
+      0.9738513012992026,
+      0.9726844697244517,
+      0.9711266843339181
     ],
-    "runtime_s": 3.0950839519500732
+    "runtime_s": 1.9868552684783936
   },
   "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

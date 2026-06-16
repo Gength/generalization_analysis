@@ -1,0 +1,22 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Heuristics",
+  "method": "M5",
+  "method_label": "AVATAR (RelGAN)",
+  "timestamp": "2026-06-16T11:19:48Z",
+  "host": "docker",
+  "seed": 42,
+  "parameters": {
+    "GAN": "RelGAN",
+    "suffix": "4981",
+    "strategy": "naive",
+    "npre_epochs": "100",
+    "nadv_steps": "5000",
+    "env": "docker-tf1.15"
+  },
+  "results": {
+    "score": 0.9348777911982958,
+    "runtime_s": 51.280601263046265
+  },
+  "notes": ""
+}

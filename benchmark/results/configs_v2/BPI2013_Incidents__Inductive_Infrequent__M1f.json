@@ -3,12 +3,12 @@
   "miner": "Inductive_Infrequent",
   "method": "M1f",
   "method_label": "HybridGen v2.6 (log weighting)",
-  "timestamp": "2026-06-12T09:13:13Z",
+  "timestamp": "2026-06-15T16:20:45Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "algorithm_version": "v2.6",
-    "max_n": 6,
+    "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
@@ -23,7 +23,7 @@
       0.9580719048330855,
       0.9598507213350759
     ],
-    "runtime_s": 2.7113914489746094,
+    "runtime_s": 1.876654863357544,
     "gen_accept": 0.45220000000000005,
     "gen_accept_std": 0.015091719583930782,
     "gen_shadow_regular": 0.9603401106968036,

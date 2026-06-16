@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Inductive_Strict",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-15T17:49:49Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.9424631616864474,
+    "std": 0.0018013962412934867,
+    "runtime_s": 1.4143309593200684
+  },
+  "notes": ""
+}

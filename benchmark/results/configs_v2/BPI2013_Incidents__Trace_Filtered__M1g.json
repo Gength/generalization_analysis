@@ -3,12 +3,12 @@
   "miner": "Trace_Filtered",
   "method": "M1g",
   "method_label": "HybridGen v2.6 (MLE weighting)",
-  "timestamp": "2026-06-12T09:13:24Z",
+  "timestamp": "2026-06-15T16:20:52Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "algorithm_version": "v2.6",
-    "max_n": 6,
+    "max_n": 1,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5,
@@ -16,20 +16,20 @@
     "trace_model_top_k": 50
   },
   "results": {
-    "mean": 0.5970998773745401,
-    "std": 0.003883502853718601,
+    "mean": 0.599988436321828,
+    "std": 0.002863557612243153,
     "raw_iterations": [
-      0.594488362971027,
-      0.5909297836833055,
-      0.6005480243389185,
-      0.5982824773637141,
-      0.6012507385157356
+      0.5991903847492306,
+      0.5948986859934733,
+      0.6017812905755446,
+      0.6032314731475075,
+      0.6008403471433835
     ],
-    "runtime_s": 9.510727643966675,
+    "runtime_s": 5.782910346984863,
     "gen_accept": 0.0,
     "gen_accept_std": 0.0,
-    "gen_shadow_regular": 0.5962410700716196,
-    "gen_shadow_mutated": 0.6528503174597498,
+    "gen_shadow_regular": 0.599037133432627,
+    "gen_shadow_mutated": 0.664439787194509,
     "duplicates_kept": 0,
     "truncated_traces": 0,
     "max_trace_length_used": 246
