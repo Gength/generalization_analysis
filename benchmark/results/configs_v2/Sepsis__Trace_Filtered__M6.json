@@ -2,35 +2,29 @@
   "dataset": "Sepsis",
   "miner": "Trace_Filtered",
   "method": "M6",
-  "method_label": "Bootstrap Generalization (adapted)",
-  "timestamp": "2026-06-13T21:28:25Z",
+  "method_label": "Bootstrap Generalization (Entropia -bgen)",
+  "timestamp": "2026-06-18T14:59:23Z",
   "host": "local",
   "seed": 42,
   "parameters": {
+    "jar": "jbpt-pm-entropia-1.7",
+    "flag": "-bgen",
+    "sample_size": 200,
+    "replicates": 5,
     "generations": 10,
     "k": 2,
     "p": 1.0,
-    "replicates": 10,
-    "sample_size": 200
+    "model_format": "DFG JSON (simulated from PNML)",
+    "note": "Standard Bootstrap Generalization (Polyvyanyy 2022) with Entropia scoring"
   },
   "results": {
-    "gen_score": 0.5818799555849434,
-    "std": 0.012047590304602007,
-    "ci_95": 0.007467173833104401,
-    "n_replicates": 10,
-    "raw_fitnesses": [
-      0.5859164420485174,
-      0.5687919463087248,
-      0.5797794117647059,
-      0.5858621920742593,
-      0.5611702127659575,
-      0.59026369168357,
-      0.5821782178217823,
-      0.5789122455789122,
-      0.6086128048780488,
-      0.5773123909249563
-    ],
-    "runtime_s": 10.430250644683838
+    "gen_score": 0.4565,
+    "precision": 0.3015,
+    "precision_std": 0.0063,
+    "recall": 0.94,
+    "recall_std": 0.0161,
+    "n_replicates": 5,
+    "runtime_s": 49.8
   },
   "notes": ""
 }

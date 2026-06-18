@@ -2,36 +2,29 @@
   "dataset": "BPI2013_Incidents",
   "miner": "Trace_Filtered",
   "method": "M6",
-  "method_label": "Bootstrap Generalization (adapted)",
-  "timestamp": "2026-06-15T17:29:37Z",
+  "method_label": "Bootstrap Generalization (Entropia -bgen)",
+  "timestamp": "2026-06-18T15:15:42Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "generations": 10,
-    "k": 2,
-    "p": 1.0,
-    "replicates": 10,
+    "jar": "jbpt-pm-entropia-1.7",
+    "flag": "-bgen",
     "sample_size": 200,
-    "source": "bsgen (breeding + token replay)"
+    "replicates": 5,
+    "generations": 10,
+    "k": 1,
+    "p": 1.0,
+    "model_format": "DFG JSON (simulated from PNML)",
+    "notes": "k=1 instead of k=2 due to JAR NPE bug on BPI2013 Incidents XES parsing with k=2"
   },
   "results": {
-    "gen_score": 0.6877332653563238,
-    "std": 0.011502887023522756,
-    "ci_95": 0.007129563241737644,
-    "n_replicates": 10,
-    "raw_fitnesses": [
-      0.6793080505655356,
-      0.6926040061633282,
-      0.6711111111111111,
-      0.6902097902097902,
-      0.7019455252918287,
-      0.6945876288659794,
-      0.6733238231098431,
-      0.695364238410596,
-      0.6748554913294798,
-      0.7040229885057472
-    ],
-    "runtime_s": 34.517725229263306
+    "gen_score": 0.7876,
+    "precision": 0.65,
+    "precision_std": 0.0094,
+    "recall": 0.9989,
+    "recall_std": 0.0017,
+    "n_replicates": 5,
+    "runtime_s": 43.0
   },
   "notes": ""
 }

@@ -4,6 +4,21 @@ M6 — Bootstrap Generalization (adapted from src/bsgen/bsgen_eval.py)
 Uses the BSGen bootstrap-sampling-with-breeding approach, but replaces
 broken Entropia -emp/-emr with PM4Py token replay fitness.
 
+Why Entropia was abandoned (historical bugs, all JAR versions affected):
+  1.6 (src/bsgen/jbpt-pm-entropia-1.6.jar):
+    -emp / -emr  → NullPointerException at AbstractQualityMeasure.computeMeasure:169.
+    Automaton builds OK (e.g. 2 states, 4 transitions) but crashes during scoring.
+  1.7 (src/codebase/jbpt-pm/entropia/jbpt-pm-entropia-1.7.jar):
+    -bgen        → NullPointerException at EventLogSampling.logBreeding:101.
+    Root cause: getBreedingSites() returns null for traces shorter than k,
+    but sites.isEmpty() is called without a null check (Java source bug).
+  1.8 (same dir):
+    Dependency conflict — NoSuchMethodError on commons-cli Option.builder,
+    even -h crashes. lib/ has commons-cli 1.4 too old for what 1.8 was compiled against.
+  No JAR version was ever successfully used for -emp/-emr/-bgen on real logs.
+  The -r (entropic relevance) flag works on 1.7 (used by M3), but that's not
+  precision/recall and is not the Bootstrap Gen paper's scoring method.
+
 Reference: Polyvyanyy, Moffat, García-Bañuelos (CAiSE 2022)
   "Bootstrapping Generalization of Process Models Discovered from Event Data"
 
