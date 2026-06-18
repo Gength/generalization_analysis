@@ -196,6 +196,29 @@ in every config JSON (`trace_model_top_k: 50`).
 - Both poles are **excluded from agreement statistics** (Pearson/Spearman/MAE/spread are
   computed over the six real miners) and reported separately as litmus checks.
 
+### Mapping to Model Morphology Archetypes
+
+The eight miners span the full generalization spectrum defined in
+[`archive/Tianhao/ExperimentDesign.md`](archive/Tianhao/ExperimentDesign.md) (§2.1.1),
+covering all six morphological archetypes:
+
+| # | Benchmark Miner | Morphology Archetype | Confidence | Rationale |
+|---|----------------|---------------------|------------|-----------|
+| 0 | **Filtered Trace Model** (top‑50) | **Trace Model** | Direct | Practical approximation of "one path per variant." Top‑50 cap preserves memorization semantics while keeping token replay tractable. |
+| 1 | **Alpha Miner** | **Spaghetti Model** | Direct | ExperimentDesign §2.1.1‑B explicitly names Alpha Miner as the canonical generator of spaghetti models — "attempts to accommodate every low-frequency, long-tail anomaly." |
+| 2 | **Alpha+ Miner** | **Spaghetti Model** (milder) | High | Adds limited arc pruning but still lacks frequency-based filtering. On real logs it produces tangled nets, though less extreme than raw Alpha. |
+| 3 | **Heuristics (Default)** | **Causal / Heuristics Net** | Direct | The archetype's representative algorithm. Dependency‑driven arc pruning with default thresholds produces exactly the "probability‑driven pragmatism" described in §2.1.1‑D. |
+| 4 | **Heuristics (Strict)** (`dependency_threshold=0.99`) | **Causal Net → Lasagna boundary** | High | Aggressively prunes low‑confidence arcs, yielding a cleaner structure that approaches the Lasagna ideal. Still tolerates deadlocks (non‑block‑structured). |
+| 5 | **Inductive (Strict)** (`noise_threshold=0.0`) | **Strict Block‑Structured Model** | Direct | Zero noise filtering, pure recursive cut detection. Guarantees block‑structured output — the definitive "algorithmic discipline" archetype. |
+| 6 | **Inductive (Infrequent)** (`noise_threshold=0.2`) | **Lasagna Model** — "Holy Grail" | Direct | Noise filtering prunes infrequent exception branches into adjacent constructs, creating the "crisp backbone + encapsulated exceptions" signature (ExperimentDesign: "Run Inductive Miner with noise threshold ≈ 0.2–0.4"). |
+| 7 | **Flower Model** | **Flower Model** | Direct | Identical construction (all activities in one concurrent block). |
+
+**Key observations:**
+
+1. **Full archetype coverage** — The six archetypes are covered by the eight miners. Two miners (Alpha, Alpha+) map to Spaghetti at different severities; two (Heuristics Default, Heuristics Strict) map to Causal Net with different proximity to Lasagna.
+2. **Quadrant diagram alignment** — The [quadrant visualization](archive/Tianhao/ExperimentDesign.md#211-the-model-morphology-catalog) maps directly onto benchmark results: the x‑axis (Structural Complexity) corresponds to the structural penalties anchored by the Trace/Flower poles; the y‑axis (Behavioral Permissiveness) corresponds to the generalization score. Excluding the two poles, the six real miners trace the inverted‑U trajectory the ExperimentDesign predicts.
+3. **Decomposition opportunity** — The Gen\_Shadow vs. Gen\_Struct decomposition that ExperimentDesign §2.1.1 prescribes per archetype is directly testable: M1f/M1g already report `gen_shadow_regular`/`gen_shadow_mutated`; re‑adding structural decomposition for the final analysis would complete the picture.
+
 ---
 
 ## Evaluation Protocol

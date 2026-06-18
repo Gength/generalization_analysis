@@ -7,3 +7,7 @@ env/
 src/
 .jupyter/
 .ipynb_checkpoints/
+REASONIX.md
+reasonix.toml
+benchmark/models/
+.codegraph/
