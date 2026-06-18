@@ -3,7 +3,7 @@
   "miner": "Alpha",
   "method": "M3",
   "method_label": "Entropic Relevance",
-  "timestamp": "2026-06-08T14:41:48Z",
+  "timestamp": "2026-06-18T18:56:53Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -13,7 +13,7 @@
   },
   "results": {
     "entropic_relevance_raw": 29.86915402386056,
-    "runtime_s": 0.35573649406433105,
+    "runtime_s": 0.3304104804992676,
     "note": "Unbounded entropic relevance. Same for all miners (DFG-based)."
   },
   "notes": ""

@@ -239,19 +239,19 @@ covering all six morphological archetypes:
 
 ### Statistical Rigor
 
-| Method(s) | Iterations | Reporting |
-|-----------|-----------|-----------|
-| M1a–M1g (HybridGen) | 5 | Mean ± std; M1f/M1g additionally add `gen_accept`, `duplicates_kept`, `truncated_traces` |
-| M2 (PM4Py built-in) | 1 (deterministic) | Single value |
-| M3 (Entropic Relevance) | 1 (deterministic) | Single value |
-| M4 (Anti-Alignment) | — | ❌ Archived — infeasible |
-| M5 (AVATAR) | 2 sampling runs (target: 3–5) | Mean ± std |
-| M6 (Bootstrap Gen) | 10 bootstrap replicates (target: 100) | Mean ± 95% CI |
-| M7 (SpeciAL4PM) | 1 per N-gram (1–3 gram + trace variant) | Profile; C1 ratio |
-| M8 (Pattern-based) | — | ❌ Archived — JAR crashes |
-| R1 (K-Fold CV) | k=5 folds × 3 shuffles | Mean ± std |
-| R2 (Leave-One-Variant-Out) | 1 pass per variant; parallelize across SLURM `krater` partition for D4/D5 | Single value per variant; aggregate by mean |
-| R3 (Random baseline) | 5 | Mean ± std |
+| Method(s) | Iterations | Guide Default | Reporting |
+|-----------|-----------|---------------|-----------|
+| M1a–M1g (HybridGen) | 5 | [`run_m1_family.py`](BenchmarkGuide.md#m1-family-runner-v2-methodology) | Mean ± std; M1f/M1g additionally add `gen_accept`, `duplicates_kept`, `truncated_traces` |
+| M2 (PM4Py built-in) | 1 (deterministic) | [`run_m2.py`](BenchmarkGuide.md#per-method-scripts) | Single value |
+| M3 (Entropic Relevance) | 1 (deterministic) | [`run_m3.py`](BenchmarkGuide.md#per-method-scripts) | Single value |
+| M4 (Anti-Alignment) | — | — | ❌ Archived — infeasible |
+| M5 (AVATAR) | 2 sampling runs (target: 3–5) | [`run_avatar.py --eval-only`](BenchmarkGuide.md#avatar-m5) (1 run; D1 accumulated 2 runs) | Mean ± std (D1); single score (D2) |
+| M6 (Bootstrap Gen) | 10 bootstrap replicates (target: 100) | [`run_m6_bgen.py --m 10`](BenchmarkGuide.md#m6-implementation-note) | Mean ± std; gen_score = F1(p,r) |
+| M7 (SpeciAL4PM) | 1 per N-gram (1–3 gram + trace variant) | [`run_m7.py`](BenchmarkGuide.md#per-method-scripts) | Profile; C1 ratio |
+| M8 (Pattern-based) | — | — | ❌ Archived — JAR crashes |
+| R1 (K-Fold CV) | k=5 folds × 3 shuffles | [`run_r_family.py --methods R1`](BenchmarkGuide.md#r-family-runner-r1r3-reference-metrics) | Mean ± std |
+| R2 (Leave-One-Variant-Out) | 1 pass per variant | [`run_r_family.py --methods R2`](BenchmarkGuide.md#r-family-runner-r1r3-reference-metrics) | Single value per variant; aggregate by mean |
+| R3 (Random baseline) | 5 | [`run_r_family.py --methods R3`](BenchmarkGuide.md#r-family-runner-r1r3-reference-metrics) | Mean ± std |
 
 Seed all random number generators for reproducibility (`seed=42`).
 
@@ -424,78 +424,40 @@ java -jar jbpt-pm-entropia-1.8.jar -r -rel=<log.xes> -ret=<model.sdfa.json>
 
 ### M5 — AVATAR (RelGAN)
 
-**What it computes:** Harmonic mean of token-replay fitness and ET Conformance precision on GAN-generated synthetic trace variants.
+✅ D1/D2 complete (2 runs, mean±std). 
 
-**Docker Environment** (used instead of conda):
-- Image: `nvcr.io/nvidia/tensorflow:22.12-tf1-py3` + `pm4py==1.2.6`
-- Built as `avatar-tf1` via `benchmark/docker/Dockerfile.avatar`
-- Entry point: `benchmark/docker/run_avatar.py`
+For setup (Docker build, dataset preparation) and execution, see [`BenchmarkGuide.md §M5`](BenchmarkGuide.md#per-method-scripts).
 
-**Data Leakage Mitigation (variant-based split):** Split variants 80/20 by instance count:
-- **GAN training set** (80%) — trains the RelGAN.
-- **Model discovery set** (20%) — per-miner model discovery.
-The GAN never sees held-out variants.
-
-**Actual D1 Results:**
-
-| Step | Detail | Runtime |
-|------|--------|---------|
-| GAN training | 5000 adv steps, suffix=4981 | ~4h |
-| Sampling | 10000 samples, naive strategy (5 runs planned, 2 completed) | ~2 min/run |
-| Generalization | 8 miners × 2 runs, Mean±Std reported | ~3 min/run |
-
-**Critical Fix — Multi-word Activity Names:** The AVATAR variant file format uses space-separated tokens, but real logs have multi-word activity names (e.g., "ER Registration"). The GAN treats each word as a separate token, but model transitions have full names. A **greedy longest-match decoder** reconstructs proper activity sequences from the GAN's token output. Without this fix, all fitness/precision scores are 0.
-
-**Per-miner results (D1 Sepsis, 2 runs):**
-| Miner | Mean ± Std |
-|-------|:---------:|
-| Inductive_Infrequent | 0.7506 ± 0.0023 |
-| Heuristics | 0.7460 ± 0.0014 |
-| Heuristics_Strict | 0.7044 ± 0.0015 |
-| Alpha+ | 0.5617 ± 0.0081 |
-| Inductive_Strict | 0.5347 ± 0.0092 |
-| Flower | 0.3967 ± 0.0074 |
-| Alpha | 0.3401 ± 0.0203 |
+| Aspect | Detail |
+|--------|--------|
+| Docker images | `avatar-tf1` (TF1.15) / `avatar-tf2` (TF2) |
+| Training | 5000 adv steps, checkpoint suffix=4981 |
+| Sampling | 10000 traces, naive strategy, greedy longest-match decoding |
+| Multi-word fix | GAN token output → greedy longest-match reconstruction (see [BenchmarkGuide.md §M5](BenchmarkGuide.md#per-method-scripts)) |
+| Results (D1, 2 runs) | See [BenchmarkGuide.md §5](BenchmarkGuide.md#5-results-d1-sepsis) table |
+| Results (D2, 1 run) | See [BenchmarkGuide.md §5b](BenchmarkGuide.md#5b-results-d2-bpi2013-incidents) table |
 
 ---
 
 ### M6 — Bootstrap Generalization
 
-**What it computes:** Bootstrap resampling + genetic trace breeding + entropy-based precision/recall, aggregated with confidence intervals.
+✅ D1/D2 complete. Uses fixed JAR `jbpt-pm-entropia-1.7.1.jar` (k=2, 10 bootstrap replicates).
+Runner: `benchmark/bridges/run_m6_bgen.py`.
 
-Two implementations available:
-- **Python** (`./src/bsgen/bsgen_eval.py`): Full pipeline with multiprocessing. Calls Entropia JAR for entropy.
-- **Java** (`./src/codebase/jbpt-pm/entropia/`, `-bgen` flag): Simpler CLI, requires DFG JSON model format.
+For setup, parameters, and execution, see [`BenchmarkGuide.md §M6 Implementation Note`](BenchmarkGuide.md#m6-implementation-note). Results in [§5 (D1)](BenchmarkGuide.md#5-results-d1-sepsis) and [§5b (D2)](BenchmarkGuide.md#5b-results-d2-bpi2013-incidents).
 
-**Dependencies:**
-- JDK 1.8+
-- Entropia JAR: `./src/codebase/jbpt-pm/entropia/jbpt-pm-entropia-1.8.jar` (or `jbpt-pm-entropia-1.6.jar` from `./src/bsgen/`)
-- Python dependencies: PM4Py, pandas, numpy
+Notable fixes:
+- **JAR NPE fix**: `EventLogSampling.java:101` null guard → enabled k=2 on all datasets (see [Src Repositories](BenchmarkGuide.md#2-src-repositories)).
+- **Runner script**: `benchmark/bridges/run_m6_bgen.py` automates -bgen invocation, output parsing, and config JSON writing.
 
-**Integration Strategy (Java path, recommended for simplicity):**
+| Parameter | Design Value | Guide Default |
+|-----------|-------------|---------------|
+| `m` (replicates) | 10 (target: 100) | `--m 10` |
+| `n` (sample size) | 200 | `--n 200` |
+| `g` (generations) | 10 | `--g 10` |
+| `k` (subtrace length) | 2 | `--k 2` |
 
-```bash
-java -jar jbpt-pm-entropia-1.8.jar -bgen -rel=<log.xes> -ret=<model.json> -n=<sample_size> -m=<replicates> -g=<generations> -k=2 -p=1.0 -s
-```
-
-1. **Convert Petri net to DFG JSON**: Build a JSON with nodes (activity + frequency + id) and arcs (from, to, frequency). Labels `INPUT` and `OUTPUT` mark process boundaries. Compute frequencies from the event log's directly-follows relations.
-2. **Export** log as XES.
-3. **Invoke** Entropia `-bgen`.
-4. **Parse** model-system precision/recall from stdout, compute generalization = 2 × (precision × recall) / (precision + recall).
-
-**Parameters:**
-- `n` = number of traces in original log (bootstrap sample size).
-- `m` = 100 (replicates).
-- `g` = 100 (breeding generations).
-- `k` = 2 (crossover subtrace length).
-- `p` = 1.0 (breeding probability).
-- `-s` for silent mode (score only).
-
-**Bridge script:** `benchmark/bridges/bsgen_bridge.py`
-
-**Estimated runtime per cell:** 5–30 min (dominated by Java subprocess calls for entropy per replicate).
-
-**Fallback:** For small logs (Sepsis, < 100 traces), skip genetic breeding — the crossover algorithm may produce no valid new traces. Use the Entropia `-bgen` with `-p=0` (nonparametric bootstrap only). If the entropy JAR is unavailable, fall back to alignment-based fitness only.
+---
 
 ---
 

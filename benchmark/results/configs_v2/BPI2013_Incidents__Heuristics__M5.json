@@ -3,7 +3,7 @@
   "miner": "Heuristics",
   "method": "M5",
   "method_label": "AVATAR (RelGAN)",
-  "timestamp": "2026-06-16T11:19:48Z",
+  "timestamp": "2026-06-18T19:44:53Z",
   "host": "docker",
   "seed": 42,
   "parameters": {
@@ -16,7 +16,7 @@
   },
   "results": {
     "score": 0.9348777911982958,
-    "runtime_s": 51.280601263046265
+    "runtime_s": 51.367671966552734
   },
   "notes": ""
 }

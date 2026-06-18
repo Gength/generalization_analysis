@@ -1,9 +1,9 @@
 {
-  "dataset": "BPI Challenge 2013 Incidents",
+  "dataset": "BPI2013_Incidents",
   "miner": "Heuristics_Strict",
   "method": "M5",
   "method_label": "AVATAR (RelGAN)",
-  "timestamp": "2025-06-16T13:20:00Z",
+  "timestamp": "2026-06-18T19:46:44Z",
   "host": "docker",
   "seed": 42,
   "parameters": {
@@ -16,7 +16,7 @@
   },
   "results": {
     "score": 0.8338445193631753,
-    "runtime_s": 60
+    "runtime_s": 78.53204274177551
   },
   "notes": ""
 }

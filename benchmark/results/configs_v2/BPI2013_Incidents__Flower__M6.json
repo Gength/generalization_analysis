@@ -3,41 +3,51 @@
   "miner": "Flower",
   "method": "M6",
   "method_label": "Bootstrap Generalization (Entropia -bgen)",
-  "timestamp": "2026-06-18T18:17:41Z",
+  "timestamp": "2026-06-18T19:20:46Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "jar": "jbpt-pm-entropia-1.7.1",
     "flag": "-bgen",
     "sample_size": 200,
-    "replicates": 5,
+    "replicates": 10,
     "generations": 10,
     "k": 2,
     "p": 1.0,
     "model_format": "DFG JSON (simulated from PNML)"
   },
   "results": {
-    "gen_score": 0.530288,
-    "precision": 0.360814,
-    "precision_std": 0.007532,
-    "recall": 0.999976,
-    "recall_std": 0.000195,
-    "n_replicates": 5,
+    "gen_score": 0.526051,
+    "precision": 0.356891,
+    "precision_std": 0.004223,
+    "recall": 1.000064,
+    "recall_std": 0.000178,
+    "n_replicates": 10,
     "raw_precisions": [
-      0.36395255,
-      0.35612525,
-      0.35658153,
-      0.35604012,
-      0.37137036
+      0.35447901,
+      0.3532287,
+      0.36137187,
+      0.35112838,
+      0.35863195,
+      0.36472515,
+      0.35038592,
+      0.36533014,
+      0.36150259,
+      0.34812501
     ],
     "raw_recalls": [
-      0.99975026,
-      1.00003889,
-      1.0002265,
-      0.99990346,
-      0.99996322
+      1.00067659,
+      1.00006588,
+      1.00022412,
+      1.00014356,
+      1.00006231,
+      0.99993416,
+      0.99967421,
+      0.99998996,
+      1.0,
+      0.9998727
     ],
-    "runtime_s": 53.3
+    "runtime_s": 81.1
   },
   "notes": ""
 }

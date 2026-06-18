@@ -27,7 +27,7 @@ JAR_FIXED = os.path.join(ENTROPIA_DIR, "jbpt-pm-entropia-1.7.1.jar")
 # ── Defaults ─────────────────────────────────────────────────────────────────
 DATASET_KEY = "D1"
 N_SAMPLE = 200
-N_REPLICATES = 5
+N_REPLICATES = 10
 N_GENERATIONS = 10
 K = 2
 P = 1.0

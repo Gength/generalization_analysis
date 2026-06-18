@@ -3,7 +3,7 @@
   "miner": "Alpha",
   "method": "M5",
   "method_label": "AVATAR (RelGAN)",
-  "timestamp": "2026-06-16T11:18:35Z",
+  "timestamp": "2026-06-18T19:43:41Z",
   "host": "docker",
   "seed": 42,
   "parameters": {
@@ -16,7 +16,7 @@
   },
   "results": {
     "score": 0.13275734353031554,
-    "runtime_s": 25.983967542648315
+    "runtime_s": 22.75650119781494
   },
   "notes": ""
 }
