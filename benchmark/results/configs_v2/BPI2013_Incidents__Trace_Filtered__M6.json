@@ -3,28 +3,41 @@
   "miner": "Trace_Filtered",
   "method": "M6",
   "method_label": "Bootstrap Generalization (Entropia -bgen)",
-  "timestamp": "2026-06-18T15:15:42Z",
+  "timestamp": "2026-06-18T18:10:18Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "jar": "jbpt-pm-entropia-1.7",
+    "jar": "jbpt-pm-entropia-1.7.1",
     "flag": "-bgen",
     "sample_size": 200,
     "replicates": 5,
     "generations": 10,
-    "k": 1,
+    "k": 2,
     "p": 1.0,
-    "model_format": "DFG JSON (simulated from PNML)",
-    "notes": "k=1 instead of k=2 due to JAR NPE bug on BPI2013 Incidents XES parsing with k=2"
+    "model_format": "DFG JSON (simulated from PNML)"
   },
   "results": {
-    "gen_score": 0.7876,
-    "precision": 0.65,
-    "precision_std": 0.0094,
-    "recall": 0.9989,
-    "recall_std": 0.0017,
+    "gen_score": 0.747757,
+    "precision": 0.599525,
+    "precision_std": 0.00812,
+    "recall": 0.993367,
+    "recall_std": 0.014998,
     "n_replicates": 5,
-    "runtime_s": 43.0
+    "raw_precisions": [
+      0.60400911,
+      0.59306757,
+      0.60743261,
+      0.60255321,
+      0.59056141
+    ],
+    "raw_recalls": [
+      0.99937165,
+      0.99992113,
+      0.96922272,
+      0.99962765,
+      0.9986899
+    ],
+    "runtime_s": 51.0
   },
   "notes": ""
 }

@@ -3,28 +3,41 @@
   "miner": "Inductive_Strict",
   "method": "M6",
   "method_label": "Bootstrap Generalization (Entropia -bgen)",
-  "timestamp": "2026-06-18T15:15:42Z",
+  "timestamp": "2026-06-18T18:15:35Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "jar": "jbpt-pm-entropia-1.7",
+    "jar": "jbpt-pm-entropia-1.7.1",
     "flag": "-bgen",
     "sample_size": 200,
     "replicates": 5,
     "generations": 10,
-    "k": 1,
+    "k": 2,
     "p": 1.0,
-    "model_format": "DFG JSON (simulated from PNML)",
-    "notes": "k=1 instead of k=2 due to JAR NPE bug on BPI2013 Incidents XES parsing with k=2"
+    "model_format": "DFG JSON (simulated from PNML)"
   },
   "results": {
-    "gen_score": 0.5979,
-    "precision": 0.4265,
-    "precision_std": 0.0069,
-    "recall": 1.0,
-    "recall_std": 0.0001,
+    "gen_score": 0.559655,
+    "precision": 0.388551,
+    "precision_std": 0.008755,
+    "recall": 1.000033,
+    "recall_std": 0.000396,
     "n_replicates": 5,
-    "runtime_s": 42.1
+    "raw_precisions": [
+      0.38085577,
+      0.39945204,
+      0.39075059,
+      0.3909018,
+      0.38079304
+    ],
+    "raw_recalls": [
+      0.99944041,
+      1.00022622,
+      1.00003116,
+      1.00037512,
+      1.0000899
+    ],
+    "runtime_s": 54.9
   },
   "notes": ""
 }

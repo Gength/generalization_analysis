@@ -3,28 +3,41 @@
   "miner": "Inductive_Infrequent",
   "method": "M6",
   "method_label": "Bootstrap Generalization (Entropia -bgen)",
-  "timestamp": "2026-06-18T14:59:23Z",
+  "timestamp": "2026-06-18T18:25:47Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "jar": "jbpt-pm-entropia-1.7",
+    "jar": "jbpt-pm-entropia-1.7.1",
     "flag": "-bgen",
     "sample_size": 200,
     "replicates": 5,
     "generations": 10,
     "k": 2,
     "p": 1.0,
-    "model_format": "DFG JSON (simulated from PNML)",
-    "note": "Standard Bootstrap Generalization (Polyvyanyy 2022) with Entropia scoring"
+    "model_format": "DFG JSON (simulated from PNML)"
   },
   "results": {
-    "gen_score": 0.2982,
-    "precision": 0.1778,
-    "precision_std": 0.0068,
-    "recall": 0.9246,
-    "recall_std": 0.0093,
+    "gen_score": 0.279557,
+    "precision": 0.166871,
+    "precision_std": 0.00471,
+    "recall": 0.860935,
+    "recall_std": 0.011768,
     "n_replicates": 5,
-    "runtime_s": 48.3
+    "raw_precisions": [
+      0.16742035,
+      0.16518028,
+      0.16919061,
+      0.16068202,
+      0.17188231
+    ],
+    "raw_recalls": [
+      0.87257939,
+      0.8581519,
+      0.85710452,
+      0.84662064,
+      0.8702197
+    ],
+    "runtime_s": 53.9
   },
   "notes": ""
 }

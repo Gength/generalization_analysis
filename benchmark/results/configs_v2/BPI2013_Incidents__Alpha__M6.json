@@ -3,19 +3,18 @@
   "miner": "Alpha",
   "method": "M6",
   "method_label": "Bootstrap Generalization (Entropia -bgen)",
-  "timestamp": "2026-06-18T15:15:42Z",
+  "timestamp": "2026-06-18T18:10:46Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "jar": "jbpt-pm-entropia-1.7",
+    "jar": "jbpt-pm-entropia-1.7.1",
     "flag": "-bgen",
     "sample_size": 200,
     "replicates": 5,
     "generations": 10,
-    "k": 1,
+    "k": 2,
     "p": 1.0,
-    "model_format": "DFG JSON (simulated from PNML)",
-    "notes": "k=1 instead of k=2 due to JAR NPE bug on BPI2013 Incidents XES parsing with k=2"
+    "model_format": "DFG JSON (simulated from PNML)"
   },
   "results": {
     "gen_score": 0.0,
@@ -24,7 +23,21 @@
     "recall": 0.0,
     "recall_std": 0.0,
     "n_replicates": 5,
-    "runtime_s": 21.9
+    "raw_precisions": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "raw_recalls": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "runtime_s": 27.6
   },
   "notes": ""
 }

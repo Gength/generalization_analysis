@@ -3,28 +3,41 @@
   "miner": "Flower",
   "method": "M6",
   "method_label": "Bootstrap Generalization (Entropia -bgen)",
-  "timestamp": "2026-06-18T14:59:23Z",
+  "timestamp": "2026-06-18T18:26:43Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "jar": "jbpt-pm-entropia-1.7",
+    "jar": "jbpt-pm-entropia-1.7.1",
     "flag": "-bgen",
     "sample_size": 200,
     "replicates": 5,
     "generations": 10,
     "k": 2,
     "p": 1.0,
-    "model_format": "DFG JSON (simulated from PNML)",
-    "note": "Standard Bootstrap Generalization (Polyvyanyy 2022) with Entropia scoring"
+    "model_format": "DFG JSON (simulated from PNML)"
   },
   "results": {
-    "gen_score": 0.1806,
-    "precision": 0.0993,
-    "precision_std": 0.0033,
-    "recall": 0.9998,
-    "recall_std": 0.0004,
+    "gen_score": 0.182592,
+    "precision": 0.100467,
+    "precision_std": 0.002286,
+    "recall": 1.000159,
+    "recall_std": 0.000638,
     "n_replicates": 5,
-    "runtime_s": 56.6
+    "raw_precisions": [
+      0.09783139,
+      0.10258619,
+      0.10095667,
+      0.10210293,
+      0.09885778
+    ],
+    "raw_recalls": [
+      0.99990908,
+      1.00012442,
+      0.99967365,
+      0.9999415,
+      1.00114541
+    ],
+    "runtime_s": 54.9
   },
   "notes": ""
 }

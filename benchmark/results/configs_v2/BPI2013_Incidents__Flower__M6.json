@@ -3,28 +3,41 @@
   "miner": "Flower",
   "method": "M6",
   "method_label": "Bootstrap Generalization (Entropia -bgen)",
-  "timestamp": "2026-06-18T15:15:42Z",
+  "timestamp": "2026-06-18T18:17:41Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "jar": "jbpt-pm-entropia-1.7",
+    "jar": "jbpt-pm-entropia-1.7.1",
     "flag": "-bgen",
     "sample_size": 200,
     "replicates": 5,
     "generations": 10,
-    "k": 1,
+    "k": 2,
     "p": 1.0,
-    "model_format": "DFG JSON (simulated from PNML)",
-    "notes": "k=1 instead of k=2 due to JAR NPE bug on BPI2013 Incidents XES parsing with k=2"
+    "model_format": "DFG JSON (simulated from PNML)"
   },
   "results": {
-    "gen_score": 0.5619,
-    "precision": 0.3907,
-    "precision_std": 0.0077,
-    "recall": 1.0001,
-    "recall_std": 0.0002,
+    "gen_score": 0.530288,
+    "precision": 0.360814,
+    "precision_std": 0.007532,
+    "recall": 0.999976,
+    "recall_std": 0.000195,
     "n_replicates": 5,
-    "runtime_s": 42.8
+    "raw_precisions": [
+      0.36395255,
+      0.35612525,
+      0.35658153,
+      0.35604012,
+      0.37137036
+    ],
+    "raw_recalls": [
+      0.99975026,
+      1.00003889,
+      1.0002265,
+      0.99990346,
+      0.99996322
+    ],
+    "runtime_s": 53.3
   },
   "notes": ""
 }
