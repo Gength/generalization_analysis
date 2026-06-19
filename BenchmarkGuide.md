@@ -14,7 +14,7 @@ bash benchmark/m3.sh
 
 ## 1. Overview
 
-Compare **HybridGen** (M1a–M1g) against external generalization baselines on 5 event logs (D1–D5) with 8 miner configurations. See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the full methodology v2 specification.
+Compare **HybridGen** (M1a–M1g) against external generalization baselines on 21 event logs (D1–D21) with 8 miner configurations. See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the full methodology v2 specification.
 
 ### Methods (v2)
 
@@ -187,6 +187,32 @@ docker build -t avatar-tf1 -f benchmark/docker/Dockerfile.avatar .
 bash benchmark/m5.sh
 ```
 
+### Switching Datasets — Model Directory Cleanup
+
+When switching to a **different dataset**, you MUST clean `benchmark/models/` first.
+`01_prepare_models.py` overwrites PNML files and `manifest.json` but does **not**
+remove leftover XES/DFG caches from previous datasets. Stale files (e.g. a prior
+`sepsis.xes.gz` when preparing for D6) can cause bridge scripts (M3, M6, M7) to
+load outdated models or mis-identify the active dataset.
+
+**Procedure:**
+
+```bash
+# 1. List current contents (for audit)
+ls -la benchmark/models/ && ls -la benchmark/models/dfg_models/
+
+# 2. After confirming the old files are no longer needed, remove them
+rm -rf benchmark/models/*
+
+# 3. Re-prepare for the new dataset
+uv run python benchmark/01_prepare_models.py --dataset <KEY>
+```
+
+> **Note:** This directory contains only generated artifacts (PNML models, DFG JSONs,
+> cached XES copies). Deleting them is safe — they are rebuilt from the original log
+> by `01_prepare_models.py`. The `dfg_models/` subdirectory is handled automatically
+> by `02_gen_per_miner_dfgs.py`.
+
 ---
 
 ## 4. Running
@@ -206,7 +232,7 @@ bash benchmark/m6.sh         # M6:      Bootstrap Gen (~2 min)
 bash benchmark/m7.sh         # M7:      SpeciAL4PM (~2 min)
 bash benchmark/m5.sh         # M5:      AVATAR RelGAN (~4h, FULL)
 
-All bridge scripts accept `--dataset D1..D5` to override the default dataset:
+All bridge scripts accept `--dataset D1..D21` to override the default dataset:
 
 ```bash
 bash benchmark/m3.sh --dataset D2
@@ -220,7 +246,7 @@ bash benchmark/m7.sh --dataset D2
 
 ### Dataset registry
 
-All benchmark scripts share a **single source of truth** for dataset definitions in [`benchmark/datasets.py`](benchmark/datasets.py). It defines D1–D5 with `name`, `log_path`, and `system_name` (for AVATAR). Import via `from datasets import DATASETS, get_info`. Never define inline `DATASETS` dicts.
+All benchmark scripts share a **single source of truth** for dataset definitions in [`benchmark/datasets.py`](benchmark/datasets.py). It defines D1–D21 with `name`, `log_path`, and `system_name` (for AVATAR). Import via `from datasets import DATASETS, get_info`. Never define inline `DATASETS` dicts.
 
 ```python
 from datasets import DATASETS, get_info
@@ -369,7 +395,7 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 |------|--------|
 | 2026-06-18 | **Standard M6 (Entropia -bgen) benchmark complete for D1 and D2.** Replaced token-replay fitness scoring with Entropia eigenvalue-based precision/recall (`-bgen` flag, 1.7 JAR). Per-miner DFG JSONs generated via PNML simulation. D2 requires `k=1` workaround (JAR NPE at `k=2`). See [M6 Implementation Note](#m6-implementation-note). Updated `configs_v2/` with new standard scores; previous token-replay scores retained in `configs/`.
 | 2026-06-18 | **M6** Default `m` changed from 5 to 10; D1 and D2 runs have been fully re-executed. Updated the "Statistical Rigor" table in `BenchmarkDesign.md` to reflect actual settings. The M6 ​​columns in the D1/D2 tables have been updated accordingly. See [Statistical Rigor](BenchmarkDesign.md#statistical-rigor).
-| 2026-06-16 | **Benchmark script restructuring.** `m1.sh` now runs only M1a–M1g via `run_m1_family.py`. Created `run_r_family.py` (unified R1–R3 runner using `compute_kfold_fitness` from `utils.py`) and `reference.sh`. R2 adds `--r2-sample` option (default 0 = all variants). Removed `demo_d1.py`, `r1_demo.py`, `r1.sh`. **Created `benchmark/datasets.py`** — canonical D1–D5 definitions; all scripts now import from it. `--dataset` CLI added to all bridge scripts. |
+| 2026-06-16 | **Benchmark script restructuring.** `m1.sh` now runs only M1a–M1g via `run_m1_family.py`. Created `run_r_family.py` (unified R1–R3 runner using `compute_kfold_fitness` from `utils.py`) and `reference.sh`. R2 adds `--r2-sample` option (default 0 = all variants). Removed `demo_d1.py`, `r1_demo.py`, `r1.sh`. **Created `benchmark/datasets.py`** — canonical D1–D21 definitions; all scripts now import from it. `--dataset` CLI added to all bridge scripts. |
 | 2026-06-13 | **Trace_Filtered D1 complete (all 15 methods).** Finished M2 (0.0376), M3 (29.87), **M5 (0.0000)** , M6 (0.5819 ± 0.0120), M7 (1.0000), R2 (0.6058 ± 0.0947), R3 (0.2796 ± 0.0033) for Trace_Filtered on D1 Sepsis. M5 = 0.0000 is the strongest memorization pole signal. All functionality added directly to existing scripts: `demo_d1.py` got `--miners` CLI + R2; `bridges/run_m6.py` / `run_m7.py` got `--miners`; `docker/run_avatar.py` got `--miners`, `--eval-only`, + Trace_Filtered miner entry. `01_prepare_models.py` regenerated all PNMLs incl. Trace_Filtered. No new scripts created. |
 | 2026-06-12 | **Methodology v2 sync.** M1 family expanded to M1a–M1g (v2.4–v2.6). Added Trace_Filtered miner (0.0 pole). v2.5/v2.6 results in `configs_v2/`. Updated BenchmarkDesign.md with merged v2 spec. |\n| 2026-06-10 | **Full English documentation.** Archived M4 (`archive/Tianhao/benchmark/m4.sh`) and M8 (`archive/Tianhao/benchmark/m8.sh`) — both infeasible on real-life logs. Removed `build/` and `lib/` directories (M4 compile artifacts). Cleaned up stale CSV files. |
 | 2026-06-09 | **M5: AVATAR RelGAN on D1 Sepsis completed.** Built Docker image `avatar-tf1` (nvcr.io TF 1.15 + pm4py 1.2.6). Trained GAN (5000 adv steps, checkpoint suffix=4981). Fixed multi-word activity bug via greedy longest-match decoding. 2 sampling runs → Mean±Std for all 7 miners. Results table updated. |

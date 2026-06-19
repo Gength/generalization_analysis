@@ -4,7 +4,7 @@ M3 — Entropic Relevance (Entropia JAR)
 Reads manifest.json, calls Entropia with -r flag.
 No pm4py dependency.
 """
-import os, sys, json, subprocess, time, argparse
+import os, sys, json, subprocess, time, argparse, re
 from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -77,14 +77,31 @@ target_miners = list(manifest["miners"].keys()) if MINER_LIST is None else MINER
 if r.returncode != 0:
     print(f"  ERROR: {r.stderr[:200]}")
     for m in target_miners:
-        write_config(m, {"entropic_relevance_raw": -1, "runtime_s": elapsed},
-                     f"JVM error: {r.stderr[:200]}")
+        write_config(m, {
+            "entropic_relevance_raw": -1,
+            "entropic_relevance_normalized": None,
+            "runtime_s": elapsed,
+        }, f"JVM error: {r.stderr[:200]}")
     sys.exit(1)
 
-raw = float(r.stdout.strip().split('\n')[0].strip())
-print(f"  Score: {raw:.4f} ({elapsed:.1f}s)")
+output_text = r.stdout.strip()
+# With -s flag, first line is the raw relevance number
+# Without -s, it's in format "Relevance:  XX.XXX"
+rel_match = re.search(r'([\d.Ee+-]+)', output_text)
+relevance = float(rel_match.group(1)) if rel_match else -1.0
+# The JAR -r flag does not output costOfBackgroundModel, so we cannot
+# compute the theoretically correct normalized score (relevance / costOfBackgroundModel).
+# Store normalized as None; the notebook's score_m3() uses a per-dataset global max fallback.
+normalized = None
+
+print(f"  Relevance: {relevance:.4f}")
+print(f"  Runtime: {elapsed:.1f}s")
 
 for m in target_miners:
-    write_config(m, {"entropic_relevance_raw": raw, "runtime_s": elapsed,
-                     "note": "Unbounded entropic relevance. Same for all miners (DFG-based)."})
+    write_config(m, {
+        "entropic_relevance_raw": relevance,
+        "entropic_relevance_normalized": normalized,
+        "runtime_s": elapsed,
+        "note": "Raw entropic relevance (unbounded). Same for all miners (DFG-based). Normalized version requires costOfBackgroundModel which the JAR -r flag does not output.",
+    })
 print(f"  → {len(target_miners)} configs written")

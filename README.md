@@ -17,61 +17,93 @@
 ## Project Structure
 
 ```
-generalization_analysis/
+.
 ├── README.md                         # This file
 ├── pyproject.toml                    # Python project config (uv package manager)
 │
 ├── Method_GenShadow.md               # ★ Authoritative metric specification
-├── WhatChanged_v25_v26.md            # v2.5/v2.6 technical summary
-├── BenchmarkDesign.md                # Benchmark methodology v2 (supersedes v1)
+├── Method2Log.md                     # Method 2 development log (coauthored)
+├── BenchmarkDesign.md                # ★ Benchmark methodology v2 (coauthored)
 ├── BenchmarkGuide.md                 # Quick-start guide for running benchmarks
+├──
+├── visualize_benchmark.ipynb         # Benchmark visualization: MAE-to-R1 heatmaps
+├── visualize_gen_shadow.ipynb        # GenShadow construct visualization
 │
 ├── HybridGen/                        # ★ Core package
 │   ├── __init__.py
+│   ├── __main__.py
+│   ├── utils.py                      # Module auto-discovery registry
 │   ├── algorithm/                    # Versioned algorithm files (v1.py … v26.py)
 │   │   ├── v1.py                     #   DFG + Good–Turing (1-gram, no backoff)
 │   │   ├── v2.py … v22_eval.py      #   N-gram evolution
 │   │   ├── v23.py … v24.py          #   Context-aware termination, Katz backoff
 │   │   ├── v25.py                    #   Katz-consistent mutation proposal
 │   │   └── v26.py                    #   Acceptance rate + MLE successor weighting
-│   └── utils.py                     # Module auto-discovery registry
+│   └── experiment/                   # Experiment runners (v1.py, v2.py)
 │
 ├── data/                             # Event logs (XES .gz)
 │   ├── Sepsis Cases - Event Log_1_all/
-│   ├── BPI-Challenge_2013/
-│   ├── BPI-Challenge_2017/
-│   ├── BPI-Challenge_2018/
-│   └── …
+│   ├── BPI-Challenge_2011/  … 2020/
+│   ├── Hospital Billing - Event Log_1_all/
+│   └── Road Traffic Fine Management Process_1_all/
 │
 ├── benchmark/                        # Benchmark scripts, models, results
+│   ├── datasets.py                  # ★ Canonical D1–D21 dataset registry
+│   ├── miners.py                    #   Miner definitions
+│   ├── utils.py                     #   Shared utilities
+│   ├── 01_prepare_models.py         #   Model discovery (PNML + DFG JSON)
+│   ├── 02_gen_per_miner_dfgs.py     #   Per-miner DFG generation
+│   ├── prepare.sh                   #   Shell wrapper for model preparation
 │   ├── run_m1_family.py             # ★ M1-family runner (v2 methodology)
+│   ├── run_m2.py                    #   M2 runner (PM4Py built-in)
+│   ├── run_r_family.py              #   R1/R2/R3 reference runners
 │   ├── version_comparison.py        #   Multi-seed cross-version comparison
 │   ├── version_comparison_analysis.ipynb  # Post-hoc analysis notebook
-│   ├── demo_d1.py                   #   D1 Sepsis full run (M1a–M1g + M2 + R3)
 │   ├── r1_accept.py                 #   R1 ground truth (acceptance-based)
-│   ├── 01_prepare_models.py         #   Model discovery for all miners
 │   ├── run_all.sh                   #   Full pipeline entry point
-│   ├── m1.sh / m3.sh / … / m7.sh   #   Per-method shell scripts
+│   ├── m1.sh / m2.sh / … / m7.sh   #   Per-method shell scripts
+│   ├── reference.sh                 #   Reference methods shell script
+│   ├── bridges/                     #   Bridge scripts for external methods
+│   │   ├── avatar_bridge.py
+│   │   ├── run_m3.py                #   Entropic Relevance
+│   │   ├── run_m6_bgen.py           #   Bootstrap Generalization
+│   │   └── run_m7.py                #   SpeciAL4PM
+│   ├── docker/                      #   Docker infrastructure for AVATAR (M5)
+│   │   ├── Dockerfile.avatar
+│   │   ├── Dockerfile.avatar.tf2
+│   │   └── run_avatar.py
 │   ├── models/                      #   Pre-discovered PNML + DFG JSON
 │   └── results/
 │       ├── configs/                 #   v1 methodology results
-│       ├── configs_v2/             #   ★ v2 methodology results
+│       ├── configs_v2/             #   ★ v2 methodology results (M1a–M1g + M2–M7 + R1–R3)
 │       ├── version_comparison_D1.csv
 │       └── version_comparison_D2.csv
 │
 ├── analysis/                         # Exploration notebooks & reports
-│   └── Mutation/                    # N-gram sweep analysis
+│   ├── Mutation/                    # N-gram mutation analysis
+│   │   ├── MutationReport.md
+│   │   └── analyze_mutation.py
+│   ├── Structure/                   # Structural metrics analysis
+│   │   ├── StructMetricAnalysis.md
+│   │   └── analyze_struct_metrics.py
+│   └── benchmark/                   # Benchmark visualization outputs (CSVs + PNGs)
+│       └── Sepsis/                  #   Per-dataset subdirectories
 │
-├── report/                           # Preliminary LaTeX paper
+├── report/                           # LaTeX paper
 │   ├── main.tex                     # "Quantifying Process Model Generalization"
 │   ├── main.pdf
 │   └── references.bib
 │
-├── archive/                          # Historical / deprecated code
-│   ├── v1/                          # Method 1 (pick-one-out, abandoned)
-│   └── Tianhao/                     # Archived experiments & logs
+├── artifacts/                        # Conceptual diagrams & deliverables
+│   └── katz-mutation.drawio         # Katz mutation proposal flowchart (v2.5)
 │
-└── output/                           # Legacy experiment results
+├── archive/                          # Historical / deprecated code; not actively maintained
+│
+├── output/                           # HybridGen experiment JSON results
+│   ├── v2/ / v21/ / v22/           #   Version-organized results
+│   └── hybrid_extensive_*.json     #   Extensive evaluation outputs
+│
+└── src/                              # External code for benchmarking (not project code)
 ```
 
 ---
@@ -136,7 +168,7 @@ Replay the shadow log on the model via PM4Py token replay.
 | **T2** | M2–M7 (PM4Py, Entropic, AVATAR, Bootstrap, SpeciAL4PM) | External baselines |
 | **T3** | R1–R3 (K-Fold CV, Leave-One-Out, Random) | Reference / sanity checks |
 
-**5 datasets:** D1 Sepsis → D2 BPI 2013 → D3 BPI 2017 → D4 BPI 2018 → D5 BPI 2019
+**21 datasets:** D1–D21 covering Sepsis, BPI Challenges 2011–2020, Hospital Billing, and Road Traffic Fine (see `benchmark/datasets.py` for full catalog).
 
 ---
 
@@ -158,11 +190,12 @@ uv run python benchmark/run_m1_family.py --dataset D1 --methods M1e M1f M1g
 # Multi-seed robustness check
 uv run python benchmark/version_comparison.py --dataset D1 --seeds 42 1 7 99
 
-# Legacy demo (M1a–M1g via shell script)
-bash benchmark/m1.sh
+# Full pipeline (all methods)
+bash benchmark/run_all.sh
 ```
 
 Results → `benchmark/results/configs_v2/` per (dataset, miner, method).
+Visualization → open `visualize_benchmark.ipynb`, set `DATASET_KEY`, Run All.
 
 ---
 
@@ -188,13 +221,7 @@ Results → `benchmark/results/configs_v2/` per (dataset, miner, method).
 | `Method_GenShadow.md` | **Authoritative** metric specification & design rationale |
 | `BenchmarkDesign.md` | Benchmark methodology v2 — full protocol, methods, datasets |
 | `BenchmarkGuide.md` | Quick-start guide for running experiments |
-| `WhatChanged_v25_v26.md` | v2.5/v2.6 plain-language technical summary |
-| `report/main.pdf` | Preliminary LaTeX paper (LNCS format) |
-
-Archived / historical:
-- `archive/v1/` — Original Method 1 (pick-one-out, abandoned)
-- `archive/Tianhao/` — Legacy experiment logs and deprecated methods
-- `Method1Log.md`, `Method2Log.md`, `Method2Log_Geng.md` — Development logs (historical reference)
+| `report/main.pdf` | LaTeX paper (LNCS format) |
 
 ---
 

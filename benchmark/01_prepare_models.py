@@ -69,7 +69,14 @@ print(f"  DFG JSON → {dfg_path}")
 # ─── Copy XES to model dir (so JAR tools find all files under same path) ────
 xes_target = f"{MODEL_DIR}/{slug}.xes.gz"
 if os.path.abspath(LOG_PATH) != os.path.abspath(xes_target):
-    shutil.copy2(LOG_PATH, xes_target)
+    if LOG_PATH.endswith(".gz"):
+        shutil.copy2(LOG_PATH, xes_target)
+    else:
+        # Source is plain .xes; gzip it to produce a valid .xes.gz
+        import gzip
+        with open(LOG_PATH, "rb") as f_in:
+            with gzip.open(xes_target, "wb") as f_out:
+                shutil.copyfileobj(f_in, f_out)
 print(f"  XES → {xes_target}")
 
 # ─── Discover & export per-miner ────────────────────────────────────────────

@@ -3,7 +3,7 @@
   "miner": "Inductive_Strict",
   "method": "M3",
   "method_label": "Entropic Relevance",
-  "timestamp": "2026-06-15T16:21:04Z",
+  "timestamp": "2026-06-19T15:57:32Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -13,8 +13,9 @@
   },
   "results": {
     "entropic_relevance_raw": 0.0,
-    "runtime_s": 1.0296225547790527,
-    "note": "Unbounded entropic relevance. Same for all miners (DFG-based)."
+    "entropic_relevance_normalized": null,
+    "runtime_s": 0.6735460758209229,
+    "note": "Raw entropic relevance (unbounded). Same for all miners (DFG-based). Normalized version requires costOfBackgroundModel which the JAR -r flag does not output."
   },
   "notes": ""
 }

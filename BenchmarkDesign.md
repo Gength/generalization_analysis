@@ -3,7 +3,7 @@
 > **Status.** This document defines **Methodology v2** of the generalization benchmark.
 > It **supersedes** the previous `BenchmarkDesign.md` (Methodology v1). All v1 sections
 > not explicitly restated below — external methods M2–M8, reference metrics R1–R3, datasets
-> D1–D5, statistical protocol, SLURM execution plan, risks — are **inherited unchanged**,
+> D1–D21, statistical protocol, SLURM execution plan, risks — are **inherited unchanged**,
 > with v2-specific overrides noted inline.
 >
 > Construct definition follows [`Method_GenShadow.md`](Method_GenShadow.md) (authoritative):
@@ -30,7 +30,7 @@
 
 ## Objective
 
-Compare **HybridGen v2.4–v2.6** against 7 external generalization baselines across 5 real-world event logs (selected from a catalog of 20+) and 8 process discovery configurations. The benchmark produces a structured CSV of per-method generalization scores, enabling quantitative ranking, correlation analysis, and qualitative assessment of each method's discriminative power.
+Compare **HybridGen v2.4–v2.6** against 7 external generalization baselines across all 21 real-world event logs in the catalog and 8 process discovery configurations. The benchmark produces a structured CSV of per-method generalization scores, enabling quantitative ranking, correlation analysis, and qualitative assessment of each method's discriminative power.
 
 ---
 
@@ -96,33 +96,33 @@ All datasets reside under `data/` with per-directory `summary.txt` files contain
 
 | # | Dataset | Path | Cases | Events | Acts | Variants | Avg Len | Size | TLRA |
 |---|---------|------|-------|--------|------|----------|---------|------|------|
-| — | BPI 2013 Problem Open | `data/BPI-Challenge_2013/` | 819 | 2,351 | 3 | 108 | 2.9 | 69 KB | 0.87 |
-| — | BPI 2013 Problem Closed | `data/BPI-Challenge_2013/` | 1,487 | 6,660 | 4 | 183 | 4.5 | 187 KB | 0.88 |
-| — | BPI 2015 Municipality 2 | `data/BPI-Challenge_2015/` | 832 | 44,354 | 410 | 828 | 53.3 | 34 MB | 0.005 |
-| — | BPI 2015 Municipality 4 | `data/BPI-Challenge_2015/` | 1,053 | 47,293 | 356 | 1,049 | 44.9 | 37 MB | 0.004 |
+| D6 | BPI 2013 Problem Open | `data/BPI-Challenge_2013/` | 819 | 2,351 | 3 | 108 | 2.9 | 69 KB | 0.87 |
+| D7 | BPI 2013 Problem Closed | `data/BPI-Challenge_2013/` | 1,487 | 6,660 | 4 | 183 | 4.5 | 187 KB | 0.88 |
+| D8 | BPI 2015 Municipality 2 | `data/BPI-Challenge_2015/` | 832 | 44,354 | 410 | 828 | 53.3 | 34 MB | 0.005 |
+| D9 | BPI 2015 Municipality 4 | `data/BPI-Challenge_2015/` | 1,053 | 47,293 | 356 | 1,049 | 44.9 | 37 MB | 0.004 |
 | D1 | **Sepsis** | `data/Sepsis Cases - Event Log_1_all/` | 1,050 | 15,214 | 16 | 846 | 14.5 | 0.2 MB | 0.19 |
-| — | BPI 2015 Municipality 1 | `data/BPI-Challenge_2015/` | 1,199 | 52,217 | 398 | 1,170 | 43.6 | 41 MB | 0.02 |
-| — | BPI 2011 Hospital | `data/BPI-Challenge_2011/` | 1,143 | 150,291 | 624 | 981 | 131.5 | 2.4 MB | 0.14 |
-| — | BPI 2015 Municipality 5 | `data/BPI-Challenge_2015/` | 1,156 | 59,083 | 389 | 1,153 | 51.1 | 46 MB | 0.003 |
-| — | BPI 2015 Municipality 3 | `data/BPI-Challenge_2015/` | 1,409 | 59,681 | 383 | 1,349 | 42.4 | 47 MB | 0.04 |
-| — | BPI 2020 PrepaidTravel | `data/BPI-Challenge_2020/` | 2,099 | 18,246 | 29 | 202 | 8.7 | — | 0.90 |
-| — | BPI 2020 InternationalDecl. | `data/BPI-Challenge_2020/` | 6,449 | 72,151 | 34 | 753 | 11.2 | — | 0.88 |
-| — | BPI 2020 RequestForPayment | `data/BPI-Challenge_2020/` | 6,886 | 36,796 | 19 | 89 | 5.3 | — | 0.99 |
-| — | BPI 2020 PermitLog | `data/BPI-Challenge_2020/` | 7,065 | 86,581 | 51 | 1,478 | 12.3 | — | 0.79 |
+| D10 | BPI 2015 Municipality 1 | `data/BPI-Challenge_2015/` | 1,199 | 52,217 | 398 | 1,170 | 43.6 | 41 MB | 0.02 |
+| D11 | BPI 2011 Hospital | `data/BPI-Challenge_2011/` | 1,143 | 150,291 | 624 | 981 | 131.5 | 2.4 MB | 0.14 |
+| D12 | BPI 2015 Municipality 5 | `data/BPI-Challenge_2015/` | 1,156 | 59,083 | 389 | 1,153 | 51.1 | 46 MB | 0.003 |
+| D13 | BPI 2015 Municipality 3 | `data/BPI-Challenge_2015/` | 1,409 | 59,681 | 383 | 1,349 | 42.4 | 47 MB | 0.04 |
+| D14 | BPI 2020 PrepaidTravel | `data/BPI-Challenge_2020/` | 2,099 | 18,246 | 29 | 202 | 8.7 | — | 0.90 |
+| D15 | BPI 2020 InternationalDecl. | `data/BPI-Challenge_2020/` | 6,449 | 72,151 | 34 | 753 | 11.2 | — | 0.88 |
+| D16 | BPI 2020 RequestForPayment | `data/BPI-Challenge_2020/` | 6,886 | 36,796 | 19 | 89 | 5.3 | — | 0.99 |
+| D17 | BPI 2020 PermitLog | `data/BPI-Challenge_2020/` | 7,065 | 86,581 | 51 | 1,478 | 12.3 | — | 0.79 |
 | D2 | **BPI 2013 Incident** | `data/BPI-Challenge_2013/` | 7,554 | 65,533 | 4 | 1,511 | 8.7 | 1.3 MB | 0.80 |
-| — | BPI 2020 DomesticDecl. | `data/BPI-Challenge_2020/` | 10,500 | 56,437 | 17 | 99 | 5.4 | — | 0.99 |
-| — | BPI 2012 | `data/BPI-Challenge_2012/` | 13,087 | 262,200 | 24 | 4,366 | 20.0 | 3.3 MB | 0.67 |
+| D18 | BPI 2020 DomesticDecl. | `data/BPI-Challenge_2020/` | 10,500 | 56,437 | 17 | 99 | 5.4 | — | 0.99 |
+| D19 | BPI 2012 | `data/BPI-Challenge_2012/` | 13,087 | 262,200 | 24 | 4,366 | 20.0 | 3.3 MB | 0.67 |
 | D3 | **BPI 2017** | `data/BPI-Challenge_2017/` | 31,509 | 1,202,267 | 26 | 15,930 | 38.2 | 29.6 MB | 0.49 |
 | D4 | **BPI 2018** | `data/BPI-Challenge_2018/` | 43,809 | 2,514,266 | 41 | 28,457 | 57.4 | 158 MB | 0.35 |
-| — | Hospital Billing | `data/Hospital Billing - Event Log_1_all/` | 100,000 | 451,359 | 18 | 1,020 | 4.5 | 6.6 MB | 0.99 |
-| — | Road Traffic Fine | `data/Road Traffic Fine Management Process_1_all/` | 150,370 | 561,470 | 11 | 231 | 3.7 | 3.5 MB | 0.998 |
+| D20 | Hospital Billing | `data/Hospital Billing - Event Log_1_all/` | 100,000 | 451,359 | 18 | 1,020 | 4.5 | 6.6 MB | 0.99 |
+| D21 | Road Traffic Fine | `data/Road Traffic Fine Management Process_1_all/` | 150,370 | 561,470 | 11 | 231 | 3.7 | 3.5 MB | 0.998 |
 | D5 | **BPI 2019** | `data/BPI-Challenge_2019/` | 251,734 | 1,595,923 | 42 | 11,973 | 6.3 | 16.9 MB | 0.95 |
 
 > **Acts** = unique activity labels. **Variants** = unique trace sequences. **TLRA** = 1 − (variants/cases), the probability an additional trace has been seen before. Higher = more repetitive.
 
-### Selected Benchmark Datasets (D1–D5)
+### Benchmark Dataset Scope
 
-From the full catalog, 5 datasets are selected for the actual benchmark, chosen to span diverse process characteristics while keeping runtime feasible:
+The initial design (v1) selected 5 representative datasets (D1–D5) spanning diverse process characteristics. **Following reviewer feedback, the benchmark now runs on all 21 datasets in the full catalog above.** The original D1–D5 set remains informative for understanding the benchmark's design rationale:
 
 | # | Dataset | Cases | Events | Variants | Avg Len | TLRA | Why Selected |
 |---|---------|-------|--------|----------|---------|------|-------------|
@@ -132,28 +132,45 @@ From the full catalog, 5 datasets are selected for the actual benchmark, chosen 
 | D4 | **BPI 2018** | 43,809 | 2,514,266 | 28,457 | 57.4 | 0.35 | Largest variant count (28K) + deepest traces (avg 57) + lowest TLRA (0.35) — hardest generalization challenge. |
 | D5 | **BPI 2019** | 251,734 | 1,595,923 | 11,973 | 6.3 | 0.95 | Largest case count — tests PM4Py memory scaling. Structured purchase-to-pay with rare branches. |
 
-**Why these 5?** They span the axes that matter for generalization evaluation:
-- **Trace depth**: from 8.7 (D2) to 57.4 (D4) avg events
-- **Variant diversity**: from 846 (D1) to 28,457 (D4)
-- **Log size**: from 1K (D1) to 251K (D5) cases
-- **TLRA**: from 0.19 (D1, low representativeness) to 0.80+ (D2, moderate)
-- **Structural complexity**: D2 has only 4 activities but 1,511 variants — tests whether metrics conflate simplicity with generalization
+> **Coverage rationale (full 21-dataset catalog):** The expanded set covers every available real-life log from BPI Challenges 2011–2020 plus Hospital Billing and Road Traffic Fine, spanning:
+> - **Trace depth**: from 2.9 (D6) to 131.5 (D11) avg events
+> - **Variant diversity**: from 89 (D16) to 28,457 (D4)
+> - **Log size**: from 819 (D6) to 251K (D5) cases
+> - **TLRA**: from 0.003 (D8) to 0.998 (D21) — coverage from extreme novelty to near-determinism
+> - **Structural complexity**: from 3 activities (D6) to 624 (D11) — tests whether metrics conflate simplicity with generalization
 
 ### Two-Phase Execution Plan
 
 ```
-Phase A: Local Machine (development, debugging, smoke test)
-  ├── D1 Sepsis — 1,050 cases, ~14 min for all fast methods
-  └── D2 BPI 2013 Incident — 7,554 cases, still runs locally
-      Goal: validate all 8 methods + 3 reference metrics + 8 miners
-            end-to-end before scaling up. Both D1 and D2 are small enough
-            for local iteration.
+Phase A: Local Machine (small to medium datasets — D1, D2, D6, D7, D14–D19)
+  ├── D1  Sepsis (1,050 cases)        — smoke test, ~14 min for fast methods
+  ├── D2  BPI 2013 Inc. (7,554 cases)  — validates pipeline on 4-activity log
+  ├── D6  BPI 2013 Problem Open (819 cases)  — smallest, 3 activities
+  ├── D7  BPI 2013 Problem Closed (1,487)     — companion to D6
+  ├── D14 BPI 2020 PrepaidTravel (2,099)      — moderate size
+  ├── D15 BPI 2020 InternationalDecl. (6,449) — larger but still local
+  ├── D16 BPI 2020 RequestForPayment (6,886)  — simple (19 acts, 89 variants)
+  ├── D17 BPI 2020 PermitLog (7,065)          — diverse (51 acts, 1.5K variants)
+  ├── D18 BPI 2020 DomesticDecl. (10,500)     — large case count, simple structure
+  └── D19 BPI 2012 (13,087 cases)             — largest local-friendly log
+      Goal: run all fast methods (M1–M3, M5–M7, R1–R3) on these 10 datasets.
+      M5 (AVATAR) may be skipped on local if GPU is unavailable.
 
-Phase B: CIP-Pool 128GB Machine (full benchmark)
-  ├── D3 BPI 2017 — 31K cases, 15,930 variants, deep traces → memory-heavy
-  ├── D4 BPI 2018 — 44K cases, 28,457 variants, 2.5M events → heaviest
-  └── D5 BPI 2019 — 251K cases, 1.6M events → largest raw case count
+Phase B: CIP-Pool 128GB Machine (large / memory-heavy datasets — D3–D5, D8–D13, D20–D21)
+  ├── D8  BPI 2015 Muni. 2 (832 cases, 410 acts, 34 MB)    — high act count
+  ├── D9  BPI 2015 Muni. 4 (1,053 cases, 356 acts, 37 MB)   — high act count
+  ├── D10 BPI 2015 Muni. 1 (1,199 cases, 398 acts, 41 MB)   — high act count
+  ├── D11 BPI 2011 Hospital (1,143 cases, 624 acts, 131.5 avg len) — deep traces
+  ├── D12 BPI 2015 Muni. 5 (1,156 cases, 389 acts, 46 MB)   — high act count
+  ├── D13 BPI 2015 Muni. 3 (1,409 cases, 383 acts, 47 MB)   — high act count
+  ├── D20 Hospital Billing (100K cases, 6.6 MB)              — large case count
+  ├── D21 Road Traffic Fine (150K cases, 3.5 MB)             — largest case count
+  ├── D3  BPI 2017 (31K cases, 16K variants)                 — variant explosion
+  ├── D4  BPI 2018 (44K cases, 28K variants, 2.5M events)   — heaviest
+  └── D5  BPI 2019 (252K cases)                              — largest raw count
 ```
+
+**Note:** D8–D13 (BPI 2015 municipalities) are included in Phase B despite modest case counts because their high activity counts (356–410) and deep traces (avg 42–53) cause memory pressure during model discovery and N-gram pre-computation. D20–D21 have 100K+ cases each, which strains token replay and R2 (Leave-One-Variant-Out).
 
 ---
 
@@ -266,7 +283,7 @@ Variant-based k-fold partitions trace variants (not individual traces) into k gr
 | 6 | 83% | ~141 variants | ~2,655 variants | Slightly more training data per fold; acceptable for variant-rich datasets (D3–D5) |
 | 10 | 90% | ~85 variants | ~1,593 variants | Too small test folds for D1/D2; model discovery on 90% of variants is nearly the full log |
 
-**Choice: k=5.** Provides an 80/20 train/test split per fold (standard in ML), works for all 5 datasets (D1's 846 variants → ~169 per test fold is sufficient), and produces 5 scores to average. k=6 is also defensible but k=5 is more conventional.
+**Choice: k=5.** Provides an 80/20 train/test split per fold (standard in ML), works for all D1–D5 datasets (D1's 846 variants → ~169 per test fold is sufficient, D3's 15,930 → ~3,186 per test fold), and produces 5 scores to average. k=6 is also defensible but k=5 is more conventional.
 
 ### HybridGen Hyperparameters
 
@@ -293,7 +310,7 @@ The Katz backoff mechanism makes `max_n` an **upper bound**, not a fixed operati
 | `num_shadow_traces` | **min(1000, len(log))** | 1,000 traces → ~38 mutated at N=6 for stratified analysis. |
 | `iterations` | **5** | Algorithm default; 5 iterations produce tight mean ± std. |
 
-**Ablation experiments (M1a–M1c) — all run on all 5 datasets:**
+**Ablation experiments (M1a–M1c) — all run on D1–D5:**
 
 | Ablation | Configuration | Isolates |
 |----------|--------------|----------|
@@ -524,49 +541,93 @@ Config JSONs are written to:
 
 Example: `Sepsis__Inductive_Strict__M1.json`
 
-### Phase A: Local Machine — Smoke Test (D1 Completed, D2 Pending)
+### Phase A: Local Machine — Small/Medium Datasets (D1, D2, D6, D7, D14–D19)
 
-D1 Sepsis completed. M4 and M8 archived as infeasible.
+All fast methods (M1–M3, M5–M7, R1–R3) can be computed on these 10 datasets locally.
+M5 (AVATAR) may be skipped if no GPU is available.
 
 ```
-Step 0: Environment Setup (local)
-  ├── Python: uv sync
-  ├── AVATAR Docker: docker build -t avatar-tf1 -f benchmark/docker/Dockerfile.avatar .
-  ├── SpeciAL4PM: pip install -e ./src/SpeciAL-core/
-  └── Entropia: java -jar src/codebase/jbpt-pm/entropia/jbpt-pm-entropia-1.7.jar -h
-
 Step 1: D1 Sepsis — Completed ✅
-  ├── M1a–M1d (HybridGen variants) — ~2–5 min
-  ├── M1e, M1f, M1g (v2.5/v2.6, via run_m1_family.py) — ~2–5 min
-  ├── M2 (PM4Py built-in) — < 1 s
-  ├── M3 (Entropic Relevance) — ~1 min
-  ├── M5 (AVATAR) — ~4h (GAN training, Docker GPU)
-  ├── M6 (Bootstrap Gen) — ~2 min/cell
-  ├── M7 (SpeciAL4PM) — ~12 s/cell
-  ├── R1 (K-Fold CV, k=5) — ~3 min
-  ├── R2 (Leave-One-Variant-Out) — ~10 min
-  ├── R3 (Random baseline) — ~30 s
-  └── ❌ M4, M8 archived — infeasible on real-life logs
+  ├── M1a–M1g, M2, M3, M5, M6, M7, R1–R3 — all complete
+  └── Configs written to configs_v2/
 
-Step 2: D2 BPI 2013 Incident — Not yet run
-  ├── Same methods as D1 (excl. M4, M8)
-  └── Estimated: ~30 min for fast methods + ~4h AVATAR
+Step 2: D2 BPI 2013 Incident — Completed ✅
+  ├── M1a–M1g, M2, M3, M5, M6, M7, R1–R3 — all complete
+  └── Configs written to configs_v2/
 
-Step 3: Validate pipeline
-  ├── D1: 8 miners × 11 methods = 88 configs (88/88 ✅)
-  ├── M4: all -1 (archived)
-  ├── M8: all -1 (archived)
+Step 3: Small BPI 2013 datasets (Phase A)
+  ├── D6  BPI 2013 Problem Open    — very small (819 cases, 3 activities)
+  ├── D7  BPI 2013 Problem Closed  — small (1,487 cases, 4 activities)
+  └── All methods expected to run in < 10 min each
+
+Step 4: BPI 2020 family (Phase A)
+  ├── D14 BPI 2020 PrepaidTravel     (2,099 cases, 29 acts)
+  ├── D15 BPI 2020 InternationalDecl. (6,449 cases, 34 acts)
+  ├── D16 BPI 2020 RequestForPayment  (6,886 cases, 19 acts, 89 variants — simplest)
+  ├── D17 BPI 2020 PermitLog          (7,065 cases, 51 acts, 1.5K variants)
+  ├── D18 BPI 2020 DomesticDecl.      (10,500 cases, 17 acts, 99 variants)
+  └── All methods run in < 30 min per dataset
+
+Step 5: D19 BPI 2012 (Phase A)
+  ├── 13,087 cases, 24 acts, 4,366 variants
+  ├── Fast methods: ~30 min
+  └── R2 (Leave-One-Variant-Out) may need SLURM array (~146 variants/job)
+
+Step 6: Validate pipeline
+  ├── D1, D2: 8 miners × 11 methods = 88 configs each
+  ├── All Phase A datasets: verify config JSONs written
   └── Config JSONs are source of truth
 ```
 
-### Phase B: CIP-Pool 128GB Machine — Heavy Datasets (D3–D5)
+### Phase B: CIP-Pool 128GB Machine — Heavy Datasets (D3–D5, D8–D13, D20–D21)
 
 Transfer codebase to the 128GB machine. All methods computed from scratch.
 
-```
-Step 4: Re-run Environment Setup on CIP-Pool machine
+**Heavy datasets split into sub-phases by memory profile:**
 
-Step 5: D3 BPI 2017 (heavy: variant explosion + deep traces)
+- **High-activity (Phase B1):** D8–D13 (BPI 2015 municipalities + BPI 2011 Hospital) — modest case counts but 356–624 unique activities, deep traces (avg 42–131), causing memory pressure during N-gram pre-computation and SDFA conversion.
+- **High-volume (Phase B2):** D20 Hospital Billing (100K cases) + D21 Road Traffic Fine (150K cases) — large case counts stress token replay and R2.
+- **Heaviest (Phase B3):** D3 (31K cases, 16K variants), D4 (44K cases, 28K variants), D5 (252K cases) — original heavy trio.
+
+```
+Step 7: Re-run Environment Setup on CIP-Pool machine
+
+Step 8a: D8  BPI 2015 Muni. 2  (832 cases, 410 acts, 34 MB)
+  ├── M1a–M1g (HybridGen)          — ~5–10 min (N-gram state blowup from 410 acts)
+  ├── M2 (PM4Py), M3, M5–M7, R1–R3 — ~30 min combined
+  └── Write config JSON for every cell
+
+Step 8b: D9  BPI 2015 Muni. 4  (1,053 cases, 356 acts, 37 MB)
+  ├── Same structure as 8a
+  └── Write config JSON
+
+Step 8c: D10 BPI 2015 Muni. 1  (1,199 cases, 398 acts, 41 MB)
+  └── Write config JSON
+
+Step 8d: D11 BPI 2011 Hospital   (1,143 cases, 624 acts, 131.5 avg len)
+  ├── M1a–M1g                     — ~10–20 min (deepest traces → large N-gram states)
+  ├── M2–M7, R1–R3               — ~45 min combined
+  └── Write config JSON
+
+Step 8e: D12 BPI 2015 Muni. 5  (1,156 cases, 389 acts, 46 MB)
+  └── Write config JSON
+
+Step 8f: D13 BPI 2015 Muni. 3  (1,409 cases, 383 acts, 47 MB)
+  └── Write config JSON
+
+Step 8g: D20 Hospital Billing     (100,000 cases, 6.6 MB)
+  ├── M1a–M1g                     — ~10–15 min
+  ├── M2–M7, R1–R3               — ~1 h combined (token replay on 100K traces)
+  ├── R2                          — SLURM array (MaxSubmit=30 → ~34 variants/job)
+  └── Write config JSON
+
+Step 8h: D21 Road Traffic Fine    (150,370 cases, 3.5 MB)
+  ├── M1a–M1g                     — ~10–15 min
+  ├── M2–M7, R1–R3               — ~1.5 h combined (largest case count)
+  ├── R2                          — SLURM array (MaxSubmit=30 → ~8 variants/job)
+  └── Write config JSON
+
+Step 9: D3 BPI 2017 (heavy: variant explosion + deep traces)
   ├── M1a–M1g (HybridGen) — ~15–30 min (N-gram state blowup)
   ├── M2 (PM4Py) — ~1 s
   ├── M3, M4, M6, M7, M8 — ~30–90 min
@@ -576,7 +637,7 @@ Step 5: D3 BPI 2017 (heavy: variant explosion + deep traces)
   ├── M5 (AVATAR) — ~4–8 hours
   └── Write config JSON for every cell
 
-Step 6: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
+Step 10: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
   ├── M1a–M1g (HybridGen) — ~30–60 min (massive N-gram state space)
   ├── M2–M8 — ~2–6 hours combined
   ├── R1 (K-Fold CV, k=5) — ~10 min
@@ -586,7 +647,7 @@ Step 6: D4 BPI 2018 (heaviest: 28K variants, 2.5M events, 158 MB compressed)
   ├── ⚠️ Risk: PM4Py read_xes on 2.5M events may OOM even on 128GB
   └── Write config JSON for every cell
 
-Step 7: D5 BPI 2019 (heavy: 251K cases in RAM)
+Step 11: D5 BPI 2019 (heavy: 251K cases in RAM)
   ├── M1a–M1g (HybridGen) — ~15–30 min
   ├── M2–M8 — ~1–3 hours combined
   ├── R1 (K-Fold CV, k=5) — ~5 min
@@ -595,15 +656,15 @@ Step 7: D5 BPI 2019 (heavy: 251K cases in RAM)
   ├── M5 (AVATAR) — ~4–8 hours
   └── Write config JSON for every cell
 
-Step 8: Aggregate results across all 5 datasets
+Step 12: Aggregate results across all 21 datasets
   ├── Validate all config JSONs are present and consistent
   ├── Compile primary CSV from config JSON pool
   └── Produce analysis deliverables (correlation matrix, leaderboard, etc.)
 ```
 
 **Total estimated wall-clock time:**
-- Local (D1+D2): ~6–12 hours (M5 AVATAR dominates; everything else is fast)
-- CIP-Pool (D3–D5): ~30–80 hours (M5 AVATAR + M6 Bootstrap Gen dominate; D4 BPI 2018 is the worst case)
+- Local (D1, D2, D6, D7, D14–D19): ~20–30 hours total (M5 AVATAR may be skipped on local; without AVATAR ~6–12 h)
+- CIP-Pool (D3–D5, D8–D13, D20–D21): ~80–200 hours (M5 AVATAR + M6 Bootstrap Gen dominate; D4 BPI 2018 is the worst case; high-activity municipality logs also add overhead)
 
 ---
 
@@ -624,7 +685,7 @@ Step 8: Aggregate results across all 5 datasets
 | Risk | Severity | Mitigation |
 |------|----------|------------|
 | AVATAR TF 1.15 vs. current Python 3.12 | High | Docker image `avatar-tf1` (nvcr.io TF 1.15 + pm4py 1.2.6) |
-| AVATAR GAN training too slow for 5 datasets | High | Pre-train one GAN per dataset; reuse across miners |
+| AVATAR GAN training too slow for 21 datasets | High | Pre-train one GAN per dataset; reuse across miners |
 | AVATAR multi-word activity names | High | Greedy longest-match decoder (see M5 section) |
 | Anti-Alignment ILP very slow on large logs | High | ❌ **Archived** — 14h per miner, infeasible |
 | BPI 2018 (D4) OOM on local machine (28K variants, 2.5M events, 158 MB) | High | Skip D4 on local; run exclusively on CIP-Pool 128GB machine |

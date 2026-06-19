@@ -23,7 +23,7 @@ from datasets import get_info
 
 # ── CLI ──────────────────────────────────────────────────────────────────────
 _cli = argparse.ArgumentParser(description="Step 2: Per-miner DFG JSON generation")
-_cli.add_argument("--dataset", default="D1", choices=["D1", "D2", "D3", "D4", "D5"],
+_cli.add_argument("--dataset", default="D1",
                   help="Dataset key (default: D1)")
 _cli.add_argument("--no-traces", type=int, default=5000,
                   help="Number of traces to simulate per miner (default: 5000)")
