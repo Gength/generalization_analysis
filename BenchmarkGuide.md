@@ -192,6 +192,45 @@ bash benchmark/shell/m5.sh
 Self-contained jobs (job_m1.py, job_m2.py, etc.) prepare their own data in `/tmp`,
 so there is no shared cache to clean up when switching datasets.
 
+### Data (Git-LFS)
+
+All XES event logs in `data/` are tracked with **Git-LFS** (`.gitattributes`). A plain `git clone` or `git pull` only downloads pointer files (~130 bytes), not the actual binary content. Running benchmarks without pulling LFS files results in `invalid gzip header` errors when PM4Py/r4pm tries to parse the XES.
+
+**Install git-lfs (user-level, no root required):**
+
+```bash
+ARCH=$(uname -m)
+[ "$ARCH" = "x86_64" ] && LFS_ARCH="amd64" || LFS_ARCH="arm64"
+LFS_VERSION="3.6.1"
+wget "https://github.com/git-lfs/git-lfs/releases/download/v${LFS_VERSION}/git-lfs-linux-${LFS_ARCH}-v${LFS_VERSION}.tar.gz"
+tar -xzf "git-lfs-linux-${LFS_ARCH}-v${LFS_VERSION}.tar.gz"
+./git-lfs-${LFS_VERSION}/install.sh --local
+git lfs version
+```
+
+**Clone with LFS (first time):**
+
+```bash
+git lfs clone <repo-url>
+# or: git clone <repo-url> && cd <repo> && git lfs pull
+```
+
+**Pull LFS files after `git pull`:**
+
+```bash
+git pull
+git lfs pull
+```
+
+**Verify data integrity:**
+
+```bash
+gzip -t "data/BPI-Challenge_2017/BPI Challenge 2017.xes.gz"
+# Exit code 0 = valid gzip
+```
+
+All shell scripts in `benchmark/shell/` include `export PATH="$HOME/.local/bin:$PATH"`, so git-lfs installed to `~/.local/bin` is available to SLURM jobs.
+
 ---
 
 ## 4. Running
