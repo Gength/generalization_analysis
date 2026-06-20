@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Page-1" id="0">
-        <mxGraphModel dx="1966" dy="1139" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="898" dy="651" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -40,7 +40,20 @@
                 <mxCell id="13" value="[9]&#xa;Leucocytes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=7;" parent="1" vertex="1">
                     <mxGeometry x="588" y="90" width="56" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="14" value="[10]&#xa;CRP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=7;" parent="1" vertex="1">
+                <mxCell id="82" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=light-dark(#b85450, #ededed);" parent="1" source="14" target="9" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="678" y="160"/>
+                            <mxPoint x="368" y="160"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="84" value="N=6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="82" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0537" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" value="[10]&lt;br&gt;CRP&lt;div&gt;(Current)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=7;" parent="1" vertex="1">
                     <mxGeometry x="650" y="90" width="56" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="15" value="[11]&#xa;Release D&#xa;* MUT *" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=7;fontStyle=1;" parent="1" vertex="1">
@@ -267,6 +280,21 @@
                 </mxCell>
                 <mxCell id="s0zXeVyIAmXEcIOGnUqo-86" value="Successors:" style="text;html=1;fillColor=none;strokeColor=none;fontSize=8;align=left;" parent="1" vertex="1">
                     <mxGeometry x="84" y="667" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="85" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=light-dark(#82b366, #ededed);" parent="1" source="14" target="10" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="688" y="140" as="sourcePoint"/>
+                        <mxPoint x="378" y="140" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="664" y="150"/>
+                            <mxPoint x="430" y="150"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="86" value="N=5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="85" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0537" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
                 </mxCell>
             </root>
         </mxGraphModel>

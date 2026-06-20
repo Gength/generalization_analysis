@@ -1,11 +1,7 @@
 """
 M7 — SpeciAL4PM (Species-based Generalization)
 ===============================================
-Uses the special4pm library directly (the tool's own API).
-The tool depends on pm4py internally — that's fine, the bridge
-does NOT import pm4py.
-
-Reads manifest.json for model list.
+Provides run() for job wrappers. CLI via main().
 """
 import os, sys, json, time, argparse
 from datetime import datetime, timezone
@@ -13,125 +9,107 @@ from functools import partial
 
 import numpy as np
 
-# Import SpeciAL4PM (the external tool, not our project)
 sys.path.insert(0, "src/SpeciAL-core")
 from special4pm.estimation import SpeciesEstimator
 from special4pm.species import retrieve_species_n_gram, retrieve_species_trace_variant
 from special4pm.simulation.simulation import simulate_model
+import pm4py
 
-import pm4py  # SpeciAL4PM's dependency
 
-# =============================================================================
-# CONFIGURATION — Change these for your experiment
-# =============================================================================
-DATASET_KEY = "D1"            # Which dataset (D1-D5)
-MINER_LIST = None              # None = all miners, or ["Alpha", ...]
-OUTPUT_DIR = "benchmark/results/configs_v2"
-SEED = 42
+def run(dataset_key, workdir, output_dir, miners=None):
+    """Run M7. Reads manifest/PNMLs from workdir, writes configs to output_dir."""
+    with open(os.path.join(workdir, "manifest.json")) as f:
+        manifest = json.load(f)
+    dname = manifest["dataset"]
+    log_path = manifest["xes_file"]
 
-import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from datasets import DATASETS, get_info, CONFIG_DIR_V2
+    log = pm4py.read_xes(log_path)
+    log = pm4py.convert_to_event_log(log)
+    print(f"M7 — SpeciAL4PM ({len(log)} traces)")
 
-# ── CLI override ────────────────────────────────────────────────────────────
-_cli = argparse.ArgumentParser(description="M7 SpeciAL4PM")
-_cli.add_argument("--dataset", default=None, choices=list(DATASETS.keys()),
-                  help="Override DATASET_KEY (default: D1)")
-_cli.add_argument("--miners", nargs="*", default=None,
-                  help="Restrict to specific miners (default: all)")
-_cli_args, _ = _cli.parse_known_args()
-if _cli_args.dataset:
-    DATASET_KEY = _cli_args.dataset
-if _cli_args.miners is not None:
-    MINER_LIST = _cli_args.miners
+    estimator = SpeciesEstimator(step_size=None, d0=False, d1=False, d2=False, c0=True, c1=True)
+    for sp in ["1-gram", "2-gram", "3-gram"]:
+        estimator.register(sp, partial(retrieve_species_n_gram, n=int(sp[0])))
+    estimator.register("tv", retrieve_species_trace_variant)
+    estimator.apply(log, verbose=False)
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+    orig_c1 = {}
+    for sp in ["1-gram", "2-gram", "3-gram", "tv"]:
+        if "incidence_c1" in estimator.metrics[sp]:
+            orig_c1[sp] = estimator.metrics[sp]["incidence_c1"][-1]
+    print(f"  Original C1: {orig_c1}")
 
-# =============================================================================
-# EXECUTION — Do not edit below this line
-# =============================================================================
+    target = miners or list(manifest["miners"].keys())
 
-info = get_info(DATASET_KEY)
-MODEL_DIR = info["model_dir"]
-CONFIG_DIR = CONFIG_DIR_V2
+    for mname in target:
+        minfo = manifest["miners"].get(mname)
+        if not minfo:
+            print(f"  [{mname}] SKIP — not in manifest")
+            continue
+        print(f"  [{mname}]", end=" ")
+        t0 = time.time()
+        from pm4py.objects.petri_net.importer import importer as pnml_importer
+        net, im, fm = pnml_importer.apply(minfo["pnml"])
+        try:
+            sim_log = simulate_model(net, im, fm, size=len(log))
+            se = SpeciesEstimator(step_size=None, d0=False, d1=False, d2=False, c0=True, c1=True)
+            for sp in ["1-gram", "2-gram", "3-gram"]:
+                se.register(sp, partial(retrieve_species_n_gram, n=int(sp[0])))
+            se.register("tv", retrieve_species_trace_variant)
+            se.apply(sim_log, verbose=False)
+            sim_c1 = {}
+            for sp in ["1-gram", "2-gram", "3-gram", "tv"]:
+                if "incidence_c1" in se.metrics[sp]:
+                    sim_c1[sp] = se.metrics[sp]["incidence_c1"][-1]
+            ratios = [min(sim_c1[sp] / orig_c1[sp], 1.0) for sp in orig_c1 if sp in sim_c1 and orig_c1[sp] > 0]
+            score = float(np.mean(ratios)) if ratios else 0.0
+            el = time.time() - t0
+            _write_config(output_dir, dname, mname, {
+                "c1_original": orig_c1, "c1_simulated": sim_c1, "gen_score": score, "runtime_s": el,
+            })
+            print(f" C1_ratio={score:.4f} ({el:.1f}s)")
+        except Exception as e:
+            _write_config(output_dir, dname, mname, {"gen_score": -1, "runtime_s": time.time() - t0},
+                          f"SpeciAL4PM error: {e}")
+            print(f" ERROR: {e}")
 
-with open(f"{MODEL_DIR}/manifest.json") as f:
-    manifest = json.load(f)
+    print(f"\nDone → {output_dir}/")
 
-DATASET = manifest["dataset"]
-LOG_PATH = manifest["log_path"]
 
-def write_config(miner, results, notes=""):
-    config = {
-        "dataset": DATASET, "miner": miner, "method": "M7",
+def _write_config(output_dir, dname, miner, results, notes=""):
+    cfg = {
+        "dataset": dname, "miner": miner, "method": "M7",
         "method_label": "SpeciAL4PM",
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "host": "local", "seed": 42,
-        "parameters": {"n_grams": ["1-gram","2-gram","3-gram","tv"]},
+        "parameters": {"n_grams": ["1-gram", "2-gram", "3-gram", "tv"]},
         "results": results, "notes": notes,
     }
-    with open(f"{CONFIG_DIR}/{DATASET}__{miner}__M7.json", "w") as f:
-        json.dump(config, f, indent=2)
+    path = os.path.join(output_dir, f"{dname}__{miner}__M7.json")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(cfg, f, indent=2)
 
-# Load log using pm4py (SpeciAL4PM's dependency — needed by SpeciesEstimator)
-log = pm4py.read_xes(LOG_PATH)
-log = pm4py.convert_to_event_log(log)
-print(f"M7 — SpeciAL4PM ({len(log)} traces)")
 
-# Original log profile (one-time)
-estimator = SpeciesEstimator(step_size=None, d0=False, d1=False, d2=False, c0=True, c1=True)
-estimator.register("1-gram", partial(retrieve_species_n_gram, n=1))
-estimator.register("2-gram", partial(retrieve_species_n_gram, n=2))
-estimator.register("3-gram", partial(retrieve_species_n_gram, n=3))
-estimator.register("tv", retrieve_species_trace_variant)
-estimator.apply(log, verbose=False)
+def main():
+    ap = argparse.ArgumentParser(description="M7 SpeciAL4PM")
+    ap.add_argument("--dataset", required=True)
+    ap.add_argument("--miners", nargs="*", default=None)
+    ap.add_argument("--output", default=None)
+    args = ap.parse_args()
 
-orig_c1 = {}
-for sp in ["1-gram", "2-gram", "3-gram", "tv"]:
-    if "incidence_c1" in estimator.metrics[sp]:
-        orig_c1[sp] = estimator.metrics[sp]["incidence_c1"][-1]
-print(f"  Original C1: {orig_c1}")
+    import shutil, secrets
+    from datetime import datetime as dt
+    workdir = f"/tmp/benchmark_M7_{args.dataset}_{dt.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
+    output_dir = args.output or os.path.join(workdir, "results")
+    os.makedirs(output_dir, exist_ok=True)
 
-# Per-miner simulation & comparison
-target_miners = list(manifest["miners"].keys()) if MINER_LIST is None else MINER_LIST
+    from job_prepare import prepare_workdir
+    prepare_workdir(workdir, args.dataset, mode="pnml")
+    run(args.dataset, workdir, output_dir, miners=args.miners)
+    shutil.rmtree(workdir)
+    print(f"  [clean] removed {workdir}")
 
-for miner_name in target_miners:
-    info = manifest["miners"][miner_name]
-    print(f"  [{miner_name}]", end=" ")
-    t0 = time.time()
 
-    from pm4py.objects.petri_net.importer import importer as pnml_importer
-    net, im, fm = pnml_importer.apply(info["pnml"])
-
-    try:
-        sim_log = simulate_model(net, im, fm, size=len(log))
-        sim_estimator = SpeciesEstimator(step_size=None, d0=False, d1=False, d2=False, c0=True, c1=True)
-        sim_estimator.register("1-gram", partial(retrieve_species_n_gram, n=1))
-        sim_estimator.register("2-gram", partial(retrieve_species_n_gram, n=2))
-        sim_estimator.register("3-gram", partial(retrieve_species_n_gram, n=3))
-        sim_estimator.register("tv", retrieve_species_trace_variant)
-        sim_estimator.apply(sim_log, verbose=False)
-
-        sim_c1 = {}
-        for sp in ["1-gram", "2-gram", "3-gram", "tv"]:
-            if "incidence_c1" in sim_estimator.metrics[sp]:
-                sim_c1[sp] = sim_estimator.metrics[sp]["incidence_c1"][-1]
-
-        ratios = []
-        for sp in orig_c1:
-            if sp in sim_c1 and orig_c1[sp] > 0:
-                ratios.append(min(sim_c1[sp] / orig_c1[sp], 1.0))
-        score = float(np.mean(ratios)) if ratios else 0.0
-        elapsed = time.time() - t0
-
-        write_config(miner_name, {
-            "c1_original": orig_c1, "c1_simulated": sim_c1,
-            "gen_score": score, "runtime_s": elapsed,
-        })
-        print(f"C1_ratio={score:.4f} ({elapsed:.1f}s)")
-    except Exception as e:
-        write_config(miner_name, {"gen_score": -1, "runtime_s": time.time() - t0},
-                     f"SpeciAL4PM error: {e}")
-        print(f"ERROR: {e}")
-
-print(f"\nDone → {CONFIG_DIR}/")
+if __name__ == "__main__":
+    main()

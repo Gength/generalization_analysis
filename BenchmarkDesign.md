@@ -61,7 +61,7 @@ probe-integrity counters `duplicates_kept` / `truncated_traces`.
 | M3 | **Entropic Relevance** (Polyvyanyy et al. 2020) | Entropy-based | Computes the relevance of a stochastic process model (SDFA) to an event log via entropic relevance measure. Part of the Entropia tool. Requires model in SDFA JSON format. | Scalar [0,1] | ~seconds (Java subprocess) |
 | M4 | **Anti-Alignment Generalization** (van Dongen, 2017) | Adversarial | ❌ **Archived** — infeasible on real-life logs (see [Archived Methods](#archived-methods)). | Scalar [0,1] | N/A |
 | M5 | **AVATAR** (Theis & Darabi, 2020) | GAN-based | ✅ D1 completed. RelGAN trained on 80% variants → samples → harmonic mean of token-replay fitness and ET Conformance precision. Multi-word activity fix applied. | Scalar [0,1] | ~4h (GAN training) |
-| M6 | **Bootstrap Generalization** (Polyvyanyy et al. 2022) | Entropia `-bgen` eigenvalue-based precision & recall | ✅ D1/D2 complete. Uses fixed JAR `jbpt-pm-entropia-1.7.1.jar` (`k=2`). Runner: `benchmark/bridges/run_m6_bgen.py`. See [`BenchmarkGuide.md §M6 Implementation Note`](BenchmarkGuide.md#m6-implementation-note). | Precision & recall [0,1]; F1 in summary table | ~45–60 s/cell |
+| M6 | **Bootstrap Generalization** (Polyvyanyy et al. 2022) | Entropia `-bgen` eigenvalue-based precision & recall | ✅ D1/D2 complete. Uses fixed JAR `jbpt-pm-entropia-1.7.1.jar` (`k=2`). Entry point: `benchmark/job_m6.py` (core: `benchmark/bridges/run_m6_bgen.py`). See [`BenchmarkGuide.md §M6 Implementation Note`](BenchmarkGuide.md#m6-implementation-note). | Precision & recall [0,1]; F1 in summary table | ~45–60 s/cell |
 | M7 | **SpeciAL4PM** (Kabierski et al. 2023) | Species diversity | ✅ D1 completed. C1 coverage ratio between simulated and original log species profiles. | C1 ratio [0,1] | ~12 s/cell |
 | M8 | **Pattern-based Generalization** (Reißner et al. 2020) | Pattern matching | ❌ **Archived** — too slow/unstable for real logs (see [Archived Methods](#archived-methods)). | Scalar [0,1] | N/A |
 
@@ -242,9 +242,9 @@ covering all six morphological archetypes:
 
 ### Per Cell: (Dataset × Miner × Method) — v2
 
-1. **Discover model** once per miner on the full log (cached across methods).
+1. **Discover model** (self-contained in /tmp workdir) or via `--output` to `configs_v2/`.
 2. **Evaluate** with the per-method protocol; **record mean, std, and raw per-iteration scores**.
-3. **Write one config JSON per cell** to `benchmark/results/configs_v2/`
+3. **Write one config JSON per cell** to the output directory
    (`{Dataset}__{Miner}__{Method}.json`, v1 schema + new optional result fields:
    `gen_accept`, `gen_accept_std`, `gen_shadow_regular`, `gen_shadow_mutated`,
    `duplicates_kept`, `truncated_traces`, `max_trace_length_used`).
@@ -258,17 +258,17 @@ covering all six morphological archetypes:
 
 | Method(s) | Iterations | Guide Default | Reporting |
 |-----------|-----------|---------------|-----------|
-| M1a–M1g (HybridGen) | 5 | [`run_m1_family.py`](BenchmarkGuide.md#m1-family-runner-v2-methodology) | Mean ± std; M1f/M1g additionally add `gen_accept`, `duplicates_kept`, `truncated_traces` |
-| M2 (PM4Py built-in) | 1 (deterministic) | [`run_m2.py`](BenchmarkGuide.md#per-method-scripts) | Single value |
-| M3 (Entropic Relevance) | 1 (deterministic) | [`run_m3.py`](BenchmarkGuide.md#per-method-scripts) | Single value |
+| M1a–M1g (HybridGen) | 5 | [`job_m1.py`](BenchmarkGuide.md#m1-family-runner-v2-methodology) | Mean ± std; M1f/M1g additionally add `gen_accept`, `duplicates_kept`, `truncated_traces` |
+| M2 (PM4Py built-in) | 1 (deterministic) | [`job_m2.py`](BenchmarkGuide.md#self-contained-jobs) | Single value |
+| M3 (Entropic Relevance) | 1 (deterministic) | [`job_m3.py`](BenchmarkGuide.md#self-contained-jobs) | Single value |
 | M4 (Anti-Alignment) | — | — | ❌ Archived — infeasible |
-| M5 (AVATAR) | 2 sampling runs (target: 3–5) | [`run_avatar.py --eval-only`](BenchmarkGuide.md#avatar-m5) (1 run; D1 accumulated 2 runs) | Mean ± std (D1); single score (D2) |
-| M6 (Bootstrap Gen) | 10 bootstrap replicates (target: 100) | [`run_m6_bgen.py --m 10`](BenchmarkGuide.md#m6-implementation-note) | Mean ± std; gen_score = F1(p,r) |
-| M7 (SpeciAL4PM) | 1 per N-gram (1–3 gram + trace variant) | [`run_m7.py`](BenchmarkGuide.md#per-method-scripts) | Profile; C1 ratio |
+| M5 (AVATAR) | 2 sampling runs (target: 3–5) | [`job_m5.py`](BenchmarkGuide.md#self-contained-jobs) | Mean ± std (D1); single score (D2) |
+| M6 (Bootstrap Gen) | 10 bootstrap replicates (target: 100) | [`job_m6.py --m 10`](BenchmarkGuide.md#m6-implementation-note) | Mean ± std; gen_score = F1(p,r) |
+| M7 (SpeciAL4PM) | 1 per N-gram (1–3 gram + trace variant) | [`job_m7.py`](BenchmarkGuide.md#self-contained-jobs) | Profile; C1 ratio |
 | M8 (Pattern-based) | — | — | ❌ Archived — JAR crashes |
-| R1 (K-Fold CV) | k=5 folds × 3 shuffles | [`run_r_family.py --methods R1`](BenchmarkGuide.md#r-family-runner-r1r3-reference-metrics) | Mean ± std |
-| R2 (Leave-One-Variant-Out) | 1 pass per variant | [`run_r_family.py --methods R2`](BenchmarkGuide.md#r-family-runner-r1r3-reference-metrics) | Single value per variant; aggregate by mean |
-| R3 (Random baseline) | 5 | [`run_r_family.py --methods R3`](BenchmarkGuide.md#r-family-runner-r1r3-reference-metrics) | Mean ± std |
+| R1 (K-Fold CV) | k=5 folds × 3 shuffles | [`job_r1.py`](BenchmarkGuide.md#r-family-runners-r1r3-reference-metrics) | Mean ± std |
+| R2 (Leave-One-Variant-Out) | 1 pass per variant | [`job_r2.py`](BenchmarkGuide.md#r-family-runners-r1r3-reference-metrics) | Single value per variant; aggregate by mean |
+| R3 (Random baseline) | 5 | [`job_r3.py`](BenchmarkGuide.md#r-family-runners-r1r3-reference-metrics) | Mean ± std |
 
 Seed all random number generators for reproducibility (`seed=42`).
 
@@ -323,7 +323,8 @@ The Katz backoff mechanism makes `max_n` an **upper bound**, not a fixed operati
 **Config JSONs** (one per cell):
 
 - v1 methodology: `benchmark/results/configs/{Dataset}__{Miner}__{Method}.json`
-- v2 methodology: `benchmark/results/configs_v2/{Dataset}__{Miner}__{Method}.json`
+- v2 methodology default: `/tmp/benchmark_{METHOD}_{DS}_*/results/{Dataset}__{Miner}__{Method}.json`
+- v2 methodology production (`--output benchmark/results/configs_v2`): `benchmark/results/configs_v2/{Dataset}__{Miner}__{Method}.json`
 
 Every (dataset, miner, method) cell produces a JSON file recording the exact configuration and results. Config JSONs are the **source of truth** — the CSVs below are derived from them.
 
@@ -459,13 +460,13 @@ For setup (Docker build, dataset preparation) and execution, see [`BenchmarkGuid
 ### M6 — Bootstrap Generalization
 
 ✅ D1/D2 complete. Uses fixed JAR `jbpt-pm-entropia-1.7.1.jar` (k=2, 10 bootstrap replicates).
-Runner: `benchmark/bridges/run_m6_bgen.py`.
+Entry point: `benchmark/job_m6.py` (core algorithm: `benchmark/bridges/run_m6_bgen.py`).
 
 For setup, parameters, and execution, see [`BenchmarkGuide.md §M6 Implementation Note`](BenchmarkGuide.md#m6-implementation-note). Results in [§5 (D1)](BenchmarkGuide.md#5-results-d1-sepsis) and [§5b (D2)](BenchmarkGuide.md#5b-results-d2-bpi2013-incidents).
 
 Notable fixes:
 - **JAR NPE fix**: `EventLogSampling.java:101` null guard → enabled k=2 on all datasets (see [Src Repositories](BenchmarkGuide.md#2-src-repositories)).
-- **Runner script**: `benchmark/bridges/run_m6_bgen.py` automates -bgen invocation, output parsing, and config JSON writing.
+- **Runner script**: `benchmark/job_m6.py` (core: `benchmark/bridges/run_m6_bgen.py`) automates -bgen invocation, output parsing, and config JSON writing.
 
 | Parameter | Design Value | Guide Default |
 |-----------|-------------|---------------|

@@ -4,10 +4,10 @@
 
 ```bash
 # Full pipeline (all methods, D1 Sepsis):
-bash benchmark/run_all.sh
+bash benchmark/shell/run_all.sh
 
 # Single method (e.g., M3 Entropic Relevance):
-bash benchmark/m3.sh
+bash benchmark/shell/m3.sh
 ```
 
 ---
@@ -20,21 +20,21 @@ Compare **HybridGen** (M1a–M1g) against external generalization baselines on 2
 
 | ID | Method | Type | Status | Spec | Script |
 |----|--------|------|--------|------|--------|
-| M1a | HybridGen v1.0 | Python | ✅ D1/D2 complete | [Design §Tier 1](BenchmarkDesign.md#tier-1--our-method-v2) | `bash benchmark/m1.sh` |
-| M1b | HybridGen v2.1 (N=3) | Python | ✅ D1/D2 complete | ↑ | `bash benchmark/m1.sh` |
-| M1c | HybridGen v2.1 (N=6) | Python | ✅ D1/D2 complete | ↑ | `bash benchmark/m1.sh` |
-| M1d | HybridGen v2.4 | Python | ✅ D1/D2 complete (baseline) | ↑ | `bash benchmark/m1.sh` |
-| M1e | HybridGen v2.5 | Python | ✅ D1/D2 complete | ↑ | `bash benchmark/m1.sh` |
-| M1f | HybridGen v2.6 (log) | Python | ✅ D1/D2 complete | ↑ | `bash benchmark/m1.sh` |
-| M1g | HybridGen v2.6 (mle) | Python | ✅ D1/D2 complete (headline) | ↑ | `bash benchmark/m1.sh` |
-| M2 | PM4Py Built-in Gen | Python | ✅ | [Design §M2](BenchmarkDesign.md#tier-2--external-generalization-baselines) | `bash benchmark/m2.sh` |
-| M3 | Entropic Relevance | Java (Entropia) | ✅ | [Design §M3](BenchmarkDesign.md#tier-2--external-generalization-baselines) | `bash benchmark/m3.sh` |
-| M5 | AVATAR (RelGAN) | Docker TF1.15 GPU | ✅ D1/D2 complete | [Design §M5](BenchmarkDesign.md#m5--avatar-relgan) | `bash benchmark/m5.sh` |
-| M6 | Bootstrap Gen (Entropia -bgen) | Java (Entropia 1.7) | ✅ D1/D2 complete | [Design §M6](BenchmarkDesign.md#m6--bootstrap-generalization) | `bash benchmark/m6.sh` |
-| M7 | SpeciAL4PM | Python (special4pm) | ✅ | [Design §M7](BenchmarkDesign.md#tier-2--external-generalization-baselines) | `bash benchmark/m7.sh` |
-| R1 | K-Fold CV (k=5) | Python | ✅ | [Design §Tier 3](BenchmarkDesign.md#tier-3--reference--sanity-check-metrics) | `bash benchmark/reference.sh` |
-| R2 | Leave-One-Variant-Out | Python | ✅ | ↑ | `bash benchmark/reference.sh` |
-| R3 | Naive Random Baseline | Python | ✅ | ↑ | `bash benchmark/reference.sh` |
+| M1a | HybridGen v1.0 | Python | ✅ D1/D2 complete | [Design §Tier 1](BenchmarkDesign.md#tier-1--our-method-v2) | `bash benchmark/shell/m1.sh` |
+| M1b | HybridGen v2.1 (N=3) | Python | ✅ D1/D2 complete | ↑ | `bash benchmark/shell/m1.sh` |
+| M1c | HybridGen v2.1 (N=6) | Python | ✅ D1/D2 complete | ↑ | `bash benchmark/shell/m1.sh` |
+| M1d | HybridGen v2.4 | Python | ✅ D1/D2 complete (baseline) | ↑ | `bash benchmark/shell/m1.sh` |
+| M1e | HybridGen v2.5 | Python | ✅ D1/D2 complete | ↑ | `bash benchmark/shell/m1.sh` |
+| M1f | HybridGen v2.6 (log) | Python | ✅ D1/D2 complete | ↑ | `bash benchmark/shell/m1.sh` |
+| M1g | HybridGen v2.6 (mle) | Python | ✅ D1/D2 complete (headline) | ↑ | `bash benchmark/shell/m1.sh` |
+| M2 | PM4Py Built-in Gen | Python | ✅ | [Design §M2](BenchmarkDesign.md#tier-2--external-generalization-baselines) | `bash benchmark/shell/m2.sh` |
+| M3 | Entropic Relevance | Java (Entropia) | ✅ | [Design §M3](BenchmarkDesign.md#tier-2--external-generalization-baselines) | `bash benchmark/shell/m3.sh` |
+| M5 | AVATAR (RelGAN) | Docker TF1.15 GPU | ✅ D1/D2 complete | [Design §M5](BenchmarkDesign.md#m5--avatar-relgan) | `bash benchmark/shell/m5.sh` |
+| M6 | Bootstrap Gen (Entropia -bgen) | Java (Entropia 1.7) | ✅ D1/D2 complete | [Design §M6](BenchmarkDesign.md#m6--bootstrap-generalization) | `bash benchmark/shell/m6.sh` |
+| M7 | SpeciAL4PM | Python (special4pm) | ✅ | [Design §M7](BenchmarkDesign.md#tier-2--external-generalization-baselines) | `bash benchmark/shell/m7.sh` |
+| R1 | K-Fold CV (k=5) | Python | ✅ | [Design §Tier 3](BenchmarkDesign.md#tier-3--reference--sanity-check-metrics) | `bash benchmark/shell/reference.sh` |
+| R2 | Leave-One-Variant-Out | Python | ✅ | ↑ | `bash benchmark/shell/reference.sh` |
+| R3 | Naive Random Baseline | Python | ✅ | ↑ | `bash benchmark/shell/reference.sh` |
 
 > **Archived** (not feasible on real-life logs, see [Archived Methods](BenchmarkDesign.md#archived-methods)):
 > - M4 Anti-Alignment Gen — `archive/Tianhao/benchmark/m4.sh`
@@ -102,14 +102,14 @@ NPE by adding a null guard in `EventLogSampling.logBreeding`. To use it, replace
 `jbpt-pm-entropia-1.7.jar` with `jbpt-pm-entropia-1.7.1.jar` in the classpath.
 The patched JAR works on all 8 miners × D2 with `k=2`.
 
-**Runner script:** `benchmark/bridges/run_m6_bgen.py` automates running `-bgen`
-with the fixed JAR, parsing output, and writing config JSONs to `configs_v2/`.
-Usage: `uv run python benchmark/bridges/run_m6_bgen.py --dataset D2 --k 2 --m 5`
+**Runner script:** `benchmark/bridges/run_m6_bgen.py` provides the core algorithm;
+`benchmark/job_m6.py` is the self-contained job wrapper.
+Usage: `uv run python benchmark/job_m6.py --dataset D2 --k 2 --m 5`
 
 **Configuration files:**
 - v1 scores (breeding + token replay) → `benchmark/results/configs/{Dataset}__{Miner}__M6.json`
 - v2 scores (breeding + Entropia -bgen) → `benchmark/results/configs_v2/{Dataset}__{Miner}__M6.json`
-- Per-miner DFG JSONs used by -bgen → `benchmark/models/dfg_models/`
+- Per-miner DFG JSONs used by -bgen → prepared automatically in `/tmp` by `job_m6.py`
 
 Miner configurations (8 total, v2):
 
@@ -147,7 +147,7 @@ documented below.
   recompiled with `javac -cp jbpt-pm-entropia-1.7.jar:lib/*` and replaced the
   class inside the JAR.
 - **Upstream issue**: Same NPE present in both 1.7 and 1.8 JARs.
-- **Runner**: `benchmark/bridges/run_m6_bgen.py` uses this JAR by default.
+- **Runner**: `benchmark/bridges/run_m6_bgen.py` (core algorithm; wrapped by `benchmark/job_m6.py`)
 
 #### `src/AVATAR/` — Trailing underscore fix
 
@@ -184,65 +184,54 @@ docker pull nvcr.io/nvidia/tensorflow:22.12-tf1-py3
 docker build -t avatar-tf1 -f benchmark/docker/Dockerfile.avatar .
 
 # 3. Run training (FULL: 5000 adv steps, ~4h)
-bash benchmark/m5.sh
+bash benchmark/shell/m5.sh
 ```
 
-### Switching Datasets — Model Directory Cleanup
+### Switching Datasets
 
-When switching to a **different dataset**, you MUST clean `benchmark/models/` first.
-`01_prepare_models.py` overwrites PNML files and `manifest.json` but does **not**
-remove leftover XES/DFG caches from previous datasets. Stale files (e.g. a prior
-`sepsis.xes.gz` when preparing for D6) can cause bridge scripts (M3, M6, M7) to
-load outdated models or mis-identify the active dataset.
-
-**Procedure:**
-
-```bash
-# 1. List current contents (for audit)
-ls -la benchmark/models/ && ls -la benchmark/models/dfg_models/
-
-# 2. After confirming the old files are no longer needed, remove them
-rm -rf benchmark/models/*
-
-# 3. Re-prepare for the new dataset
-uv run python benchmark/01_prepare_models.py --dataset <KEY>
-```
-
-> **Note:** This directory contains only generated artifacts (PNML models, DFG JSONs,
-> cached XES copies). Deleting them is safe — they are rebuilt from the original log
-> by `01_prepare_models.py`. The `dfg_models/` subdirectory is handled automatically
-> by `02_gen_per_miner_dfgs.py`.
+Self-contained jobs (job_m1.py, job_m2.py, etc.) prepare their own data in `/tmp`,
+so there is no shared cache to clean up when switching datasets.
 
 ---
 
 ## 4. Running
 
-### Per-method scripts
+### Self-contained jobs
+
+Every method is a self-contained job. No preparation step needed —
+each script creates a temp workdir in `/tmp`, prepares data, runs, and cleans up:
 
 ```bash
-# Step 1: Prepare models (required before any method):
-bash benchmark/prepare.sh
+# Run any method directly (default: results → /tmp/<workdir>/results/):
+uv run python benchmark/job_m1.py --dataset D1   # M1a-M1g (~3 min)
+uv run python benchmark/job_m2.py --dataset D1   # M2 (~10s)
+uv run python benchmark/job_m3.py --dataset D1   # M3 (~1 min)
+uv run python benchmark/job_m6.py --dataset D1   # M6 (~2 min)
+uv run python benchmark/job_m7.py --dataset D1   # M7 (~2 min)
+uv run python benchmark/job_m5.py --dataset D1   # M5 (~4h, FULL)
+uv run python benchmark/job_r1.py --dataset D1   # R1 (~5 min)
+uv run python benchmark/job_r2.py --dataset D1   # R2 (~10 min)
+uv run python benchmark/job_r3.py --dataset D1   # R3 (~2 min)
 
-# Step 2: Run individual method families:
-bash benchmark/m1.sh         # M1a-M1g: HybridGen family (~3 min)
-bash benchmark/m2.sh         # M2:      PM4Py Built-in Gen (~10s)
-bash benchmark/reference.sh  # R1-R3:   Reference/sanity metrics (~5 min)
-bash benchmark/m3.sh         # M3:      Entropic Relevance (~1 min)
-bash benchmark/m6.sh         # M6:      Bootstrap Gen (~2 min)
-bash benchmark/m7.sh         # M7:      SpeciAL4PM (~2 min)
-bash benchmark/m5.sh         # M5:      AVATAR RelGAN (~4h, FULL)
+# Production output (writes to benchmark/results/configs_v2/):
+uv run python benchmark/job_m1.py --dataset D1 --output benchmark/results/configs_v2
+```
 
-All bridge scripts accept `--dataset D1..D21` to override the default dataset:
+All scripts accept `--dataset D1..D21` and `--output <dir>` (default: `/tmp/.../results/`).
 
+Shell wrappers (shortcuts):
 ```bash
-bash benchmark/m3.sh --dataset D2
-bash benchmark/m5.sh --dataset D2
-bash benchmark/m6.sh --dataset D2
-bash benchmark/m7.sh --dataset D2
+bash benchmark/shell/m1.sh --dataset D1
+bash benchmark/shell/m2.sh --dataset D1
+bash benchmark/shell/m3.sh --dataset D1 --miners Alpha Flower
+bash benchmark/shell/r1.sh --dataset D1
+bash benchmark/shell/r2.sh --dataset D1
+bash benchmark/shell/r3.sh --dataset D1
+# reference.sh runs all three: R1 + R2 + R3
+bash benchmark/shell/reference.sh --dataset D1
 ```
 
-> **D2 complete**: All 15 methods (M1a–M1g, M2, M3, M5, M6, M7, R1–R3) × 8 miners = 120 configs for D2 BPI2013_Incidents, written to `benchmark/results/configs_v2/`. M2 completed 2026-06-16 via `benchmark/run_m2.py`.
-```
+> **D2 complete**: All 15 methods (M1a–M1g, M2, M3, M5, M6, M7, R1–R3) × 8 miners = 120 configs for D2 BPI2013_Incidents, written to `benchmark/results/configs_v2/`. M2 completed 2026-06-16.
 
 ### Dataset registry
 
@@ -260,27 +249,42 @@ print(info["name"], info["log_path"])
 
 ```bash
 # All 7 M1 versions (M1a–M1g), 8 miners, config JSONs + agreement stats:
-uv run python benchmark/run_m1_family.py --dataset D1
-uv run python benchmark/run_m1_family.py --dataset D2
+uv run python benchmark/job_m1.py --dataset D1
+uv run python benchmark/job_m1.py --dataset D2
 
 # Only the new versions:
-uv run python benchmark/run_m1_family.py --dataset D1 --methods M1e M1f M1g
+uv run python benchmark/job_m1.py --dataset D1 --methods M1e M1f M1g
+
+# Production output (writes to configs_v2/):
+uv run python benchmark/job_m1.py --dataset D1 --output benchmark/results/configs_v2
 ```
 
-Results go to `benchmark/results/configs_v2/`. See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the protocol.
+Default output: `/tmp/<workdir>/results/` — safe for testing, never touches project files.
+Use `--output benchmark/results/configs_v2` to write to the production directory.
+See [`BenchmarkDesign.md`](BenchmarkDesign.md) for the protocol.
 
-### R-family runner (R1–R3 reference metrics)
+### R-family runners (R1–R3 reference metrics)
+
+Each R method is an independent job:
 
 ```bash
-# All 3 reference methods (R1–R3), 8 miners, config JSONs:
-uv run python benchmark/run_r_family.py --dataset D1
-uv run python benchmark/run_r_family.py --dataset D2
+# R1: K-Fold CV (k=5, variant-based, 3 shuffles)
+uv run python benchmark/job_r1.py --dataset D1
 
-# Only selected methods:
-uv run python benchmark/run_r_family.py --dataset D1 --methods R1 R3
+# R2: Leave-One-Variant-Out (default: all variants; --r2-sample N to cap)
+uv run python benchmark/job_r2.py --dataset D1
+uv run python benchmark/job_r2.py --dataset D1 --r2-sample 50
 
-# R2 with variant sampling (default 0 = all variants, i.e. 100%%):
-uv run python benchmark/run_r_family.py --dataset D1 --r2-sample 50
+# R3: Naive Random Baseline (5 iterations, 1000 traces)
+uv run python benchmark/job_r3.py --dataset D1
+```
+
+Or using shell wrappers:
+```bash
+bash benchmark/shell/r1.sh --dataset D1
+bash benchmark/shell/r2.sh --dataset D1
+bash benchmark/shell/r3.sh --dataset D1
+bash benchmark/shell/reference.sh --dataset D1  # all three sequentially
 ```
 
 | Method | What | Detail |
@@ -289,17 +293,25 @@ uv run python benchmark/run_r_family.py --dataset D1 --r2-sample 50
 | **R2** | Leave-One-Variant-Out | Each variant held out in turn; LOVO fitness over all (or sampled) variants. `--r2-sample N` caps evaluation to N random variants for fast iteration. Default = all variants (100%%). |
 | **R3** | Naive Random Baseline | Uniform random activity traces, length sampled from log distribution. 5 iterations of 1,000 traces. |
 
-Results go to `benchmark/results/configs_v2/` alongside M1 configs. The legacy `r1.sh` has been removed — `reference.sh` is the unified entry point for R1–R3.
+Results go to `benchmark/results/configs_v2/` when `--output` is specified,
+or to `/tmp/<workdir>/results/` by default. The legacy `r1.sh` has been removed —
+`reference.sh` is the unified entry point for R1–R3.
 
 Archived methods in `archive/Tianhao/benchmark/` (see [Archived Methods](BenchmarkDesign.md#archived-methods)).
 
 ### Full pipeline (sequential)
 
 ```bash
-bash benchmark/run_all.sh
+bash benchmark/shell/run_all.sh
 ```
 
-The pipeline calls `prepare.sh`, `m1.sh`, `reference.sh`, `m3.sh`, `m6.sh`, `m7.sh`, and optionally `m5.sh`.
+The pipeline calls `m1.sh`, `m2.sh`, `m3.sh`, `m6.sh`, `m7.sh`, and optionally `m5.sh`.
+Each job is self-contained — no prepare step is needed.
+
+For production runs (write to `benchmark/results/configs_v2/`):
+```bash
+OUTPUT_DIR=benchmark/results/configs_v2 bash benchmark/shell/run_all.sh D1
+```
 
 ---
 

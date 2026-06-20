@@ -30,27 +30,27 @@
   - `Tianhao/` — your archived work (ExperimentDesign.md, v1 scripts, presentation notebook, etc.)
   - `src_deps/` — external dependency backups
 - `benchmark/` — scripts and runners for executing and analyzing benchmarks
-  - `01_prepare_models.py` + `prepare.sh` — model discovery (PNML + DFG JSON export for all miners)
-  - `02_gen_per_miner_dfgs.py` — per-miner DFG generation
+  - **Self-contained job model**: every method creates a unique `/tmp/benchmark_{METHOD}_{DS}_{TIMESTAMP}_{RAND}/`
+    workdir, prepares its own data (copies XES, optionally discovers PNMLs/DFGs), runs, writes results,
+    and cleans up. `--output <dir>` overrides the output destination.
+  - `job_prepare.py` — `prepare_workdir(workdir, dataset_key, mode)` with 4 modes:
+    `minimal`, `log_dfg`, `pnml`, `per_miner_dfgs`
+  - `job_m1.py` … `job_m7.py`, `job_r1.py`, `job_r2.py`, `job_r3.py` — thin wrappers: create workdir → prepare → run → cleanup
+  - `run_m1_family.py`, `run_m2.py`, `run_r_family.py` — core algorithm implementations (expose `run()`)
+  - `bridges/run_m3.py`, `bridges/run_m6_bgen.py`, `bridges/run_m7.py` — bridge implementations
+  - `docker/run_avatar.py` — AVATAR (M5) implementation
   - `miners.py` — definitions of all miners used in benchmarks
   - `datasets.py` — canonical D1–D21 dataset definitions (single source of truth; all scripts import from here)
   - `utils.py` — shared benchmark utilities
-  - `run_m1_family.py` — **teammate**, M1-family runner (Methodology v2): one-command M1a–M1g for a dataset, writes to `results/configs_v2/`
-  - `run_m2.py` — M2 runner (PM4Py built-in generalization)
-  - `run_r_family.py` — R-family runner (R1/R2/R3 reference methods)
   - `version_comparison.py` — **teammate**, multi-seed cross-version comparison: v2.4 vs v2.5 vs v2.6 vs v2.6-mle
   - `r1_accept.py` — **teammate**, R1 acceptance rate computation
   - `version_comparison_analysis.ipynb` — **teammate**, notebook for analyzing `version_comparison_D*.csv`
-  - `bridges/` — bridge scripts for external methods (M3, M6, M7, AVATAR)
-    - `avatar_bridge.py`, `run_m3.py`, `run_m6_bgen.py`, `run_m7.py`
-  - `docker/` — Docker infrastructure for AVATAR (RelGAN) method M5
-    - `Dockerfile.avatar`, `Dockerfile.avatar.tf2`, `run_avatar.py`
-  - `models/` — pre-discovered PNML models, DFG JSON, manifest, and dataset XES cache
+  - `models/` — pre-discovered PNML models, DFG JSON, manifest (legacy, not used by new jobs)
   - `results/`
     - `configs/` — benchmark config JSONs (Methodology v1)
     - `configs_v2/` — benchmark config JSONs (Methodology v2, M1a–M1g + M2–M7 + R1–R3)
     - `version_comparison_D1.csv`, `version_comparison_D2.csv` — version comparison results
-  - Shell runners: `m1.sh`, `m2.sh`, `m3.sh`, `m5.sh`, `m6.sh`, `m7.sh`, `reference.sh`, `run_all.sh`
+  - Shell runners in `benchmark/shell/`: `m1.sh` … `m7.sh`, `r1.sh` … `r3.sh`, `run_all.sh` — all with `#SBATCH` SLURM headers, runnable via `bash` or `sbatch`
 - `src/` — external code for benchmarking, not part of project
 - `artifacts/` — conceptual diagrams, presentation slides, and other non-code deliverables
   - `katz-mutation.drawio` — flowchart of Katz proposal for mutation-based generalization estimation (v2.5)
@@ -67,22 +67,32 @@ uv run python -m HybridGen --list
 # Run a specific HybridGen version
 uv run python -m HybridGen -a v2.6 -e v2 --miner all --weight 0.5
 
-# --- Benchmark: Model Discovery ---
-# Export PNML + DFG JSON for all miners (run once per dataset)
-uv run python benchmark/01_prepare_models.py
+# --- Benchmark: Self-contained jobs (recommended) ---
+# Each job creates its own /tmp workdir, prepares data, runs, cleans up.
+# Default output: /tmp/<workdir>/results/ (safe, no project pollution).
+# Production: add --output <dir> or set OUTPUT_DIR=<dir>.
 
-# --- Benchmark: M1 family (Methodology v2) ---
-# Full M1a–M1g family on a dataset (writes to results/configs_v2/)
-uv run python benchmark/run_m1_family.py --dataset D1
-uv run python benchmark/run_m1_family.py --dataset D2
-uv run python benchmark/run_m1_family.py --dataset D1 --methods M1e M1f M1g
+# Run a single method on a dataset
+uv run python benchmark/job_m1.py --dataset D1
+uv run python benchmark/job_m2.py --dataset D2
+uv run python benchmark/job_m3.py --dataset D1
+uv run python benchmark/job_m6.py --dataset D1
+uv run python benchmark/job_m7.py --dataset D1
+uv run python benchmark/job_r.py --dataset D1
+
+# Production run (writes to configs_v2/)
+uv run python benchmark/job_m2.py --dataset D1 --output benchmark/results/configs_v2
+
+# --- Benchmark: Full pipeline (sequential) ---
+bash benchmark/shell/run_all.sh
+OUTPUT_DIR=benchmark/results/configs_v2 bash benchmark/shell/run_all.sh D1  # production
 
 # --- Benchmark: Version comparison (multi-seed) ---
 uv run python benchmark/version_comparison.py --dataset D1 --seeds 42 1 7 99
 uv run python benchmark/version_comparison.py --dataset D2 --seeds 42
 
 # --- Benchmark: Full pipeline (sequential) ---
-bash benchmark/run_all.sh
+bash benchmark/shell/run_all.sh
 ```
 
 ## Conventions
@@ -121,5 +131,5 @@ bash benchmark/run_all.sh
 - After completing the experiments, you should output the raw measurement data in a structured format. Do not output redundant debug (Debug) information to the console. Before deleting any folders, you must list all files and subfolders within the current folder and indicate the reason and basis for the deletion operation in the output. The deletion operation must go through a human review and approval process to ensure data security and compliance.
 - All project documentation should be written in English.
 - When starting the m5 docker container, you need to check if the m5 container is clean. Do not have two or more m5 containers running simultaneously.
-- When starting the experiment m1-r3 independently, you need to call `benchmark/01_prepare_models.py` to ensure that the model is consistent with the dataset used in the current experiment.
+- When starting the experiment m1-r3 independently, you need to call `benchmark/job_prepare.py` to ensure that the model is consistent with the dataset used in the current experiment.
 - The waiting time for running experiments should increase exponentially, for example, 5 minutes followed by 10 minutes, and multiple experiments cannot be run at the same time. Before each experiment startup, you need to check the number of currently running experiments to ensure it does not exceed one.

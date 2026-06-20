@@ -48,29 +48,28 @@
 │   └── Road Traffic Fine Management Process_1_all/
 │
 ├── benchmark/                        # Benchmark scripts, models, results
-│   ├── datasets.py                  # ★ Canonical D1–D21 dataset registry
-│   ├── miners.py                    #   Miner definitions
-│   ├── utils.py                     #   Shared utilities
-│   ├── 01_prepare_models.py         #   Model discovery (PNML + DFG JSON)
-│   ├── 02_gen_per_miner_dfgs.py     #   Per-miner DFG generation
-│   ├── prepare.sh                   #   Shell wrapper for model preparation
-│   ├── run_m1_family.py             # ★ M1-family runner (v2 methodology)
-│   ├── run_m2.py                    #   M2 runner (PM4Py built-in)
-│   ├── run_r_family.py              #   R1/R2/R3 reference runners
-│   ├── version_comparison.py        #   Multi-seed cross-version comparison
-│   ├── version_comparison_analysis.ipynb  # Post-hoc analysis notebook
-│   ├── r1_accept.py                 #   R1 ground truth (acceptance-based)
-│   ├── run_all.sh                   #   Full pipeline entry point
-│   ├── m1.sh / m2.sh / … / m7.sh   #   Per-method shell scripts
-│   ├── reference.sh                 #   Reference methods shell script
+│   ├── job_prepare.py               # ★ prepare_workdir() — 4 modes
+│   ├── job_m1.py … job_m7.py        #   Self-contained job wrappers (M1–M7)
+│   ├── job_r1.py, job_r2.py, job_r3.py  #   Self-contained job wrappers (R1–R3)
+│   ├── run_m1_family.py             # ★ M1-family core implementation
+│   ├── run_m2.py                    #   M2 core implementation
+│   ├── run_r_family.py              #   R1/R2/R3 core implementation (R2 parallelized)
 │   ├── bridges/                     #   Bridge scripts for external methods
-│   │   ├── avatar_bridge.py
-│   │   ├── run_m3.py                #   Entropic Relevance
-│   │   ├── run_m6_bgen.py           #   Bootstrap Generalization
-│   │   └── run_m7.py                #   SpeciAL4PM
+│   │   ├── run_m3.py                #   M3 core (Entropic Relevance)
+│   │   ├── run_m6_bgen.py           #   M6 core (Bootstrap Gen)
+│   │   └── run_m7.py                #   M7 core (SpeciAL4PM)
 │   ├── docker/                      #   Docker infrastructure for AVATAR (M5)
 │   │   ├── Dockerfile.avatar
 │   │   ├── Dockerfile.avatar.tf2
+│   │   └── run_avatar.py            #   M5 core implementation
+│   ├── shell/                       # ★ SLURM-ready shell scripts
+│   │   ├── m1.sh … m7.sh            #   Per-method (sbatch/bash dual-use)
+│   │   ├── r1.sh, r2.sh, r3.sh      #   Per-method R-family
+│   │   └── run_all.sh               #   Full pipeline entry point
+│   ├── logs/                        #   SLURM log output (%j = job ID)
+│   ├── miners.py                    #   Miner definitions
+│   ├── datasets.py                  # ★ Canonical D1–D21 dataset registry
+│   ├── utils.py                     #   Shared utilities
 │   │   └── run_avatar.py
 │   ├── models/                      #   Pre-discovered PNML + DFG JSON
 │   └── results/
@@ -178,23 +177,35 @@ Replay the shadow log on the model via PM4Py token replay.
 # Environment
 uv sync
 
-# D1 Sepsis — M1 family benchmark (all 7 versions, 8 miners)
-uv run python benchmark/run_m1_family.py --dataset D1
+# Self-contained jobs — each method prepares its own data in /tmp.
+# Default output: /tmp/<workdir>/results/ (safe for testing).
+# Production: add --output benchmark/results/configs_v2.
 
-# D2 BPI 2013 Incidents
-uv run python benchmark/run_m1_family.py --dataset D2
+# D1 Sepsis — M1 family benchmark (all 7 versions, all 8 miners)
+uv run python benchmark/job_m1.py --dataset D1
 
-# Only new versions (v2.5/v2.6)
-uv run python benchmark/run_m1_family.py --dataset D1 --methods M1e M1f M1g
+# Single methods (M2, M3, M6, M7, R1, R2, R3)
+uv run python benchmark/job_m2.py --dataset D1
+uv run python benchmark/job_m3.py --dataset D1
+uv run python benchmark/job_m6.py --dataset D1
+uv run python benchmark/job_m7.py --dataset D1
+uv run python benchmark/job_r1.py --dataset D1
+uv run python benchmark/job_r2.py --dataset D1
+uv run python benchmark/job_r3.py --dataset D1
 
-# Multi-seed robustness check
-uv run python benchmark/version_comparison.py --dataset D1 --seeds 42 1 7 99
+# Using shell wrappers (bash or sbatch)
+bash benchmark/shell/m1.sh --dataset D1
+bash benchmark/shell/r1.sh --dataset D1
 
-# Full pipeline (all methods)
-bash benchmark/run_all.sh
+# Full pipeline (all methods, self-contained)
+bash benchmark/shell/run_all.sh
+
+# Production run (results → benchmark/results/configs_v2/):
+OUTPUT_DIR=benchmark/results/configs_v2 bash benchmark/shell/run_all.sh D1
 ```
 
-Results → `benchmark/results/configs_v2/` per (dataset, miner, method).
+Results → `/tmp/<workdir>/results/` by default, or `benchmark/results/configs_v2/`
+with `--output`. One JSON file per (dataset, miner, method).
 Visualization → open `visualize_benchmark.ipynb`, set `DATASET_KEY`, Run All.
 
 ---
