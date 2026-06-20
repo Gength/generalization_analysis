@@ -23,7 +23,7 @@
 | 3 | Pole interpretation corrected | Flower ≈ 1.0 is **correct** for a pure generalization metric (construct-purity litmus), not a failure; Trace low is the overfitting pole |
 | 4 | Reporting: **mean ± std for every M1 version** + acceptance + probe-integrity counters | Transparency; v2.6 metrics expose `gen_accept`, `duplicates_kept`, `truncated_traces` |
 | 5 | Agreement protocol: **Spearman + MAE + spread** vs R1, poles excluded | Spearman alone is a low bar (even the random floor achieves 1.0 on D1) |
-| 6 | New runner: `benchmark/run_m1_family.py` writes official config JSONs to `configs_v2/` | One command per dataset, model discovery cached, R1 copied/computed automatically |
+| 6 | New runner: `benchmark/run_m1_family.py` writes official config JSONs to `configs_v2/` | One command per dataset, model discovery cached; R1 computed separately by `r1.sh` |
 | 7 | M1g (v2.6-mle) recommended as headline candidate | Best calibration across all criteria; only mode ranking D2 correctly |
 
 ---

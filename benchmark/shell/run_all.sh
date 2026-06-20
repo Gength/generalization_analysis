@@ -6,13 +6,13 @@
 #   bash benchmark/shell/run_all.sh D2       # D2
 #
 # Each sub-script has its own #SBATCH header; they are submitted as
-# independent SLURM jobs via sbatch.
-# All results land in benchmark/results/configs_v2/.
-#
+# independent SLURM jobs. All results land in benchmark/results/configs_v2/.
 # To include M5 (AVATAR GPU), uncomment the line below.
 # ─────────────────────────────────────────────────────────────────────────────
 
-set -euo pipefail
+set -eo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+
 DATASET="${1:-D1}"
 OUTPUT="benchmark/results/configs_v2"
 
@@ -32,5 +32,5 @@ sbatch benchmark/shell/r2.sh --dataset "$DATASET" --output "$OUTPUT"
 sbatch benchmark/shell/r3.sh --dataset "$DATASET" --output "$OUTPUT"
 
 echo ""
-echo "All jobs submitted: $(date)"
+echo "All submitted: $(date)"
 echo "Check: squeue -u $USER"

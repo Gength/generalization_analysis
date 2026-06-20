@@ -21,10 +21,8 @@
 #   bash benchmark/shell/m1.sh --dataset D2 --workers 4
 # ─────────────────────────────────────────────────────────────────────────────
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
-cd "$SCRIPT_DIR"
+set -eo pipefail
 export TMPDIR=/tmp
+export PATH="$HOME/.local/bin:$PATH"
 
-source ~/.bashrc
 uv run python benchmark/job_m1.py "$@"

@@ -24,10 +24,8 @@
 #   bash benchmark/shell/m5.sh --dataset D1 --output benchmark/results/configs_v2
 # ─────────────────────────────────────────────────────────────────────────────
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
-cd "$SCRIPT_DIR"
+set -eo pipefail
 export TMPDIR=/tmp
+export PATH="$HOME/.local/bin:$PATH"
 
-source ~/.bashrc
 uv run python benchmark/job_m5.py "$@"

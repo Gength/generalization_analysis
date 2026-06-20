@@ -6,23 +6,19 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=benchmark/logs/bench_M2_%j.log
 #
-# M2  PM4Py Built-in Generalization (deterministic, ~0.3s/miner)
+# M2  PM4Py Built-in Generalization (token-replay-based)
 # ─────────────────────────────────────────────────────────────────────────────
-# CLI arguments (all optional except --dataset):
+# CLI arguments:
 #   --dataset D1..D21          Dataset key (required)
 #   --output <dir>             Output directory (default: /tmp/<workdir>/results/)
-#   --miners Alpha Flower ...  Subset of miners (default: all 8)
 #
 # Examples:
 #   bash benchmark/shell/m2.sh --dataset D1
-#   bash benchmark/shell/m2.sh --dataset D1 --miners Alpha Heuristics
-#   bash benchmark/shell/m2.sh --dataset D2 --output benchmark/results/configs_v2
+#   bash benchmark/shell/m2.sh --dataset D1 --output benchmark/results/configs_v2
 # ─────────────────────────────────────────────────────────────────────────────
 
-set -euo pipefail
-SCRIPT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
-cd "$SCRIPT_DIR"
+set -eo pipefail
 export TMPDIR=/tmp
+export PATH="$HOME/.local/bin:$PATH"
 
-source ~/.bashrc
 uv run python benchmark/job_m2.py "$@"

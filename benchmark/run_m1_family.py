@@ -5,18 +5,16 @@ Parallelized: each algorithm version runs on its own core.
 Default parallelism: 8 workers (--workers).
 Provides run() for job wrappers. CLI via main().
 """
-import os, sys, json, time, random, argparse, signal
+import os, sys, json, time, argparse, signal
 from collections import defaultdict
 from datetime import datetime, timezone
-from concurrent.futures import ProcessPoolExecutor, as_completed, wait, FIRST_COMPLETED
+from concurrent.futures import ProcessPoolExecutor, wait, FIRST_COMPLETED
 
 import multiprocessing as mp
 import numpy as np
 import pm4py
-from pm4py.objects.log.obj import EventLog
 from pm4py.objects.petri_net.obj import PetriNet, Marking
 from pm4py.objects.petri_net.utils import petri_utils
-from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -70,7 +68,6 @@ MINERS = {
     "Inductive_Infrequent": lambda l: pm4py.discover_petri_net_inductive(l, noise_threshold=0.2),
     "Flower": lambda l: _flower(l),
 }
-REAL = ["Alpha", "Alpha+", "Heuristics", "Heuristics_Strict", "Inductive_Infrequent", "Inductive_Strict"]
 
 # ── Module-level globals for fork sharing (read-only after fork) ────────────
 _SHARED_LOG = None
@@ -151,49 +148,6 @@ def run(dataset_key, workdir, output_dir, methods=None, workers=8):
         net = cache[mn][0]
         print(f"  {mn:22s} {len(net.transitions)}t/{len(net.places)}p  ({time.time()-t0:.1f}s)")
 
-    # ── Serial: R1 ground truth ───────────────────────────────────────────
-    print("\nGround truth R1:")
-    r1 = {}
-    for mn, fn in MINERS.items():
-        t0 = time.time()
-        random.seed(SEED); np.random.seed(SEED)
-        vm = defaultdict(list)
-        for t in log:
-            vm[tuple(e["concept:name"] for e in t)].append(t)
-        vs = list(vm.keys())
-        K, SH = 5, 3
-        all_fits = []
-        for _ in range(SH):
-            random.shuffle(vs)
-            fs = max(1, len(vs) // K)
-            folds = []
-            for i in range(K):
-                s, e2 = i * fs, (i + 1) * fs if i < K - 1 else len(vs)
-                tv = set(vs[s:e2])
-                train = EventLog([t for v in vs if v not in tv for t in vm[v]])
-                test = EventLog([t for v in tv for t in vm[v]])
-                try:
-                    net, im, fm = fn(train)
-                    fit = replay_fitness.apply(test, net, im, fm,
-                                               variant=replay_fitness.Variants.TOKEN_BASED)["log_fitness"]
-                    folds.append(fit)
-                except Exception:
-                    folds.append(0.0)
-            all_fits.append(float(np.mean(folds)))
-        mean, std = float(np.mean(all_fits)), float(np.std(all_fits))
-        r1[mn] = mean
-        print(f"  R1[{mn}] = {mean:.4f}  ({(time.time()-t0):.0f}s)")
-        r1cfg = {
-            "dataset": dname, "miner": mn, "method": "R1",
-            "method_label": "K-Fold CV (k=5)",
-            "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "host": "local", "seed": SEED,
-            "parameters": {"k": 5, "shuffles": 3, "variant_based": True},
-            "results": {"mean": mean, "std": std, "raw_shuffles": all_fits, "runtime_s": time.time()-t0},
-            "notes": "computed by run_m1_family.py",
-        }
-        with open(os.path.join(output_dir, f"{dname}__{mn}__R1.json"), "w") as f:
-            json.dump(r1cfg, f, indent=2)
 
     os.makedirs(output_dir, exist_ok=True)
     target_methods = methods or list(METHODS.keys())
@@ -250,29 +204,13 @@ def run(dataset_key, workdir, output_dir, methods=None, workers=8):
         print(f"\n  Parallel eval: {time.time()-t_par_start:.1f}s")
 
     # ── Summary ───────────────────────────────────────────────────────────
-    def _pearson(x, y):
-        x, y = np.asarray(x, float), np.asarray(y, float)
-        if x.std() == 0 or y.std() == 0: return float("nan")
-        return float(np.corrcoef(x, y)[0, 1])
-
     print("\n" + "=" * 98)
     print(f"SUMMARY — {dataset_key} {dname}")
     h = f"{'Method':6s} " + " ".join(f"{m[:13]:>15s}" for m in MINERS)
     print(h); print("-" * 98)
-    print(f"{'R1':6s} " + " ".join(f"{r1[m]:>15.4f}" for m in MINERS))
     for mid in target_methods:
         cells = [results[(mid, m)] for m in MINERS]
         print(f"{mid:6s} " + " ".join(f"{c['gen_shadow_mean']:>7.4f}+-{c['gen_shadow_std']:<6.4f}" for c in cells))
-
-    print(f"\nAgreement with R1 (6 real miners):")
-    print(f"{'Method':6s} {'Pearson':>8s} {'Spearman':>9s} {'MAE':>7s} {'Flower':>7s}")
-    y = [r1[m] for m in REAL]
-    for mid in target_methods:
-        x = [results[(mid, m)]["gen_shadow_mean"] for m in REAL]
-        ma = float(np.mean(np.abs(np.array(x) - np.array(y))))
-        fl = results[(mid, "Flower")]["gen_shadow_mean"]
-        sp = _pearson(np.argsort(np.argsort(x)), np.argsort(np.argsort(y)))
-        print(f"{mid:6s} {_pearson(x, y):8.3f} {sp:9.3f} {ma:7.3f} {fl:7.3f}")
     print("=" * 98)
     print(f"Configs → {output_dir}/")
 
