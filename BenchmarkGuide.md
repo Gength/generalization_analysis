@@ -437,6 +437,31 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 
 ---
 
+## 5c. Results (D3 BPI2017)
+
+| Miner | M1a | M1b | M1c | M1d | M1e | M1f | M1g | M2 | M3* | M5 | M6** | M7 | R1 | R2 | R3 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Trace_Filtered | 0.5483 | 0.5884 | 0.6181 | 0.6301 | 0.6285 | 0.6285 | 0.6051 | 0.0510 | 178.5299 | - | 0.5764 | 1.0000 | 0.6724 | 0.5958 | 0.3165 |
+| Alpha | 0.3969 | 0.3956 | 0.3874 | 0.3992 | 0.4009 | 0.4009 | 0.3890 | 0.9824 | 178.5299 | - | 0.0864 | 0.7500 | 0.3851 | 0.3886 | 0.3748 |
+| Alpha+ | 0.6047 | 0.6990 | 0.7535 | 0.7859 | 0.7832 | 0.7832 | 0.8599 | 0.9828 | 178.5299 | - | 0.0930 | 0.7500 | 0.8838 | 0.8595 | 0.4509 |
+| Heuristics | 0.9300 | 0.8654 | 0.8815 | 0.8812 | 0.8818 | 0.8818 | 0.9477 | 0.9289 | 178.5299 | - | 0.1366 | 0.9918 | 0.9526 | 0.9546 | 0.5626 |
+| Heuristics_Strict | 0.9396 | 0.8801 | 0.8939 | 0.8936 | 0.8939 | 0.8939 | 0.9512 | 0.9575 | 178.5299 | - | 0.1250 | 0.9219 | 0.9522 | 0.9598 | 0.5693 |
+| Inductive_Strict | 0.9653 | 0.9887 | 0.9945 | 0.9963 | 0.9974 | 0.9974 | 0.9996 | 0.9485 | 178.5299 | - | 0.1345 | 0.8536 | 1.0000 | 1.0000 | 0.8829 |
+| Inductive_Infrequent | 0.9431 | 0.9332 | 0.9500 | 0.9530 | 0.9555 | 0.9555 | 0.9761 | 0.9473 | 178.5299 | - | 0.0176 | 0.9999 | 0.9807 | 0.9771 | 0.7252 |
+| Flower | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.9824 | 178.5299 | - | 0.0837 | 0.7811 | 1.0000 | 1.0000 | 1.0000 |
+
+> **M3 (\*)**: Raw entropic relevance (unbounded, higher=better). Same DFG-based score for all miners.
+>
+> **M6 (\*\*)**: Bootstrap Generalization with Entropia `-bgen` scoring (v2 methodology). All values computed with the **fixed JAR** `jbpt-pm-entropia-1.7.1.jar` (null guard added at `EventLogSampling.logBreeding:101`), `k=2`, **10 bootstrap replicates** (design spec: 10, target: 100). The table shows F1 score (harmonic mean of precision and recall). See [Design §M6](BenchmarkDesign.md#m6--bootstrap-generalization).
+>
+> **M5**: Not yet run on D3 (BPI2017). Docker AVATAR training requires ~4h per miner. See [BenchmarkDesign.md](BenchmarkDesign.md) for the full method catalog.
+>
+> **Key observations**: D3 (BPI2017) has a deep activity profile (87% variant singletons, average trace length ~37) which stresses all methods. Flower ≈ 1.0 on all M1 variants and R1/R2 confirms construct-purity: a pure generalization metric should score the maximally permissive model at ceiling. Trace_Filtered shows the widest M1 spread (0.55–0.63) and the lowest R3 (0.3165), consistent with severe memorization pressure. M6 (bootstrap gen) produces very low F1 scores on Alpha-family miners (0.0864 Alpha, 0.0930 Alpha+) — likely due to precision collapse from poor recall on deep, sparse traces.
+>
+> **M1e ≡ M1f**: Complete convergence across all miners (M1e = M1f values identical), consistent with D1 and D2 patterns — `gen_shadow` dominates and `gen_accept` adds no discriminative information when shadow-trace coverage is already saturated.
+
+---
+
 ## 6. Troubleshooting
 
 | Symptom | Cause | Fix |

@@ -3,7 +3,7 @@
 #SBATCH --job-name=bench_R2
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=14
 #SBATCH --output=benchmark/logs/bench_R2_%j.log
 #
 # R2  Leave-One-Variant-Out (reference metric)
