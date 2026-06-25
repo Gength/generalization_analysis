@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Heuristics_Strict",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-19T19:24:56Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.9575030989578651,
+    "runtime_s": 33.03299260139465
+  },
+  "notes": ""
+}

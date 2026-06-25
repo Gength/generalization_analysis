@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Inductive_Strict",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-19T19:26:13Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.9484917562396579,
+    "runtime_s": 76.54499769210815
+  },
+  "notes": ""
+}

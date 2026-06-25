@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Trace_Filtered",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-19T22:24:40Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.6723565902031682,
+    "std": 0.017385251274396572,
+    "raw_shuffles": [
+      0.6966658228139292,
+      0.6570135024430312,
+      0.6633904453525441
+    ],
+    "runtime_s": 875.100198507309
+  },
+  "notes": ""
+}

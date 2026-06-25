@@ -1,0 +1,23 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Inductive_Infrequent",
+  "method": "M1d",
+  "method_label": "HybridGen v2.4 (uniform proposal)",
+  "timestamp": "2026-06-19T19:08:46Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.4",
+    "max_n": 1,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.9530040332829708,
+    "std": 0.0010022361024522785,
+    "raw_iterations": null,
+    "runtime_s": 19.363959789276123
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}
