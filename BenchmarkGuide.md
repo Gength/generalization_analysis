@@ -194,32 +194,39 @@ so there is no shared cache to clean up when switching datasets.
 
 ### Data (Git-LFS)
 
-All XES event logs in `data/` are tracked with **Git-LFS** (`.gitattributes`). A plain `git clone` or `git pull` only downloads pointer files (~130 bytes), not the actual binary content. Running benchmarks without pulling LFS files results in `invalid gzip header` errors when PM4Py/r4pm tries to parse the XES.
+All XES event logs in `data/` are tracked with **Git-LFS** (`.gitattributes`). A plain `git clone` or `git pull` will only download pointer files (~130 bytes) if Git-LFS is not properly initialized in the system, resulting in `invalid gzip header` errors when PM4Py/r4pm tries to parse the XES files.
 
-**Install git-lfs (user-level, no root required):**
+**Install and Initialize Git-LFS (user-level, no root required):**
 
 ```bash
 ARCH=$(uname -m)
 [ "$ARCH" = "x86_64" ] && LFS_ARCH="amd64" || LFS_ARCH="arm64"
 LFS_VERSION="3.6.1"
-wget "https://github.com/git-lfs/git-lfs/releases/download/v${LFS_VERSION}/git-lfs-linux-${LFS_ARCH}-v${LFS_VERSION}.tar.gz"
+wget "[https://github.com/git-lfs/git-lfs/releases/download/v$](https://github.com/git-lfs/git-lfs/releases/download/v$){LFS_VERSION}/git-lfs-linux-${LFS_ARCH}-v${LFS_VERSION}.tar.gz"
 tar -xzf "git-lfs-linux-${LFS_ARCH}-v${LFS_VERSION}.tar.gz"
-./git-lfs-${LFS_VERSION}/install.sh --local
+
+# Install to default local binary directory (~/.local/bin)
+PREFIX="$HOME/.local" ./git-lfs-${LFS_VERSION}/install.sh
+export PATH="$HOME/.local/bin:$PATH"
+
+# CRITICAL: Register Git-LFS global filters and hooks to prevent modified status bugs
+git lfs install
 git lfs version
 ```
 
-**Clone with LFS (first time):**
+**Clone and Setup (First time):**
 
 ```bash
-git lfs clone <repo-url>
-# or: git clone <repo-url> && cd <repo> && git lfs pull
+# Modern Git handles LFS automatically during clone if 'git lfs install' was executed
+git clone <repo-url>
 ```
 
-**Pull LFS files after `git pull`:**
+**Pull and Update:**
 
 ```bash
+# If 'git lfs install' is active, a standard pull will fetch both code and LFS data atomically.
+# DO NOT split into 'git pull && git lfs pull' as it may corrupt the Git index.
 git pull
-git lfs pull
 ```
 
 **Verify data integrity:**
