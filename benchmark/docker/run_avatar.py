@@ -96,36 +96,53 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
         print(f"AVATAR {'QUICK' if quick else 'FULL'}: {npre} pre-epochs, {nadv} adv steps")
         docker_kill_all()
         t0 = time.time()
-        subprocess.run(["docker", "run", "--rm", "--gpus", "all", "--ipc=host",
-                        "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
-                        "-w", "/workspace/src/AVATAR",
-                        "-e", f"AVATAR_NPRE_EPOCHS={npre}",
-                        "-e", f"AVATAR_NADV_STEPS={nadv}",
-                        "-e", "AVATAR_BATCH_SIZE=16", "-e", "CUDA_VISIBLE_DEVICES=0",
-                        DOCKER_IMAGE, "python", "-u", "-m", "avatar.training",
-                        "-s", SYSTEM_NAME, "-j", "0", "-gpu", "0", "-n", "10000"],
-                       capture_output=True, text=True)
-        print(f"Training done ({time.time()-t0:.0f}s)")
+        r = subprocess.run(["docker", "run", "--rm", "--gpus", "all", "--ipc=host",
+                            "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
+                            "-w", "/workspace/src/AVATAR",
+                            "-e", f"AVATAR_NPRE_EPOCHS={npre}",
+                            "-e", f"AVATAR_NADV_STEPS={nadv}",
+                            "-e", f"AVATAR_BATCH_SIZE={os.environ.get('AVATAR_BATCH_SIZE', '8' if tf2 else '16')}", "-e", "CUDA_VISIBLE_DEVICES=0",
+                            "-e", "TF_GPU_ALLOCATOR=cuda_malloc_async",
+                            DOCKER_IMAGE, "python", "-u", "-m", "avatar.training",
+                            "-s", SYSTEM_NAME, "-j", "0", "-gpu", "0", "-n", "10000"],
+                           capture_output=True, text=True)
+        elapsed = time.time() - t0
+        if r.returncode != 0:
+            print(f"Training FAILED (exit={r.returncode})")
+            # Print last 20 lines of stderr for diagnosis
+            stderr_lines = r.stderr.strip().split('\n')
+            print('\n'.join(stderr_lines[-20:]))
+            # Don't continue to sampling
+            return
+        print(f"Training done ({elapsed:.0f}s)")
 
         ckpts = glob.glob(os.path.join(AVATAR_ABS, f"data/avatar/sgans/{SYSTEM_NAME}/0/tf_logs/ckpt/*.meta"))
         if not ckpts:
             print("No checkpoints!")
             return
-        suffixes = [int(re.search(r'\.(\d+)\.meta$', f).group(1)) for f in ckpts if re.search(r'\.(\d+)\.meta$', f)]
+        suffixes = [int(re.search(r'-(\d+)\.meta$', f).group(1)) for f in ckpts if re.search(r'-(\d+)\.meta$', f)]
         suffix = str(max(suffixes)) if suffixes else "5000"
         print(f"Checkpoint: suffix={suffix}")
 
         print("Sampling...")
         docker_kill_all()
-        subprocess.run(["docker", "run", "--rm", "--gpus", "all", "--ipc=host",
-                        "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
-                        "-w", "/workspace/src/AVATAR",
-                        "-e", "CUDA_VISIBLE_DEVICES=0",
-                        DOCKER_IMAGE, "python", "-u", "-m", "avatar.sampling",
-                        "-s", SYSTEM_NAME, "-j", "0", "-sfx", suffix, "-gpu", "0",
-                        "-strategy", "naive", "-n_n", "10000"],
-                       capture_output=True, text=True)
+        r2 = subprocess.run(["docker", "run", "--rm", "--gpus", "all", "--ipc=host",
+                             "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
+                             "-w", "/workspace/src/AVATAR",
+                             "-e", "CUDA_VISIBLE_DEVICES=0",
+                             DOCKER_IMAGE, "python", "-u", "-m", "avatar.sampling",
+                             "-s", SYSTEM_NAME, "-j", "0", "-sfx", suffix, "-gpu", "0",
+                             "-strategy", "naive", "-n_n", "10000"],
+                            capture_output=True, text=True)
+        if r2.returncode != 0:
+            print(f"Sampling FAILED (exit={r2.returncode})")
+            stderr_lines = r2.stderr.strip().split('\n')
+            print('\n'.join(stderr_lines[-20:]))
+            return
         print("Sampling done")
+        samp_path = os.path.join(AVATAR_ABS, f"data/avatar/variants/{SYSTEM_NAME}_relgan_{suffix}_j0_naive.txt")
+        if not os.path.exists(samp_path):
+            print(f"WARNING: sampling output not found at {samp_path}")
 
     # ── Generalization ───────────────────────────────────────────────────
     def _flower(l):
@@ -183,6 +200,10 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
                            capture_output=True, text=True)
         elapsed = time.time() - t0
         score = -1
+        if r.returncode != 0:
+            print(f"  Generalization FAILED (exit={r.returncode})")
+            stderr_lines = r.stderr.strip().split('\n')
+            print('\n'.join(stderr_lines[-20:]))
         for line in r.stdout.split("\n"):
             if "AVATAR Generalization=" in line:
                 try:

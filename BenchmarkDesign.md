@@ -58,7 +58,7 @@ probe-integrity counters `duplicates_kept` / `truncated_traces`.
 | # | Method | Paradigm | Approach | Output | Runtime |
 |---|--------|----------|----------|--------|---------|
 | M2 | **PM4Py Built-in** | Structural counting | Counts invisible transitions, token-replay deviations, and visited states in the reachability graph. `pm4py.algo.evaluation.generalization.apply()`. | Scalar [0,1] | < 1 s |
-| M3 | **Entropic Relevance** (Polyvyanyy et al. 2020) | Entropy-based | Computes the relevance of a stochastic process model (SDFA) to an event log via entropic relevance measure. Part of the Entropia tool. Requires model in SDFA JSON format. | Scalar [0,1] | ~seconds (Java subprocess) |
+| M3 | **Entropic Relevance** (Polyvyanyy et al. 2020) | Entropy-based | Computes entropic relevance of a stochastic process model to an event log. Currently approximated via per-miner DFG simulation (PNML → play\_out → DFG JSON → JDFG2Aut → automaton JSON → Relevance). Uses open-source `relevance.jar` from [promtecmx/relevance](https://github.com/promtecmx/relevance). Full SDFA conversion pending. | Scalar [0,1] | ~seconds (Java subprocess) |
 | M4 | **Anti-Alignment Generalization** (van Dongen, 2017) | Adversarial | ❌ **Archived** — infeasible on real-life logs (see [Archived Methods](#archived-methods)). | Scalar [0,1] | N/A |
 | M5 | **AVATAR** (Theis & Darabi, 2020) | GAN-based | ✅ D1 completed. RelGAN trained on 80% variants → samples → harmonic mean of token-replay fitness and ET Conformance precision. Multi-word activity fix applied. | Scalar [0,1] | ~4h (GAN training) |
 | M6 | **Bootstrap Generalization** (Polyvyanyy et al. 2022) | Entropia `-bgen` eigenvalue-based precision & recall | ✅ D1/D2 complete. Uses fixed JAR `jbpt-pm-entropia-1.7.1.jar` (`k=2`). Entry point: `benchmark/job_m6.py` (core: `benchmark/bridges/run_m6_bgen.py`). See [`BenchmarkGuide.md §M6 Implementation Note`](BenchmarkGuide.md#m6-implementation-note). | Precision & recall [0,1]; F1 in summary table | ~45–60 s/cell |
@@ -69,7 +69,7 @@ probe-integrity counters `duplicates_kept` / `truncated_traces`.
 
 | Method | Repository | Local Path |
 |--------|-----------|------------|
-| Entropic Relevance | [jbpt/codebase/jbpt-pm/entropia](https://github.com/jbpt/codebase/tree/master/jbpt-pm/entropia) | `./src/codebase/jbpt-pm/entropia/` |
+| Entropic Relevance | [promtecmx/relevance](https://github.com/promtecmx/relevance) | `./src/relevance/` |
 | Anti-Alignment Generalization | ❌ Archived | `archive/Tianhao/benchmark/` |
 | AVATAR | [Julian-Theis/AVATAR](https://github.com/Julian-Theis/AVATAR) | `./src/AVATAR/` |
 | Bootstrap Generalization | [lgbanuelos/bsgen](https://github.com/lgbanuelos/bsgen) + [jbpt/codebase](https://github.com/jbpt/codebase/tree/master/jbpt-pm/gen/bootstrap) | `./src/bsgen/` (Python), `./src/codebase/jbpt-pm/entropia/` (Java `-bgen`) |
@@ -176,7 +176,7 @@ Phase B: CIP-Pool 128GB Machine (large / memory-heavy datasets — D3–D5, D8�
 
 **Partial infrastructure worth noting:**
 - `gen/bootstrap/inputs_r.csv` provides validated parameter configurations for Sepsis (`VE_30_Sepsis_*`), Road Traffic (`PE_11_Road_Traffic_*`), and BPI Challenge (`PE_01_BPI_Challenge_*`, `VE_01_BPI_Challenge_*`) models. These can serve as a reference for `-bgen` parameter selection (log_size, generations, k_value, breeding_factor).
-- Entropia `examples/` contains `sepsis.xes.gz` and a pre-built SDFA model `sdfa_sepsis_1.000.json` — this can be used to validate the Entropic Relevance bridge script against a known-good SDFA before running on our own discovered models.
+- Entropia `examples/` (legacy jbpt-pm-entropia) contains `sepsis.xes.gz` and a pre-built SDFA model `sdfa_sepsis_1.000.json` — can be used to validate the `relevance.jar` bridge against a known-good SDFA before running on our own discovered models.
 - SpeciAL4PM eval scripts have hardcoded paths to BPI 2012, Road Traffic, Sepsis, BPI 2018, BPI 2019 — confirming these datasets are compatible with the species estimation pipeline.
 
 ---
@@ -367,7 +367,7 @@ v2 schema adds these optional result fields to the v1 schema:
 | M1e (v2.5) | same as M1d + `duplicates_kept`, `truncated_traces` |
 | M1f, M1g (v2.6) | same as M1e + `successor_weighting` (`"log"` or `"mle"`), `gen_accept`, `gen_accept_std`, `gen_shadow_regular`, `gen_shadow_mutated`, `max_trace_length_used` |
 | M2 | (none — deterministic) |
-| M3 | `jar_version`, `sdfa_conversion_method` |
+| M3 | `jar_version` (relevance.jar), `dfg_simulation_method` |
 | M4 | `jar_version`, `timeout_s` |
 | M5 | `checkpoint_epoch`, `temperature`, `strategy` (naive/mh), `n_samples` |
 | M6 | `n`, `m`, `g`, `k`, `p`, `jar_version` |
@@ -407,34 +407,34 @@ Zero integration cost. Already used in existing benchmarks.
 
 ---
 
-### M3 — Entropic Relevance (Entropia JAR)
+### M3 — Entropic Relevance (relevance.jar)
 
-**What it computes:** Entropic relevance measures how well a stochastic process model (SDFA) explains the event log in information-theoretic terms. It requires the model as a **stochastic deterministic finite automaton (SDFA) in JSON format**, not a Petri net.
+**What it computes:** Entropic relevance measures how well a stochastic process model (DFG→automaton with probabilities) explains the event log in information-theoretic terms. The current implementation uses a **per-miner DFG (simulated via PM4Py `play_out`, 5000 traces)** → **JDFG2Aut** (converts DFG JSON to a probability-annotated automaton) → **Relevance** (computes entropic relevance). Previously used a single log-level DFG via the closed-source Entropia JAR, returning identical non-discriminating values; fixed 2026-06-26 via per-miner DFGs, and switched 2026-06-27 to open-source `relevance.jar` (github.com/promtecmx/relevance).
 
 **Dependencies:**
-- JDK 1.8+
-- Entropia JAR: `./src/codebase/jbpt-pm/entropia/jbpt-pm-entropia-1.8.jar`
+- JDK 21+
+- `relevance.jar` + `OpenXES-20180810.jar` in `./src/relevance/`
 
 **CLI:**
 ```bash
-java -jar jbpt-pm-entropia-1.8.jar -r -rel=<log.xes> -ret=<model.sdfa.json>
+# Step 1: DFG → probability automaton
+java -cp relevance.jar:OpenXES.jar org.jbpt.relevance.JDFG2Aut <dfg.json> <outdir/>
+# Step 2: entropic relevance
+java -cp relevance.jar:OpenXES.jar org.jbpt.relevance.Relevance <automaton.json> <log.xes>
 ```
 
 **Integration Strategy:**
 
-1. **Export event log** as XES via `pm4py.write_xes()`.
-2. **Convert Petri net to SDFA**: This is the main challenge. The Petri net must be converted to a stochastic automaton. Options:
-   - Use the event log to annotate transition probabilities on the Petri net reachability graph, then export as SDFA JSON.
-   - Use PM4Py's `discover_stochastic_petri_net()` or a manual frequency-based annotation.
-   - Fallback: Use the Entropia tool's `-emp` / `-emr` (exact matching precision/recall) which accept `.pnml` directly, as an approximation.
-3. **Shell out** via `subprocess.run()` to the Entropia JAR.
-4. **Parse** the single numeric score from stdout.
+1. **Prepare models** via `benchmark/job_prepare.py` with `mode="pnml"` — mines all 8 PNMLs and a log-level DFG.
+2. **For each miner**: load PNML → simulate (5000 traces via `pm4py.play_out()`) → generate model-level DFG JSON → JDFG2Aut → Relevance.
+3. **Parse** the 6th CSV column from Relevance stdout.
+4. **Clean up** temporary files.
 
-**Bridge script:** `benchmark/bridges/entropia_bridge.py`
+**Bridge script:** `benchmark/bridges/run_m3.py`
 
-**Estimated runtime per cell:** < 10 s (JVM startup + computation).
+**Estimated runtime per cell:** ~30-120 s (PNML simulation dominates).
 
-**Fallback:** If SDFA conversion is infeasible, use Entropia's exact matching precision (`-emp`) on PNML directly — while not the "Entropic Relevance" measure per se, it provides a related non-deterministic precision score.
+**Note:** The ideal approach (Petri net → SDFA conversion) is not yet implemented. The DFG-via-simulation + JDFG2Aut approach is a sound approximation that gives discriminating scores per miner on all evaluated datasets.
 
 ---
 
@@ -696,11 +696,11 @@ Step 12: Aggregate results across all 21 datasets
 | BPI 2018 158 MB compressed — PM4Py read_xes may exceed memory | High | Use chunked XES parsing if available; skip Alpha/Alpha+ miners on D4 if discovery exceeds 30 min |
 | Results from unknown configurations (e.g., prior runs without JSON provenance) are treated as invalid | Low | All scores must be regenerated with known, recorded configurations; never import results without matching config JSON |
 | Pattern-based Gen lpsolve native lib unavailable | Medium | Detect at setup; skip M8 entirely if lib missing |
-| Entropic Relevance SDFA conversion from Petri net | Medium | Use PM4Py stochastic map + reachability graph → SDFA; fallback to `-emp` exact matching precision on PNML |
+| Entropic Relevance SDFA conversion from Petri net | Medium | Current per-miner DFG simulation is a viable approximation; full SDFA conversion (PM4Py reachability graph + token replay probabilities) is future work |
 | Bootstrap Gen entropy JAR fails on certain models | Medium | Fallback to alignment-based fitness only |
 | Bootstrap Gen breeding produces no valid traces for small logs (e.g., Sepsis) | Medium | Fall back to nonparametric bootstrap (`-p=0`) for logs with < 100 traces |
 | Model simulation deadlocks (SpeciAL4PM, AVATAR) | Medium | Impose maxTraceLength; catch empty simulations; exclude miner if consistently deadlocking |
-| Entropia SDFA validation — no known-good score to verify bridge script | Low | Use pre-built `sdfa_sepsis_1.000.json` + `sepsis.xes.gz` from Entropia `examples/` as a smoke test for the bridge script |
+| relevance.jar SDFA validation — no known-good score to verify bridge script | Low | Use pre-built `sdfa_sepsis_1.000.json` + `sepsis.xes.gz` from Entropia `examples/` as a smoke test for `promtecmx/relevance` |
 | JDK 1.8 unavailable | Low | All Java methods blocked; pre-compute offline or skip Java-dependent methods |
 | Memory blowup from storing all raw scores | Low | Stream to CSV incrementally |
 
@@ -730,7 +730,7 @@ Step 12: Aggregate results across all 21 datasets
 
 ## References
 
-- **Entropic Relevance**: Polyvyanyy, A., et al. (2020). "Entropic Relevance: A Mechanism for Measuring Stochastic Process Model Quality." *arXiv:2007.09310*. [jbpt/codebase](https://github.com/jbpt/codebase/tree/master/jbpt-pm/entropia)
+- **Entropic Relevance**: Polyvyanyy, A., et al. (2020). "Entropic Relevance: A Mechanism for Measuring Stochastic Process Model Quality." *arXiv:2007.09310*. Implementation: [promtecmx/relevance](https://github.com/promtecmx/relevance); original: [jbpt/codebase](https://github.com/jbpt/codebase/tree/master/jbpt-pm/entropia)
 - **Anti-Alignment Generalization**: van Dongen, B. (2017). "Computing Alignments of Event Data and Process Models." *Transactions on Petri Nets and Other Models of Concurrency*. [ProM AntiAlignments](https://github.com/promworkbench/AntiAlignments)
 - **AVATAR**: Theis, J. & Darabi, H. (2020). "Adversarial System Variant Approximation to Quantify Process Model Generalization." *IEEE Access*, 8, 194410–194427. [Julian-Theis/AVATAR](https://github.com/Julian-Theis/AVATAR)
 - **Bootstrap Generalization**: Polyvyanyy, A., et al. (2022). "Bootstrapping Generalization of Process Models." *Information Systems*. [lgbanuelos/bsgen](https://github.com/lgbanuelos/bsgen)

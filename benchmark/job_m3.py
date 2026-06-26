@@ -10,6 +10,6 @@ ap.add_argument("--dataset", required=True); ap.add_argument("--output", default
 args = ap.parse_args()
 workdir = f"/tmp/benchmark_M3_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
-prepare_workdir(workdir, args.dataset, mode="log_dfg")
+prepare_workdir(workdir, args.dataset, mode="pnml")
 run(args.dataset, workdir, output_dir, miners=args.miners)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")

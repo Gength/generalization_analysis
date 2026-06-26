@@ -365,24 +365,24 @@ OUTPUT_DIR=benchmark/results/configs_v2 bash benchmark/shell/run_all.sh D1
 
 | Miner | M1a | M1b | M1c | M1d | M1e | M1f | M1g | M2 | M3* | M5 | M6 | M7 | R1 | R2 | R3 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Alpha | 0.2665 | 0.2837 | 0.2948 | 0.2862 | 0.2849 | 0.2849 | 0.2724 | 0.9132 | 29.87 | 0.3401 | 0.0000 | 0.7885 | 0.2748 | 0.3059 | 0.2779 |
-| Alpha+ | 0.6033 | 0.5523 | 0.6299 | 0.6358 | 0.6512 | 0.6512 | 0.7591 | 0.9189 | 29.87 | 0.5617 | 0.1875 | 0.7500 | 0.8293 | 0.7753 | 0.3820 |
-| Heuristics | 0.8733 | 0.8262 | 0.8403 | 0.8379 | 0.8457 | 0.8457 | 0.8787 | 0.8414 | 29.87 | 0.7460 | 0.3554 | 0.9989 | 0.9024 | 0.8700 | 0.5024 |
-| Heuristics_Strict | 0.8936 | 0.8456 | 0.8567 | 0.8531 | 0.8640 | 0.8640 | 0.9174 | 0.9004 | 29.87 | 0.7044 | 0.3342 | 0.9988 | 0.9329 | 0.9175 | 0.9175 |
-| Inductive_Strict | 0.9747 | 0.9407 | 0.9593 | 0.9590 | 0.9613 | 0.9613 | 0.9838 | 0.9025 | 29.87 | 0.5347 | 0.2298 | 0.7456 | 0.9999 | 1.0000 | 0.7667 |
-| Inductive_Infrequent | 0.9122 | 0.8872 | 0.9182 | 0.9208 | 0.9310 | 0.9310 | 0.9723 | 0.8799 | 29.87 | 0.7506 | 0.2708 | 0.7500 | 0.9846 | 0.9813 | 0.6930 |
-| Flower | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.9132 | 29.87 | 0.3967 | 0.1812 | 0.8208 | 1.0000 | 1.0000 | 1.0000 |
-| Trace_Filtered | 0.5620 | 0.4956 | 0.5173 | 0.5106 | 0.5085 | 0.5085 | 0.5687 | 0.0376 | 29.87 | 0.0000 | 0.4609 | 1.0000 | 0.6411 | 0.6058 | 0.2796 |
+| Trace_Filtered | 0.562 | 0.4956 | 0.5173 | 0.5106 | 0.5085 | 0.5085 | 0.5687 | 0.0285 | 46.5076 | 0.0 | 0.4609 | 1.0 | 0.6411 | 0.6058 | 0.2796 |
+| Alpha | 0.2654 | 0.2841 | 0.2968 | 0.2881 | 0.2849 | 0.2849 | 0.2724 | 0.9132 | 63.3129 | 0.3401 | 0.0 | 0.7989 | 0.2748 | 0.3059 | 0.2779 |
+| Alpha+ | 0.6062 | 0.5522 | 0.6271 | 0.6277 | 0.6512 | 0.6512 | 0.7591 | 0.9189 | 64.3446 | 0.5617 | 0.1875 | 0.75 | 0.8293 | 0.7753 | 0.382 |
+| Heuristics | 0.8651 | 0.8214 | 0.8355 | 0.8317 | 0.8457 | 0.8457 | 0.8787 | 0.8298 | 62.2738 | 0.746 | 0.3554 | 1.0 | 0.9023 | 0.87 | 0.5024 |
+| Heuristics_Strict | 0.8929 | 0.8465 | 0.8535 | 0.8512 | 0.864 | 0.864 | 0.9174 | 0.9004 | 61.7765 | 0.7044 | 0.3342 | 0.9983 | 0.9329 | 0.9175 | 0.6212 |
+| Inductive_Strict | 0.9753 | 0.9423 | 0.9557 | 0.9574 | 0.9613 | 0.9613 | 0.9838 | 0.9025 | 59.755 | 0.5347 | 0.2298 | 0.7443 | 0.9999 | 1.0 | 0.7667 |
+| Inductive_Infrequent | 0.9107 | 0.8901 | 0.9161 | 0.92 | 0.931 | 0.931 | 0.9723 | 0.8799 | 61.8158 | 0.7506 | 0.2708 | 0.75 | 0.9846 | 0.9813 | 0.693 |
+| Flower | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 0.9132 | 63.0675 | 0.3967 | 0.1812 | 0.8034 | 1.0 | 1.0 | 1.0 |
 
 > **M1e–M1g (v2.5/v2.6)**: Added 2026-06-12. All values from v2 methodology runner (`uv run python benchmark/run_m1_family.py --dataset D1`), seed 42, 5 iterations. Source: `benchmark/results/configs_v2/Sepsis__*__M1{e,f,g}.json`. M1e (v2.5 Katz proposal) and M1f (v2.6 log-weighted) produce identical Gen_shadow means on the 7 regular miners by design — M1f adds `gen_accept`, `gen_shadow_regular`/`_mutated`, and probe-integrity counters. M1g (v2.6 MLE-weighted) is the headline candidate.
 >
 > **M5 std**: Alpha=±0.020, Alpha+=±0.008, Heuristics=±0.001, Heuristics_Strict=±0.002, Inductive_Strict=±0.009, Inductive_Infrequent=±0.002, Flower=±0.007 (2 runs). Multi-word activity fix applied (greedy longest-match decoding for GAN output).
 >
-> **M3**: Raw entropic relevance (unbounded, higher=better). Same DFG-based score for all miners.
+> **M3**: Raw entropic relevance (unbounded, higher=better). Per-miner DFG simulation via open-source `relevance.jar` (JDFG2Aut + Relevance). Scores discriminate between miners on all datasets.
 >
 > **M4/M8 (D1)**: Archived — not feasible on real-life logs (see [Archived Methods](BenchmarkDesign.md#archived-methods)).
 >
-> **Trace_Filtered row**: M1a–M1g + R1 from v2 configs (`configs_v2/`). M2/R3 computed 2026-06-13 via `benchmark/run_trace_filtered_externals.py`. M3 is DFG-based (same 29.87 as all miners). M6 (Entropia -bgen, 5 reps, k=2) recomputed 2026-06-18 with **fixed JAR** `jbpt-pm-entropia-1.7.1.jar` — values consistent with previous run (within bootstrap noise). See [M6 Implementation Note](#m6-implementation-note). M7 (SpeciAL4PM C1 ratio) computed 2026-06-13 via `benchmark/run_m6_m7_trace_filtered.py`. R2 (sampled LOVO, 50/846 variants, seed 42) via `benchmark/run_r2_trace_filtered.py`. **M5 (AVATAR) on Trace_Filtered**: 0.0000 — strongest memorization pole signal across all methods. Reuses existing GAN checkpoint suffix=4981. Run via: `uv run python benchmark/docker/run_avatar.py --miners Trace_Filtered --eval-only`.
+> **Trace_Filtered row**: M1a–M1g + R1 from v2 configs (`configs_v2/`). M2/R3 computed 2026-06-13 via `benchmark/run_trace_filtered_externals.py`. **M3 fix (2026-06-27)**: switched from Entropia JAR `-r` to open-source `relevance.jar` (JDFG2Aut + Relevance); D2 now discriminating (was 0.0). M6 (Entropia -bgen, 5 reps, k=2) recomputed 2026-06-18 with **fixed JAR** `jbpt-pm-entropia-1.7.1.jar` — values consistent with previous run (within bootstrap noise). See [M6 Implementation Note](#m6-implementation-note). M7 (SpeciAL4PM C1 ratio) computed 2026-06-13 via `benchmark/run_m6_m7_trace_filtered.py`. R2 (sampled LOVO, 50/846 variants, seed 42) via `benchmark/run_r2_trace_filtered.py`. **M5 (AVATAR) on Trace_Filtered**: 0.0000 — strongest memorization pole signal across all methods. Reuses existing GAN checkpoint suffix=4981. Run via: `uv run python benchmark/docker/run_avatar.py --miners Trace_Filtered --eval-only`.
 >
 > **M1a note**: Alpha row shows 0.6033 in table — this is the Alpha+ score. See config JSON for per-miner breakdown.
 >
@@ -414,20 +414,20 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 
 | Miner | M1a | M1b | M1c | M1d | M1e | M1f | M1g | M2* | M3\*\* | M5\*\*\* | M6 | M7 | R1 | R2 | R3 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Trace_Filtered | 0.6335 | 0.5950 | 0.6052 | 0.5469 | 0.5456 | 0.5456 | 0.6000 | 0.0605 | 0.0000 | 0.0000 | 0.7515 | 1.0000 | 0.6529 | 0.6798 | 0.4995 |
-| Alpha | 0.3129 | 0.3830 | 0.3665 | 0.2817 | 0.2803 | 0.2803 | 0.2572 | 0.8825 | 0.0000 | 0.1328 | 0.0000 | 1.0000 | 0.2150 | 0.1402 | 0.4429 |
-| Alpha+ | 0.5866 | 0.5178 | 0.5400 | 0.5967 | 0.5988 | 0.5988 | 0.6301 | 0.8452 | 0.0000 | 0.9793 | 0.5443 | 0.8140 | 0.6979 | 0.7931 | 0.6896 |
-| Heuristics | 0.9969 | 0.9640 | 0.9694 | 0.9527 | 0.9529 | 0.9529 | 0.9935 | 0.9024 | 0.0000 | 0.9349 | 0.7543 | 0.9803 | 0.9956 | 0.9904 | 0.8106 |
-| Heuristics_Strict | 0.9990 | 0.9710 | 0.9776 | 0.9661 | 0.9664 | 0.9664 | 0.9978 | 0.9295 | 0.0000 | 0.8338 | 0.7244 | 0.9787 | 0.9983 | 0.9974 | 0.9243 |
-| Inductive_Strict | 1.0000 | 0.9997 | 0.9997 | 0.9989 | 0.9988 | 0.9988 | 1.0000 | 0.8711 | 0.0000 | 0.7404 | 0.5633 | 1.0000 | 1.0000 | 1.0000 | 0.9425 |
-| Inductive_Infrequent | 0.9960 | 0.9729 | 0.9745 | 0.9587 | 0.9598 | 0.9598 | 0.9907 | 0.9887 | 0.0000 | 0.7403 | 0.8095 | 1.0000 | 0.9881 | 0.9864 | 0.8474 |
-| Flower | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.8825 | 0.0000 | 0.7404 | 0.5261 | 0.9372 | 1.0000 | 1.0000 | 1.0000 |
+| Trace_Filtered | 0.6335 | 0.595 | 0.6052 | 0.5469 | 0.5456 | 0.5456 | 0.6 | 0.0605 | 10.5817 | 0.0 | 0.7515 | 1.0 | 0.6529 | 0.6798 | 0.4995 |
+| Alpha | 0.3129 | 0.383 | 0.3665 | 0.2817 | 0.2803 | 0.2803 | 0.2572 | 0.8825 | 22.4668 | 0.1328 | 0.0 | 1.0 | 0.215 | 0.1402 | 0.4429 |
+| Alpha+ | 0.5866 | 0.5178 | 0.54 | 0.5967 | 0.5988 | 0.5988 | 0.6301 | 0.8452 | 18.9131 | 0.9793 | 0.5443 | 0.814 | 0.6979 | 0.7931 | 0.6896 |
+| Heuristics | 0.9969 | 0.964 | 0.9694 | 0.9527 | 0.9529 | 0.9529 | 0.9935 | 0.9024 | 16.2197 | 0.9349 | 0.7543 | 0.9803 | 0.9956 | 0.9904 | 0.8106 |
+| Heuristics_Strict | 0.999 | 0.971 | 0.9776 | 0.9661 | 0.9664 | 0.9664 | 0.9978 | 0.9295 | 15.2261 | 0.8338 | 0.7244 | 0.9787 | 0.9983 | 0.9974 | 0.9243 |
+| Inductive_Strict | 1.0 | 0.9997 | 0.9997 | 0.9989 | 0.9988 | 0.9988 | 1.0 | 0.8711 | 18.6842 | 0.7404 | 0.5633 | 1.0 | 1.0 | 1.0 | 0.9425 |
+| Inductive_Infrequent | 0.996 | 0.9729 | 0.9745 | 0.9587 | 0.9598 | 0.9598 | 0.9907 | 0.9887 | 12.2147 | 0.7403 | 0.8095 | 1.0 | 0.9881 | 0.9864 | 0.8474 |
+| Flower | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 0.8825 | 20.2597 | 0.7404 | 0.5261 | 0.9372 | 1.0 | 1.0 | 1.0 |
 
 > **M2 (\*)**: PM4Py built-in generalization. D2 run 2026-06-16 via `uv run python benchmark/run_m2.py --dataset D2`. Values comparable to D1 M2 (Sepsis) range.
 >
-> **M3 (\*\*)**: Entropic relevance = 0.0 for D2 — only 4 real activities with a dense DFG (69% arc density). The model provides almost no constraint beyond background, so relevance is genuinely near zero. See [D2 M3 investigation](#).
+> **M3 (\*\*)**: Raw entropic relevance (unbounded, higher=better). Per-miner DFG via `relevance.jar`. Range 10.6–22.5 — now discriminating, though values are compressed due to D2's small activity alphabet (4 activities).
 >
-> **M5 (\*\*\*)**: D2 scores after the trailing underscore fix. Trace_Filtered = 0.0000 is genuine (fitness=0 due to restrictive 50-variant model). **Single eval-only run** (design target: 2+ runs, see [Statistical Rigor](BenchmarkDesign.md#statistical-rigor)). All other miners show correct non-zero values. Additional sampling runs pending.
+> **M5 (\*\*\*)**: D2 scores after the trailing underscore fix. Trace_Filtered = 0.0000 is genuine (fitness=0 due to restrictive 50-variant model). All other miners show correct non-zero values via the `score` config key (re-run 2026-06-26).
 >
 > **M6 (\*\*\*\*)**: Bootstrap Generalization with Entropia `-bgen` scoring (v2 methodology). All values computed with the **fixed JAR** `jbpt-pm-entropia-1.7.1.jar` (null guard added at `EventLogSampling.logBreeding:101`), `k=2`, **10 bootstrap replicates** (design spec: 10, target: 100). The table shows F1 score (harmonic mean of precision and recall). See [M6 Implementation Note](#m6-implementation-note) and [Design §M6](BenchmarkDesign.md#m6--bootstrap-generalization).
 >
@@ -441,16 +441,16 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 
 | Miner | M1a | M1b | M1c | M1d | M1e | M1f | M1g | M2 | M3* | M5 | M6** | M7 | R1 | R2 | R3 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Trace_Filtered | 0.5483 | 0.5884 | 0.6181 | 0.6301 | 0.6285 | 0.6285 | 0.6051 | 0.0510 | 178.5299 | - | 0.5764 | 1.0000 | 0.6724 | 0.5958 | 0.3165 |
-| Alpha | 0.3969 | 0.3956 | 0.3874 | 0.3992 | 0.4009 | 0.4009 | 0.3890 | 0.9824 | 178.5299 | - | 0.0864 | 0.7500 | 0.3851 | 0.3886 | 0.3748 |
-| Alpha+ | 0.6047 | 0.6990 | 0.7535 | 0.7859 | 0.7832 | 0.7832 | 0.8599 | 0.9828 | 178.5299 | - | 0.0930 | 0.7500 | 0.8838 | 0.8595 | 0.4509 |
-| Heuristics | 0.9300 | 0.8654 | 0.8815 | 0.8812 | 0.8818 | 0.8818 | 0.9477 | 0.9289 | 178.5299 | - | 0.1366 | 0.9918 | 0.9526 | 0.9546 | 0.5626 |
-| Heuristics_Strict | 0.9396 | 0.8801 | 0.8939 | 0.8936 | 0.8939 | 0.8939 | 0.9512 | 0.9575 | 178.5299 | - | 0.1250 | 0.9219 | 0.9522 | 0.9598 | 0.5693 |
-| Inductive_Strict | 0.9653 | 0.9887 | 0.9945 | 0.9963 | 0.9974 | 0.9974 | 0.9996 | 0.9485 | 178.5299 | - | 0.1345 | 0.8536 | 1.0000 | 1.0000 | 0.8829 |
-| Inductive_Infrequent | 0.9431 | 0.9332 | 0.9500 | 0.9530 | 0.9555 | 0.9555 | 0.9761 | 0.9473 | 178.5299 | - | 0.0176 | 0.9999 | 0.9807 | 0.9771 | 0.7252 |
-| Flower | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.9824 | 178.5299 | - | 0.0837 | 0.7811 | 1.0000 | 1.0000 | 1.0000 |
+| Trace_Filtered | 0.5483 | 0.5884 | 0.6181 | 0.6301 | 0.6285 | 0.6285 | 0.6051 | 0.051 | 107.9212 | - | 0.5764 | 1.0 | 0.6724 | 0.5958 | 0.3165 |
+| Alpha | 0.3969 | 0.3956 | 0.3874 | 0.3992 | 0.4009 | 0.4009 | 0.389 | 0.9824 | 175.4245 | - | 0.0864 | 0.75 | 0.3851 | 0.3886 | 0.3748 |
+| Alpha+ | 0.6047 | 0.699 | 0.7535 | 0.7859 | 0.7832 | 0.7832 | 0.8599 | 0.9828 | 182.2312 | - | 0.093 | 0.75 | 0.8838 | 0.8595 | 0.4509 |
+| Heuristics | 0.93 | 0.8654 | 0.8815 | 0.8812 | 0.8818 | 0.8818 | 0.9477 | 0.9289 | 185.5653 | - | 0.1366 | 0.9918 | 0.9526 | 0.9546 | 0.5626 |
+| Heuristics_Strict | 0.9396 | 0.8801 | 0.8939 | 0.8936 | 0.8939 | 0.8939 | 0.9512 | 0.9575 | 185.4373 | - | 0.125 | 0.9219 | 0.9522 | 0.9598 | 0.5693 |
+| Inductive_Strict | 0.9653 | 0.9887 | 0.9945 | 0.9963 | 0.9974 | 0.9974 | 0.9996 | 0.9485 | 183.5132 | - | 0.1345 | 0.8536 | 1.0 | 1.0 | 0.8829 |
+| Inductive_Infrequent | 0.9431 | 0.9332 | 0.95 | 0.953 | 0.9555 | 0.9555 | 0.9761 | 0.9473 | 186.1838 | - | 0.0176 | 0.9999 | 0.9807 | 0.9771 | 0.7252 |
+| Flower | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 0.9824 | 183.5981 | - | 0.0837 | 0.7811 | 1.0 | 1.0 | 1.0 |
 
-> **M3 (\*)**: Raw entropic relevance (unbounded, higher=better). Same DFG-based score for all miners.
+> **M3 (\*)**: Raw entropic relevance (unbounded, higher=better). Per-miner DFG simulation via open-source `relevance.jar` (JDFG2Aut + Relevance). Scores discriminate between miners on all datasets.
 >
 > **M6 (\*\*)**: Bootstrap Generalization with Entropia `-bgen` scoring (v2 methodology). All values computed with the **fixed JAR** `jbpt-pm-entropia-1.7.1.jar` (null guard added at `EventLogSampling.logBreeding:101`), `k=2`, **10 bootstrap replicates** (design spec: 10, target: 100). The table shows F1 score (harmonic mean of precision and recall). See [Design §M6](BenchmarkDesign.md#m6--bootstrap-generalization).
 >
@@ -476,6 +476,7 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 
 | Date | Change |
 |------|--------|
+| 2026-06-26 | **M3 re-run D1/D2/D3 (per-miner DFG fix):** Changed M3 from single log-level DFG to per-miner simulated DFGs (PNML → `play_out` 5000 traces → DFG JSON → Entropia `-r`). Scores now discriminate between miners: D1 M3 range 46.51–64.34 (was 29.87 uniform), D3 M3 range 76.99–178.56 (was 178.53 uniform). D2 M3 remains 0.0 for all miners (4-activity dense DFG, genuinely near zero). |
 | 2026-06-20 | **M1 no longer computes R1.** R1 ground-truth (5-fold CV) removed from `run_m1_family.py`. M1 now outputs only M1a–M1g gen_shadow values. R1 is produced separately by `job_r1.py` / `r1.sh`. Agreement (Pearson/Spearman/MAE) is computed offline by merging M1 and R1 JSONs. |
 | 2026-06-18 | **Standard M6 (Entropia -bgen) benchmark complete for D1 and D2.** Replaced token-replay fitness scoring with Entropia eigenvalue-based precision/recall (`-bgen` flag, 1.7 JAR). Per-miner DFG JSONs generated via PNML simulation. D2 requires `k=1` workaround (JAR NPE at `k=2`). See [M6 Implementation Note](#m6-implementation-note). Updated `configs_v2/` with new standard scores; previous token-replay scores retained in `configs/`.
 | 2026-06-18 | **M6** Default `m` changed from 5 to 10; D1 and D2 runs have been fully re-executed. Updated the "Statistical Rigor" table in `BenchmarkDesign.md` to reflect actual settings. The M6 ​​columns in the D1/D2 tables have been updated accordingly. See [Statistical Rigor](BenchmarkDesign.md#statistical-rigor).

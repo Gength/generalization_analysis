@@ -3,19 +3,18 @@
   "miner": "Heuristics",
   "method": "M3",
   "method_label": "Entropic Relevance",
-  "timestamp": "2026-06-19T15:57:32Z",
+  "timestamp": "2026-06-26T22:38:27Z",
   "host": "local",
   "seed": 42,
   "parameters": {
-    "jar": "entropia-1.7",
-    "flag": "-r",
-    "model": "DFG"
+    "jar": "relevance",
+    "flag": "JDFG2Aut+Relevance",
+    "model": "per-miner DFG \u2192 automaton (probability)"
   },
   "results": {
-    "entropic_relevance_raw": 0.0,
+    "entropic_relevance_raw": 16.21970194,
     "entropic_relevance_normalized": null,
-    "runtime_s": 0.6735460758209229,
-    "note": "Raw entropic relevance (unbounded). Same for all miners (DFG-based). Normalized version requires costOfBackgroundModel which the JAR -r flag does not output."
+    "runtime_s": 0.9240036010742188
   },
   "notes": ""
 }

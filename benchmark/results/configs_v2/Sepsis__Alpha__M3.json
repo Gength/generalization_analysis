@@ -3,19 +3,18 @@
   "miner": "Alpha",
   "method": "M3",
   "method_label": "Entropic Relevance",
-  "timestamp": "2026-06-19T15:56:49Z",
+  "timestamp": "2026-06-26T21:47:26Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "jar": "entropia-1.7",
     "flag": "-r",
-    "model": "DFG"
+    "model": "per-miner DFG (simulated)"
   },
   "results": {
-    "entropic_relevance_raw": 29.86915402386056,
+    "entropic_relevance_raw": 63.31285300009083,
     "entropic_relevance_normalized": null,
-    "runtime_s": 0.3365616798400879,
-    "note": "Raw entropic relevance (unbounded). Same for all miners (DFG-based). Normalized version requires costOfBackgroundModel which the JAR -r flag does not output."
+    "runtime_s": 0.28801488876342773
   },
   "notes": ""
 }

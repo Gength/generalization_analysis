@@ -36,6 +36,7 @@ KEY_MAP = {
     "M1e": "mean", "M1f": "mean", "M1g": "mean",
     "M2": "score",
     "M3": "entropic_relevance_raw",
+    "M5": "mean",           # fallback to "score" in extraction logic
     "M6": "gen_score",
     "M7": "gen_score",
     "R1": "mean", "R2": "mean", "R3": "mean",
@@ -99,12 +100,19 @@ def extract_dataset(name, label=None):
             d = json.load(f)
         key = KEY_MAP.get(method)
         if key is None:
-            # M5 or any unregistered method -> dash
+            # Unregistered method -> dash
             continue
         try:
             val = d["results"][key]
         except KeyError:
-            val = "-"
+            # M5 fallback: some configs use "score" instead of "mean"
+            if method == "M5" and key == "mean":
+                try:
+                    val = d["results"]["score"]
+                except KeyError:
+                    val = "-"
+            else:
+                val = "-"
         if isinstance(val, float):
             val = round(val, 4)
         data[(miner, method)] = val

@@ -4,7 +4,7 @@
 
 FROM nvcr.io/nvidia/tensorflow:25.02-tf2-py3
 
-LABEL description="AVATAR (RelGAN) benchmark environment — TF2 GPU (compat.v1 mode)"
+LABEL description="AVATAR (RelGAN) benchmark environment — TF2 GPU"
 
 # Install system build deps for pm4py deps (lxml, etc.)
 RUN apt-get update && apt-get install -y --no-install-recommends \
