@@ -1,0 +1,24 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Trace_Filtered",
+  "method": "M1d",
+  "method_label": "HybridGen v2.4 (uniform proposal)",
+  "timestamp": "2026-06-19T19:07:00Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.4",
+    "max_n": 1,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5,
+    "trace_model_top_k": 50
+  },
+  "results": {
+    "mean": 0.6300670566328028,
+    "std": 0.0008205991893531732,
+    "raw_iterations": null,
+    "runtime_s": 56.53685283660889
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

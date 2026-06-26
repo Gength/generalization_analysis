@@ -1,0 +1,31 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Alpha+",
+  "method": "M1e",
+  "method_label": "HybridGen v2.5 (Katz proposal)",
+  "timestamp": "2026-06-19T19:10:24Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.5",
+    "max_n": 1,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.7831613126419292,
+    "std": 0.005509181931527706,
+    "raw_iterations": [
+      0.7723687508847749,
+      0.786824627213949,
+      0.7872026217199349,
+      0.7840903406832439,
+      0.7853202227077433
+    ],
+    "runtime_s": 14.099473476409912,
+    "duplicates_kept": 0,
+    "truncated_traces": 0
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

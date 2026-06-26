@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Flower",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-19T19:27:33Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.9824200959583872,
+    "runtime_s": 15.006942987442017
+  },
+  "notes": ""
+}

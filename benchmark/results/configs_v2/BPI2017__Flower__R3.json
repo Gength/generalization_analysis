@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Flower",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-20T16:05:18Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 1.0,
+    "std": 0.0,
+    "runtime_s": 5.657642841339111
+  },
+  "notes": ""
+}

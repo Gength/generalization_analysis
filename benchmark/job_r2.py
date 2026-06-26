@@ -9,7 +9,7 @@ ap = argparse.ArgumentParser(description="R2 job")
 ap.add_argument("--dataset", required=True); ap.add_argument("--output", default=None)
 ap.add_argument("--seed", type=int, default=42); ap.add_argument("--miners", nargs="*", default=None)
 ap.add_argument("--r2-sample", type=int, default=0)
-ap.add_argument("--workers", type=int, default=8)
+ap.add_argument("--workers", type=int, default=14)
 args = ap.parse_args()
 workdir = f"/tmp/benchmark_R2_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)

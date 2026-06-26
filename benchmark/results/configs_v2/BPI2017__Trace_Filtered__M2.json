@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Trace_Filtered",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-19T19:23:14Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.051023442508317585,
+    "runtime_s": 257.74080753326416
+  },
+  "notes": ""
+}

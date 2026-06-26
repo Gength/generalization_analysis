@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Inductive_Infrequent",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-20T16:05:13Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.7252481623270801,
+    "std": 0.0026140059806070244,
+    "runtime_s": 75.84618735313416
+  },
+  "notes": ""
+}

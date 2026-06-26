@@ -1,0 +1,37 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Inductive_Infrequent",
+  "method": "M1g",
+  "method_label": "HybridGen v2.6 (MLE weighting)",
+  "timestamp": "2026-06-19T19:18:15Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.6",
+    "max_n": 1,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5,
+    "successor_weighting": "mle"
+  },
+  "results": {
+    "mean": 0.9761204275849877,
+    "std": 0.00019915123048480234,
+    "raw_iterations": [
+      0.9761175855465122,
+      0.9760812782970224,
+      0.9764875091275151,
+      0.9760256122190285,
+      0.975890152734861
+    ],
+    "runtime_s": 22.215722799301147,
+    "gen_accept": 0.0004,
+    "gen_accept_std": 0.0004898979485566357,
+    "gen_shadow_regular": 0.9763109027811041,
+    "gen_shadow_mutated": 0.9684116632912787,
+    "duplicates_kept": 0,
+    "truncated_traces": 0,
+    "max_trace_length_used": 360
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

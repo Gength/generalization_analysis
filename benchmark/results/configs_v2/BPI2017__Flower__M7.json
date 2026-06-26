@@ -1,0 +1,34 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Flower",
+  "method": "M7",
+  "method_label": "SpeciAL4PM",
+  "timestamp": "2026-06-19T20:54:13Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "n_grams": [
+      "1-gram",
+      "2-gram",
+      "3-gram",
+      "tv"
+    ]
+  },
+  "results": {
+    "c1_original": {
+      "1-gram": 1.0,
+      "2-gram": 0.9999818670114704,
+      "3-gram": 0.9998945977737544,
+      "tv": 0.5586358843582764
+    },
+    "c1_simulated": {
+      "1-gram": 1,
+      "2-gram": 1,
+      "3-gram": 1,
+      "tv": 0.06956783614480222
+    },
+    "gen_score": 0.7811329070028848,
+    "runtime_s": 17.1344792842865
+  },
+  "notes": ""
+}

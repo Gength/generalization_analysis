@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Trace_Filtered",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-20T15:58:13Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.3165099399364519,
+    "std": 0.003959180137041237,
+    "runtime_s": 90.07345938682556
+  },
+  "notes": ""
+}

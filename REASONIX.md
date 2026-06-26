@@ -36,12 +36,15 @@
   - `job_prepare.py` — `prepare_workdir(workdir, dataset_key, mode)` with 4 modes:
     `minimal`, `log_dfg`, `pnml`, `per_miner_dfgs`
   - `job_m1.py` … `job_m7.py`, `job_r1.py`, `job_r2.py`, `job_r3.py` — thin wrappers: create workdir → prepare → run → cleanup
+  - `job_m5.py` — M5 AVATAR self-contained job (Docker TF1)
+  - `job_r.py` — shared R-family entry point (also `job_r1.py`, `job_r2.py`, `job_r3.py`)
   - `run_m1_family.py`, `run_m2.py`, `run_r_family.py` — core algorithm implementations (expose `run()`)
-  - `bridges/run_m3.py`, `bridges/run_m6_bgen.py`, `bridges/run_m7.py` — bridge implementations
+  - `bridges/run_m3.py`, `bridges/run_m6_bgen.py`, `bridges/run_m7.py`, `bridges/avatar_bridge.py` — bridge implementations
   - `docker/run_avatar.py` — AVATAR (M5) implementation
   - `miners.py` — definitions of all miners used in benchmarks
   - `datasets.py` — canonical D1–D21 dataset definitions (single source of truth; all scripts import from here)
   - `utils.py` — shared benchmark utilities
+  - `extract_results.py` — universal result extractor: `--dataset D3` or `--all`, outputs Markdown table to stdout
   - `version_comparison.py` — **teammate**, multi-seed cross-version comparison: v2.4 vs v2.5 vs v2.6 vs v2.6-mle
   - `r1_accept.py` — **teammate**, R1 acceptance rate computation
   - `version_comparison_analysis.ipynb` — **teammate**, notebook for analyzing `version_comparison_D*.csv`
@@ -121,6 +124,42 @@ bash benchmark/shell/run_all.sh
   - `mcp__jupyter__execute_code` → temporary debug (not saved to notebook)
 
 - There is NO fallback. If the Jupyter MCP server is not connected or tools fail, report the problem and wait for the user to resolve it.
+
+## Benchmark quick-index
+
+Docs: [`BenchmarkDesign.md`](BenchmarkDesign.md) (methodology) · [`BenchmarkGuide.md`](BenchmarkGuide.md) (operations, results).
+
+### Dataset key → name → status
+
+| Key | Configs_v2 prefix | Status |
+|-----|-------------------|--------|
+| D1 | Sepsis | ✅ |
+| D2 | BPI2013_Incidents | ✅ |
+| D3 | BPI2017 | ⚠️ all except M5 |
+| D4 | BPI2018 | ⚠️ partial |
+| D5 | BPI2019 | ⚠️ partial |
+| D6 | BPI2013_Problem_Open | ⚠️ partial |
+| D7–D21 | see [`datasets.py`](benchmark/datasets.py) | — |
+
+### JSON value key per method (configs_v2)
+
+| Methods | Key in `results` |
+|---------|-----------------|
+| M1a–M1g, R1, R2, R3 | `mean` |
+| M2 | `score` |
+| M3 | `entropic_relevance_raw` (DFG-based, same across miners) |
+| M5 | `mean` (Docker TF1; present for D1/D2, missing for D3) |
+| M6, M7 | `gen_score` |
+
+### Extraction
+
+`benchmark/extract_results.py` — `--dataset D3` or `--all`, outputs Markdown table, missing → `-`.
+
+### Gotchas
+
+- **File prefix = dataset `name`, not key**: `BPI2017` not `D3`.
+- **`benchmark/models/` is legacy** — self-contained jobs prepare models in `/tmp`.
+- **M6 JAR**: must use patched `jbpt-pm-entropia-1.7.1.jar` (see BenchmarkGuide §1 M6 note).
 
 ## Watch out for
 - **Data files are .xes.gz** — PM4Py reads them directly; don't unzip

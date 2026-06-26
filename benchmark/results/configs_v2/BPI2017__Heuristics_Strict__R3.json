@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Heuristics_Strict",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-20T16:01:03Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.5693161322860953,
+    "std": 0.0017603587946754355,
+    "runtime_s": 63.05324983596802
+  },
+  "notes": ""
+}

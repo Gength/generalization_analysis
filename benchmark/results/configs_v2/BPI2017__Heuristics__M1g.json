@@ -1,0 +1,37 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Heuristics",
+  "method": "M1g",
+  "method_label": "HybridGen v2.6 (MLE weighting)",
+  "timestamp": "2026-06-19T19:17:09Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.6",
+    "max_n": 1,
+    "safe_threshold": 5,
+    "num_shadow_traces": 1000,
+    "iterations": 5,
+    "successor_weighting": "mle"
+  },
+  "results": {
+    "mean": 0.94770343246609,
+    "std": 0.0006312307781768485,
+    "raw_iterations": [
+      0.9485040013965493,
+      0.9480192100444877,
+      0.9480645215118048,
+      0.9468425627807917,
+      0.947086866596817
+    ],
+    "runtime_s": 20.787036657333374,
+    "gen_accept": 0.0,
+    "gen_accept_std": 0.0,
+    "gen_shadow_regular": 0.9484133634325392,
+    "gen_shadow_mutated": 0.9186905867219846,
+    "duplicates_kept": 0,
+    "truncated_traces": 0,
+    "max_trace_length_used": 360
+  },
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
+}

@@ -1,0 +1,21 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Heuristics",
+  "method": "M3",
+  "method_label": "Entropic Relevance",
+  "timestamp": "2026-06-19T19:27:43Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "entropia-1.7",
+    "flag": "-r",
+    "model": "DFG"
+  },
+  "results": {
+    "entropic_relevance_raw": 178.52990704138452,
+    "entropic_relevance_normalized": null,
+    "runtime_s": 8.769287347793579,
+    "note": "Raw entropic relevance (unbounded). Same for all miners (DFG-based). Normalized version requires costOfBackgroundModel which the JAR -r flag does not output."
+  },
+  "notes": ""
+}
