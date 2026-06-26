@@ -1,0 +1,324 @@
+"""Generate all report figures from the config JSONs (single source of truth).
+
+This merges the former make_report_figures.py and make_extra_figures.py into one
+entry point. All figures are derived from the same config files the tables are
+built from, so figures and tables cannot drift. Outputs vector PDFs to report/figures/.
+
+Figures currently used by the report:
+  fig_calibration_<tag>.pdf  metric score vs R1, small-multiples (on the line = calibrated)
+  fig_accept_<tag>.pdf       acceptance vs graded fitness, per miner (v2.6-mle)
+  fig_nsweep.pdf             realized mutation rate vs N-gram order (BPI 2017 sweep)
+  fig_pareto.pdf             speed vs accuracy (time vs MAE-to-R1; lower-left = better)
+
+Also generated but no longer referenced by the report (kept for slides / reuse):
+  fig_landscape_<tag>.pdf, fig_mae_<tag>.pdf, fig_metric_corr_<tag>.pdf, fig_ladder.pdf,
+  fig_runtime.pdf
+
+Usage: python benchmark/make_figures.py                       # D1 Sepsis (default)
+       python benchmark/make_figures.py --dataset BPI2013_Incidents
+"""
+import os, json, argparse
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+CFG_V1 = "benchmark/results/configs"        # external methods + R1/R2/R3
+CFG_V2 = "benchmark/results/configs_v2"     # M1 family (8 miners incl. trace) + R1
+OUT = "report/figures"
+os.makedirs(OUT, exist_ok=True)
+
+MINERS7 = ["Alpha", "Alpha+", "Heuristics", "Heuristics_Strict",
+           "Inductive_Infrequent", "Inductive_Strict", "Flower"]
+MINERS8 = ["Trace_Filtered"] + MINERS7
+REAL = MINERS7[:-1]  # six real miners (no flower pole)
+MLABEL = {"Trace_Filtered": "Trace*", "Alpha": "Alpha", "Alpha+": "Alpha+",
+          "Heuristics": "Heuristics", "Heuristics_Strict": "Heur-strict",
+          "Inductive_Infrequent": "Ind-infreq", "Inductive_Strict": "Ind-strict",
+          "Flower": "Flower*"}
+
+# --------------------------------------------------------------------------- #
+# config readers                                                              #
+# --------------------------------------------------------------------------- #
+def cfg(d, dataset, miner, method):
+    return f"{d}/{dataset}__{miner}__{method}.json"
+
+def score_of(path):
+    if not os.path.exists(path):
+        return np.nan
+    r = json.load(open(path, encoding="utf-8")).get("results", {})
+    for k in ("mean", "score", "gen_score"):
+        if r.get(k) is not None:
+            v = float(r[k])
+            # -1 is the "exceeds compute budget" sentinel; render as a timeout
+            # cell (NaN -> distinct gray "--"), not a low score.
+            return np.nan if v < 0 else v
+    return np.nan
+
+def _score(d, ds, m, meth):
+    return score_of(cfg(d, ds, m, meth))
+
+def col(ds, meth):
+    """Score vector over the six real miners; externals live in configs/."""
+    d = CFG_V1 if meth in ("M2", "M5", "M6", "M7") else CFG_V2
+    vals = np.array([_score(d, ds, m, meth) for m in REAL])
+    if np.all(np.isnan(vals)):
+        vals = np.array([_score(CFG_V1, ds, m, meth) for m in REAL])
+    return vals
+
+# --------------------------------------------------------------------------- #
+# shared plot helpers                                                         #
+# --------------------------------------------------------------------------- #
+def plot_heatmap(M, rows, cols, cmap, vmin, vmax, fmt, out, cbar_label):
+    fig, ax = plt.subplots(figsize=(0.85 * len(cols) + 2.0, 0.5 * len(rows) + 1.6))
+    im = ax.imshow(np.ma.masked_invalid(M), cmap=cmap, vmin=vmin, vmax=vmax, aspect="auto")
+    ax.set_xticks(range(len(cols))); ax.set_xticklabels(cols, rotation=30, ha="right", fontsize=8)
+    ax.set_yticks(range(len(rows))); ax.set_yticklabels(rows, fontsize=8)
+    ax.set_ylabel("miner", fontsize=8)
+    for i in range(M.shape[0]):
+        for j in range(M.shape[1]):
+            if np.isnan(M[i, j]):
+                ax.text(j, i, "--", ha="center", va="center", fontsize=7, color="0.5")
+            else:
+                norm = (M[i, j] - vmin) / (vmax - vmin)
+                dark = norm < 0.22 or norm > 0.80
+                ax.text(j, i, fmt.format(M[i, j]), ha="center", va="center",
+                        fontsize=7, color="white" if dark else "black")
+    cb = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.02)
+    cb.set_label(cbar_label, fontsize=8); cb.ax.tick_params(labelsize=7)
+    ax.set_xticks(np.arange(-.5, len(cols), 1), minor=True)
+    ax.set_yticks(np.arange(-.5, len(rows), 1), minor=True)
+    ax.grid(which="minor", color="white", linewidth=1.2); ax.tick_params(which="minor", length=0)
+    fig.tight_layout()
+    fig.savefig(out, bbox_inches="tight"); plt.close(fig)
+
+def plot_grouped_bars(rows, fit, acc, out):
+    x = np.arange(len(rows)); w = 0.38
+    fig, ax = plt.subplots(figsize=(7.2, 3.2))
+    b1 = ax.bar(x - w/2, fit, w, label="Fitness (graded)", color="#378ADD")
+    b2 = ax.bar(x + w/2, acc, w, label="Acceptance (strict)", color="#1D9E75")
+    ax.set_xticks(x); ax.set_xticklabels(rows, rotation=30, ha="right", fontsize=8)
+    ax.set_ylabel("score", fontsize=9); ax.set_ylim(0, 1.12)
+    ax.legend(fontsize=8, frameon=False, ncol=2, loc="upper left")
+    for bars in (b1, b2):
+        for bar in bars:
+            h = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width()/2, h + 0.015, f"{h:.2f}",
+                    ha="center", va="bottom", fontsize=6.5)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout(); fig.savefig(out, bbox_inches="tight"); plt.close(fig)
+
+# --------------------------------------------------------------------------- #
+# per-dataset figures                                                         #
+# --------------------------------------------------------------------------- #
+def _r1_per_miner(ds):
+    r1 = {}
+    for m in MINERS8:
+        v = score_of(cfg(CFG_V2, ds, m, "R1"))
+        if np.isnan(v):
+            v = score_of(cfg(CFG_V1, ds, m, "R1"))
+        r1[m] = v
+    return r1
+
+def fig_landscape(ds, tag):
+    """Landscape score heatmap (7 miners x methods+refs). No longer in the report."""
+    versions = [("v1", CFG_V2, "M1a"), ("v2.1", CFG_V2, "M1c"), ("v2.6-mle", CFG_V2, "M1g")]
+    externals = [("PM4Py", CFG_V1, "M2"), ("AVATAR", CFG_V1, "M5"),
+                 ("Bootstrap", CFG_V1, "M6"), ("SpeciAL", CFG_V1, "M7")]
+    infeasible = [("AntiAlign", CFG_V1, "M4"), ("Pattern", CFG_V1, "M8")]
+    refs = [("R1 CV", CFG_V1, "R1"), ("R2 LOVO", CFG_V1, "R2"), ("R3 Rand", CFG_V1, "R3")]
+    cols = versions + externals + infeasible + refs
+    M = np.full((len(MINERS7), len(cols)), np.nan)
+    for i, miner in enumerate(MINERS7):
+        for j, (_, d, meth) in enumerate(cols):
+            M[i, j] = score_of(cfg(d, ds, miner, meth))
+    plot_heatmap(M, [MLABEL[m] for m in MINERS7], [c[0] for c in cols],
+                 cmap="RdYlGn", vmin=0, vmax=1, fmt="{:.2f}",
+                 out=f"{OUT}/fig_landscape_{tag}.pdf", cbar_label="generalization score")
+
+def fig_mae(ds, tag):
+    """Key-methods MAE-to-R1 heatmap. No longer in the report."""
+    r1 = _r1_per_miner(ds)
+    cols2 = [("v1", CFG_V2, "M1a"), ("v2.1", CFG_V2, "M1c"), ("v2.6-mle", CFG_V2, "M1g"),
+             ("PM4Py", CFG_V1, "M2"), ("AVATAR", CFG_V1, "M5"),
+             ("Bootstrap", CFG_V1, "M6"), ("SpeciAL", CFG_V1, "M7")]
+    A = np.full((len(MINERS7), len(cols2)), np.nan)
+    for i, miner in enumerate(MINERS7):
+        for j, (_, d, meth) in enumerate(cols2):
+            s = score_of(cfg(d, ds, miner, meth))
+            A[i, j] = abs(s - r1[miner]) if not (np.isnan(s) or np.isnan(r1[miner])) else np.nan
+    plot_heatmap(A, [MLABEL[m] for m in MINERS7], [c[0] for c in cols2],
+                 cmap="RdYlGn_r", vmin=0, vmax=0.6, fmt="{:.3f}",
+                 out=f"{OUT}/fig_mae_{tag}.pdf", cbar_label="|score - R1|  (lower = better)")
+
+def fig_accept(ds, tag):
+    """Acceptance vs graded fitness (M1g = v2.6 mle, 8 miners)."""
+    fit, acc = [], []
+    for m in MINERS8:
+        r = json.load(open(cfg(CFG_V2, ds, m, "M1g"), encoding="utf-8"))["results"]
+        fit.append(r["mean"]); acc.append(r.get("gen_accept", np.nan))
+    plot_grouped_bars([MLABEL[m] for m in MINERS8], fit, acc, out=f"{OUT}/fig_accept_{tag}.pdf")
+
+def fig_calibration(ds, tag):
+    """Calibration small-multiples: each metric vs R1 over the six real miners."""
+    r1 = col(ds, "R1")
+    panels = [("v1", "M1a"), ("v2.6-mle", "M1g"), ("PM4Py", "M2"),
+              ("AVATAR", "M5"), ("Bootstrap", "M6"), ("SpeciAL", "M7")]
+    fig, axes = plt.subplots(2, 3, figsize=(7.4, 5.0), sharex=True, sharey=True)
+    for ax, (name, meth) in zip(axes.ravel(), panels):
+        y = col(ds, meth)
+        ax.plot([0, 1], [0, 1], ls="--", c="0.6", lw=1, zorder=1)
+        ax.scatter(r1, y, c="#378ADD", s=30, zorder=3, edgecolor="white", linewidth=0.6)
+        mae = np.nanmean(np.abs(y - r1))
+        ax.set_title(f"{name}  (MAE {mae:.3f})", fontsize=9)
+        ax.set_xlim(0, 1.05); ax.set_ylim(0, 1.05); ax.set_aspect("equal")
+        ax.tick_params(labelsize=7)
+    for ax in axes[-1]:
+        ax.set_xlabel("R1 cross-validation fitness", fontsize=8)
+    for ax in axes[:, 0]:
+        ax.set_ylabel("metric score", fontsize=8)
+    fig.suptitle("Calibration against held-out ground truth (six real miners; on the dashed line = perfect)",
+                 fontsize=9)
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
+    fig.savefig(f"{OUT}/fig_calibration_{tag}.pdf", bbox_inches="tight"); plt.close(fig)
+
+def fig_metric_corr(ds, tag):
+    """Inter-metric Pearson matrix over the six real miners. No longer in the report."""
+    methods = [("ours v2.6-mle", "M1g"), ("PM4Py", "M2"), ("AVATAR", "M5"),
+               ("Bootstrap", "M6"), ("SpeciAL", "M7"),
+               ("R1 CV", "R1"), ("R2 LOVO", "R2"), ("R3 rand", "R3")]
+    cols = [col(ds, m) for _, m in methods]
+    n = len(methods)
+    C = np.full((n, n), np.nan)
+    for i in range(n):
+        for j in range(n):
+            a, b = cols[i], cols[j]
+            mask = ~(np.isnan(a) | np.isnan(b))
+            if mask.sum() >= 3 and a[mask].std() > 0 and b[mask].std() > 0:
+                C[i, j] = np.corrcoef(a[mask], b[mask])[0, 1]
+    fig, ax = plt.subplots(figsize=(6.0, 5.0))
+    im = ax.imshow(np.ma.masked_invalid(C), cmap="RdYlGn", vmin=-1, vmax=1, aspect="auto")
+    labels = [nm for nm, _ in methods]
+    ax.set_xticks(range(n)); ax.set_xticklabels(labels, rotation=40, ha="right", fontsize=8)
+    ax.set_yticks(range(n)); ax.set_yticklabels(labels, fontsize=8)
+    for i in range(n):
+        for j in range(n):
+            if not np.isnan(C[i, j]):
+                ax.text(j, i, f"{C[i, j]:.2f}", ha="center", va="center", fontsize=6.5,
+                        color="white" if abs(C[i, j]) > 0.6 else "black")
+    cb = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.02)
+    cb.set_label("Pearson r over six real miners", fontsize=8); cb.ax.tick_params(labelsize=7)
+    ax.set_title("Inter-metric agreement (six real miners)", fontsize=9)
+    fig.tight_layout()
+    fig.savefig(f"{OUT}/fig_metric_corr_{tag}.pdf", bbox_inches="tight"); plt.close(fig)
+
+# --------------------------------------------------------------------------- #
+# dataset-independent figures                                                 #
+# --------------------------------------------------------------------------- #
+def _mae_vs_r1(ds, meth):
+    r1 = np.array([_score(CFG_V2, ds, m, "R1") for m in REAL])
+    x = np.array([_score(CFG_V2, ds, m, meth) for m in REAL])
+    return float(np.mean(np.abs(x - r1))) if not np.any(np.isnan(np.r_[x, r1])) else np.nan
+
+def fig_ladder():
+    """MAE-per-version on D1 and D2. No longer in the report."""
+    versions = [("v1", "M1a"), ("v2.1", "M1c"), ("v2.4", "M1d"),
+                ("v2.5", "M1e"), ("v2.6-log", "M1f"), ("v2.6-mle", "M1g")]
+    d1 = [_mae_vs_r1("Sepsis", me) for _, me in versions]
+    d2 = [_mae_vs_r1("BPI2013_Incidents", me) for _, me in versions]
+    xs = list(range(len(versions)))
+    fig, ax = plt.subplots(figsize=(6.2, 3.4))
+    ax.plot(xs, d1, "o-", color="#378ADD", label="D1 Sepsis")
+    ax.plot(xs, d2, "s--", color="#1D9E75", label="D2 BPI 2013")
+    ax.set_xticks(xs); ax.set_xticklabels([v for v, _ in versions], rotation=18, ha="right", fontsize=8)
+    ax.set_ylabel("MAE vs R1  (lower = better)", fontsize=9)
+    ax.set_ylim(0, max(v for v in d1 + d2 if not np.isnan(v)) * 1.18)
+    ax.annotate("only the final version,\nwith mle sampling, wins", xy=(5, d1[5]),
+                xytext=(2.6, 0.052), fontsize=7.5, color="0.25",
+                arrowprops=dict(arrowstyle="->", color="0.45"))
+    ax.legend(fontsize=8, frameon=False); ax.spines[["top", "right"]].set_visible(False)
+    ax.grid(axis="y", ls=":", alpha=.5)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_ladder.pdf", bbox_inches="tight"); plt.close(fig)
+
+def fig_nsweep():
+    """Realized mutation rate vs N (BPI 2017 sweep)."""
+    N = list(range(1, 9))
+    rate = [0.027, 0.211, 0.376, 0.664, 0.882, 1.333, 1.255, 1.208]  # x1e-3
+    fig, ax = plt.subplots(figsize=(5.6, 3.2))
+    ax.plot(N, rate, "o-", color="#378ADD")
+    ax.scatter([6], [1.333], s=90, facecolor="none", edgecolor="#b8403e", linewidth=1.6, zorder=5)
+    ax.annotate("peak at $N{=}6$", xy=(6, 1.333), xytext=(6.15, 0.85), fontsize=8,
+                arrowprops=dict(arrowstyle="->", color="0.45"))
+    ax.set_xlabel("N-gram order $N$", fontsize=9)
+    ax.set_ylabel(r"realized mutation rate ($\times10^{-3}$)", fontsize=9)
+    ax.set_xticks(N); ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.5)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_nsweep.pdf", bbox_inches="tight"); plt.close(fig)
+
+def fig_runtime():
+    """Per-model time on D1, log scale (bar). Superseded by fig_pareto in the report."""
+    data = [("PM4Py (M2)", 0.4, "work"), ("SpeciAL (M7)", 1.0, "work"),
+            ("R3 random", 4.4, "work"), ("ShadowGen", 5.4, "ours"),
+            ("Bootstrap (M6)", 11.1, "work"), ("R1 5-fold CV", 120, "gt"),
+            ("M8 pattern", 600, "infeasible"), ("AVATAR (M5)", 14400, "slow"),
+            ("M4 anti-align.", 48414, "infeasible")]
+    data.sort(key=lambda t: t[1])
+    labels = [d[0] for d in data]; vals = [d[1] for d in data]
+    cmap = {"ours": "#1D9E75", "work": "#378ADD", "gt": "#9673a6",
+            "slow": "#E8943A", "infeasible": "#b8403e"}
+    fig, ax = plt.subplots(figsize=(6.4, 3.4))
+    ax.barh(labels, vals, color=[cmap[d[2]] for d in data])
+    ax.set_xscale("log"); ax.set_xlabel("time per model (s, log scale)", fontsize=9)
+    for i, v in enumerate(vals):
+        lab = f"{v:.0f}s" if v < 90 else (f"{v/60:.0f} min" if v < 5400 else f"{v/3600:.1f} h")
+        ax.text(v * 1.18, i, lab, va="center", fontsize=7)
+    ax.set_xlim(0.2, 3e5); ax.tick_params(labelsize=8)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_runtime.pdf", bbox_inches="tight"); plt.close(fig)
+
+def fig_pareto():
+    """Speed vs accuracy on D1: time per model (log x) against MAE-to-R1 (y).
+    Lower-left = better. Runtimes match fig_runtime; MAE via col() (= Table 4)."""
+    ds = "Sepsis"
+    r1 = col(ds, "R1")
+    # (label, runtime_s, method_id, kind, label_dx, label_dy, ha)
+    pts = [("ShadowGen (ours)", 5.4, "M1g", "ours", 8, 4, "left"),
+           ("Bootstrap (M6)", 11.1, "M6", "work", 8, -12, "left"),
+           ("PM4Py (M2)", 0.4, "M2", "work", 8, 0, "left"),
+           ("SpeciAL (M7)", 1.0, "M7", "work", 8, 2, "left"),
+           ("AVATAR (M5)", 14400, "M5", "slow", -8, 4, "right"),
+           ("R3 random floor", 4.4, "R3", "floor", 0, 9, "center")]
+    cmap = {"ours": "#1D9E75", "work": "#378ADD", "slow": "#E8943A", "floor": "0.55"}
+    fig, ax = plt.subplots(figsize=(6.4, 4.0))
+    for label, t, meth, kind, dx, dy, ha in pts:
+        y = col(ds, meth)
+        mae = float(np.nanmean(np.abs(y - r1)))
+        ax.scatter(t, mae, s=80, color=cmap[kind], edgecolor="white", linewidth=0.8, zorder=3)
+        ax.annotate(label, (t, mae), textcoords="offset points", xytext=(dx, dy),
+                    fontsize=8, ha=ha)
+    ax.set_xscale("log")
+    ax.set_xlabel("time per model (s, log scale)", fontsize=9)
+    ax.set_ylabel("MAE vs R1  (lower = better)", fontsize=9)
+    ax.set_ylim(-0.02, 0.33); ax.set_xlim(0.2, 6e4)
+    ax.annotate("better", xy=(0.55, 0.005), xytext=(4.0, 0.075), fontsize=9, color="0.3",
+                arrowprops=dict(arrowstyle="->", color="0.45"))
+    ax.text(0.98, 0.97, "M4, M8: no score (infeasible)", transform=ax.transAxes,
+            ha="right", va="top", fontsize=7.5, color="#b8403e")
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.5)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_pareto.pdf", bbox_inches="tight"); plt.close(fig)
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dataset", default="Sepsis")
+    args = ap.parse_args()
+    ds = args.dataset
+    tag = "d1" if ds == "Sepsis" else ds.lower()
+
+    # used by the report
+    fig_calibration(ds, tag); fig_accept(ds, tag); fig_nsweep(); fig_pareto()
+    # kept for slides / reuse (not referenced by the current report)
+    fig_landscape(ds, tag); fig_mae(ds, tag); fig_metric_corr(ds, tag)
+    fig_ladder(); fig_runtime()
+    print(f"Figures written to {OUT}/ for dataset {ds}")
+
+if __name__ == "__main__":
+    main()
