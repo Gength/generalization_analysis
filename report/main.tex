@@ -88,7 +88,7 @@ Section~\ref{sec:background} fixes notation and the process-mining concepts the 
 \label{sec:background}
 
 \subsubsection{Event logs.}
-Let $\mathcal{A}$ be a finite set of activities. A trace $\sigma=\langle a_1,\dots,a_k\rangle\in\mathcal{A}^{*}$ is a finite sequence of activities; an event log $L$ is a multiset of traces. Traces with an identical activity sequence form a \emph{variant}; we write $V(L)$ for the set of variants and $\#\sigma$ for the case count of variant $\sigma$. Real logs are typically dominated by a few frequent variants and a long tail of rare ones. We summarize a log's repetitiveness by $\mathrm{TLRA}=1-|V(L)|/|L|$, the empirical probability that a new case repeats a known variant.
+Let $\mathcal{A}$ be a finite set of activities. A trace $\sigma=\langle a_1,\dots,a_k\rangle\in\mathcal{A}^{*}$ is a finite sequence of activities; an event log $L$ is a multiset of traces. Traces with an identical activity sequence form a \emph{variant}; we write $V(L)$ for the set of variants and, for a variant $v\in V(L)$, $\#v$ for its case count. Real logs are typically dominated by a few frequent variants and a long tail of rare ones. We summarize a log's repetitiveness by $\mathrm{TLRA}=1-|V(L)|/|L|$, the empirical probability that a new case repeats a known variant.
 
 \subsubsection{Process models and discovery.}
 A process discovery algorithm (a miner) maps a log to a process model. In this work all models are accepting Petri nets $(N,m_i,m_f)$ discovered with PM4Py~\cite{berti2019pm4py}; the discovery algorithms we use range from the Alpha miner~\cite{vanderaalst2004alpha} through the Heuristics miner~\cite{weijters2006hm} to the Inductive miner~\cite{leemans2013im,leemans2014imf}. Two extreme constructions serve as theoretical boundaries: a \emph{trace model}, one isolated path per observed variant, and a \emph{flower model}, all activities in a single self-loop accepting every sequence over $\mathcal{A}$.
@@ -186,7 +186,7 @@ ShadowGen scores a model by the replay quality of a synthetic \emph{shadow log}:
 \label{sec:method:gen}
 
 \subsubsection{Variant statistics.}
-The log is compressed to its variants with case counts; every count below is weighted by how often the variant occurs ($\#\sigma$). For each order $n\in\{1,\dots,N\}$ (default $N{=}6$) and each observed context $s$ (a length-$n$ activity sequence), we record the successor multiset $C_n(s)$, where $C_n(s)[a]$ is the frequency with which activity $a$ follows $s$, and separately the termination counts: $T_n(s)$, the number of occurrences of $s$, and $E_n(s)$, the number of those occurrences at the end of a trace.
+The log is compressed to its variants with case counts; every count below is weighted by how often the variant occurs ($\#v$). For each order $n\in\{1,\dots,N\}$ (default $N{=}6$) and each observed context $s$ (a length-$n$ activity sequence), we record the successor multiset $C_n(s)$, where $C_n(s)[a]$ is the frequency with which activity $a$ follows $s$, and separately the termination counts: $T_n(s)$, the number of occurrences of $s$, and $E_n(s)$, the number of those occurrences at the end of a trace.
 
 \subsubsection{Katz backoff.}
 At generation time the walker holds a partial trace $\sigma$ and resolves its decision context to the deepest order with adequate support. Let $\tau$ be a support threshold (default $5$). The \emph{resolved order} is the largest $n\le N$ such that the suffix $s=\mathrm{suffix}_n(\sigma)$ satisfies $|C_n(s)|_1 := \sum_a C_n(s)[a] \ge \tau$ \emph{and} the Good--Turing mass below is $<1$; otherwise $n$ is reduced, falling back ultimately to $n{=}1$. Thus $N$ is an upper bound, not a fixed operating point: on sparse logs the effective order is reduced naturally.
@@ -283,7 +283,7 @@ Figure~\ref{fig:mutation} traces one mutation on a synthetic Sepsis pathway (see
 
 \subsection{Time and space complexity}
 \label{sec:method:complexity}
-Let $|V|$ be the number of variants, $\bar\ell$ the mean variant length, $\ell_{\max}$ the longest, $A=|\mathcal{A}|$, $N$ the maximal order, $T$ the shadow-log size, $M\!\approx\!2\ell_{\max}$ the walk cap, $K$ the iteration count, and $|M_P|$ the size of the Petri net under evaluation. Let $E_V=\sum_{\sigma\in V(L)}|\sigma|$ be the total length of distinct variants.
+Let $|V|$ be the number of variants, $\bar\ell$ the mean variant length, $\ell_{\max}$ the longest, $A=|\mathcal{A}|$, $N$ the maximal order, $T$ the shadow-log size, $M\!\approx\!2\ell_{\max}$ the walk cap, $K$ the iteration count, and $|M_P|$ the size of the Petri net under evaluation. Let $E_V=\sum_{v\in V(L)}|v|$ be the total length of distinct variants.
 
 \emph{Statistics ($O(N\,E_V)$).} Each of $E_V$ positions contributes to $N$ orders, each $O(1)$. Space is $O(N\,D)$ where $D\le N\,E_V$ is the number of distinct $n$-grams stored.
 
@@ -303,7 +303,7 @@ The method assumes a control-flow view (activity sequences; data, resources, and
 
 \subsection{Architecture}
 \label{sec:impl:arch}
-The metric is implemented in Python on top of PM4Py~\cite{berti2019pm4py}. The code is organized as an \emph{algorithm registry}: each metric version registers itself under a name (\texttt{v1}, \dots, \texttt{v26}), and a benchmark runner loads a version by name and calls a uniform \texttt{evaluate\_miner(log, miner)} entry point. Each version is a \emph{frozen module}. Rather than mutating one file over time, every design stage is preserved as the exact code that produced its benchmark numbers, which is essential for the version study (Sect.~\ref{sec:eval:versions}) and for provenance. The benchmark layer comprises model preparation, per-method bridges (including subprocess bridges to external Java/Docker baselines), the ground-truth scripts, and two runners (\texttt{run\_m1\_family.py} for the metric family, \texttt{version\_comparison.py} for quick multi-seed checks).
+The metric is implemented in Python on top of PM4Py~\cite{berti2019pm4py}. The code is organized as an \emph{algorithm registry}: each metric version registers itself under a name (\texttt{v1}, \dots, \texttt{v2.6}), and a benchmark runner loads a version by name and calls a uniform \texttt{evaluate\_miner(log, miner)} entry point. Each version is a \emph{frozen module}. Rather than mutating one file over time, every design stage is preserved as the exact code that produced its benchmark numbers, which is essential for the version study (Sect.~\ref{sec:eval:versions}) and for provenance. The benchmark layer comprises model preparation, per-method bridges (including subprocess bridges to external Java/Docker baselines), the ground-truth scripts, and two runners (\texttt{run\_m1\_family.py} for the metric family, \texttt{version\_comparison.py} for quick multi-seed checks).
 
 \subsection{Key design decisions}
 \label{sec:impl:decisions}
@@ -317,7 +317,7 @@ The benchmark is driven from the command line. Listing~\ref{lst:cli} shows a run
 $ python benchmark/run_m1_family.py --dataset D1
 Discovering models (cached across methods):
   Trace_Filtered  751t/377p  ...   Flower 16t/1p
---- M1g: HybridGen v26 (MLE weighting) ---
+--- M1g: HybridGen v2.6 (MLE weighting) ---
     Inductive_Strict   0.9838 +- 0.0020   (6.7s)
     Flower             1.0000 +- 0.0000   (3.5s)
 SUMMARY  Pearson 0.996  Spearman 1.000  MAE 0.023  Flower 1.000
@@ -326,7 +326,7 @@ SUMMARY  Pearson 0.996  Spearman 1.000  MAE 0.023  Flower 1.000
 \begin{lstlisting}[caption={Sidecar config JSON for one cell (abridged).},label={lst:json}]
 { "dataset": "Sepsis", "miner": "Inductive_Strict", "method": "M1g",
   "seed": 42,
-  "parameters": { "algorithm_version": "v26", "max_n": 6,
+  "parameters": { "algorithm_version": "v2.6", "max_n": 6,
                   "successor_weighting": "mle", "num_shadow_traces": 1000,
                   "iterations": 5 },
   "results": { "mean": 0.9838, "std": 0.0020, "gen_accept": 0.7444,
