@@ -13,7 +13,7 @@ ap.add_argument("--workers", type=int, default=14)
 args = ap.parse_args()
 workdir = f"/tmp/benchmark_R2_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
-prepare_workdir(workdir, args.dataset, mode="minimal")
+prepare_workdir(workdir, args.dataset, copy_xes=True)
 run_r2(args.dataset, workdir, output_dir, seed=args.seed, miners=args.miners,
        sample_n=args.r2_sample, workers=args.workers)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")

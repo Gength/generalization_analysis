@@ -196,7 +196,7 @@ def main():
     output_dir = args.output or os.path.join(workdir, "results")
     os.makedirs(output_dir, exist_ok=True)
 
-    prepare_workdir(workdir, args.dataset, mode="pnml")
+    prepare_workdir(workdir, args.dataset, copy_xes=True, discover_pnmls=True)
     run(args.dataset, workdir, output_dir, miners=args.miners)
     shutil.rmtree(workdir)
     print(f"  [clean] removed {workdir}")

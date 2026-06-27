@@ -17,7 +17,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 from job_prepare import prepare_workdir
 from run_m2 import run
-prepare_workdir(workdir, args.dataset, mode="minimal")
+prepare_workdir(workdir, args.dataset, copy_xes=True)
 run(args.dataset, workdir, output_dir, miners=args.miners)
 shutil.rmtree(workdir)
 print(f"  [clean] removed {workdir}")

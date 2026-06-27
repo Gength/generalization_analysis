@@ -70,7 +70,7 @@ probe-integrity counters `duplicates_kept` / `truncated_traces`.
 | Method | Repository | Local Path |
 |--------|-----------|------------|
 | Entropic Relevance | [promtecmx/relevance](https://github.com/promtecmx/relevance) | `./src/relevance/` |
-| Anti-Alignment Generalization | ❌ Archived | `archive/Tianhao/benchmark/` |
+| Anti-Alignment Generalization | [ProcessMPUT/processm](https://github.com/ProcessMPUT/processm) → `processm.conformance/src/main/kotlin/processm/conformance/models/antialignments` | `./src/processm/` |
 | AVATAR | [Julian-Theis/AVATAR](https://github.com/Julian-Theis/AVATAR) | `./src/AVATAR/` |
 | Bootstrap Generalization | [lgbanuelos/bsgen](https://github.com/lgbanuelos/bsgen) + [jbpt/codebase](https://github.com/jbpt/codebase/tree/master/jbpt-pm/gen/bootstrap) | `./src/bsgen/` (Python), `./src/codebase/jbpt-pm/entropia/` (Java `-bgen`) |
 | SpeciAL4PM | [MartinKabierski/SpeciAL-core](https://github.com/MartinKabierski/SpeciAL-core) | `./src/SpeciAL-core/` |
@@ -711,6 +711,8 @@ Step 12: Aggregate results across all 21 datasets
 ### M4 — Anti-Alignment Generalization (AntiAlignments JAR)
 
 > ❌ **Archived** — The algorithm is inherently single-threaded O(n²~n³). On D1 Sepsis (1,050 traces), Alpha+ ran for 14 hours without completing a single miner. Verified working on mini dataset (10 traces, Gen=0.7125, 53ms) but infeasible on any real-life log. Scripts moved to `archive/Tianhao/benchmark/`.
+>
+> **2026-06-27 re-evaluation**: Tested with [ProcessMPUT/processm](https://github.com/ProcessMPUT/processm) Kotlin implementation (`antialignments` module). On D1 Sepsis with Alpha miner: still infeasible — no result after 10+ hours. The algorithm's exponential complexity remains the fundamental blocker.
 
 ### M8 — Pattern-based Generalization (AutomataConformance)
 
@@ -731,7 +733,7 @@ Step 12: Aggregate results across all 21 datasets
 ## References
 
 - **Entropic Relevance**: Polyvyanyy, A., et al. (2020). "Entropic Relevance: A Mechanism for Measuring Stochastic Process Model Quality." *arXiv:2007.09310*. Implementation: [promtecmx/relevance](https://github.com/promtecmx/relevance); original: [jbpt/codebase](https://github.com/jbpt/codebase/tree/master/jbpt-pm/entropia)
-- **Anti-Alignment Generalization**: van Dongen, B. (2017). "Computing Alignments of Event Data and Process Models." *Transactions on Petri Nets and Other Models of Concurrency*. [ProM AntiAlignments](https://github.com/promworkbench/AntiAlignments)
+- **Anti-Alignment Generalization**: van Dongen, B. (2017). "Computing Alignments of Event Data and Process Models." *Transactions on Petri Nets and Other Models of Concurrency*. Original: [ProM AntiAlignments](https://github.com/promworkbench/AntiAlignments); Kotlin reimplementation: [ProcessMPUT/processm](https://github.com/ProcessMPUT/processm) (`processm.conformance/src/main/kotlin/processm/conformance/models/antialignments`)
 - **AVATAR**: Theis, J. & Darabi, H. (2020). "Adversarial System Variant Approximation to Quantify Process Model Generalization." *IEEE Access*, 8, 194410–194427. [Julian-Theis/AVATAR](https://github.com/Julian-Theis/AVATAR)
 - **Bootstrap Generalization**: Polyvyanyy, A., et al. (2022). "Bootstrapping Generalization of Process Models." *Information Systems*. [lgbanuelos/bsgen](https://github.com/lgbanuelos/bsgen)
 - **SpeciAL4PM**: Kabierski, M., et al. (2023). "Addressing the Log Representativeness Problem Using Species Discovery." *ICPM 2023*. [MartinKabierski/SpeciAL-core](https://github.com/MartinKabierski/SpeciAL-core)

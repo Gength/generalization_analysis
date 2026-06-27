@@ -12,6 +12,6 @@ ap.add_argument("--num-traces", type=int, default=1000)
 args = ap.parse_args()
 workdir = f"/tmp/benchmark_R3_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
-prepare_workdir(workdir, args.dataset, mode="minimal")
+prepare_workdir(workdir, args.dataset, copy_xes=True)
 run_r3(args.dataset, workdir, output_dir, seed=args.seed, miners=args.miners, num_traces=args.num_traces)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")

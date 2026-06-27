@@ -21,7 +21,7 @@ def run(dataset_key, workdir, output_dir, miners=None):
         dname, xes_path = mf["dataset"], mf["xes_file"]
     else:
         from job_prepare import prepare_workdir
-        ctx = prepare_workdir(workdir, dataset_key, mode="minimal")
+        ctx = prepare_workdir(workdir, dataset_key, copy_xes=True)
         dname, xes_path = ctx["dataset_name"], ctx["xes_path"]
 
     log = pm4py.read_xes(xes_path)

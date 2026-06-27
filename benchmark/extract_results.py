@@ -22,7 +22,7 @@ RESULTS_DIR = Path(__file__).resolve().parent / "results" / "configs_v2"
 
 METHOD_ORDER = [
     "M1a", "M1b", "M1c", "M1d", "M1e", "M1f", "M1g",
-    "M2", "M3", "M5", "M6", "M7", "R1", "R2", "R3",
+    "M2", "M3", "M4", "M5", "M6", "M7", "R1", "R2", "R3",
 ]
 MINER_ORDER = [
     "Trace_Filtered", "Alpha", "Alpha+", "Heuristics", "Heuristics_Strict",
@@ -30,12 +30,13 @@ MINER_ORDER = [
 ]
 
 # For each method, the key under results{} to extract.
-# Methods not listed (e.g. M5) are always filled with "-".
+# Methods not listed (e.g. M8) are always filled with "-".
 KEY_MAP = {
     "M1a": "mean", "M1b": "mean", "M1c": "mean", "M1d": "mean",
     "M1e": "mean", "M1f": "mean", "M1g": "mean",
     "M2": "score",
     "M3": "entropic_relevance_raw",
+    "M4": "gen_score",
     "M5": "mean",           # fallback to "score" in extraction logic
     "M6": "gen_score",
     "M7": "gen_score",

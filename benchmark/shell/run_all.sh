@@ -28,7 +28,7 @@ sbatch benchmark/shell/m6.sh --dataset "$DATASET" --output "$OUTPUT"
 sbatch benchmark/shell/m7.sh --dataset "$DATASET" --output "$OUTPUT"
 # sbatch benchmark/shell/m5.sh --dataset "$DATASET" --output "$OUTPUT"  # requires Docker GPU
 sbatch benchmark/shell/r1.sh --dataset "$DATASET" --output "$OUTPUT"
-sbatch benchmark/shell/r2.sh --dataset "$DATASET" --output "$OUTPUT"
+bash benchmark/shell/r2.sh --dataset "$DATASET" --output "$OUTPUT"
 sbatch benchmark/shell/r3.sh --dataset "$DATASET" --output "$OUTPUT"
 
 echo ""

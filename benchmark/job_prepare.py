@@ -1,12 +1,12 @@
 """
 Job Preparation Module — prepare_workdir() for self-contained benchmark jobs.
 
-Prepares a temp workdir with exactly what each method needs:
+Each bool flag directly controls one data product:
 
-  mode="minimal":         XES copy + manifest
-  mode="log_dfg":         + log-level DFG JSON
-  mode="pnml":            + PNML for all miners
-  mode="per_miner_dfgs":  + per-miner DFG JSONs (via PNML simulation)
+  copy_xes=True:         copy source XES to workdir (native format — .xes or .xes.gz)
+  decompress_xes=True:   additionally decompress to .xes_plain (M6 Java JAR only)
+  discover_pnmls=True:   discover PNML for all 8 miners
+  per_miner_dfgs=True:   simulate PNMLs → per-miner DFG JSONs (M6 only)
 
 All I/O is contained in `workdir`. Returns a dict of paths.
 """
@@ -54,21 +54,28 @@ def _dump_dfg(log, path):
         json.dump({"nodes": nodes, "arcs": arcs}, f, indent=2)
 
 
-def prepare_workdir(workdir, dataset_key, mode="minimal"):
+def prepare_workdir(workdir, dataset_key,
+                    copy_xes=True,
+                    decompress_xes=False,
+                    discover_pnmls=False,
+                    per_miner_dfgs=False):
     """Prepare `workdir` with data for a benchmark method.
 
     Args:
         workdir: Absolute path to a (possibly non-existent) temp directory.
                  Created if needed; caller is responsible for cleanup.
         dataset_key: e.g. "D1", "D2".
-        mode: "minimal" | "log_dfg" | "pnml" | "per_miner_dfgs"
+        copy_xes: Copy the source XES to workdir (native format — .xes or .xes.gz).
+        decompress_xes: Also produce a decompressed .xes_plain (M6 Java JAR only).
+        discover_pnmls: Discover PNML for all 8 miners.
+        per_miner_dfgs: Simulate PNMLs → per-miner DFG JSONs (implies discover_pnmls).
 
     Returns:
         dict {
             "dataset_name": str,
             "xes_path": str,
-            "xes_plain": str,        # decompressed copy
-            "dfg_path": str | None,
+            "xes_plain": str,        # decompressed copy (same as xes_path if not decompressed)
+            "dfg_path": str | None,  # always None — log-level DFG no longer produced
             "manifest_path": str,
             "manifest": dict,
             "miner_names": list[str],
@@ -83,47 +90,41 @@ def prepare_workdir(workdir, dataset_key, mode="minimal"):
     dname = ds["name"]
     slug = dname.lower().replace(" ", "_")
     log_path = ds["log_path"]
-    xes_path = os.path.join(workdir, f"{slug}.xes.gz")
-    xes_plain = os.path.join(workdir, f"{slug}.xes")
-    dfg_path = os.path.join(workdir, f"{slug}_dfg.json") if mode != "minimal" else None
 
-    # ── XES copy ──────────────────────────────────────────────────────────
-    if log_path.endswith(".gz"):
+    # ── XES copy (always retains original extension) ──────────────────────
+    xes_path = os.path.join(workdir, f"{slug}{os.path.splitext(log_path)[1]}")
+    if copy_xes:
         shutil.copy2(log_path, xes_path)
+        xes_manifest = xes_path
     else:
-        with open(log_path, "rb") as f_in:
-            with gzip.open(xes_path, "wb") as f_out:
-                shutil.copyfileobj(f_in, f_out)
+        xes_manifest = log_path
 
-    # Decompressed copy (some JAR tools need plain .xes)
-    try:
-        with gzip.open(xes_path, "rb") as f_in:
-            with open(xes_plain, "wb") as f_out:
-                shutil.copyfileobj(f_in, f_out)
-    except Exception:
-        xes_plain = xes_path
+    # ── Decompressed XES plain (M6 Java JAR only) ─────────────────────────
+    xes_plain = xes_path
+    if decompress_xes and copy_xes:
+        slug_xes = os.path.join(workdir, f"{slug}.xes")
+        if log_path.endswith(".gz"):
+            with gzip.open(log_path, "rb") as f_in:
+                with open(slug_xes, "wb") as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+            xes_plain = slug_xes
+        else:
+            # Already plain .xes, just symlink or reference the copy
+            xes_plain = xes_path
 
-    print(f"  [prep] XES → {xes_path}")
+    print(f"  [prep] XES → {xes_manifest}" +
+          (f"  plain → {xes_plain}" if xes_plain != xes_manifest else ""))
 
     manifest = {
         "dataset": dname,
-        "xes_file": xes_path,
+        "xes_file": xes_manifest,
         "miners": {},
     }
 
-    # ── Log-level DFG ─────────────────────────────────────────────────────
-    if mode in ("log_dfg", "pnml", "per_miner_dfgs"):
+    # ── PNML discovery for all miners ─────────────────────────────────────
+    if discover_pnmls:
         log = pm4py.read_xes(log_path)
         log = pm4py.convert_to_event_log(log)
-        _dump_dfg(log, dfg_path)
-        manifest["dfg_json"] = dfg_path
-        print(f"  [prep] Log DFG → {dfg_path}")
-
-    # ── PNMLs ─────────────────────────────────────────────────────────────
-    if mode in ("pnml", "per_miner_dfgs"):
-        if "log" not in locals():
-            log = pm4py.read_xes(log_path)
-            log = pm4py.convert_to_event_log(log)
         MINERS = _get_miners()
         for mname, mfn in MINERS.items():
             try:
@@ -141,8 +142,8 @@ def prepare_workdir(workdir, dataset_key, mode="minimal"):
             except Exception as e:
                 print(f"  [prep] {mname:22s} SKIP ({e})")
 
-    # ── Per-miner DFGs ────────────────────────────────────────────────────
-    if mode == "per_miner_dfgs":
+    # ── Per-miner DFGs (simulate PNML → DFG JSON) ─────────────────────────
+    if per_miner_dfgs:
         dfg_dir = os.path.join(workdir, "dfg_models")
         os.makedirs(dfg_dir, exist_ok=True)
         if "log" not in locals():
@@ -191,9 +192,9 @@ def prepare_workdir(workdir, dataset_key, mode="minimal"):
 
     return {
         "dataset_name": dname,
-        "xes_path": xes_path,
+        "xes_path": xes_manifest,
         "xes_plain": xes_plain,
-        "dfg_path": dfg_path,
+        "dfg_path": None,
         "manifest_path": manifest_path,
         "manifest": manifest,
         "miner_names": list(_get_miners().keys()),

@@ -11,6 +11,6 @@ ap.add_argument("--seed", type=int, default=42); ap.add_argument("--miners", nar
 args = ap.parse_args()
 workdir = f"/tmp/benchmark_R1_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
-prepare_workdir(workdir, args.dataset, mode="minimal")
+prepare_workdir(workdir, args.dataset, copy_xes=True)
 run_r1(args.dataset, workdir, output_dir, seed=args.seed, miners=args.miners)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")

@@ -139,7 +139,7 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     from job_prepare import prepare_workdir
-    prepare_workdir(workdir, args.dataset, mode="per_miner_dfgs")
+    prepare_workdir(workdir, args.dataset, copy_xes=True, decompress_xes=True, discover_pnmls=True, per_miner_dfgs=True)
     run(args.dataset, workdir, output_dir, jar=args.jar, k=args.k, m=args.m,
         n=args.n, g=args.g, p=args.p, miners=args.miners)
     shutil.rmtree(workdir)

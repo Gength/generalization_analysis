@@ -38,7 +38,7 @@ def _load_workdir(workdir, dataset_key):
         dname, xes_path = mf["dataset"], mf["xes_file"]
     else:
         from job_prepare import prepare_workdir
-        ctx = prepare_workdir(workdir, dataset_key, mode="minimal")
+        ctx = prepare_workdir(workdir, dataset_key, copy_xes=True)
         dname, xes_path = ctx["dataset_name"], ctx["xes_path"]
     log = pm4py.read_xes(xes_path)
     log = pm4py.convert_to_event_log(log)

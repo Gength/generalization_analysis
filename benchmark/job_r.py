@@ -13,6 +13,6 @@ ap.add_argument("--r2-sample", type=int, default=0); ap.add_argument("--num-trac
 args = ap.parse_args()
 workdir = f"/tmp/benchmark_R_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
-prepare_workdir(workdir, args.dataset, mode="minimal")
+prepare_workdir(workdir, args.dataset, copy_xes=True)
 run(args.dataset, workdir, output_dir, methods=args.methods, seed=args.seed, miners=args.miners, r2_sample=args.r2_sample, num_traces=args.num_traces)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")

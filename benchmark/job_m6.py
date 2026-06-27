@@ -14,6 +14,6 @@ ap.add_argument("--miners", nargs="+", default=None)
 args = ap.parse_args()
 workdir = f"/tmp/benchmark_M6_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
-prepare_workdir(workdir, args.dataset, mode="per_miner_dfgs")
+prepare_workdir(workdir, args.dataset, copy_xes=True, decompress_xes=True, discover_pnmls=True, per_miner_dfgs=True)
 run(args.dataset, workdir, output_dir, jar=args.jar, k=args.k, m=args.m, n=args.n, g=args.g, p=args.p, miners=args.miners)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")
