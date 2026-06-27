@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Heuristics_Strict",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-24T09:00:24Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.9292774090614192,
+    "std": 0.0030614153801122026,
+    "raw_shuffles": [
+      0.9326449558775465,
+      0.9299501410162339,
+      0.9252371302904772
+    ],
+    "runtime_s": 256.9712393283844
+  },
+  "notes": ""
+}

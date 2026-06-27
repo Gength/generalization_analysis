@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Inductive_Strict",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-24T08:46:46Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.9553322127754145,
+    "std": 0.0008403635179593298,
+    "runtime_s": 93.59701633453369
+  },
+  "notes": ""
+}

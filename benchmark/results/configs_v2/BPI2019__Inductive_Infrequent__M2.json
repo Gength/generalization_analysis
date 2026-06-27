@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Inductive_Infrequent",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-24T08:50:07Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.8923333558041053,
+    "runtime_s": 86.41301679611206
+  },
+  "notes": ""
+}

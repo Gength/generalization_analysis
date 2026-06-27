@@ -1,0 +1,27 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Inductive_Infrequent",
+  "method": "M1b",
+  "method_label": "HybridGen v2.1 (N=3)",
+  "timestamp": "2026-06-24T08:52:41Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.1",
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.9672969181559645,
+    "std": 0.0009310148083502189,
+    "raw_iterations": [
+      0.9681363650167379,
+      0.9681238814525902,
+      0.9658644655788544,
+      0.9665218682904597,
+      0.9678380104411805
+    ],
+    "runtime_s": 48.45200729370117
+  },
+  "notes": "run_m1_family.py"
+}

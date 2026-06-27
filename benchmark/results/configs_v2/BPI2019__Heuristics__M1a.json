@@ -1,0 +1,27 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Heuristics",
+  "method": "M1a",
+  "method_label": "HybridGen v1.0 (1-gram DFG)",
+  "timestamp": "2026-06-24T08:48:39Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v1.0",
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.8302244839247621,
+    "std": 0.0014241387298933761,
+    "raw_iterations": [
+      0.8283759771977178,
+      0.8327081530143333,
+      0.8297591276772892,
+      0.8305422549588248,
+      0.8297369067756454
+    ],
+    "runtime_s": 92.55125570297241
+  },
+  "notes": "run_m1_family.py"
+}

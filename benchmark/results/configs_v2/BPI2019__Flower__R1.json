@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Flower",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-24T09:24:46Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 1.0,
+    "std": 0.0,
+    "raw_shuffles": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "runtime_s": 80.25743794441223
+  },
+  "notes": ""
+}

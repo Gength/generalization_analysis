@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Alpha+",
+  "method": "M2",
+  "method_label": "PM4Py Built-in Gen",
+  "timestamp": "2026-06-24T08:44:27Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "score": 0.914657734338877,
+    "runtime_s": 33.57747793197632
+  },
+  "notes": ""
+}

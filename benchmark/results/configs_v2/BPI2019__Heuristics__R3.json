@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Heuristics",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-24T08:43:49Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.49905995435541184,
+    "std": 0.004065871229481673,
+    "runtime_s": 30.947404861450195
+  },
+  "notes": ""
+}

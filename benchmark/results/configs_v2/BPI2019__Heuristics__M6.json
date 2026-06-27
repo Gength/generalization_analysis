@@ -1,0 +1,23 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Heuristics",
+  "method": "M6",
+  "method_label": "Bootstrap Gen (Entropia -bgen)",
+  "timestamp": "2026-06-25T17:03:46Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "jbpt-pm-entropia-1.7.1",
+    "flag": "-bgen"
+  },
+  "results": {
+    "gen_score": 0.188541,
+    "precision": 0.10515,
+    "precision_std": 0.002605,
+    "recall": 0.91111,
+    "recall_std": 0.014361,
+    "n_replicates": 10,
+    "runtime_s": 269.0
+  },
+  "notes": ""
+}
