@@ -1,0 +1,19 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Alpha+",
+  "method": "R3",
+  "method_label": "Naive Random Baseline",
+  "timestamp": "2026-06-20T22:35:24Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "num_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.46097966489209485,
+    "std": 0.005169835239681355,
+    "runtime_s": 17.151649236679077
+  },
+  "notes": ""
+}

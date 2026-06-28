@@ -1,0 +1,28 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Trace_Filtered",
+  "method": "M1g",
+  "method_label": "HybridGen v2.6 (MLE)",
+  "timestamp": "2026-06-21T02:52:38Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.6",
+    "num_shadow_traces": 1000,
+    "iterations": 5,
+    "successor_weighting": "mle"
+  },
+  "results": {
+    "mean": 0.5814456076440166,
+    "std": 0.003714271645313553,
+    "raw_iterations": [
+      0.577066083969182,
+      0.5871087512698696,
+      0.5795838300356834,
+      0.584389333052652,
+      0.5790800398926959
+    ],
+    "runtime_s": 347.4870207309723
+  },
+  "notes": "run_m1_family.py"
+}

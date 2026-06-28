@@ -1,0 +1,27 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Inductive_Strict",
+  "method": "M1c",
+  "method_label": "HybridGen v2.1 (N=6)",
+  "timestamp": "2026-06-21T07:57:47Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.1",
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.9752119355572224,
+    "std": 0.00015196260118647455,
+    "raw_iterations": [
+      0.9752472314168277,
+      0.9751849085692983,
+      0.9753980879614983,
+      0.9749416145915261,
+      0.975287835246962
+    ],
+    "runtime_s": 15122.98635673523
+  },
+  "notes": "run_m1_family.py"
+}

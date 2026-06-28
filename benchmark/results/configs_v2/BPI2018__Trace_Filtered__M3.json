@@ -1,0 +1,20 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Trace_Filtered",
+  "method": "M3",
+  "method_label": "Entropic Relevance",
+  "timestamp": "2026-06-26T23:04:21Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "relevance",
+    "flag": "JDFG2Aut+Relevance",
+    "model": "per-miner DFG \u2192 automaton (probability)"
+  },
+  "results": {
+    "entropic_relevance_raw": 255.02038054,
+    "entropic_relevance_normalized": null,
+    "runtime_s": 103.22705149650574
+  },
+  "notes": ""
+}

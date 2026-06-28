@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Inductive_Strict",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-21T10:59:34Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.9847314111463978,
+    "std": 0.00104730390706462,
+    "raw_shuffles": [
+      0.984380971375689,
+      0.9861528903089327,
+      0.9836603717545718
+    ],
+    "runtime_s": 20618.253665447235
+  },
+  "notes": ""
+}

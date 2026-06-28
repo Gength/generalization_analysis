@@ -1,0 +1,21 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Flower",
+  "method": "M1d",
+  "method_label": "HybridGen v2.4 (uniform)",
+  "timestamp": "2026-06-21T03:53:02Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.4",
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 1.0,
+    "std": 0.0,
+    "raw_iterations": null,
+    "runtime_s": 64.99700951576233
+  },
+  "notes": "run_m1_family.py"
+}

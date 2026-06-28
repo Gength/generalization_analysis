@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Alpha",
+  "method": "R1",
+  "method_label": "K-Fold CV (k=5)",
+  "timestamp": "2026-06-21T04:12:43Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "k": 5,
+    "shuffles": 3,
+    "variant_based": true
+  },
+  "results": {
+    "mean": 0.1955032373768205,
+    "std": 0.00030827596065715034,
+    "raw_shuffles": [
+      0.19567083991598128,
+      0.1957679804279925,
+      0.19507089178648765
+    ],
+    "runtime_s": 452.42472863197327
+  },
+  "notes": ""
+}

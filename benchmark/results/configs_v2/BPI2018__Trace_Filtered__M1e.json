@@ -1,0 +1,27 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Trace_Filtered",
+  "method": "M1e",
+  "method_label": "HybridGen v2.5 (Katz)",
+  "timestamp": "2026-06-21T02:53:09Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.5",
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.3969858149746595,
+    "std": 0.0031145000920465822,
+    "raw_iterations": [
+      0.39474291676048073,
+      0.40018783413645703,
+      0.39248716011146645,
+      0.4005879286869155,
+      0.39692323517797773
+    ],
+    "runtime_s": 378.53989696502686
+  },
+  "notes": "run_m1_family.py"
+}

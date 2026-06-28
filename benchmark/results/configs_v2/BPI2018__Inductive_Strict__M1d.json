@@ -1,0 +1,21 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Inductive_Strict",
+  "method": "M1d",
+  "method_label": "HybridGen v2.4 (uniform)",
+  "timestamp": "2026-06-21T03:50:16Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.4",
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.9748511439417749,
+    "std": 0.00011976826753780983,
+    "raw_iterations": null,
+    "runtime_s": 2944.811753988266
+  },
+  "notes": "run_m1_family.py"
+}
