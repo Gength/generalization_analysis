@@ -136,8 +136,8 @@ Docs: [`BenchmarkDesign.md`](BenchmarkDesign.md) (methodology) · [`BenchmarkGui
 | D1 | Sepsis | ✅ |
 | D2 | BPI2013_Incidents | ✅ |
 | D3 | BPI2017 | ⚠️ all except M5 |
-| D4 | BPI2018 | ⚠️ partial |
-| D5 | BPI2019 | ⚠️ partial |
+| D4 | BPI2018 | ⚠️ all except M5 |
+| D5 | BPI2019 | ⚠️ all except M5 |
 | D6 | BPI2013_Problem_Open | ⚠️ partial |
 | D7–D21 | see [`datasets.py`](benchmark/datasets.py) | — |
 
@@ -147,7 +147,7 @@ Docs: [`BenchmarkDesign.md`](BenchmarkDesign.md) (methodology) · [`BenchmarkGui
 |---------|-----------------|
 | M1a–M1g, R1, R2, R3 | `mean` |
 | M2 | `score` |
-| M3 | `entropic_relevance_raw` (DFG-based, same across miners) |
+| M3 | `entropic_relevance_raw` (per-miner DFG-based) |
 | M5 | `mean` (Docker TF1; present for D1/D2, missing for D3) |
 | M6, M7 | `gen_score` |
 

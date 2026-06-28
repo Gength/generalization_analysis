@@ -9,6 +9,10 @@ ap = argparse.ArgumentParser(description="R1 job")
 ap.add_argument("--dataset", required=True); ap.add_argument("--output", default=None)
 ap.add_argument("--seed", type=int, default=42); ap.add_argument("--miners", nargs="*", default=None)
 args = ap.parse_args()
+from datasets import DATASETS
+ds_name = DATASETS[args.dataset]["name"]
+miner_list = ", ".join(args.miners) if args.miners else "all 8"
+print(f"[R1] {args.dataset} ({ds_name}) | miners: {miner_list} | seed={args.seed}")
 workdir = f"/tmp/benchmark_R1_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
 prepare_workdir(workdir, args.dataset, copy_xes=True)
