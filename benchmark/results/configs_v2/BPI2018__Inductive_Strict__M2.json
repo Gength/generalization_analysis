@@ -1,15 +1,15 @@
 {
   "dataset": "BPI2018",
-  "miner": "Heuristics_Strict",
+  "miner": "Inductive_Strict",
   "method": "M2",
   "method_label": "PM4Py Built-in Gen",
-  "timestamp": "2026-06-28T13:21:02Z",
+  "timestamp": "2026-06-28T16:50:15Z",
   "host": "local",
   "seed": 42,
   "parameters": {},
   "results": {
-    "score": 0.9043217311171592,
-    "runtime_s": 386.39454436302185
+    "score": 0.9525783664614512,
+    "runtime_s": 12552.679283380508
   },
   "notes": ""
 }

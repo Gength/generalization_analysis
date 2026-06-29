@@ -3,13 +3,13 @@
   "miner": "Trace_Filtered",
   "method": "M2",
   "method_label": "PM4Py Built-in Gen",
-  "timestamp": "2026-06-20T22:58:26Z",
+  "timestamp": "2026-06-28T13:05:05Z",
   "host": "local",
   "seed": 42,
   "parameters": {},
   "results": {
-    "score": 0.0800339139896673,
-    "runtime_s": 1549.1961724758148
+    "score": 0.07167141766582596,
+    "runtime_s": 1535.4660456180573
   },
   "notes": ""
 }
