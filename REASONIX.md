@@ -141,7 +141,21 @@ Docs: [`BenchmarkDesign.md`](BenchmarkDesign.md) (methodology) · [`BenchmarkGui
 | D4 | BPI2018 | ⚠️ all except M5 |
 | D5 | BPI2019 | ⚠️ all except M5 |
 | D6 | BPI2013_Problem_Open | ⚠️ partial |
-| D7–D21 | see [`datasets.py`](benchmark/datasets.py) | — |
+| D7 | BPI2013_Problem_Closed | ⚠️ partial |
+| D8 | BPI2015_Municipality_2 | — (5/8 miners) |
+| D9 | BPI2015_Municipality_4 | — (5/8 miners) |
+| D10 | BPI2015_Municipality_1 | — (5/8 miners) |
+| D11 | BPI2011_Hospital | — (5/8 miners) |
+| D12 | BPI2015_Municipality_5 | — (5/8 miners) |
+| D13 | BPI2015_Municipality_3 | — (4/8 miners) |
+| D14 | BPI2020_PrepaidTravel | — |
+| D15 | BPI2020_InternationalDecl | — |
+| D16 | BPI2020_RequestForPayment | — |
+| D17 | BPI2020_PermitLog | — |
+| D18 | BPI2020_DomesticDecl | — |
+| D19 | BPI2012 | — |
+| D20 | Hospital_Billing | — |
+| D21 | Road_Traffic_Fine | — |
 
 ### JSON value key per method (configs_v2)
 

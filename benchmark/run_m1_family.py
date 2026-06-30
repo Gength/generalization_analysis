@@ -142,14 +142,26 @@ def _eval_worker(miner_name, method_id):
     return miner_name, method_id, r
 
 
-def run(dataset_key, workdir, output_dir, methods=None, workers=8):
+def run(dataset_key, workdir, output_dir, methods=None, miners=None, workers=8):
     """Run M1a–M1g in pure multi-process architecture.
 
     Phase 1: serial model discovery for all 8 miners in the main process.
     Phase 2: submit every (miner, method) pair to a process pool
              (``workers`` caps concurrency, default 8).
+
+    If ``miners`` is provided (list of miner names), only those miners
+    are run (see ``benchmark/statistics/_miner_availability.json``).
     """
     from job_prepare import prepare_workdir
+
+    # ── Filter miners if subset requested ────────────────────────────────
+    _miners_dict = MINERS
+    if miners:
+        _miners_dict = {k: v for k, v in MINERS.items() if k in miners}
+        missing = set(miners) - set(MINERS.keys())
+        if missing:
+            print(f"  Warning: unknown miner(s): {missing}")
+    _miner_names = list(_miners_dict.keys())
     mp_path = os.path.join(workdir, "manifest.json")
     if os.path.exists(mp_path):
         with open(mp_path) as f:
@@ -168,7 +180,7 @@ def run(dataset_key, workdir, output_dir, methods=None, workers=8):
     print(f"Loaded {len(log)} traces")
 
     target_methods = methods or list(METHODS.keys())
-    n_miners = len(MINERS)
+    n_miners = len(_miner_names)
     n_tasks = n_miners * len(target_methods)
     n_workers = min(workers, n_tasks, os.cpu_count() or 8)
     os.makedirs(output_dir, exist_ok=True)
@@ -184,7 +196,7 @@ def run(dataset_key, workdir, output_dir, methods=None, workers=8):
 
     cache = {}
     with ThreadPoolExecutor(max_workers=8) as pool:
-        futs = [pool.submit(_discover_one, (mn, fn)) for mn, fn in MINERS.items()]
+        futs = [pool.submit(_discover_one, (mn, fn)) for mn, fn in _miners_dict.items()]
         for f in as_completed(futs):
             mn, result, elapsed = f.result()
             cache[mn] = result
@@ -207,7 +219,7 @@ def run(dataset_key, workdir, output_dir, methods=None, workers=8):
     try:
         with ProcessPoolExecutor(max_workers=n_workers, mp_context=ctx) as ex:
             futs = {}
-            for mn in MINERS:
+            for mn in _miner_names:
                 for mid in target_methods:
                     f = ex.submit(_eval_worker, mn, mid)
                     futs[f] = (mn, mid)
@@ -215,7 +227,7 @@ def run(dataset_key, workdir, output_dir, methods=None, workers=8):
                 mn, mid, r = f.result()
                 all_results[(mid, mn)] = r
                 # Progress indicator: print first miner when a method finishes
-                first_mn = next(iter(MINERS))
+                first_mn = _miner_names[0]
                 if mn == first_mn:
                     print(f"  ✓ {mid} ({METHODS[mid]['label']})  "
                           f"{first_mn}={r.get('gen_shadow_mean', '?'):.4f}", flush=True)
@@ -225,10 +237,10 @@ def run(dataset_key, workdir, output_dir, methods=None, workers=8):
     # ── Summary ─────────────────────────────────────────────────────────
     print("\n" + "=" * 98)
     print(f"SUMMARY — {dataset_key} {dname}")
-    h = f"{'Method':6s} " + " ".join(f"{m[:13]:>15s}" for m in MINERS)
+    h = f"{'Method':6s} " + " ".join(f"{m[:13]:>15s}" for m in _miner_names)
     print(h); print("-" * 98)
     for mid in target_methods:
-        cells = [all_results.get((mid, m), {}) for m in MINERS]
+        cells = [all_results.get((mid, m), {}) for m in _miner_names]
         vals = " ".join(
             f"{c.get('gen_shadow_mean', -1):>7.4f}+-{c.get('gen_shadow_std', -1):<6.4f}"
             if c else "     ---     "
@@ -248,11 +260,12 @@ def main():
     ap.add_argument("--dataset", required=True)
     ap.add_argument("--output", default=None)
     ap.add_argument("--methods", nargs="+", default=list(METHODS.keys()), choices=list(METHODS.keys()))
+    ap.add_argument("--miners", nargs="*", default=None)
     ap.add_argument("--workers", type=int, default=8, help="Parallel workers (default: 8)")
     args = ap.parse_args()
     workdir = f"/tmp/benchmark_M1_{args.dataset}_{dt.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
     output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
-    run(args.dataset, workdir, output_dir, methods=args.methods, workers=args.workers)
+    run(args.dataset, workdir, output_dir, methods=args.methods, miners=args.miners, workers=args.workers)
     shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")
 
 

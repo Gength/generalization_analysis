@@ -33,6 +33,8 @@ fi
 OUTPUT_ARG=""; [[ -n "$OUTPUT" ]] && OUTPUT_ARG="--output $OUTPUT"
 SAMPLE_ARG=""; [[ -n "$SAMPLE" ]] && SAMPLE_ARG="--r2-sample $SAMPLE"
 
+# ── Miner configuration ──────────────────────────────────────────────────────
+# Edit this array to subset miners for a run (canonical order).
 MINERS=(Trace_Filtered Alpha Alpha+ Heuristics Heuristics_Strict Inductive_Strict Inductive_Infrequent Flower)
 
 echo "Submitting ${#MINERS[@]} R2 jobs for dataset $DATASET …"

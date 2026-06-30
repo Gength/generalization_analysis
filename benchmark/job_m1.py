@@ -8,14 +8,16 @@ from job_prepare import prepare_workdir
 ap = argparse.ArgumentParser(description="M1-family job")
 ap.add_argument("--dataset", required=True); ap.add_argument("--output", default=None)
 ap.add_argument("--methods", nargs="+", default=None)
+ap.add_argument("--miners", nargs="*", default=None)
 ap.add_argument("--workers", type=int, default=8, help="Parallel workers (default: 8)")
 args = ap.parse_args()
 from datasets import DATASETS
 ds_name = DATASETS[args.dataset]["name"]
 methods_str = ", ".join(args.methods) if args.methods else "M1a–M1g"
-print(f"[M1] {args.dataset} ({ds_name}) | methods: {methods_str} | miners: all 8 | workers: {args.workers}")
+miners_str = ", ".join(args.miners) if args.miners else "all 8"
+print(f"[M1] {args.dataset} ({ds_name}) | methods: {methods_str} | miners: {miners_str} | workers: {args.workers}")
 workdir = f"/tmp/benchmark_M1_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
 prepare_workdir(workdir, args.dataset, copy_xes=True)
-run(args.dataset, workdir, output_dir, methods=args.methods, workers=args.workers)
+run(args.dataset, workdir, output_dir, methods=args.methods, miners=args.miners, workers=args.workers)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")

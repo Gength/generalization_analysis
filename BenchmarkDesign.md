@@ -120,6 +120,24 @@ All datasets reside under `data/` with per-directory `summary.txt` files contain
 
 > **Acts** = unique activity labels. **Variants** = unique trace sequences. **TLRA** = 1 − (variants/cases), the probability an additional trace has been seen before. Higher = more repetitive.
 
+### Miner Availability (Model Discovery Timing)
+
+Model discovery was timed on all 21 datasets × 8 miners (1h timeout per miner, HPC).
+See `benchmark/statistics/_miner_availability.json` for the canonical record.
+
+| Dataset | Available | Unavailable |
+|---------|-----------|-------------|
+| D1–D7, D14–D21 | **8/8** (all miners) | — |
+| D8 (BPI2015_Municipality_2) | 5/8: Flower, Trace_Filtered, Heuristics, Heuristics_Strict, Inductive_Infrequent | Alpha (timeout), Alpha+ (timeout), Inductive_Strict (RecursionError) |
+| D9 (BPI2015_Municipality_4) | 5/8: same as D8 | same as D8 |
+| D10 (BPI2015_Municipality_1) | 5/8: same as D8 | same as D8 |
+| D11 (BPI2011_Hospital) | 5/8: same miner set as D8 | Alpha (timeout), Alpha+ (timeout), Inductive_Strict (timeout) |
+| D12 (BPI2015_Municipality_5) | 5/8: same as D8 | same as D8 |
+| D13 (BPI2015_Municipality_3) | 4/8: Flower, Trace_Filtered, Heuristics, Heuristics_Strict | Alpha (timeout), Alpha+ (timeout), Inductive_Infrequent (RecursionError), Inductive_Strict (RecursionError) |
+
+> Benchmark jobs should skip unavailable miners
+> rather than failing at runtime.
+
 ### Benchmark Dataset Scope
 
 The initial design (v1) selected 5 representative datasets (D1–D5) spanning diverse process characteristics. **Following reviewer feedback, the benchmark now runs on all 21 datasets in the full catalog above.** The original D1–D5 set remains informative for understanding the benchmark's design rationale:
@@ -170,7 +188,7 @@ Phase B: CIP-Pool 128GB Machine (large / memory-heavy datasets — D3–D5, D8�
   └── D5  BPI 2019 (252K cases)                              — largest raw count
 ```
 
-**Note:** D8–D13 (BPI 2015 municipalities) are included in Phase B despite modest case counts because their high activity counts (356–410) and deep traces (avg 42–53) cause memory pressure during model discovery and N-gram pre-computation. D20–D21 have 100K+ cases each, which strains token replay and R2 (Leave-One-Variant-Out).
+**Note:** D8–D13 (BPI 2015 municipalities + BPI 2011 Hospital) are included in Phase B despite modest case counts because their high activity counts (356–624) and deep traces (avg 42–131) cause memory pressure during model discovery and N-gram pre-computation. Additionally, model discovery timing (1h timeout) revealed that **Alpha and Alpha+ timeout on all six datasets**, **Inductive_Strict fails with RecursionError on D8/D9/D10/D12/D13 and times out on D11**, and **Inductive_Infrequent also fails on D13**. Only 4–5 of 8 miners are available for benchmark runs on these datasets. See [Miner Availability](#miner-availability-model-discovery-timing) above.
 
 ---
 
@@ -594,26 +612,45 @@ Transfer codebase to the 128GB machine. All methods computed from scratch.
 Step 7: Re-run Environment Setup on CIP-Pool machine
 
 Step 8a: D8  BPI 2015 Muni. 2  (832 cases, 410 acts, 34 MB)
+  ├── Available miners (5/8): Flower, Trace_Filtered, Heuristics, Heuristics_Strict,
+  │     Inductive_Infrequent
+  ├── Unavailable: Alpha (timeout), Alpha+ (timeout), Inductive_Strict (RecursionError)
   ├── M1a–M1g (HybridGen)          — ~5–10 min (N-gram state blowup from 410 acts)
   ├── M2 (PM4Py), M3, M5–M7, R1–R3 — ~30 min combined
   └── Write config JSON for every cell
 
 Step 8b: D9  BPI 2015 Muni. 4  (1,053 cases, 356 acts, 37 MB)
-  ├── Same structure as 8a
+  ├── Same miner availability as D8 (5/8)
+  ├── M1a–M1g (HybridGen)          — ~5–10 min
+  ├── M2–M7, R1–R3               — ~30 min combined
   └── Write config JSON
 
 Step 8c: D10 BPI 2015 Muni. 1  (1,199 cases, 398 acts, 41 MB)
+  ├── Same miner availability as D8 (5/8)
+  ├── M1a–M1g                     — ~5–10 min
+  ├── M2–M7, R1–R3               — ~30 min combined
   └── Write config JSON
 
 Step 8d: D11 BPI 2011 Hospital   (1,143 cases, 624 acts, 131.5 avg len)
+  ├── Available miners (5/8): Flower, Trace_Filtered, Heuristics, Heuristics_Strict,
+  │     Inductive_Infrequent
+  ├── Unavailable: Alpha (timeout), Alpha+ (timeout), Inductive_Strict (timeout)
   ├── M1a–M1g                     — ~10–20 min (deepest traces → large N-gram states)
   ├── M2–M7, R1–R3               — ~45 min combined
   └── Write config JSON
 
 Step 8e: D12 BPI 2015 Muni. 5  (1,156 cases, 389 acts, 46 MB)
+  ├── Same miner availability as D8 (5/8)
+  ├── M1a–M1g                     — ~5–10 min
+  ├── M2–M7, R1–R3               — ~30 min combined
   └── Write config JSON
 
 Step 8f: D13 BPI 2015 Muni. 3  (1,409 cases, 383 acts, 47 MB)
+  ├── Available miners (4/8): Flower, Trace_Filtered, Heuristics, Heuristics_Strict
+  ├── Unavailable: Alpha (timeout), Alpha+ (timeout), Inductive_Infrequent (RecursionError),
+  │     Inductive_Strict (RecursionError)
+  ├── M1a–M1g                     — ~5–10 min
+  ├── M2–M7, R1–R3               — ~30 min combined
   └── Write config JSON
 
 Step 8g: D20 Hospital Billing     (100,000 cases, 6.6 MB)
@@ -701,6 +738,7 @@ Step 12: Aggregate results across all 21 datasets
 | Bootstrap Gen breeding produces no valid traces for small logs (e.g., Sepsis) | Medium | Fall back to nonparametric bootstrap (`-p=0`) for logs with < 100 traces |
 | Model simulation deadlocks (SpeciAL4PM, AVATAR) | Medium | Impose maxTraceLength; catch empty simulations; exclude miner if consistently deadlocking |
 | relevance.jar SDFA validation — no known-good score to verify bridge script | Low | Use pre-built `sdfa_sepsis_1.000.json` + `sepsis.xes.gz` from Entropia `examples/` as a smoke test for `promtecmx/relevance` |
+| Alpha/Alpha+/Inductive_Strict miners timeout or crash on D8–D13 (high-activity logs) | High | Skip unavailable miners per `benchmark/statistics/_miner_availability.json`; accept 4–5 miner coverage on these datasets |
 | JDK 1.8 unavailable | Low | All Java methods blocked; pre-compute offline or skip Java-dependent methods |
 | Memory blowup from storing all raw scores | Low | Stream to CSV incrementally |
 

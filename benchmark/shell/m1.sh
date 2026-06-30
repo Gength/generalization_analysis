@@ -26,4 +26,8 @@ export TMPDIR=/tmp
 export PATH="$HOME/.local/bin:$PATH"
 export PYTHONHASHSEED=0
 
-uv run python benchmark/job_m1.py "$@"
+# ── Miner configuration ──────────────────────────────────────────────────────
+# Edit this array to subset miners for a run.
+MINERS=(Trace_Filtered Alpha Alpha+ Heuristics Heuristics_Strict Inductive_Strict Inductive_Infrequent Flower)
+
+uv run python benchmark/job_m1.py --miners "${MINERS[@]}" "$@"

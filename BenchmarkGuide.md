@@ -240,6 +240,35 @@ All shell scripts in `benchmark/shell/` include `export PATH="$HOME/.local/bin:$
 
 ---
 
+### Dataset & Miner Availability
+
+| Key | Dataset | Benchmark Status | Miners Available |
+|-----|---------|-----------------|-----------------|
+| D1 | Sepsis | ✅ Complete | 8/8 |
+| D2 | BPI2013_Incidents | ✅ Complete | 8/8 |
+| D3 | BPI2017 | ⚠️ all except M5 | 8/8 |
+| D4 | BPI2018 | ⚠️ all except M5 | 8/8 |
+| D5 | BPI2019 | ⚠️ all except M5 | 8/8 |
+| D6 | BPI2013_Problem_Open | ⚠️ partial | 8/8 |
+| D7 | BPI2013_Problem_Closed | ⚠️ partial | 8/8 |
+| D8 | BPI2015_Municipality_2 | — | 5/8 (no Alpha, Alpha+, Inductive_Strict) |
+| D9 | BPI2015_Municipality_4 | — | 5/8 (same) |
+| D10 | BPI2015_Municipality_1 | — | 5/8 (same) |
+| D11 | BPI2011_Hospital | — | 5/8 (no Alpha, Alpha+; Inductive_Strict timeout) |
+| D12 | BPI2015_Municipality_5 | — | 5/8 (same as D8) |
+| D13 | BPI2015_Municipality_3 | — | 4/8 (also no Inductive_Infrequent) |
+| D14 | BPI2020_PrepaidTravel | — | 8/8 |
+| D15 | BPI2020_InternationalDecl | — | 8/8 |
+| D16 | BPI2020_RequestForPayment | — | 8/8 |
+| D17 | BPI2020_PermitLog | — | 8/8 |
+| D18 | BPI2020_DomesticDecl | — | 8/8 |
+| D19 | BPI2012 | — | 8/8 |
+| D20 | Hospital_Billing | — | 8/8 |
+| D21 | Road_Traffic_Fine | — | 8/8 |
+
+> Canonical source: `benchmark/statistics/_miner_availability.json`. All benchmark
+> jobs should read this file and skip unavailable miners.
+
 ## 4. Running
 
 ### Self-contained jobs
