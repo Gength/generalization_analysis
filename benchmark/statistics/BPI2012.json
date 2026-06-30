@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D19",
+  "dataset_name": "BPI2012",
+  "timestamp": "2026-06-30T17:24:33.142107",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 6.88,
+      "n_transitions": 81,
+      "n_places": 41
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 6.85,
+      "n_transitions": 70,
+      "n_places": 32
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 6.69,
+      "n_transitions": 24,
+      "n_places": 1
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 6.8,
+      "n_transitions": 814,
+      "n_places": 766
+    },
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 7.5,
+      "n_transitions": 24,
+      "n_places": 10
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 7.93,
+      "n_transitions": 25,
+      "n_places": 97
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 18.39,
+      "n_transitions": 78,
+      "n_places": 54
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 19.22,
+      "n_transitions": 61,
+      "n_places": 39
+    }
+  }
+}

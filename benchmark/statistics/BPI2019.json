@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D5",
+  "dataset_name": "BPI2019",
+  "timestamp": "2026-06-30T17:23:58.032851",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 87.34,
+      "n_transitions": 262,
+      "n_places": 214
+    },
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 89.24,
+      "n_transitions": 42,
+      "n_places": 19
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 88.16,
+      "n_transitions": 42,
+      "n_places": 1
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 90.2,
+      "n_transitions": 206,
+      "n_places": 75
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 93.66,
+      "n_transitions": 238,
+      "n_places": 105
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 109.81,
+      "n_transitions": 44,
+      "n_places": 40
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 145.57,
+      "n_transitions": 132,
+      "n_places": 80
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 151.5,
+      "n_transitions": 91,
+      "n_places": 57
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D20",
+  "dataset_name": "Hospital_Billing",
+  "timestamp": "2026-06-30T17:24:44.032695",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 21.44,
+      "n_transitions": 86,
+      "n_places": 45
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 21.35,
+      "n_transitions": 18,
+      "n_places": 1
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 20.58,
+      "n_transitions": 346,
+      "n_places": 298
+    },
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 21.75,
+      "n_transitions": 18,
+      "n_places": 2
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 21.89,
+      "n_transitions": 62,
+      "n_places": 31
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 25.56,
+      "n_transitions": 56,
+      "n_places": 32
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 25.24,
+      "n_transitions": 81,
+      "n_places": 53
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 26.01,
+      "n_transitions": 20,
+      "n_places": 7
+    }
+  }
+}

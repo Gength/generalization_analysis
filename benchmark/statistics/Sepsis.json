@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D1",
+  "dataset_name": "Sepsis",
+  "timestamp": "2026-06-30T17:21:03.353567",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 0.75,
+      "n_transitions": 16,
+      "n_places": 6
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 0.92,
+      "n_transitions": 18,
+      "n_places": 20
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 0.98,
+      "n_transitions": 74,
+      "n_places": 33
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 0.83,
+      "n_transitions": 54,
+      "n_places": 21
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 0.81,
+      "n_transitions": 35,
+      "n_places": 28
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 0.69,
+      "n_transitions": 16,
+      "n_places": 1
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 0.83,
+      "n_transitions": 472,
+      "n_places": 424
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 1.03,
+      "n_transitions": 50,
+      "n_places": 39
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D16",
+  "dataset_name": "BPI2020_RequestForPayment",
+  "timestamp": "2026-06-30T17:24:14.387369",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 1.62,
+      "n_transitions": 19,
+      "n_places": 19
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 1.65,
+      "n_transitions": 44,
+      "n_places": 23
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 1.65,
+      "n_transitions": 22,
+      "n_places": 12
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 1.55,
+      "n_transitions": 44,
+      "n_places": 30
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 1.91,
+      "n_transitions": 51,
+      "n_places": 33
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 1.86,
+      "n_transitions": 19,
+      "n_places": 1
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 1.66,
+      "n_transitions": 351,
+      "n_places": 303
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 1.99,
+      "n_transitions": 21,
+      "n_places": 24
+    }
+  }
+}

@@ -1,0 +1,256 @@
+{
+  "D11": {
+    "dataset_name": "BPI2011_Hospital",
+    "available_miners": [
+      "Flower",
+      "Trace_Filtered",
+      "Heuristics_Strict",
+      "Heuristics",
+      "Inductive_Infrequent"
+    ]
+  },
+  "D19": {
+    "dataset_name": "BPI2012",
+    "available_miners": [
+      "Heuristics",
+      "Heuristics_Strict",
+      "Flower",
+      "Trace_Filtered",
+      "Alpha",
+      "Alpha+",
+      "Inductive_Strict",
+      "Inductive_Infrequent"
+    ]
+  },
+  "D2": {
+    "dataset_name": "BPI2013_Incidents",
+    "available_miners": [
+      "Alpha",
+      "Alpha+",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Strict",
+      "Flower",
+      "Trace_Filtered",
+      "Inductive_Infrequent"
+    ]
+  },
+  "D7": {
+    "dataset_name": "BPI2013_Problem_Closed",
+    "available_miners": [
+      "Alpha",
+      "Alpha+",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict",
+      "Flower",
+      "Trace_Filtered"
+    ]
+  },
+  "D6": {
+    "dataset_name": "BPI2013_Problem_Open",
+    "available_miners": [
+      "Alpha",
+      "Alpha+",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict",
+      "Flower",
+      "Trace_Filtered"
+    ]
+  },
+  "D10": {
+    "dataset_name": "BPI2015_Municipality_1",
+    "available_miners": [
+      "Flower",
+      "Trace_Filtered",
+      "Heuristics_Strict",
+      "Heuristics",
+      "Inductive_Infrequent"
+    ]
+  },
+  "D8": {
+    "dataset_name": "BPI2015_Municipality_2",
+    "available_miners": [
+      "Flower",
+      "Trace_Filtered",
+      "Heuristics_Strict",
+      "Heuristics",
+      "Inductive_Infrequent"
+    ]
+  },
+  "D13": {
+    "dataset_name": "BPI2015_Municipality_3",
+    "available_miners": [
+      "Flower",
+      "Trace_Filtered",
+      "Heuristics_Strict",
+      "Heuristics"
+    ]
+  },
+  "D9": {
+    "dataset_name": "BPI2015_Municipality_4",
+    "available_miners": [
+      "Heuristics_Strict",
+      "Flower",
+      "Trace_Filtered",
+      "Heuristics",
+      "Inductive_Infrequent"
+    ]
+  },
+  "D12": {
+    "dataset_name": "BPI2015_Municipality_5",
+    "available_miners": [
+      "Flower",
+      "Trace_Filtered",
+      "Heuristics_Strict",
+      "Heuristics",
+      "Inductive_Infrequent"
+    ]
+  },
+  "D3": {
+    "dataset_name": "BPI2017",
+    "available_miners": [
+      "Flower",
+      "Alpha",
+      "Trace_Filtered",
+      "Heuristics",
+      "Alpha+",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict"
+    ]
+  },
+  "D4": {
+    "dataset_name": "BPI2018",
+    "available_miners": [
+      "Flower",
+      "Trace_Filtered",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Alpha+",
+      "Alpha",
+      "Heuristics",
+      "Inductive_Strict"
+    ]
+  },
+  "D5": {
+    "dataset_name": "BPI2019",
+    "available_miners": [
+      "Trace_Filtered",
+      "Alpha",
+      "Flower",
+      "Heuristics_Strict",
+      "Heuristics",
+      "Alpha+",
+      "Inductive_Strict",
+      "Inductive_Infrequent"
+    ]
+  },
+  "D18": {
+    "dataset_name": "BPI2020_DomesticDecl",
+    "available_miners": [
+      "Alpha",
+      "Inductive_Infrequent",
+      "Trace_Filtered",
+      "Alpha+",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Strict",
+      "Flower"
+    ]
+  },
+  "D15": {
+    "dataset_name": "BPI2020_InternationalDecl",
+    "available_miners": [
+      "Alpha",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Flower",
+      "Alpha+",
+      "Heuristics",
+      "Trace_Filtered",
+      "Inductive_Strict"
+    ]
+  },
+  "D17": {
+    "dataset_name": "BPI2020_PermitLog",
+    "available_miners": [
+      "Alpha",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Flower",
+      "Trace_Filtered",
+      "Inductive_Infrequent",
+      "Alpha+",
+      "Inductive_Strict"
+    ]
+  },
+  "D14": {
+    "dataset_name": "BPI2020_PrepaidTravel",
+    "available_miners": [
+      "Trace_Filtered",
+      "Alpha",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict",
+      "Flower",
+      "Alpha+"
+    ]
+  },
+  "D16": {
+    "dataset_name": "BPI2020_RequestForPayment",
+    "available_miners": [
+      "Alpha",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict",
+      "Flower",
+      "Trace_Filtered",
+      "Alpha+"
+    ]
+  },
+  "D20": {
+    "dataset_name": "Hospital_Billing",
+    "available_miners": [
+      "Heuristics",
+      "Flower",
+      "Trace_Filtered",
+      "Alpha",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict",
+      "Alpha+"
+    ]
+  },
+  "D21": {
+    "dataset_name": "Road_Traffic_Fine",
+    "available_miners": [
+      "Alpha",
+      "Inductive_Strict",
+      "Trace_Filtered",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Flower",
+      "Alpha+"
+    ]
+  },
+  "D1": {
+    "dataset_name": "Sepsis",
+    "available_miners": [
+      "Alpha",
+      "Alpha+",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Flower",
+      "Trace_Filtered",
+      "Inductive_Strict"
+    ]
+  }
+}

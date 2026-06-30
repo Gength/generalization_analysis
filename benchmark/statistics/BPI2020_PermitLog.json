@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D17",
+  "dataset_name": "BPI2020_PermitLog",
+  "timestamp": "2026-06-30T17:24:41.106809",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 17.12,
+      "n_transitions": 51,
+      "n_places": 37
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 17.35,
+      "n_transitions": 210,
+      "n_places": 106
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 17.29,
+      "n_transitions": 80,
+      "n_places": 44
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 16.92,
+      "n_transitions": 51,
+      "n_places": 1
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 16.95,
+      "n_transitions": 551,
+      "n_places": 503
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 17.91,
+      "n_transitions": 129,
+      "n_places": 79
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 22.99,
+      "n_transitions": 53,
+      "n_places": 43
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 28.79,
+      "n_transitions": 167,
+      "n_places": 100
+    }
+  }
+}

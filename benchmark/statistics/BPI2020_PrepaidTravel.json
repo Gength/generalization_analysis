@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D14",
+  "dataset_name": "BPI2020_PrepaidTravel",
+  "timestamp": "2026-06-30T17:24:08.571830",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 0.86,
+      "n_transitions": 452,
+      "n_places": 404
+    },
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 1.08,
+      "n_transitions": 29,
+      "n_places": 89
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 1.26,
+      "n_transitions": 108,
+      "n_places": 57
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 1.05,
+      "n_transitions": 31,
+      "n_places": 20
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 1.08,
+      "n_transitions": 66,
+      "n_places": 46
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 1.39,
+      "n_transitions": 89,
+      "n_places": 58
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 1.12,
+      "n_transitions": 29,
+      "n_places": 1
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 2.22,
+      "n_transitions": 31,
+      "n_places": 133
+    }
+  }
+}

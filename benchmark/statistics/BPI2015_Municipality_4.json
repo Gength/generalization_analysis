@@ -1,0 +1,53 @@
+{
+  "dataset_key": "D9",
+  "dataset_name": "BPI2015_Municipality_4",
+  "timestamp": "2026-06-30T18:23:56.747003",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 3.71,
+      "n_transitions": 117,
+      "n_places": 75
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 3.09,
+      "n_transitions": 356,
+      "n_places": 1
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 3.84,
+      "n_transitions": 1958,
+      "n_places": 1910
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 14.1,
+      "n_transitions": 1791,
+      "n_places": 1088
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 911.37,
+      "n_transitions": 671,
+      "n_places": 405
+    },
+    "Inductive_Strict": {
+      "status": "error",
+      "time_seconds": 1150.84,
+      "error": "RecursionError('maximum recursion depth exceeded')"
+    },
+    "Alpha": {
+      "status": "timeout",
+      "time_seconds": 3600,
+      "error": "exceeded 3600s limit"
+    },
+    "Alpha+": {
+      "status": "timeout",
+      "time_seconds": 3600,
+      "error": "exceeded 3600s limit"
+    }
+  }
+}

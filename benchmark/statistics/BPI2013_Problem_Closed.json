@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D7",
+  "dataset_name": "BPI2013_Problem_Closed",
+  "timestamp": "2026-06-30T17:22:54.463351",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 0.4,
+      "n_transitions": 4,
+      "n_places": 3
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 0.48,
+      "n_transitions": 5,
+      "n_places": 2
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 0.39,
+      "n_transitions": 17,
+      "n_places": 9
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 0.39,
+      "n_transitions": 14,
+      "n_places": 8
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 0.44,
+      "n_transitions": 15,
+      "n_places": 11
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 0.37,
+      "n_transitions": 19,
+      "n_places": 16
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 0.35,
+      "n_transitions": 4,
+      "n_places": 1
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 0.36,
+      "n_transitions": 352,
+      "n_places": 304
+    }
+  }
+}

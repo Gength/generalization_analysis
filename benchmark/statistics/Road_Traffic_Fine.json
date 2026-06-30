@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D21",
+  "dataset_name": "Road_Traffic_Fine",
+  "timestamp": "2026-06-30T17:24:42.590603",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 20.96,
+      "n_transitions": 11,
+      "n_places": 12
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 20.68,
+      "n_transitions": 34,
+      "n_places": 29
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 20.38,
+      "n_transitions": 329,
+      "n_places": 281
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 21.83,
+      "n_transitions": 40,
+      "n_places": 25
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 21.8,
+      "n_transitions": 29,
+      "n_places": 17
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 24.14,
+      "n_transitions": 21,
+      "n_places": 16
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 24.27,
+      "n_transitions": 11,
+      "n_places": 1
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 24.78,
+      "n_transitions": 12,
+      "n_places": 24
+    }
+  }
+}

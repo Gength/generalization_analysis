@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D2",
+  "dataset_name": "BPI2013_Incidents",
+  "timestamp": "2026-06-30T17:21:20.064753",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 2.89,
+      "n_transitions": 4,
+      "n_places": 2
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 2.91,
+      "n_transitions": 6,
+      "n_places": 6
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 2.52,
+      "n_transitions": 15,
+      "n_places": 8
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 2.51,
+      "n_transitions": 15,
+      "n_places": 8
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 2.55,
+      "n_transitions": 23,
+      "n_places": 17
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 2.34,
+      "n_transitions": 4,
+      "n_places": 1
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 2.32,
+      "n_transitions": 409,
+      "n_places": 361
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 3.1,
+      "n_transitions": 12,
+      "n_places": 10
+    }
+  }
+}

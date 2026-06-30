@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D18",
+  "dataset_name": "BPI2020_DomesticDecl",
+  "timestamp": "2026-06-30T17:24:17.108858",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 1.97,
+      "n_transitions": 17,
+      "n_places": 17
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 1.93,
+      "n_transitions": 35,
+      "n_places": 21
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 1.88,
+      "n_transitions": 372,
+      "n_places": 324
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 2.46,
+      "n_transitions": 19,
+      "n_places": 15
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 2.03,
+      "n_transitions": 35,
+      "n_places": 19
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 2.37,
+      "n_transitions": 20,
+      "n_places": 12
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 1.96,
+      "n_transitions": 43,
+      "n_places": 26
+    },
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 2.25,
+      "n_transitions": 17,
+      "n_places": 1
+    }
+  }
+}

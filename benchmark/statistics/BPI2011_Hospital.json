@@ -1,0 +1,53 @@
+{
+  "dataset_key": "D11",
+  "dataset_name": "BPI2011_Hospital",
+  "timestamp": "2026-06-30T18:24:00.342628",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 19.37,
+      "n_transitions": 624,
+      "n_places": 1
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 19.35,
+      "n_transitions": 1805,
+      "n_places": 1757
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 21.08,
+      "n_transitions": 338,
+      "n_places": 173
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 74.19,
+      "n_transitions": 3453,
+      "n_places": 1879
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 114.72,
+      "n_transitions": 729,
+      "n_places": 458
+    },
+    "Alpha": {
+      "status": "timeout",
+      "time_seconds": 3600,
+      "error": "exceeded 3600s limit"
+    },
+    "Alpha+": {
+      "status": "timeout",
+      "time_seconds": 3600,
+      "error": "exceeded 3600s limit"
+    },
+    "Inductive_Strict": {
+      "status": "timeout",
+      "time_seconds": 3600,
+      "error": "exceeded 3600s limit"
+    }
+  }
+}

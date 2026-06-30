@@ -1,0 +1,56 @@
+{
+  "dataset_key": "D3",
+  "dataset_name": "BPI2017",
+  "timestamp": "2026-06-30T17:23:20.392007",
+  "timeout_seconds": 3600,
+  "miners": {
+    "Flower": {
+      "status": "ok",
+      "time_seconds": 52.02,
+      "n_transitions": 26,
+      "n_places": 1
+    },
+    "Alpha": {
+      "status": "ok",
+      "time_seconds": 54.34,
+      "n_transitions": 26,
+      "n_places": 12
+    },
+    "Trace_Filtered": {
+      "status": "ok",
+      "time_seconds": 55.07,
+      "n_transitions": 1299,
+      "n_places": 1251
+    },
+    "Heuristics": {
+      "status": "ok",
+      "time_seconds": 59.44,
+      "n_transitions": 82,
+      "n_places": 43
+    },
+    "Alpha+": {
+      "status": "ok",
+      "time_seconds": 61.85,
+      "n_transitions": 27,
+      "n_places": 14
+    },
+    "Heuristics_Strict": {
+      "status": "ok",
+      "time_seconds": 61.43,
+      "n_transitions": 80,
+      "n_places": 41
+    },
+    "Inductive_Infrequent": {
+      "status": "ok",
+      "time_seconds": 102.04,
+      "n_transitions": 71,
+      "n_places": 46
+    },
+    "Inductive_Strict": {
+      "status": "ok",
+      "time_seconds": 116.52,
+      "n_transitions": 87,
+      "n_places": 55
+    }
+  }
+}
