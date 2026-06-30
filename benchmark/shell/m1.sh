@@ -24,5 +24,6 @@
 set -eo pipefail
 export TMPDIR=/tmp
 export PATH="$HOME/.local/bin:$PATH"
+export PYTHONHASHSEED=0
 
 uv run python benchmark/job_m1.py "$@"
