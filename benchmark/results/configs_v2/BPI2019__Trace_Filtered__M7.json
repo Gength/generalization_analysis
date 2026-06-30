@@ -3,7 +3,7 @@
   "miner": "Trace_Filtered",
   "method": "M7",
   "method_label": "SpeciAL4PM",
-  "timestamp": "2026-06-25T16:56:23Z",
+  "timestamp": "2026-06-29T11:04:35Z",
   "host": "local",
   "seed": 42,
   "parameters": {
@@ -28,7 +28,7 @@
       "tv": 1
     },
     "gen_score": 1.0,
-    "runtime_s": 283.9225218296051
+    "runtime_s": 276.38898944854736
   },
   "notes": ""
 }

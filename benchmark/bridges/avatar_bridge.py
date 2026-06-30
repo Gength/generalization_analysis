@@ -223,7 +223,6 @@ if suffix is None:
         result = subprocess.run(
             full_cmd.split(),
             capture_output=True, text=True,
-            timeout=7200,  # 2 hour max for training
             env=train_env,
             cwd=AVATAR_DIR
         )
@@ -232,20 +231,6 @@ if suffix is None:
         # Find the latest suffix (epoch) from output
         suffix = "5000"  # default: use last adversarial step
         print(f"    Using suffix={suffix}")
-    except subprocess.TimeoutExpired:
-        print(f"    Training timed out after 2 hours.")
-        print(f"    M5 results not available for this demo.")
-        # Write placeholder configs for all miners
-        for miner_name in MINERS:
-            write_config(DATASET, miner_name, "M5", "AVATAR (RelGAN)",
-                        {"GAN": "RelGAN", "status": "training_timeout"},
-                        {"score": -1, "runtime_s": 7200},
-                        "GAN training exceeded 2-hour timeout")
-        print(f"\n{'='*60}")
-        print("M5 SKIPPED — training timeout. To run properly:")
-        print(f"  conda run -n avatar-env python3 {AVATAR_DIR}/avatar/training.py -s {SYSTEM_NAME} -j 0 -gpu 0")
-        print(f"{'='*60}")
-        sys.exit(0)
     except Exception as e:
         print(f"    Training error: {e}")
         suffix = None
@@ -268,18 +253,10 @@ try:
     result = subprocess.run(
         f"{sampling_cmd} {sampling_args}".split(),
         capture_output=True, text=True,
-        timeout=600,  # 10 min for sampling
         cwd=AVATAR_DIR
     )
     sampling_time = time.time() - t0
     print(f"    Sampling completed in {sampling_time:.1f}s")
-except subprocess.TimeoutExpired:
-    print(f"    Sampling timed out.")
-    for miner_name in MINERS:
-        write_config(DATASET, miner_name, "M5", "AVATAR (RelGAN)",
-                    {"GAN": "RelGAN", "suffix": suffix, "strategy": "naive", "status": "sampling_timeout"},
-                    {"score": -1, "runtime_s": 600}, "GAN sampling timed out")
-    sys.exit(0)
 except Exception as e:
     print(f"    Sampling error: {e}")
     for miner_name in MINERS:
@@ -325,7 +302,6 @@ for miner_name, miner_fn in MINERS.items():
         result = subprocess.run(
             f"{gen_cmd} {gen_args}".split(),
             capture_output=True, text=True,
-            timeout=300,
             cwd=AVATAR_DIR
         )
         gen_time = time.time() - t0
@@ -347,11 +323,6 @@ for miner_name, miner_fn in MINERS.items():
                      "n_samples": 10000, "discovery_variants": len(discovery_variants)},
                     {"score": score, "runtime_s": gen_time}, notes)
 
-    except subprocess.TimeoutExpired:
-        write_config(DATASET, miner_name, "M5", "AVATAR (RelGAN)",
-                    {"GAN": "RelGAN", "status": "generalization_timeout"},
-                    {"score": -1, "runtime_s": 300}, notes + " ⚠️ TIMEOUT")
-        print(f"      Generalization timed out (300s)")
     except Exception as e:
         write_config(DATASET, miner_name, "M5", "AVATAR (RelGAN)",
                     {"GAN": "RelGAN"}, {"score": -1, "error": str(e)}, notes + " ⚠️ ERROR")

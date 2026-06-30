@@ -110,7 +110,9 @@ bash benchmark/shell/run_all.sh
 
 **Planner (read‑only):**
 - Plans, surveys code, reads `.md`/`.py`/`.json`/`.sh`/`.drawio` files via standard tools
+- May use a restricted subset of tools as defined in `reasonix.toml`'s `planner_allowed_tools` — limited to read‑only operations on Jupyter and Drawio (e.g. listing pages, reading cells in brief mode). These tools are available to the planner for read‑only inspection only.
 - **MUST NOT read, view, or interact with `.ipynb` files through ANY channel** — not via `read_file`, not via `web_fetch`, not via `glob` on `.ipynb` paths (except to confirm file existence/paths for handover). Notebooks contain base64‑encoded images that cause truncation in non‑MCP tools and are inherently unreadable outside the Jupyter MCP.
+- When `mcp__jupyter__use_notebook` is needed, the planner **MUST use `mode: "connect"` only** — never create a new notebook.
 - When notebook context is needed, describe WHAT information is needed from WHICH notebook; the executor will report back a summary
 
 **Executor (read‑write):**

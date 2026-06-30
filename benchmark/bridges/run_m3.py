@@ -115,7 +115,7 @@ def run(dataset_key, workdir, output_dir, miners=None):
             r2 = subprocess.run(
                 [_JAVA21, "-cp", _RELEVANCE_CP, "org.jbpt.relevance.JDFG2Aut",
                  dfg_path, aut_dir],
-                capture_output=True, text=True, timeout=30,
+                capture_output=True, text=True,
             )
             if r2.returncode != 0:
                 raise RuntimeError(f"JDFG2Aut failed: {r2.stderr[:200]}")
@@ -128,7 +128,7 @@ def run(dataset_key, workdir, output_dir, miners=None):
             r3 = subprocess.run(
                 [_JAVA21, "-cp", _RELEVANCE_CP, "org.jbpt.relevance.Relevance",
                  aut_path, xes],
-                capture_output=True, text=True, timeout=120,
+                capture_output=True, text=True,
             )
             os.unlink(aut_path)
             elapsed = time.time() - t0

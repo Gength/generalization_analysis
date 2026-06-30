@@ -50,7 +50,7 @@ def run(dataset_key, workdir, output_dir, jar="fixed",
                    f"-rel={xes_plain}", f"-ret={dfg}",
                    f"-n={n}", f"-m={m}", f"-g={g}", f"-k={k}", f"-p={p}"]
             t0 = time.time()
-            r = subprocess.run(cmd, capture_output=True, text=True, timeout=600, cwd=ENTROPIA_DIR)
+            r = subprocess.run(cmd, capture_output=True, text=True, cwd=ENTROPIA_DIR)
             elapsed = time.time() - t0
 
             precisions = [float(x.group(1)) for x in RE_REPLICATE.finditer(r.stdout)]
@@ -74,13 +74,6 @@ def run(dataset_key, workdir, output_dir, jar="fixed",
             ps = f"{p_mean:.4f}±{p_std:.4f}" if p_mean else "N/A"
             rs = f"{r_mean:.4f}±{r_std:.4f}" if r_mean else "N/A"
             print(f"p={ps}, r={rs} [{res['runtime_s']}s]")
-        except subprocess.TimeoutExpired:
-            print("TIMEOUT (>600s)")
-            _write_config(output_dir, dname, mname, {
-                "precision_mean": None, "precision_std": None,
-                "recall_mean": None, "recall_std": None,
-                "n_replicates": 0, "runtime_s": 600, "precisions": [], "recalls": [],
-            }, jar_label, "Timed out")
         except Exception as e:
             print(f"ERROR: {e}")
             _write_config(output_dir, dname, mname, {
