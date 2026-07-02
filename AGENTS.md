@@ -1,4 +1,29 @@
-# REASONIX.md — generalization-analysis
+# AGENTS.md — generalization-analysis
+
+---
+
+## Role Boundaries — Planner vs Executor
+
+**Planner (read‑only):**
+- Plans, surveys code, reads `.md`/`.py`/`.json`/`.sh`/`.drawio` files via standard tools
+- May use a restricted subset of tools as defined in `reasonix.toml`'s `planner_allowed_tools` — limited to read‑only operations on Jupyter and Drawio (e.g. listing pages, reading cells in brief mode). These tools are available to the planner for read‑only inspection only.
+- **MUST NOT read, view, or interact with `.ipynb` files through ANY channel** — not via `read_file`, not via `web_fetch`, not via `glob` on `.ipynb` paths (except to confirm file existence/paths for handover). Notebooks contain base64‑encoded images that cause truncation in non‑MCP tools and are inherently unreadable outside the Jupyter MCP.
+- When `mcp__jupyter__use_notebook` is needed, the planner **MUST use `mode: "connect"` only** — never create a new notebook.
+- When notebook context is needed, describe WHAT information is needed from WHICH notebook; the executor will report back a summary
+
+**Executor (read‑write):**
+- The executor owns all notebook interaction. Notebooks MUST be accessed exclusively through Jupyter MCP tools:
+
+  - `mcp__jupyter__use_notebook` → connect and activate a notebook
+  - `mcp__jupyter__read_notebook` (brief mode + pagination) → survey cells
+  - `mcp__jupyter__insert_cell` / `mcp__jupyter__edit_cell_source` / `mcp__jupyter__overwrite_cell_source` → edit
+  - `mcp__jupyter__execute_cell` / `mcp__jupyter__insert_execute_code_cell` → run code
+  - `mcp__jupyter__read_cell` → inspect outputs
+  - `mcp__jupyter__execute_code` → temporary debug (not saved to notebook)
+
+- There is NO fallback. If the Jupyter MCP server is not connected or tools fail, report the problem and wait for the user to resolve it.
+
+---
 
 ## Stack
 - **Python 3.12** (`.python-version`)
@@ -110,10 +135,9 @@ bash benchmark/shell/run_all.sh
 
 **Planner (read‑only):**
 - Plans, surveys code, reads `.md`/`.py`/`.json`/`.sh`/`.drawio` files via standard tools
-- May use a restricted subset of tools as defined in `reasonix.toml`'s `planner_allowed_tools` — limited to read‑only operations on Jupyter and Drawio (e.g. listing pages, reading cells in brief mode). These tools are available to the planner for read‑only inspection only.
-- **MUST NOT read, view, or interact with `.ipynb` files through ANY channel** — not via `read_file`, not via `web_fetch`, not via `glob` on `.ipynb` paths (except to confirm file existence/paths for handover). Notebooks contain base64‑encoded images that cause truncation in non‑MCP tools and are inherently unreadable outside the Jupyter MCP.
-- When `mcp__jupyter__use_notebook` is needed, the planner **MUST use `mode: "connect"` only** — never create a new notebook.
-- When notebook context is needed, describe WHAT information is needed from WHICH notebook; the executor will report back a summary
+- **MUST NOT read, view, or interact with `.ipynb` files through ANY channel** — not via `read_file`, not via `web_fetch`, not via `glob` on `.ipynb` paths (except to confirm file existence/paths for handover). This prohibition applies unconditionally regardless of MCP availability. Notebooks contain base64‑encoded images that cause truncation in non‑MCP tools.
+- **Before every planning turn, MUST read `ExecutionSummary.md`** — this is the only source of executor state. See the Planner–Executor Communication Protocol section above.
+- When notebook context is needed, describe WHAT information is needed from WHICH notebook in the plan; the executor will read the notebook via Jupyter MCP and record findings in `ExecutionSummary.md`.
 
 **Executor (read‑write):**
 - The executor owns all notebook interaction. Notebooks MUST be accessed exclusively through Jupyter MCP tools:
@@ -126,6 +150,7 @@ bash benchmark/shell/run_all.sh
   - `mcp__jupyter__execute_code` → temporary debug (not saved to notebook)
 
 - There is NO fallback. If the Jupyter MCP server is not connected or tools fail, report the problem and wait for the user to resolve it.
+- **After every execution turn, MUST append a summary entry to `ExecutionSummary.md`.** Follow the format defined in the Planner–Executor Communication Protocol section above. This is the executor's only way to communicate results, state, and blockers back to the planner.
 
 ## Benchmark quick-index
 

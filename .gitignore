@@ -11,3 +11,4 @@ reasonix.toml
 benchmark/models/
 .codegraph/
 archive/src_deps/
+ExecutionSummary.md
