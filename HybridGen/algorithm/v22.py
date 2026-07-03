@@ -17,7 +17,7 @@ from pm4py.algo.conformance.tokenreplay import algorithm as token_replay
 from pm4py.algo.evaluation.replay_fitness import algorithm as replay_fitness
 
 # Increase recursion depth slightly just to be safe with long traces
-# sys.setrecursionlimit(2000)
+sys.setrecursionlimit(2000)
 __all__ = [
     "calculate_gen_shadow_stable", 
     "calculate_gen_struct",

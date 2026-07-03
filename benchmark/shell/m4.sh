@@ -4,6 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
+#SBATCH --time=08:00:00
 #SBATCH --output=benchmark/logs/bench_M4_%j.log
 #
 # M4  Anti-Alignment Generalization (ProcessM TwoPhaseDFS)
@@ -27,4 +28,14 @@ export PATH="$HOME/.local/bin:$PATH"
 # Edit this array to subset miners for a run.
 MINERS=(Trace_Filtered Alpha Alpha+ Heuristics Heuristics_Strict Inductive_Strict Inductive_Infrequent Flower)
 
-uv run python benchmark/job_m4.py --miners "${MINERS[@]}" "$@"
+# Parse --miners from CLI args; everything else passes through
+PASSTHRU=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --miners) shift; MINERS=()
+            while [[ $# -gt 0 && ! "$1" =~ ^-- ]]; do MINERS+=("$1"); shift; done ;;
+        *) PASSTHRU+=("$1"); shift ;;
+    esac
+done
+
+uv run python benchmark/job_m4.py --miners "${MINERS[@]}" "${PASSTHRU[@]}"

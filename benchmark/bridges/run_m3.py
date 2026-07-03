@@ -69,6 +69,10 @@ def run(dataset_key, workdir, output_dir, miners=None):
         manifest = json.load(f)
     dname = manifest["dataset"]
     xes = manifest["xes_file"]
+    # Use decompressed .xes if available (Java Relevance can't read .xes.gz)
+    xes_plain = os.path.join(workdir, f"{dname.lower().replace(' ', '_')}.xes")
+    if os.path.exists(xes_plain):
+        xes = xes_plain
     all_miners = manifest.get("miners", {})
 
     target = miners or get_miner_names()
