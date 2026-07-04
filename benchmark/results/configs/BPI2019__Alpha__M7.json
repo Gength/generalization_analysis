@@ -1,0 +1,22 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Alpha",
+  "method": "M7",
+  "method_label": "SpeciAL4PM",
+  "timestamp": "2026-07-02T22:11:15Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "n_grams": [
+      "1-gram",
+      "2-gram",
+      "3-gram",
+      "tv"
+    ]
+  },
+  "results": {
+    "gen_score": -1,
+    "runtime_s": 3600.0002427101135
+  },
+  "notes": "SpeciAL4PM error: exceeds cell budget (3600s)"
+}

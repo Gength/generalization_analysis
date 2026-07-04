@@ -16,7 +16,8 @@
   },
   "results": {
     "raw_line": "",
-    "runtime_s": 120
+    "runtime_s": 120,
+    "gen_score": -1
   },
-  "notes": "TIMEOUT"
+  "notes": "TIMEOUT | sentinel normalized: no result within its 120 s runner timeout; not yet re-attempted under the 3600 s protocol"
 }

@@ -1,0 +1,34 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Inductive_Infrequent",
+  "method": "M7",
+  "method_label": "SpeciAL4PM",
+  "timestamp": "2026-07-02T23:32:11Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "n_grams": [
+      "1-gram",
+      "2-gram",
+      "3-gram",
+      "tv"
+    ]
+  },
+  "results": {
+    "c1_original": {
+      "1-gram": 0.9999992339459978,
+      "2-gram": 0.9999347337998823,
+      "3-gram": 0.9992824732288011,
+      "tv": 0.964128835479753
+    },
+    "c1_simulated": {
+      "1-gram": 1,
+      "2-gram": 0.9999962530412099,
+      "3-gram": 0.9990900175324969,
+      "tv": 0.1387140298072267
+    },
+    "gen_score": 0.7859205998692455,
+    "runtime_s": 416.05135560035706
+  },
+  "notes": ""
+}

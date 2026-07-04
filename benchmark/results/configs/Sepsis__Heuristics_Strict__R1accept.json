@@ -1,0 +1,24 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Heuristics_Strict",
+  "method": "R1accept",
+  "method_label": "R1-accept (variant 5-fold x3, perfect replay)",
+  "timestamp": "2026-07-02T14:00:00Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "folds": 5,
+    "shuffles": 3
+  },
+  "results": {
+    "accept_mean": 0.04268464275911179,
+    "accept_std": 0.007927275377975674,
+    "shuffle_means": [
+      0.03245667759331712,
+      0.051774061016605956,
+      0.04382318966741229
+    ],
+    "runtime_s": 3.2752981185913086
+  },
+  "notes": "r1_accept.py"
+}

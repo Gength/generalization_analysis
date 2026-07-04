@@ -2,28 +2,22 @@
   "dataset": "Sepsis",
   "miner": "Inductive_Infrequent",
   "method": "M1d",
-  "method_label": "HybridGen v2.4 (N=6)",
-  "timestamp": "2026-06-08T13:59:10Z",
+  "method_label": "HybridGen v2.4 (uniform proposal)",
+  "timestamp": "2026-06-12T09:05:16Z",
   "host": "local",
   "seed": 42,
   "parameters": {
+    "algorithm_version": "v2.4",
     "max_n": 6,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
   },
   "results": {
-    "gen_total": 0.9208110082435981,
-    "mean": 0.9208110082435981,
-    "std": 0.0021391921701788587,
-    "raw_iterations": [
-      0.9203264044635092,
-      0.9194369091888902,
-      0.9179694743056128,
-      0.9222563341985114,
-      0.9240659190614668
-    ],
-    "runtime_s": 3.073453426361084
+    "mean": 0.9199757442596079,
+    "std": 0.0033095437806419017,
+    "raw_iterations": null,
+    "runtime_s": 4.314606189727783
   },
-  "notes": ""
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

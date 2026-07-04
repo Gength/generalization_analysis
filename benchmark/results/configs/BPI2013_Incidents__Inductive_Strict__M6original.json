@@ -1,0 +1,53 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Inductive_Strict",
+  "method": "M6original",
+  "method_label": "Bootstrap Generalization (Entropia -bgen)",
+  "timestamp": "2026-06-18T19:17:11Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "jbpt-pm-entropia-1.7.1",
+    "flag": "-bgen",
+    "sample_size": 200,
+    "replicates": 10,
+    "generations": 10,
+    "k": 2,
+    "p": 1.0,
+    "model_format": "DFG JSON (simulated from PNML)"
+  },
+  "results": {
+    "gen_score": 0.563273,
+    "precision": 0.392034,
+    "precision_std": 0.004934,
+    "recall": 1.000124,
+    "recall_std": 0.000234,
+    "n_replicates": 10,
+    "raw_precisions": [
+      0.3947311,
+      0.383971,
+      0.38796869,
+      0.39628762,
+      0.40680723,
+      0.38719093,
+      0.38912038,
+      0.4002414,
+      0.38764322,
+      0.38638028
+    ],
+    "raw_recalls": [
+      0.99944564,
+      1.00057149,
+      1.00008907,
+      1.00006967,
+      1.00006415,
+      1.00002437,
+      0.9997498,
+      1.00046303,
+      1.00032736,
+      1.00043504
+    ],
+    "runtime_s": 79.5
+  },
+  "notes": "renamed M6 -> M6bgen in configs_second_try: this is the published Entropia -bgen reading; M6 is the token-replay adaptation (Sect. 5.4)."
+}

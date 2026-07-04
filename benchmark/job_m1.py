@@ -10,6 +10,11 @@ ap.add_argument("--dataset", required=True); ap.add_argument("--output", default
 ap.add_argument("--methods", nargs="+", default=None)
 ap.add_argument("--miners", nargs="*", default=None)
 ap.add_argument("--workers", type=int, default=8, help="Parallel workers (default: 8)")
+ap.add_argument("--cell-timeout", type=int, default=3600,
+                help="Per-cell METRIC budget in seconds (discovery excluded; "
+                     "protocol default 3600, R1/R2 exempt, 0 = unlimited)")
+ap.add_argument("--no-model-cache", action="store_true",
+                help="Force rediscovery instead of using benchmark/models/<key>/")
 args = ap.parse_args()
 from datasets import DATASETS
 ds_name = DATASETS[args.dataset]["name"]
@@ -19,5 +24,7 @@ print(f"[M1] {args.dataset} ({ds_name}) | methods: {methods_str} | miners: {mine
 workdir = f"/tmp/benchmark_M1_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
 prepare_workdir(workdir, args.dataset, copy_xes=True)
-run(args.dataset, workdir, output_dir, methods=args.methods, miners=args.miners, workers=args.workers)
+run(args.dataset, workdir, output_dir, methods=args.methods, miners=args.miners,
+    workers=args.workers, cell_timeout=args.cell_timeout,
+    model_cache=not args.no_model_cache)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")

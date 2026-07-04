@@ -1,0 +1,37 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Inductive_Infrequent",
+  "method": "M6adapted",
+  "method_label": "Bootstrap Generalization (adapted)",
+  "timestamp": "2026-07-02T23:48:40Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "generations": 10,
+    "k": 2,
+    "p": 1.0,
+    "replicates": 10,
+    "sample_size": 200,
+    "source": "bsgen (breeding + token replay)"
+  },
+  "results": {
+    "gen_score": 0.9888731418271848,
+    "std": 0.0025480792986220906,
+    "ci_95": 0.0015793159115045491,
+    "n_replicates": 10,
+    "raw_fitnesses": [
+      0.9855274855841933,
+      0.9890299862542496,
+      0.989658054013844,
+      0.9899355204230291,
+      0.9834865183921273,
+      0.9892368039180119,
+      0.9898580287206267,
+      0.9917301758694469,
+      0.9878429095266725,
+      0.9924259355696456
+    ],
+    "runtime_s": 58.60038900375366
+  },
+  "notes": ""
+}

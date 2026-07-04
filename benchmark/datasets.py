@@ -146,7 +146,7 @@ DATASETS = {
 # ── Derived paths (dataset-independent) ─────────────────────────────────────
 MODEL_DIR = "benchmark/models"
 MANIFEST_PATH = os.path.join(MODEL_DIR, "manifest.json")
-CONFIG_DIR_V2 = "benchmark/results/configs_v2"
+CONFIG_DIR_V2 = "benchmark/results/configs"
 
 # ── Convenience helpers ─────────────────────────────────────────────────────
 def get_info(ds_key):

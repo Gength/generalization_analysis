@@ -23,8 +23,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-CFG_V1 = "benchmark/results/configs"        # external methods + R1/R2/R3
-CFG_V2 = "benchmark/results/configs_v2"     # M1 family (8 miners incl. trace) + R1
+# Single source of truth: the consolidated matrix (M6adapted = token-replay
+# bootstrap adaptation, M6original = published Entropia -bgen, R1accept = acceptance GT).
+CFG_V1 = "benchmark/results/configs"
+CFG_V2 = "benchmark/results/configs"
 OUT = "report/figures"
 os.makedirs(OUT, exist_ok=True)
 
@@ -59,11 +61,12 @@ def _score(d, ds, m, meth):
     return score_of(cfg(d, ds, m, meth))
 
 def col(ds, meth):
-    """Score vector over the six real miners; externals live in configs/."""
-    d = CFG_V1 if meth in ("M2", "M5", "M6", "M7") else CFG_V2
+    """Score vector over the six real miners (all cells live in configs/)."""
+    d = CFG_V1 if meth in ("M2", "M5", "M6adapted", "M7") else CFG_V2
     vals = np.array([_score(d, ds, m, meth) for m in REAL])
     if np.all(np.isnan(vals)):
-        vals = np.array([_score(CFG_V1, ds, m, meth) for m in REAL])
+        other = CFG_V2 if d == CFG_V1 else CFG_V1
+        vals = np.array([_score(other, ds, m, meth) for m in REAL])
     return vals
 
 # --------------------------------------------------------------------------- #
@@ -124,7 +127,7 @@ def fig_landscape(ds, tag):
     """Landscape score heatmap (7 miners x methods+refs). No longer in the report."""
     versions = [("v1", CFG_V2, "M1a"), ("v2.1", CFG_V2, "M1c"), ("v2.6-mle", CFG_V2, "M1g")]
     externals = [("PM4Py", CFG_V1, "M2"), ("AVATAR", CFG_V1, "M5"),
-                 ("Bootstrap", CFG_V1, "M6"), ("SpeciAL", CFG_V1, "M7")]
+                 ("Bootstrap", CFG_V1, "M6adapted"), ("SpeciAL", CFG_V1, "M7")]
     infeasible = [("AntiAlign", CFG_V1, "M4"), ("Pattern", CFG_V1, "M8")]
     refs = [("R1 CV", CFG_V1, "R1"), ("R2 LOVO", CFG_V1, "R2"), ("R3 Rand", CFG_V1, "R3")]
     cols = versions + externals + infeasible + refs
@@ -136,12 +139,37 @@ def fig_landscape(ds, tag):
                  cmap="RdYlGn", vmin=0, vmax=1, fmt="{:.2f}",
                  out=f"{OUT}/fig_landscape_{tag}.pdf", cbar_label="generalization score")
 
+def fig_calibration_v2(ds, tag):
+    """Single-version calibration small-multiples: the final metric plus the five
+    external readings (v1 panel replaced by the published Entropia -bgen F1).
+    Written to fig_calibration_<tag>v2.pdf so the original figure stays intact."""
+    r1 = col(ds, "R1")
+    panels = [("ShadowGen (ours)", "M1g"), ("PM4Py", "M2"), ("AVATAR", "M5"),
+              ("Bootstrap adapted", "M6adapted"), ("Entropia -bgen", "M6original"), ("SpeciAL", "M7")]
+    fig, axes = plt.subplots(2, 3, figsize=(7.4, 5.0), sharex=True, sharey=True)
+    for ax, (name, meth) in zip(axes.ravel(), panels):
+        y = col(ds, meth)
+        ax.plot([0, 1], [0, 1], ls="--", c="0.6", lw=1, zorder=1)
+        ax.scatter(r1, y, c="#378ADD", s=30, zorder=3, edgecolor="white", linewidth=0.6)
+        mae = np.nanmean(np.abs(y - r1))
+        ax.set_title(f"{name}  (MAE {mae:.3f})", fontsize=9)
+        ax.set_xlim(0, 1.05); ax.set_ylim(0, 1.05); ax.set_aspect("equal")
+        ax.tick_params(labelsize=7)
+    for ax in axes[-1]:
+        ax.set_xlabel("R1 cross-validation fitness", fontsize=8)
+    for ax in axes[:, 0]:
+        ax.set_ylabel("metric score", fontsize=8)
+    fig.suptitle("Calibration against held-out ground truth (six real miners; on the dashed line = perfect)",
+                 fontsize=9)
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
+    fig.savefig(f"{OUT}/fig_calibration_{tag}v2.pdf", bbox_inches="tight"); plt.close(fig)
+
 def fig_mae(ds, tag):
     """Key-methods MAE-to-R1 heatmap. No longer in the report."""
     r1 = _r1_per_miner(ds)
     cols2 = [("v1", CFG_V2, "M1a"), ("v2.1", CFG_V2, "M1c"), ("v2.6-mle", CFG_V2, "M1g"),
              ("PM4Py", CFG_V1, "M2"), ("AVATAR", CFG_V1, "M5"),
-             ("Bootstrap", CFG_V1, "M6"), ("SpeciAL", CFG_V1, "M7")]
+             ("Bootstrap", CFG_V1, "M6adapted"), ("SpeciAL", CFG_V1, "M7")]
     A = np.full((len(MINERS7), len(cols2)), np.nan)
     for i, miner in enumerate(MINERS7):
         for j, (_, d, meth) in enumerate(cols2):
@@ -163,7 +191,7 @@ def fig_calibration(ds, tag):
     """Calibration small-multiples: each metric vs R1 over the six real miners."""
     r1 = col(ds, "R1")
     panels = [("v1", "M1a"), ("v2.6-mle", "M1g"), ("PM4Py", "M2"),
-              ("AVATAR", "M5"), ("Bootstrap", "M6"), ("SpeciAL", "M7")]
+              ("AVATAR", "M5"), ("Bootstrap", "M6adapted"), ("SpeciAL", "M7")]
     fig, axes = plt.subplots(2, 3, figsize=(7.4, 5.0), sharex=True, sharey=True)
     for ax, (name, meth) in zip(axes.ravel(), panels):
         y = col(ds, meth)
@@ -185,7 +213,7 @@ def fig_calibration(ds, tag):
 def fig_metric_corr(ds, tag):
     """Inter-metric Pearson matrix over the six real miners. No longer in the report."""
     methods = [("ours v2.6-mle", "M1g"), ("PM4Py", "M2"), ("AVATAR", "M5"),
-               ("Bootstrap", "M6"), ("SpeciAL", "M7"),
+               ("Bootstrap", "M6adapted"), ("SpeciAL", "M7"),
                ("R1 CV", "R1"), ("R2 LOVO", "R2"), ("R3 rand", "R3")]
     cols = [col(ds, m) for _, m in methods]
     n = len(methods)
@@ -221,24 +249,50 @@ def _mae_vs_r1(ds, meth):
     return float(np.mean(np.abs(x - r1))) if not np.any(np.isnan(np.r_[x, r1])) else np.nan
 
 def fig_ladder():
-    """MAE-per-version on D1 and D2. No longer in the report."""
+    """MAE-per-version across all five datasets."""
     versions = [("v1", "M1a"), ("v2.1", "M1c"), ("v2.4", "M1d"),
                 ("v2.5", "M1e"), ("v2.6-log", "M1f"), ("v2.6-mle", "M1g")]
-    d1 = [_mae_vs_r1("Sepsis", me) for _, me in versions]
-    d2 = [_mae_vs_r1("BPI2013_Incidents", me) for _, me in versions]
+    STYLE = {"D1": ("o-", "#378ADD"), "D2": ("s--", "#1D9E75"), "D3": ("^-", "#9673a6"),
+             "D4": ("D--", "#E8943A"), "D5": ("v-", "#b8403e")}
     xs = list(range(len(versions)))
-    fig, ax = plt.subplots(figsize=(6.2, 3.4))
-    ax.plot(xs, d1, "o-", color="#378ADD", label="D1 Sepsis")
-    ax.plot(xs, d2, "s--", color="#1D9E75", label="D2 BPI 2013")
+    fig, ax = plt.subplots(figsize=(6.6, 3.6))
+    allv = []
+    for d, ds in DS5:
+        ys = [_mae_vs_r1(ds, me) for _, me in versions]
+        allv += [v for v in ys if not np.isnan(v)]
+        mk, c = STYLE[d]
+        ax.plot(xs, ys, mk, color=c, label=f"{d}", ms=4.5, lw=1.4)
     ax.set_xticks(xs); ax.set_xticklabels([v for v, _ in versions], rotation=18, ha="right", fontsize=8)
     ax.set_ylabel("MAE vs R1  (lower = better)", fontsize=9)
-    ax.set_ylim(0, max(v for v in d1 + d2 if not np.isnan(v)) * 1.18)
-    ax.annotate("only the final version,\nwith mle sampling, wins", xy=(5, d1[5]),
-                xytext=(2.6, 0.052), fontsize=7.5, color="0.25",
-                arrowprops=dict(arrowstyle="->", color="0.45"))
-    ax.legend(fontsize=8, frameon=False); ax.spines[["top", "right"]].set_visible(False)
+    ax.set_ylim(0, max(allv) * 1.15)
+    ax.legend(fontsize=8, frameon=False, ncol=5, loc="upper right")
+    ax.spines[["top", "right"]].set_visible(False)
     ax.grid(axis="y", ls=":", alpha=.5)
     fig.tight_layout(); fig.savefig(f"{OUT}/fig_ladder.pdf", bbox_inches="tight"); plt.close(fig)
+
+def fig_calibration_scale():
+    """v2.6-mle vs R1 on the six real miners of every dataset (30 points).
+    The graded-fitness analogue of fig_accept_scale."""
+    MARKS = {"D1": ("o", "#378ADD"), "D2": ("s", "#1D9E75"), "D3": ("^", "#9673a6"),
+             "D4": ("D", "#E8943A"), "D5": ("v", "#b8403e")}
+    fig, ax = plt.subplots(figsize=(6.2, 4.6))
+    ax.plot([0, 1], [0, 1], ls="--", c="0.6", lw=1, zorder=1)
+    for d, ds in DS5:
+        r1 = col(ds, "R1"); mg = col(ds, "M1g")
+        mask = ~(np.isnan(r1) | np.isnan(mg))
+        pear = np.corrcoef(r1[mask], mg[mask])[0, 1]
+        mae = float(np.nanmean(np.abs(mg - r1)))
+        mk, c = MARKS[d]
+        ax.scatter(r1[mask], mg[mask], marker=mk, s=52, color=c, edgecolor="white",
+                   linewidth=0.7, zorder=3,
+                   label=f"{d}  (r={pear:.3f}, MAE {mae:.3f})")
+    ax.set_xlabel("R1 cross-validation fitness (ground truth)", fontsize=9)
+    ax.set_ylabel("ShadowGen v2.6-mle", fontsize=9)
+    ax.set_xlim(0.1, 1.03); ax.set_ylim(0.1, 1.03); ax.set_aspect("equal")
+    ax.legend(fontsize=8, frameon=False, loc="upper left")
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.4)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_calibration_scale.pdf", bbox_inches="tight")
+    plt.close(fig)
 
 def fig_nsweep():
     """Realized mutation rate vs N (BPI 2017 sweep)."""
@@ -258,7 +312,7 @@ def fig_runtime():
     """Per-model time on D1, log scale (bar). Superseded by fig_pareto in the report."""
     data = [("PM4Py (M2)", 0.4, "work"), ("SpeciAL (M7)", 1.0, "work"),
             ("R3 random", 4.4, "work"), ("ShadowGen", 5.4, "ours"),
-            ("Bootstrap (M6)", 11.1, "work"), ("R1 5-fold CV", 120, "gt"),
+            ("Bootstrap (M6adapted)", 11.1, "work"), ("R1 5-fold CV", 120, "gt"),
             ("M8 pattern", 600, "infeasible"), ("AVATAR (M5)", 14400, "slow"),
             ("M4 anti-align.", 48414, "infeasible")]
     data.sort(key=lambda t: t[1])
@@ -282,7 +336,7 @@ def fig_pareto():
     r1 = col(ds, "R1")
     # (label, runtime_s, method_id, kind, label_dx, label_dy, ha)
     pts = [("ShadowGen (ours)", 5.4, "M1g", "ours", 8, 4, "left"),
-           ("Bootstrap (M6)", 11.1, "M6", "work", 8, -12, "left"),
+           ("Bootstrap (M6adapted)", 11.1, "M6adapted", "work", 8, -12, "left"),
            ("PM4Py (M2)", 0.4, "M2", "work", 8, 0, "left"),
            ("SpeciAL (M7)", 1.0, "M7", "work", 8, 2, "left"),
            ("AVATAR (M5)", 14400, "M5", "slow", -8, 4, "right"),
@@ -306,6 +360,337 @@ def fig_pareto():
     ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.5)
     fig.tight_layout(); fig.savefig(f"{OUT}/fig_pareto.pdf", bbox_inches="tight"); plt.close(fig)
 
+def fig_scale():
+    """MAE to R1 per dataset (D1-D5) for v1, v2.6-mle, PM4Py. One bar group per log."""
+    DS = [("D1\nSepsis", "Sepsis"), ("D2\nBPI 2013", "BPI2013_Incidents"),
+          ("D3\nBPI 2017", "BPI2017"), ("D4\nBPI 2018", "BPI2018"),
+          ("D5\nBPI 2019", "BPI2019")]
+    METHS = [("v1", "M1a", "#9BC4E8"), ("v2.6-mle (ours)", "M1g", "#1D9E75"),
+             ("PM4Py", "M2", "#E8943A")]
+    fig, ax = plt.subplots(figsize=(6.8, 3.4))
+    x = np.arange(len(DS)); w = 0.26
+    for k, (name, meth, color) in enumerate(METHS):
+        maes = []
+        for _, ds in DS:
+            y = col(ds, meth); r1 = col(ds, "R1")
+            maes.append(float(np.nanmean(np.abs(y - r1))))
+        bars = ax.bar(x + (k - 1) * w, maes, w, label=name, color=color)
+        for bar, v in zip(bars, maes):
+            ax.text(bar.get_x() + bar.get_width() / 2, v + 0.004, f"{v:.3f}",
+                    ha="center", va="bottom", fontsize=6.3)
+        print(f"  scale {meth:4}", [round(m, 3) for m in maes])
+    ax.set_xticks(x); ax.set_xticklabels([d[0] for d in DS], fontsize=8)
+    ax.set_ylabel("MAE vs R1  (lower = better)", fontsize=9)
+    ax.set_ylim(0, 0.26)
+    ax.legend(fontsize=8, frameon=False, ncol=3, loc="upper left")
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(axis="y", ls=":", alpha=.5)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_scale.pdf", bbox_inches="tight"); plt.close(fig)
+
+DS5 = [("D1", "Sepsis"), ("D2", "BPI2013_Incidents"), ("D3", "BPI2017"),
+       ("D4", "BPI2018"), ("D5", "BPI2019")]
+
+def _accept_pair(ds, miner):
+    """(gen_accept of M1g, R1accept mean) for one cell, or (nan, nan)."""
+    import json as _json
+    ga = ra = np.nan
+    p1 = f"{CFG_V1}/{ds}__{miner}__M1g.json"
+    p2 = f"{CFG_V1}/{ds}__{miner}__R1accept.json"
+    if os.path.exists(p1):
+        v = _json.load(open(p1, encoding="utf-8"))["results"].get("gen_accept")
+        ga = np.nan if v is None else float(v)
+    if os.path.exists(p2):
+        ra = float(_json.load(open(p2, encoding="utf-8"))["results"]["accept_mean"])
+    return ga, ra
+
+def fig_accept_scale():
+    """Acceptance validation across all five logs: gen_accept (v2.6-mle) vs the
+    acceptance ground truth R1-accept; y=x = perfect. Shows the exact poles and
+    the D4 saturation outlier (Inductive-strict)."""
+    MARKS = {"D1": ("o", "#378ADD"), "D2": ("s", "#1D9E75"), "D3": ("^", "#9673a6"),
+             "D4": ("D", "#E8943A"), "D5": ("v", "#b8403e")}
+    fig, ax = plt.subplots(figsize=(6.2, 4.6))
+    ax.plot([0, 1], [0, 1], ls="--", c="0.6", lw=1, zorder=1)
+    for d, ds in DS5:
+        xs, ys = [], []
+        for m in ["Trace_Filtered"] + REAL + ["Flower"]:
+            ga, ra = _accept_pair(ds, m)
+            if not (np.isnan(ga) or np.isnan(ra)):
+                xs.append(ra); ys.append(ga)
+        mk, c = MARKS[d]
+        ax.scatter(xs, ys, marker=mk, s=52, color=c, edgecolor="white",
+                   linewidth=0.7, label=d, zorder=3)
+    ax.set_xlabel("R1-accept (held-out real traces replayed perfectly)", fontsize=9)
+    ax.set_ylabel("gen_accept (shadow traces replayed perfectly)", fontsize=9)
+    ax.set_xlim(-0.03, 1.05); ax.set_ylim(-0.03, 1.05); ax.set_aspect("equal")
+    ax.legend(fontsize=8, frameon=False, loc="upper left")
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.4)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_accept_scale.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+def fig_accept_landscape():
+    """The acceptance ground truth itself: R1-accept per (dataset, miner).
+    Only the Inductive family strictly accepts unseen behavior, and trace
+    depth (D4, avg 57 events) defeats strict acceptance everywhere."""
+    miners = ["Trace_Filtered"] + REAL + ["Flower"]
+    M = np.full((len(DS5), len(miners)), np.nan)
+    for i, (d, ds) in enumerate(DS5):
+        for j, m in enumerate(miners):
+            _, ra = _accept_pair(ds, m)
+            M[i, j] = ra
+    labels = ["Trace*", "Alpha", "Alpha+", "Heuristics", "Heur-strict",
+              "Ind-infreq", "Ind-strict", "Flower*"]
+    fig, ax = plt.subplots(figsize=(7.0, 2.9))
+    im = ax.imshow(np.ma.masked_invalid(M), cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
+    ax.set_xticks(range(len(miners))); ax.set_xticklabels(labels, rotation=30,
+                                                          ha="right", fontsize=8)
+    ynames = {"D1": "D1 Sepsis", "D2": "D2 BPI 2013", "D3": "D3 BPI 2017",
+              "D4": "D4 BPI 2018 (avg 57 ev)", "D5": "D5 BPI 2019"}
+    ax.set_yticks(range(len(DS5)))
+    ax.set_yticklabels([ynames[d] for d, _ in DS5], fontsize=8)
+    for i in range(M.shape[0]):
+        for j in range(M.shape[1]):
+            if not np.isnan(M[i, j]):
+                dark = M[i, j] < 0.22 or M[i, j] > 0.80
+                ax.text(j, i, f"{M[i, j]:.2f}", ha="center", va="center", fontsize=7,
+                        color="white" if dark else "black")
+    cb = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
+    cb.set_label("R1-accept", fontsize=8); cb.ax.tick_params(labelsize=7)
+    ax.set_xticks(np.arange(-.5, len(miners), 1), minor=True)
+    ax.set_yticks(np.arange(-.5, len(DS5), 1), minor=True)
+    ax.grid(which="minor", color="white", linewidth=1.2)
+    ax.tick_params(which="minor", length=0)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_accept_landscape.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+DS_MARKS = {"D1": ("o", "#378ADD"), "D2": ("s", "#1D9E75"), "D3": ("^", "#9673a6"),
+            "D4": ("D", "#E8943A"), "D5": ("v", "#b8403e")}
+
+def _method_cover(meth):
+    """Datasets on which `meth` has valid scores over the six real miners."""
+    out = []
+    for d, ds in DS5:
+        vals = col(ds, meth)
+        if not np.all(np.isnan(vals)):
+            out.append((d, ds))
+    return out
+
+def fig_calibration_grid_scale():
+    """Per-method calibration against R1 with EVERY dataset the method returned
+    on (points marked per dataset). Partial coverage is stated in the panel title."""
+    panels = [("v1", "M1a"), ("v2.6-mle", "M1g"), ("PM4Py", "M2"),
+              ("AVATAR", "M5"), ("Bootstrap adapted", "M6adapted"), ("SpeciAL", "M7")]
+    fig, axes = plt.subplots(2, 3, figsize=(7.6, 5.4), sharex=True, sharey=True)
+    for ax, (name, meth) in zip(axes.ravel(), panels):
+        ax.plot([0, 1], [0, 1], ls="--", c="0.6", lw=1, zorder=1)
+        cover = _method_cover(meth)
+        errs = []
+        for d, ds in cover:
+            y = col(ds, meth); r1 = col(ds, "R1")
+            mask = ~(np.isnan(y) | np.isnan(r1))
+            mk, c = DS_MARKS[d]
+            ax.scatter(r1[mask], y[mask], marker=mk, s=26, color=c,
+                       edgecolor="white", linewidth=0.5, zorder=3)
+            errs += list(np.abs(y[mask] - r1[mask]))
+        mae = float(np.mean(errs)) if errs else np.nan
+        dd = [d for d, _ in cover]
+        note = "all logs" if len(dd) == 5 else "+".join(dd)
+        ax.set_title(f"{name}  (MAE {mae:.3f}, {note})", fontsize=8.5)
+        ax.set_xlim(0, 1.05); ax.set_ylim(0, 1.05); ax.set_aspect("equal")
+        ax.tick_params(labelsize=7)
+    for ax in axes[-1]:
+        ax.set_xlabel("R1 cross-validation fitness", fontsize=8)
+    for ax in axes[:, 0]:
+        ax.set_ylabel("metric score", fontsize=8)
+    handles = [plt.Line2D([], [], marker=DS_MARKS[d][0], color=DS_MARKS[d][1],
+                          ls="", ms=6, label=d) for d, _ in DS5]
+    fig.legend(handles=handles, ncol=5, fontsize=8, frameon=False,
+               loc="upper center", bbox_to_anchor=(0.5, 1.0))
+    fig.tight_layout(rect=[0, 0, 1, 0.95])
+    fig.savefig(f"{OUT}/fig_calibration_grid_scale.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+def fig_pareto_scale():
+    """Speed vs accuracy aggregated over the five logs: median cell runtime (x)
+    against the mean of per-dataset MAEs to R1 (y). Methods that only ran on
+    some logs carry their coverage in the label."""
+    import json as _json
+    MINERS8 = ["Trace_Filtered"] + REAL + ["Flower"]
+
+    def time_stats(meth):
+        """(median, min, max) cell runtime over all logs x miners."""
+        ts = []
+        for _, ds in DS5:
+            for m in MINERS8:
+                p = f"{CFG_V1}/{ds}__{m}__{meth}.json"
+                if not os.path.exists(p):
+                    continue
+                r = _json.load(open(p, encoding="utf-8")).get("results", {})
+                t = r.get("runtime_s")
+                s = None
+                for k in ("mean", "score", "gen_score"):
+                    if r.get(k) is not None:
+                        s = float(r[k]); break
+                if t is not None and float(t) > 0 and (s is None or s >= 0):
+                    ts.append(float(t))
+        if not ts:
+            return (np.nan, np.nan, np.nan)
+        return (float(np.median(ts)), float(min(ts)), float(max(ts)))
+
+    def mae_stats(meth):
+        """(mean, min, max) of the per-dataset MAEs to R1."""
+        maes = []
+        for _, ds in DS5:
+            y = col(ds, meth); r1 = col(ds, "R1")
+            mask = ~(np.isnan(y) | np.isnan(r1))
+            if mask.sum() >= 3:
+                maes.append(float(np.mean(np.abs(y[mask] - r1[mask]))))
+        if not maes:
+            return (np.nan, np.nan, np.nan)
+        return (float(np.mean(maes)), float(min(maes)), float(max(maes)))
+
+    def covnote(meth):
+        dd = [d for d, _ in _method_cover(meth)]
+        return "" if len(dd) == 5 else " (" + "+".join(dd) + ")"
+
+    # (label base, method, kind, time override, dx, dy, ha)
+    pts = [("ShadowGen (ours)", "M1g", "ours", None, 8, 4, "left"),
+           ("PM4Py", "M2", "work", None, 8, 8, "left"),
+           ("SpeciAL", "M7", "work", None, 8, -11, "left"),
+           ("Bootstrap adapted", "M6adapted", "work", None, -8, -14, "right"),
+           ("Entropia -bgen", "M6original", "fail", None, -8, 6, "right"),
+           ("AVATAR", "M5", "slow", 14400.0, -8, 4, "right")]
+    cmap = {"ours": "#1D9E75", "work": "#378ADD", "slow": "#E8943A",
+            "fail": "#b8403e", "floor": "0.55"}
+    fig, ax = plt.subplots(figsize=(6.6, 4.2))
+    for base, meth, kind, t_over, dx, dy, ha in pts:
+        tmed, tlo, thi = time_stats(meth)
+        t = t_over if t_over is not None else tmed
+        mae, mlo, mhi = mae_stats(meth)
+        if np.isnan(t) or np.isnan(mae):
+            continue
+        c = cmap[kind]
+        # whiskers so the point does not hide the spread: horizontal = min-max
+        # cell runtime, vertical = min-max per-log MAE. AVATAR's x is a fixed
+        # budget anchor, not a measured median, so it gets no time whisker.
+        if t_over is None and not np.isnan(tlo):
+            ax.plot([tlo, thi], [mae, mae], color=c, lw=0.9, alpha=0.45, zorder=2)
+        if not np.isnan(mlo) and mhi > mlo:
+            ax.plot([t, t], [mlo, mhi], color=c, lw=0.9, alpha=0.45, zorder=2)
+        ax.scatter(t, mae, s=80, color=c, edgecolor="white",
+                   linewidth=0.8, zorder=3)
+        ax.annotate(base + covnote(meth), (t, mae), textcoords="offset points",
+                    xytext=(dx, dy), fontsize=8, ha=ha)
+        print(f"  pareto_scale {meth:7} t={t:>8.1f}s (min {tlo:.1f}, max {thi:.1f})  "
+              f"MAE={mae:.3f} (min {mlo:.3f}, max {mhi:.3f})")
+    ax.set_xscale("log")
+    ax.set_xlabel("median time per model over all logs (s, log scale)", fontsize=9)
+    ax.set_ylabel("mean MAE vs R1 over covered logs  (lower = better)", fontsize=9)
+    ax.set_ylim(-0.03, 0.72); ax.set_xlim(0.2, 6e4)
+    ax.annotate("better", xy=(0.55, 0.01), xytext=(4.0, 0.13), fontsize=9, color="0.3",
+                arrowprops=dict(arrowstyle="->", color="0.45"))
+    ax.text(0.98, 0.97, "M4, M8: no score on any log (infeasible)",
+            transform=ax.transAxes, ha="right", va="top", fontsize=7.5, color="#b8403e")
+    ax.text(0.02, 0.97, "bars: min-max over cells (horizontal)\nand over per-log error (vertical)",
+            transform=ax.transAxes, ha="left", va="top", fontsize=7, color="0.4")
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.5)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_pareto_scale.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+def fig_genval():
+    """Generator-premise validation: fraction of generated traces that are
+    EXACT matches of held-out real variants (never seen by the generator),
+    per dataset, for the full generator vs the 1-gram ablation vs random."""
+    import json as _json
+    p = "benchmark/results/generator_validation.json"
+    if not os.path.exists(p):
+        print("  genval: no results file, skipped")
+        return
+    data = _json.load(open(p, encoding="utf-8"))
+    DS = [("D1\nSepsis", "D1"), ("D2\nBPI 2013", "D2"), ("D3\nBPI 2017", "D3"),
+          ("D4\nBPI 2018", "D4"), ("D5\nBPI 2019", "D5")]
+    SERIES = [("shadow log (N=6, mle)", "v26_mle_N6", "#1D9E75"),
+              ("1-gram ablation", "N1_ablation", "#9BC4E8"),
+              ("random traces", "random", "0.6")]
+    fig, ax = plt.subplots(figsize=(6.8, 3.6))
+    x = np.arange(len(DS)); w = 0.26
+    for k, (name, key, color) in enumerate(SERIES):
+        vals = [100 * data[d][key]["hit_rate_mean"] if d in data and key in data[d] else np.nan
+                for _, d in DS]
+        bars = ax.bar(x + (k - 1) * w, vals, w, label=name, color=color)
+        for bar, v in zip(bars, vals):
+            if not np.isnan(v):
+                ax.text(bar.get_x() + bar.get_width() / 2, v + 0.35,
+                        f"{v:.2f}" if v >= 0.005 else "0", ha="center",
+                        va="bottom", fontsize=6.5)
+    ax.set_xticks(x); ax.set_xticklabels([d[0] for d in DS], fontsize=8)
+    ax.set_ylabel("% of generated traces that are\nheld-out REAL variants", fontsize=8.5)
+    ax.set_ylim(0, 30)
+    ax.legend(fontsize=8, frameon=False, loc="upper left")
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(axis="y", ls=":", alpha=.5)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_genval.pdf", bbox_inches="tight")
+    plt.close(fig)
+
+def fig_runtime_scale():
+    """Median time per model vs event-log size, all five logs (log-log).
+    Missing points are the feasibility story: SpeciAL crashed on D5, the
+    Entropia tool timed out on D4. R1 is the ground-truth reference."""
+    import json as _json
+    EVENTS = {"Sepsis": 15214, "BPI2013_Incidents": 65533, "BPI2017": 1202267,
+              "BPI2018": 2514266, "BPI2019": 1595923}
+    MINERS8 = ["Trace_Filtered"] + REAL + ["Flower"]
+
+    def rt_stats(ds, meth):
+        """(median, min, max) cell runtime over miners with valid scores."""
+        ts = []
+        for m in MINERS8:
+            p = f"{CFG_V1}/{ds}__{m}__{meth}.json"
+            if not os.path.exists(p):
+                continue
+            r = _json.load(open(p, encoding="utf-8")).get("results", {})
+            t = r.get("runtime_s")
+            s = None
+            for k in ("mean", "score", "gen_score"):
+                if r.get(k) is not None:
+                    s = float(r[k]); break
+            if t is not None and float(t) > 0 and (s is None or s >= 0):
+                ts.append(float(t))
+        if not ts:
+            return (np.nan, np.nan, np.nan)
+        return (float(np.median(ts)), float(min(ts)), float(max(ts)))
+
+    METHS = [("ShadowGen v2.6-mle (ours)", "M1g", "#1D9E75", "o-"),
+             ("PM4Py", "M2", "#378ADD", "s-"),
+             ("SpeciAL", "M7", "#9673a6", "^-"),
+             ("Entropia -bgen", "M6original", "#E8943A", "D-"),
+             ("R1 ground truth", "R1", "0.35", "v--")]
+    fig, ax = plt.subplots(figsize=(6.6, 4.0))
+    for name, meth, c, mk in METHS:
+        pts = []
+        for _, ds in [("D1", "Sepsis"), ("D2", "BPI2013_Incidents"),
+                      ("D3", "BPI2017"), ("D4", "BPI2018"), ("D5", "BPI2019")]:
+            med, lo, hi = rt_stats(ds, meth)
+            if not np.isnan(med):
+                pts.append((EVENTS[ds], med, lo, hi))
+        pts.sort()  # connect points in log-size order, not dataset order
+        xs = [p[0] for p in pts]; ys = [p[1] for p in pts]
+        ax.plot(xs, ys, mk, color=c, label=name, ms=4.5, lw=1.4)
+        # min-max whiskers: the median hides the tail; show the worst cell too
+        ax.errorbar(xs, ys,
+                    yerr=[[y - p[2] for y, p in zip(ys, pts)],
+                          [p[3] - y for y, p in zip(ys, pts)]],
+                    fmt="none", ecolor=c, elinewidth=0.8, capsize=2, alpha=0.55)
+    ax.set_xscale("log"); ax.set_yscale("log")
+    ax.set_xlabel("event log size (events, log scale)", fontsize=9)
+    ax.set_ylabel("time per model (s, log scale)\nmarker = median, whiskers = min to max", fontsize=8.5)
+    ax.text(0.98, 0.04, "SpeciAL: crashed on D5 (1.6M events)\n"
+                        "Entropia -bgen: timeout on D4 (2.5M events)",
+            transform=ax.transAxes, fontsize=7.5, color="#b8403e",
+            ha="right", va="bottom")
+    ax.legend(fontsize=8, frameon=False, loc="upper left")
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.4)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_runtime_scale.pdf", bbox_inches="tight")
+    plt.close(fig)
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dataset", default="Sepsis")
@@ -314,7 +699,10 @@ def main():
     tag = "d1" if ds == "Sepsis" else ds.lower()
 
     # used by the report
-    fig_calibration(ds, tag); fig_accept(ds, tag); fig_nsweep(); fig_pareto()
+    fig_calibration(ds, tag); fig_calibration_v2(ds, tag); fig_accept(ds, tag); fig_nsweep(); fig_pareto()
+    # cross-dataset summaries (D1-D5)
+    fig_scale(); fig_accept_scale(); fig_accept_landscape(); fig_calibration_scale()
+    fig_runtime_scale(); fig_calibration_grid_scale(); fig_pareto_scale(); fig_genval()
     # kept for slides / reuse (not referenced by the current report)
     fig_landscape(ds, tag); fig_mae(ds, tag); fig_metric_corr(ds, tag)
     fig_ladder(); fig_runtime()

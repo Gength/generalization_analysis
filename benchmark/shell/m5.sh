@@ -27,6 +27,7 @@
 set -eo pipefail
 export TMPDIR=/tmp
 export PATH="$HOME/.local/bin:$PATH"
+export PYTHONHASHSEED=0
 
 # ── Miner configuration ──────────────────────────────────────────────────────
 # Edit this array to subset miners for a run.

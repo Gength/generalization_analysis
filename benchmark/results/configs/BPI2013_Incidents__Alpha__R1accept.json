@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2013_Incidents",
+  "miner": "Alpha",
+  "method": "R1accept",
+  "method_label": "R1-accept (variant 5-fold x3, perfect replay)",
+  "timestamp": "2026-07-02T15:59:18Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "folds": 5,
+    "shuffles": 3
+  },
+  "results": {
+    "accept_mean": 0.00014190904685125333,
+    "accept_std": 5.9064468505343023e-05,
+    "shuffle_means": [
+      0.00015360983102918587,
+      0.00020768431983385254,
+      6.443298969072165e-05
+    ],
+    "runtime_s": 2.5254931449890137,
+    "wall_s": 6.746913909912109
+  },
+  "notes": "r1_accept.py (parallel folds; reference, budget-exempt)"
+}

@@ -16,7 +16,8 @@
   },
   "results": {
     "raw_line": "",
-    "runtime_s": 0.007897615432739258
+    "runtime_s": 0.007897615432739258,
+    "gen_score": -1
   },
-  "notes": "STDERR: xvfb-run: error: Xvfb failed to start"
+  "notes": "STDERR: xvfb-run: error: Xvfb failed to start | sentinel normalized: no result within its 0.007897615432739258 s runner timeout; not yet re-attempted under the 3600 s protocol"
 }

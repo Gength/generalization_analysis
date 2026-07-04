@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Heuristics",
+  "method": "R1accept",
+  "method_label": "R1-accept (variant 5-fold x3, perfect replay)",
+  "timestamp": "2026-07-02T16:07:02Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "folds": 5,
+    "shuffles": 3
+  },
+  "results": {
+    "accept_mean": 0.02326138963519601,
+    "accept_std": 0.0017417355510285022,
+    "shuffle_means": [
+      0.022344818579913765,
+      0.025699671935571607,
+      0.021739678390102657
+    ],
+    "runtime_s": 288.1829824447632,
+    "wall_s": 245.95058608055115
+  },
+  "notes": "r1_accept.py (parallel folds; reference, budget-exempt)"
+}

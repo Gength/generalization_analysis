@@ -3,13 +3,13 @@
   "miner": "Inductive_Infrequent",
   "method": "M2",
   "method_label": "PM4Py Built-in Gen",
-  "timestamp": "2026-06-08T13:58:59Z",
+  "timestamp": "2026-06-16T12:13:35Z",
   "host": "local",
   "seed": 42,
   "parameters": {},
   "results": {
     "score": 0.8799409837736138,
-    "runtime_s": 0.4312264919281006
+    "runtime_s": 0.4950449466705322
   },
   "notes": ""
 }

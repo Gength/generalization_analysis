@@ -1,0 +1,24 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Trace_Filtered",
+  "method": "R1accept",
+  "method_label": "R1-accept (variant 5-fold x3, perfect replay)",
+  "timestamp": "2026-07-02T13:59:49Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "folds": 5,
+    "shuffles": 3
+  },
+  "results": {
+    "accept_mean": 0.0,
+    "accept_std": 0.0,
+    "shuffle_means": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "runtime_s": 9.410072803497314
+  },
+  "notes": "r1_accept.py"
+}

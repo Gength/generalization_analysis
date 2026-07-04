@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Inductive_Infrequent",
+  "method": "M8",
+  "method_label": "Pattern-based generalization",
+  "timestamp": "2026-07-02T15:31:24Z",
+  "host": "generated",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "gen_score": -1,
+    "runtime_s": -1
+  },
+  "notes": "sentinel: not re-attempted at scale; produced no score on any D1 cell within budget (Sect. 6.2)"
+}

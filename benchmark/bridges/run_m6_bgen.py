@@ -21,8 +21,14 @@ RE_RUNTIME = re.compile(r"Generalization calculated in\s*(\d+)\s*ms")
 
 
 def run(dataset_key, workdir, output_dir, jar="fixed",
-        k=2, m=10, n=200, g=10, p=1.0, miners=None):
-    """Run M6. Reads manifest/per-miner DFGs from workdir, writes configs to output_dir."""
+        k=2, m=10, n=200, g=10, p=1.0, miners=None, cell_timeout=None):
+    """Run M6. Reads manifest/per-miner DFGs from workdir, writes configs to output_dir.
+
+    cell_timeout (seconds) bounds each miner's jar runtime (model conversion
+    happened in prepare_workdir and is excluded); timed-out cells are written
+    as -1 sentinels. 0 or None = unlimited."""
+    if not cell_timeout or cell_timeout <= 0:
+        cell_timeout = None
     with open(os.path.join(workdir, "manifest.json")) as f:
         manifest = json.load(f)
     dname = manifest["dataset"]
@@ -50,7 +56,18 @@ def run(dataset_key, workdir, output_dir, jar="fixed",
                    f"-rel={xes_plain}", f"-ret={dfg}",
                    f"-n={n}", f"-m={m}", f"-g={g}", f"-k={k}", f"-p={p}"]
             t0 = time.time()
-            r = subprocess.run(cmd, capture_output=True, text=True, cwd=ENTROPIA_DIR)
+            try:
+                r = subprocess.run(cmd, capture_output=True, text=True,
+                                   cwd=ENTROPIA_DIR, timeout=cell_timeout)
+            except subprocess.TimeoutExpired:
+                _write_config(output_dir, dname, mname, {
+                    "precision_mean": None, "precision_std": None,
+                    "recall_mean": None, "recall_std": None,
+                    "n_replicates": 0, "runtime_s": cell_timeout,
+                    "precisions": [], "recalls": [],
+                }, jar_label, f"exceeds budget (cell timeout {cell_timeout}s)")
+                print(f"TIMEOUT ({cell_timeout}s)")
+                continue
             elapsed = time.time() - t0
 
             precisions = [float(x.group(1)) for x in RE_REPLICATE.finditer(r.stdout)]
@@ -87,9 +104,15 @@ def run(dataset_key, workdir, output_dir, jar="fixed",
 
 def _write_config(output_dir, dname, miner, results, jar_label, notes=""):
     p, r = results.get("precision_mean"), results.get("recall_mean")
-    gen = round(2 * p * r / (p + r), 6) if (p and r and p + r > 0) else 0.0
+    # No parsed result -> -1 sentinel ("no score"), NOT 0.0: a 0.0 would read
+    # as a valid low score downstream (this is how the D4 timeouts ended up
+    # looking like zeros). A genuine p=r=0 still yields gen=0.0 below.
+    if p is None or r is None:
+        gen = -1
+    else:
+        gen = round(2 * p * r / (p + r), 6) if (p + r) > 0 else 0.0
     cfg = {
-        "dataset": dname, "miner": miner, "method": "M6",
+        "dataset": dname, "miner": miner, "method": "M6original",
         "method_label": "Bootstrap Gen (Entropia -bgen)",
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "host": "local", "seed": 42,
@@ -105,7 +128,7 @@ def _write_config(output_dir, dname, miner, results, jar_label, notes=""):
         },
         "notes": notes,
     }
-    path = os.path.join(output_dir, f"{dname}__{miner}__M6.json")
+    path = os.path.join(output_dir, f"{dname}__{miner}__M6original.json")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         json.dump(cfg, f, indent=2)
@@ -123,6 +146,9 @@ def main():
     ap.add_argument("--g", type=int, default=10)
     ap.add_argument("--p", type=float, default=1.0)
     ap.add_argument("--miners", nargs="+", default=None)
+    ap.add_argument("--cell-timeout", type=int, default=3600,
+                    help="Per-cell jar budget in seconds (conversion excluded; "
+                         "protocol default 3600, 0 = unlimited)")
     args = ap.parse_args()
 
     import shutil, secrets
@@ -134,7 +160,8 @@ def main():
     from job_prepare import prepare_workdir
     prepare_workdir(workdir, args.dataset, copy_xes=True, decompress_xes=True, discover_pnmls=True, per_miner_dfgs=True)
     run(args.dataset, workdir, output_dir, jar=args.jar, k=args.k, m=args.m,
-        n=args.n, g=args.g, p=args.p, miners=args.miners)
+        n=args.n, g=args.g, p=args.p, miners=args.miners,
+        cell_timeout=args.cell_timeout)
     shutil.rmtree(workdir)
     print(f"  [clean] removed {workdir}")
 

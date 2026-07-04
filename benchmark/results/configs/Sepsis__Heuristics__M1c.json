@@ -3,26 +3,27 @@
   "miner": "Heuristics",
   "method": "M1c",
   "method_label": "HybridGen v2.1 (N=6)",
-  "timestamp": "2026-06-08T13:58:04Z",
+  "timestamp": "2026-06-12T09:07:31Z",
   "host": "local",
   "seed": 42,
   "parameters": {
+    "algorithm_version": "v21",
     "max_n": 6,
     "safe_threshold": 5,
     "num_shadow_traces": 1000,
     "iterations": 5
   },
   "results": {
-    "mean": 0.8402750400625656,
-    "std": 0.0014788825881801098,
+    "mean": 0.8355152164479517,
+    "std": 0.0011975760808236372,
     "raw_iterations": [
-      0.8424038319612029,
-      0.840120741011315,
-      0.8395553012047193,
-      0.8380547604354035,
-      0.8412405657001878
+      0.8378349778107149,
+      0.8344916775879337,
+      0.8353466562077743,
+      0.8351486086987638,
+      0.8347541619345722
     ],
-    "runtime_s": 3.9839346408843994
+    "runtime_s": 7.084035634994507
   },
-  "notes": ""
+  "notes": "Benchmark Methodology v2 (run_m1_family.py)"
 }

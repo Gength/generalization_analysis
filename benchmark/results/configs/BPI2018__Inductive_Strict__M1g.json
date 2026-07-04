@@ -1,0 +1,35 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Inductive_Strict",
+  "method": "M1g",
+  "method_label": "HybridGen v2.6 (MLE)",
+  "timestamp": "2026-07-02T16:45:18Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.6",
+    "num_shadow_traces": 1000,
+    "iterations": 5,
+    "successor_weighting": "mle"
+  },
+  "results": {
+    "mean": 0.9757594086119958,
+    "std": 0.00011919068782203365,
+    "raw_iterations": [
+      0.9756023748619423,
+      0.975830179275699,
+      0.9759404825280888,
+      0.9757571789927074,
+      0.9756668274015416
+    ],
+    "runtime_s": 1317.7083110809326,
+    "gen_accept": 0.0002,
+    "gen_accept_std": 0.0004,
+    "gen_shadow_regular": 0.9762612615514261,
+    "gen_shadow_mutated": 0.9743739862066321,
+    "duplicates_kept": 0,
+    "truncated_traces": 0,
+    "max_trace_length_used": 1000
+  },
+  "notes": "run_m1_family.py"
+}

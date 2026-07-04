@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Trace_Filtered",
+  "method": "R1accept",
+  "method_label": "R1-accept (variant 5-fold x3, perfect replay)",
+  "timestamp": "2026-07-02T16:08:01Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "folds": 5,
+    "shuffles": 3
+  },
+  "results": {
+    "accept_mean": 1.793764172276896e-05,
+    "accept_std": 1.2938421065515656e-05,
+    "shuffle_means": [
+      3.0034539720678778e-05,
+      2.3778385447628105e-05,
+      0.0
+    ],
+    "runtime_s": 1142.251520872116,
+    "wall_s": 323.8337278366089
+  },
+  "notes": "r1_accept.py (parallel folds; reference, budget-exempt)"
+}

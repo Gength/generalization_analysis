@@ -1,0 +1,24 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Inductive_Infrequent",
+  "method": "R1accept",
+  "method_label": "R1-accept (variant 5-fold x3, perfect replay)",
+  "timestamp": "2026-07-02T14:00:10Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "folds": 5,
+    "shuffles": 3
+  },
+  "results": {
+    "accept_mean": 0.7833062471179728,
+    "accept_std": 0.01582277051069926,
+    "shuffle_means": [
+      0.8047177870012782,
+      0.7782307142779527,
+      0.7669702400746876
+    ],
+    "runtime_s": 3.5418312549591064
+  },
+  "notes": "r1_accept.py"
+}

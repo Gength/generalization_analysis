@@ -18,11 +18,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from benchmark.datasets import DATASETS
 
-RESULTS_DIR = Path(__file__).resolve().parent / "results" / "configs_v2"
+RESULTS_DIR = Path(__file__).resolve().parent / "results" / "configs"
 
 METHOD_ORDER = [
     "M1a", "M1b", "M1c", "M1d", "M1e", "M1f", "M1g",
-    "M2", "M3", "M4", "M5", "M6", "M7", "R1", "R2", "R3",
+    "M2", "M3", "M4", "M5", "M6adapted", "M7", "R1", "R2", "R3",
 ]
 MINER_ORDER = [
     "Trace_Filtered", "Alpha", "Alpha+", "Heuristics", "Heuristics_Strict",
@@ -38,7 +38,7 @@ KEY_MAP = {
     "M3": "entropic_relevance_raw",
     "M4": "gen_score",
     "M5": "mean",           # fallback to "score" in extraction logic
-    "M6": "gen_score",
+    "M6adapted": "gen_score",
     "M7": "gen_score",
     "R1": "mean", "R2": "mean", "R3": "mean",
 }

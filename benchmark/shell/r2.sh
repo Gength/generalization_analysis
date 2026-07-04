@@ -49,7 +49,7 @@ for miner in "${MINERS[@]}"; do
         --nodes=1 --ntasks=1 --cpus-per-task=14 \
         --time=08:00:00 \
         --output="benchmark/logs/bench_R2_${miner}_%j.log" \
-        --wrap="export TMPDIR=/tmp PATH=\"\$HOME/.local/bin:\$PATH\"; uv run python benchmark/job_r2.py --dataset ${DATASET} ${OUTPUT_ARG} ${SAMPLE_ARG} --miners ${miner}"
+        --wrap="export TMPDIR=/tmp PYTHONHASHSEED=0 PATH=\"\$HOME/.local/bin:\$PATH\"; uv run python benchmark/job_r2.py --dataset ${DATASET} ${OUTPUT_ARG} ${SAMPLE_ARG} --miners ${miner}"
 done
 
 echo "Done. Check: squeue -u \$USER | grep R2_"

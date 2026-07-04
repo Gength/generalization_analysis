@@ -1,0 +1,31 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Flower",
+  "method": "M1e",
+  "method_label": "HybridGen v2.5 (Katz)",
+  "timestamp": "2026-07-02T16:27:49Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.5",
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 1.0,
+    "std": 0.0,
+    "raw_iterations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "runtime_s": 41.6295280456543,
+    "gen_shadow_regular": 1.0,
+    "gen_shadow_mutated": 1.0,
+    "duplicates_kept": 0,
+    "truncated_traces": 2042
+  },
+  "notes": "run_m1_family.py"
+}

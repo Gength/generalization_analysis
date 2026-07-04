@@ -1,0 +1,31 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Inductive_Strict",
+  "method": "M1e",
+  "method_label": "HybridGen v2.5 (Katz)",
+  "timestamp": "2026-07-02T16:01:51Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.5",
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.9984171351167562,
+    "std": 0.00016113042280528427,
+    "raw_iterations": [
+      0.9983106273717453,
+      0.9986468860511757,
+      0.9982627668428163,
+      0.9982888718534262,
+      0.9985765234646172
+    ],
+    "runtime_s": 15.489763021469116,
+    "gen_shadow_regular": 0.9983471312130137,
+    "gen_shadow_mutated": 0.9985353724534647,
+    "duplicates_kept": 0,
+    "truncated_traces": 0
+  },
+  "notes": "run_m1_family.py"
+}

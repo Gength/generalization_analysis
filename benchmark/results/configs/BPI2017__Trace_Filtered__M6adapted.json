@@ -1,0 +1,37 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Trace_Filtered",
+  "method": "M6adapted",
+  "method_label": "Bootstrap Generalization (adapted)",
+  "timestamp": "2026-07-02T23:45:25Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "generations": 10,
+    "k": 2,
+    "p": 1.0,
+    "replicates": 10,
+    "sample_size": 200,
+    "source": "bsgen (breeding + token replay)"
+  },
+  "results": {
+    "gen_score": 0.6279212757547968,
+    "std": 0.014139733119562887,
+    "ci_95": 0.008763897384288385,
+    "n_replicates": 10,
+    "raw_fitnesses": [
+      0.6435197455605619,
+      0.6400972364380757,
+      0.6339116291677962,
+      0.6062163485070974,
+      0.6074092805664433,
+      0.6376867594023699,
+      0.6304844027390312,
+      0.6156254075909743,
+      0.6181406499733617,
+      0.6461212976022567
+    ],
+    "runtime_s": 59.07642722129822
+  },
+  "notes": ""
+}

@@ -1,0 +1,15 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Heuristics_Strict",
+  "method": "M5",
+  "method_label": "AVATAR",
+  "timestamp": "2026-07-02T15:31:24Z",
+  "host": "generated",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "gen_score": -1,
+    "runtime_s": -1
+  },
+  "notes": "sentinel: not attempted from D3 upward; GAN training alone exceeds the per-cell budget"
+}

@@ -4,7 +4,7 @@ Job Preparation Module — prepare_workdir() for self-contained benchmark jobs.
 Each bool flag directly controls one data product:
 
   copy_xes=True:         copy source XES to workdir (native format — .xes or .xes.gz)
-  decompress_xes=True:   additionally decompress to .xes_plain (M6 Java JAR only)
+  decompress_xes=True:   additionally decompress to .xes_plain (M6original Java JAR only)
   discover_pnmls=True:   discover PNML for all 8 miners
   per_miner_dfgs=True:   simulate PNMLs → per-miner DFG JSONs (M6 only)
 
@@ -15,6 +15,13 @@ from collections import Counter
 from datetime import datetime
 
 import pm4py
+
+# Persistent model cache: discovery runs once per (dataset, miner) EVER.
+# Every job copies the cached PNML instead of re-discovering, which removes
+# discovery time from method runs entirely and guarantees that all methods
+# score byte-identical models. Delete benchmark/models/<dataset_key>/ to
+# force rediscovery (e.g. after changing a miner definition).
+MODEL_CACHE_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
 
 _LOADED_MINERS = None
 
@@ -66,7 +73,7 @@ def prepare_workdir(workdir, dataset_key,
                  Created if needed; caller is responsible for cleanup.
         dataset_key: e.g. "D1", "D2".
         copy_xes: Copy the source XES to workdir (native format — .xes or .xes.gz).
-        decompress_xes: Also produce a decompressed .xes_plain (M6 Java JAR only).
+        decompress_xes: Also produce a decompressed .xes_plain (M6original Java JAR only).
         discover_pnmls: Discover PNML for all 8 miners.
         per_miner_dfgs: Simulate PNMLs → per-miner DFG JSONs (implies discover_pnmls).
 
@@ -99,7 +106,7 @@ def prepare_workdir(workdir, dataset_key,
     else:
         xes_manifest = log_path
 
-    # ── Decompressed XES plain (M6 Java JAR only) ─────────────────────────
+    # ── Decompressed XES plain (M6original Java JAR only) ─────────────────────────
     xes_plain = xes_path
     if decompress_xes and copy_xes:
         slug_xes = os.path.join(workdir, f"{slug}.xes")
@@ -121,24 +128,40 @@ def prepare_workdir(workdir, dataset_key,
         "miners": {},
     }
 
-    # ── PNML discovery for all miners ─────────────────────────────────────
+    # ── PNML discovery for all miners (cache-backed) ──────────────────────
     if discover_pnmls:
-        log = pm4py.read_xes(log_path)
-        log = pm4py.convert_to_event_log(log)
+        cache_dir = os.path.join(MODEL_CACHE_ROOT, dataset_key)
+        os.makedirs(cache_dir, exist_ok=True)
+        log = None
         MINERS = _get_miners()
         for mname, mfn in MINERS.items():
             try:
                 t0 = datetime.now()
-                net, im, fm = mfn(log)
                 pn = os.path.join(workdir, f"{mname}.pnml")
-                pm4py.write_pnml(net, im, fm, pn)
+                cached = os.path.join(cache_dir, f"{mname}.pnml")
+                if os.path.exists(cached):
+                    shutil.copy2(cached, pn)
+                    net, im, fm = pm4py.read_pnml(pn)
+                    src = "cache"
+                else:
+                    if log is None:
+                        log = pm4py.read_xes(log_path)
+                        log = pm4py.convert_to_event_log(log)
+                    net, im, fm = mfn(log)
+                    pm4py.write_pnml(net, im, fm, pn)
+                    # atomic cache publish: concurrent jobs on a cold cache
+                    # must never interleave writes to the same file
+                    tmp = f"{cached}.tmp.{os.getpid()}"
+                    shutil.copy2(pn, tmp)
+                    os.replace(tmp, cached)
+                    src = "disc"
                 manifest["miners"][mname] = {
                     "pnml": pn,
                     "n_transitions": len(net.transitions),
                     "n_places": len(net.places),
                 }
                 el = (datetime.now() - t0).total_seconds()
-                print(f"  [prep] {mname:22s} → {pn}  ({el:.1f}s)")
+                print(f"  [prep] {mname:22s} → {pn}  ({el:.1f}s, {src})")
             except Exception as e:
                 print(f"  [prep] {mname:22s} SKIP ({e})")
 
@@ -146,7 +169,7 @@ def prepare_workdir(workdir, dataset_key,
     if per_miner_dfgs:
         dfg_dir = os.path.join(workdir, "dfg_models")
         os.makedirs(dfg_dir, exist_ok=True)
-        if "log" not in locals():
+        if "log" not in locals() or log is None:
             log = pm4py.read_xes(log_path)
             log = pm4py.convert_to_event_log(log)
         for mname, minfo in list(manifest["miners"].items()):

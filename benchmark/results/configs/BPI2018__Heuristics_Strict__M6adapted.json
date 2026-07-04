@@ -1,0 +1,37 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Heuristics_Strict",
+  "method": "M6adapted",
+  "method_label": "Bootstrap Generalization (adapted)",
+  "timestamp": "2026-07-02T23:53:22Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "generations": 10,
+    "k": 2,
+    "p": 1.0,
+    "replicates": 10,
+    "sample_size": 200,
+    "source": "bsgen (breeding + token replay)"
+  },
+  "results": {
+    "gen_score": 0.9360308956081509,
+    "std": 0.0028882604005059562,
+    "ci_95": 0.0017901623428887164,
+    "n_replicates": 10,
+    "raw_fitnesses": [
+      0.9331565298148733,
+      0.9354772579503714,
+      0.9374490484644451,
+      0.9342924217303082,
+      0.9368920759082384,
+      0.9378358825532294,
+      0.9422149095723353,
+      0.9318947664717051,
+      0.9333116260005571,
+      0.9377844376154452
+    ],
+    "runtime_s": 91.31549167633057
+  },
+  "notes": ""
+}

@@ -1,0 +1,53 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Flower",
+  "method": "M6original",
+  "method_label": "Bootstrap Generalization (Entropia -bgen)",
+  "timestamp": "2026-06-18T19:36:17Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "jbpt-pm-entropia-1.7.1",
+    "flag": "-bgen",
+    "sample_size": 200,
+    "replicates": 10,
+    "generations": 10,
+    "k": 2,
+    "p": 1.0,
+    "model_format": "DFG JSON (simulated from PNML)"
+  },
+  "results": {
+    "gen_score": 0.181185,
+    "precision": 0.099616,
+    "precision_std": 0.001239,
+    "recall": 1.000108,
+    "recall_std": 0.000351,
+    "n_replicates": 10,
+    "raw_precisions": [
+      0.09877691,
+      0.09682502,
+      0.0986947,
+      0.10110011,
+      0.10137711,
+      0.09807208,
+      0.09807917,
+      0.10081941,
+      0.09977393,
+      0.10264202
+    ],
+    "raw_recalls": [
+      1.00056144,
+      0.99992845,
+      1.00028304,
+      0.99999806,
+      0.99927545,
+      0.99949266,
+      1.00098648,
+      1.00006356,
+      1.00059345,
+      0.99989521
+    ],
+    "runtime_s": 117.0
+  },
+  "notes": "renamed M6 -> M6bgen in configs_second_try: this is the published Entropia -bgen reading; M6 is the token-replay adaptation (Sect. 5.4)."
+}

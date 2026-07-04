@@ -1,0 +1,42 @@
+{
+  "Inductive_Strict": {
+    "n_compared": 1000,
+    "agreement": 1.0,
+    "proxy_accept_rate": 0.774,
+    "align_accept_rate": 0.774,
+    "proxy_yes_align_no": 0,
+    "align_yes_proxy_no": 0,
+    "runtime_s": 754.6531279087067,
+    "note": null
+  },
+  "Inductive_Infrequent": {
+    "n_compared": 1000,
+    "agreement": 0.804,
+    "proxy_accept_rate": 0.668,
+    "align_accept_rate": 0.472,
+    "proxy_yes_align_no": 196,
+    "align_yes_proxy_no": 0,
+    "runtime_s": 11.879799365997314,
+    "note": null
+  },
+  "Flower": {
+    "n_compared": 1000,
+    "agreement": 1.0,
+    "proxy_accept_rate": 1.0,
+    "align_accept_rate": 1.0,
+    "proxy_yes_align_no": 0,
+    "align_yes_proxy_no": 0,
+    "runtime_s": 1.5527665615081787,
+    "note": null
+  },
+  "Heuristics": {
+    "n_compared": 1000,
+    "agreement": 1.0,
+    "proxy_accept_rate": 0.0,
+    "align_accept_rate": 0.0,
+    "proxy_yes_align_no": 0,
+    "align_yes_proxy_no": 0,
+    "runtime_s": 40.54849720001221,
+    "note": null
+  }
+}

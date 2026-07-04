@@ -11,6 +11,9 @@ ap.add_argument("--jar", default="fixed"); ap.add_argument("--k", type=int, defa
 ap.add_argument("--m", type=int, default=10); ap.add_argument("--n", type=int, default=200)
 ap.add_argument("--g", type=int, default=10); ap.add_argument("--p", type=float, default=1.0)
 ap.add_argument("--miners", nargs="+", default=None)
+ap.add_argument("--cell-timeout", type=int, default=3600,
+                help="Per-cell jar budget in seconds (conversion excluded; "
+                     "protocol default 3600, 0 = unlimited)")
 args = ap.parse_args()
 from datasets import DATASETS
 ds_name = DATASETS[args.dataset]["name"]
@@ -19,5 +22,5 @@ print(f"[M6] {args.dataset} ({ds_name}) | miners: {miner_list} | k={args.k} m={a
 workdir = f"/tmp/benchmark_M6_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
 prepare_workdir(workdir, args.dataset, copy_xes=True, decompress_xes=True, discover_pnmls=True, per_miner_dfgs=True)
-run(args.dataset, workdir, output_dir, jar=args.jar, k=args.k, m=args.m, n=args.n, g=args.g, p=args.p, miners=args.miners)
+run(args.dataset, workdir, output_dir, jar=args.jar, k=args.k, m=args.m, n=args.n, g=args.g, p=args.p, miners=args.miners, cell_timeout=args.cell_timeout)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")

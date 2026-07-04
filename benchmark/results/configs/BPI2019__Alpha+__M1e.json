@@ -1,0 +1,31 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Alpha+",
+  "method": "M1e",
+  "method_label": "HybridGen v2.5 (Katz)",
+  "timestamp": "2026-07-02T16:01:33Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.5",
+    "num_shadow_traces": 1000,
+    "iterations": 5
+  },
+  "results": {
+    "mean": 0.45914456507541973,
+    "std": 0.005886347121819528,
+    "raw_iterations": [
+      0.46604103752746623,
+      0.46197469469189495,
+      0.4587725422373675,
+      0.4483934805598249,
+      0.46054107036054537
+    ],
+    "runtime_s": 12.581293821334839,
+    "gen_shadow_regular": 0.4534428261986556,
+    "gen_shadow_mutated": 0.4694454537348906,
+    "duplicates_kept": 0,
+    "truncated_traces": 0
+  },
+  "notes": "run_m1_family.py"
+}

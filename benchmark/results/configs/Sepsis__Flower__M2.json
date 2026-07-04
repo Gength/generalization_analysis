@@ -3,13 +3,13 @@
   "miner": "Flower",
   "method": "M2",
   "method_label": "PM4Py Built-in Gen",
-  "timestamp": "2026-06-08T13:59:15Z",
+  "timestamp": "2026-06-16T12:13:35Z",
   "host": "local",
   "seed": 42,
   "parameters": {},
   "results": {
     "score": 0.9131789227698267,
-    "runtime_s": 0.28065919876098633
+    "runtime_s": 0.2832047939300537
   },
-  "notes": "Flower model \u2014 all activities in one concurrent block; expected lowest gen score"
+  "notes": ""
 }

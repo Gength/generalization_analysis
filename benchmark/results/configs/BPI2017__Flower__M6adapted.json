@@ -1,0 +1,37 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Flower",
+  "method": "M6adapted",
+  "method_label": "Bootstrap Generalization (adapted)",
+  "timestamp": "2026-07-02T23:45:58Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "generations": 10,
+    "k": 2,
+    "p": 1.0,
+    "replicates": 10,
+    "sample_size": 200,
+    "source": "bsgen (breeding + token replay)"
+  },
+  "results": {
+    "gen_score": 1.0,
+    "std": 0.0,
+    "ci_95": 0.0,
+    "n_replicates": 10,
+    "raw_fitnesses": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "runtime_s": 32.59238362312317
+  },
+  "notes": ""
+}

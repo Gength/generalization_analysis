@@ -1,0 +1,23 @@
+{
+  "dataset": "BPI2018",
+  "miner": "Inductive_Infrequent",
+  "method": "M6original",
+  "method_label": "Bootstrap Gen (Entropia -bgen)",
+  "timestamp": "2026-07-03T01:06:33Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "jbpt-pm-entropia-1.7.1",
+    "flag": "-bgen"
+  },
+  "results": {
+    "gen_score": 0.190876,
+    "precision": 0.106205,
+    "precision_std": 0.000742,
+    "recall": 0.941413,
+    "recall_std": 0.006096,
+    "n_replicates": 10,
+    "runtime_s": 365.3
+  },
+  "notes": "renamed M6 -> M6bgen (published tool reading); honest re-run under the 3600 s budget"
+}

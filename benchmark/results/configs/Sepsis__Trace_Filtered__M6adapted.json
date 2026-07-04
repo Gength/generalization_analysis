@@ -1,0 +1,37 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Trace_Filtered",
+  "method": "M6adapted",
+  "method_label": "Bootstrap Generalization (adapted)",
+  "timestamp": "2026-07-02T23:42:12Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "generations": 10,
+    "k": 2,
+    "p": 1.0,
+    "replicates": 10,
+    "sample_size": 200,
+    "source": "bsgen (breeding + token replay)"
+  },
+  "results": {
+    "gen_score": 0.5696472985271462,
+    "std": 0.004873783247225844,
+    "ci_95": 0.003020802153108217,
+    "n_replicates": 10,
+    "raw_fitnesses": [
+      0.5748607242339833,
+      0.5722080756638778,
+      0.5783509183274717,
+      0.5712809917355373,
+      0.5614697802197802,
+      0.5719411553641909,
+      0.5669002335669002,
+      0.56941431670282,
+      0.5638227513227514,
+      0.5662240381341506
+    ],
+    "runtime_s": 3.677536964416504
+  },
+  "notes": ""
+}

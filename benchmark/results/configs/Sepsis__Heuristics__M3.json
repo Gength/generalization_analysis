@@ -3,18 +3,18 @@
   "miner": "Heuristics",
   "method": "M3",
   "method_label": "Entropic Relevance",
-  "timestamp": "2026-06-08T14:41:48Z",
+  "timestamp": "2026-06-26T21:47:40Z",
   "host": "local",
   "seed": 42,
   "parameters": {
     "jar": "entropia-1.7",
     "flag": "-r",
-    "model": "DFG"
+    "model": "per-miner DFG (simulated)"
   },
   "results": {
-    "entropic_relevance_raw": 29.86915402386056,
-    "runtime_s": 0.35573649406433105,
-    "note": "Unbounded entropic relevance. Same for all miners (DFG-based)."
+    "entropic_relevance_raw": 62.273793225961036,
+    "entropic_relevance_normalized": null,
+    "runtime_s": 0.29885411262512207
   },
   "notes": ""
 }

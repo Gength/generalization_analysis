@@ -1,0 +1,25 @@
+{
+  "dataset": "BPI2017",
+  "miner": "Inductive_Strict",
+  "method": "R1accept",
+  "method_label": "R1-accept (variant 5-fold x3, perfect replay)",
+  "timestamp": "2026-07-02T16:08:01Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "folds": 5,
+    "shuffles": 3
+  },
+  "results": {
+    "accept_mean": 0.999429228499405,
+    "accept_std": 0.0007828738193534697,
+    "shuffle_means": [
+      1.0,
+      0.9999654278305965,
+      0.9983222576676187
+    ],
+    "runtime_s": 1129.4960708618164,
+    "wall_s": 323.83919620513916
+  },
+  "notes": "r1_accept.py (parallel folds; reference, budget-exempt)"
+}

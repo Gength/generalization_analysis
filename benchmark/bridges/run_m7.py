@@ -16,8 +16,12 @@ from special4pm.simulation.simulation import simulate_model
 import pm4py
 
 
-def run(dataset_key, workdir, output_dir, miners=None):
-    """Run M7. Reads manifest/PNMLs from workdir, writes configs to output_dir."""
+def run(dataset_key, workdir, output_dir, miners=None, cell_timeout=None):
+    """Run M7. Reads manifest/PNMLs from workdir, writes configs to output_dir.
+
+    cell_timeout (seconds) bounds each miner's METRIC time (simulation +
+    coverage; model discovery happened in prepare_workdir and is excluded).
+    Timed-out cells are written as -1 sentinels. Unix-only (SIGALRM)."""
     with open(os.path.join(workdir, "manifest.json")) as f:
         manifest = json.load(f)
     dname = manifest["dataset"]
@@ -41,16 +45,34 @@ def run(dataset_key, workdir, output_dir, miners=None):
 
     target = miners or list(manifest["miners"].keys())
 
+    # Sentinel pre-write: if the job dies mid-run (OOM, wall-clock kill), the
+    # unfinished miners keep a -1 config instead of leaving silent holes
+    # (on BPI2019 only Trace_Filtered was written before the job died).
+    for mname in target:
+        if mname in manifest["miners"]:
+            _write_config(output_dir, dname, mname,
+                          {"gen_score": -1, "runtime_s": -1},
+                          "did not complete (crash or budget)")
+
+    import signal
+    use_alarm = cell_timeout and hasattr(signal, "SIGALRM")
+    if use_alarm:
+        def _on_alarm(signum, frame):
+            raise TimeoutError(f"exceeds cell budget ({cell_timeout}s)")
+        signal.signal(signal.SIGALRM, _on_alarm)
+
     for mname in target:
         minfo = manifest["miners"].get(mname)
         if not minfo:
             print(f"  [{mname}] SKIP — not in manifest")
             continue
-        print(f"  [{mname}]", end=" ")
+        print(f"  [{mname}]", end=" ", flush=True)
         t0 = time.time()
-        from pm4py.objects.petri_net.importer import importer as pnml_importer
-        net, im, fm = pnml_importer.apply(minfo["pnml"])
+        if use_alarm:
+            signal.alarm(int(cell_timeout))
         try:
+            from pm4py.objects.petri_net.importer import importer as pnml_importer
+            net, im, fm = pnml_importer.apply(minfo["pnml"])
             sim_log = simulate_model(net, im, fm, size=len(log))
             se = SpeciesEstimator(step_size=None, d0=False, d1=False, d2=False, c0=True, c1=True)
             for sp in ["1-gram", "2-gram", "3-gram"]:
@@ -72,6 +94,9 @@ def run(dataset_key, workdir, output_dir, miners=None):
             _write_config(output_dir, dname, mname, {"gen_score": -1, "runtime_s": time.time() - t0},
                           f"SpeciAL4PM error: {e}")
             print(f" ERROR: {e}")
+        finally:
+            if use_alarm:
+                signal.alarm(0)
 
     print(f"\nDone → {output_dir}/")
 
@@ -96,6 +121,9 @@ def main():
     ap.add_argument("--dataset", required=True)
     ap.add_argument("--miners", nargs="*", default=None)
     ap.add_argument("--output", default=None)
+    ap.add_argument("--cell-timeout", type=int, default=3600,
+                    help="Per-cell METRIC budget in seconds (discovery excluded; "
+                         "protocol default 3600, 0 = unlimited)")
     args = ap.parse_args()
 
     import shutil, secrets
@@ -106,7 +134,8 @@ def main():
 
     from job_prepare import prepare_workdir
     prepare_workdir(workdir, args.dataset, copy_xes=True, discover_pnmls=True)
-    run(args.dataset, workdir, output_dir, miners=args.miners)
+    run(args.dataset, workdir, output_dir, miners=args.miners,
+        cell_timeout=args.cell_timeout)
     shutil.rmtree(workdir)
     print(f"  [clean] removed {workdir}")
 

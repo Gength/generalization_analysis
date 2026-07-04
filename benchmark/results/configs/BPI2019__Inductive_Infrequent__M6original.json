@@ -1,0 +1,23 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Inductive_Infrequent",
+  "method": "M6original",
+  "method_label": "Bootstrap Gen (Entropia -bgen)",
+  "timestamp": "2026-06-25T17:14:24Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "jar": "jbpt-pm-entropia-1.7.1",
+    "flag": "-bgen"
+  },
+  "results": {
+    "gen_score": 0.200729,
+    "precision": 0.112825,
+    "precision_std": 0.003017,
+    "recall": 0.908761,
+    "recall_std": 0.009916,
+    "n_replicates": 10,
+    "runtime_s": 193.9
+  },
+  "notes": "renamed M6 -> M6bgen in configs_second_try: this is the published Entropia -bgen reading; M6 is the token-replay adaptation (Sect. 5.4)."
+}

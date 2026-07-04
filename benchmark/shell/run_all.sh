@@ -13,6 +13,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 set -eo pipefail
+export PYTHONHASHSEED=0
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 DATASET="${1:-D1}"

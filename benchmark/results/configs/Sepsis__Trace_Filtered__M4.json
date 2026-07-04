@@ -1,0 +1,15 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Trace_Filtered",
+  "method": "M4",
+  "method_label": "Anti-alignments",
+  "timestamp": "2026-07-02T15:31:24Z",
+  "host": "generated",
+  "seed": 42,
+  "parameters": {},
+  "results": {
+    "gen_score": -1,
+    "runtime_s": -1
+  },
+  "notes": "sentinel: not attempted on this miner"
+}

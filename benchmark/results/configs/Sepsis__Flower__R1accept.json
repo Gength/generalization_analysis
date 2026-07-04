@@ -1,0 +1,24 @@
+{
+  "dataset": "Sepsis",
+  "miner": "Flower",
+  "method": "R1accept",
+  "method_label": "R1-accept (variant 5-fold x3, perfect replay)",
+  "timestamp": "2026-07-02T14:00:12Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "folds": 5,
+    "shuffles": 3
+  },
+  "results": {
+    "accept_mean": 1.0,
+    "accept_std": 0.0,
+    "shuffle_means": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "runtime_s": 1.5526986122131348
+  },
+  "notes": "r1_accept.py"
+}

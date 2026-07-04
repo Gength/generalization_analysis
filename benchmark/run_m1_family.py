@@ -88,10 +88,22 @@ _MP_LOG = None
 _MP_DNAME = None
 _MP_OUTPUT_DIR = None
 _MP_CACHE = None          # miner_name -> (net, im, fm)
+_MP_TIMEOUT = None        # per-cell metric budget in seconds (None = unlimited)
 
 
 def _write_one_config(dname, output_dir, mn, mid, spec, r):
     """Write one config JSON (called from sub-processes — safe, unique filenames)."""
+    results = {"mean": r["gen_shadow_mean"], "std": r["gen_shadow_std"],
+               "raw_iterations": r.get("gen_shadow_raw_iterations"), "runtime_s": r["runtime_s"]}
+    # Acceptance reading, openness profile, and integrity counters: written
+    # whenever the algorithm version reports them (v2.5 adds the counters,
+    # v2.6 adds gen_accept and the regular/mutated split). Downstream
+    # consumers (tab:accept, fig_accept, r1_accept.py) depend on gen_accept.
+    for k in ("gen_accept", "gen_accept_std", "gen_shadow_regular",
+              "gen_shadow_mutated", "duplicates_kept", "truncated_traces",
+              "max_trace_length_used"):
+        if r.get(k) is not None:
+            results[k] = r[k]
     cfg = {
         "dataset": dname, "miner": mn, "method": mid, "method_label": spec["label"],
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -100,8 +112,7 @@ def _write_one_config(dname, output_dir, mn, mid, spec, r):
                        "num_shadow_traces": NUM_SHADOW, "iterations": ITERATIONS,
                        **({"successor_weighting": spec["kwargs"]["successor_weighting"]}
                           if "successor_weighting" in spec["kwargs"] else {})},
-        "results": {"mean": r["gen_shadow_mean"], "std": r["gen_shadow_std"],
-                    "raw_iterations": r.get("gen_shadow_raw_iterations"), "runtime_s": r["runtime_s"]},
+        "results": results,
         "notes": "run_m1_family.py",
     }
     path = os.path.join(output_dir, f"{dname}__{mn}__{mid}.json")
@@ -133,26 +144,61 @@ def _eval_worker(miner_name, method_id):
     def _cached_miner(_log):
         return model_triple
 
-    r = algo.evaluate_miner(_MP_LOG, miner_name, _cached_miner,
-                            num_shadow_traces=NUM_SHADOW,
-                            iterations=ITERATIONS, seed=None,
-                            **spec["kwargs"])
+    # Per-cell metric budget (discovery is excluded: the model comes from the
+    # Phase-1 cache). SIGALRM is Unix-only; on other platforms the budget is
+    # simply not enforced.
+    use_alarm = _MP_TIMEOUT and hasattr(signal, "SIGALRM")
+    if use_alarm:
+        def _on_alarm(signum, frame):
+            raise TimeoutError(f"exceeds cell budget ({_MP_TIMEOUT}s)")
+        signal.signal(signal.SIGALRM, _on_alarm)
+        signal.alarm(int(_MP_TIMEOUT))
+    try:
+        r = algo.evaluate_miner(_MP_LOG, miner_name, _cached_miner,
+                                num_shadow_traces=NUM_SHADOW,
+                                iterations=ITERATIONS, seed=None,
+                                **spec["kwargs"])
+    except TimeoutError:
+        cfg = {
+            "dataset": _MP_DNAME, "miner": miner_name, "method": method_id,
+            "method_label": spec["label"],
+            "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "host": "local", "seed": SEED,
+            "parameters": {"algorithm_version": spec["version"],
+                           "num_shadow_traces": NUM_SHADOW, "iterations": ITERATIONS},
+            "results": {"mean": -1, "std": -1, "runtime_s": _MP_TIMEOUT},
+            "notes": f"exceeds budget (cell timeout {_MP_TIMEOUT}s, metric time only)",
+        }
+        with open(os.path.join(_MP_OUTPUT_DIR,
+                               f"{_MP_DNAME}__{miner_name}__{method_id}.json"), "w") as f:
+            json.dump(cfg, f, indent=2)
+        return miner_name, method_id, {"gen_shadow_mean": -1, "gen_shadow_std": -1,
+                                       "runtime_s": _MP_TIMEOUT}
+    finally:
+        if use_alarm:
+            signal.alarm(0)
 
     _write_one_config(_MP_DNAME, _MP_OUTPUT_DIR, miner_name, method_id, spec, r)
     return miner_name, method_id, r
 
 
-def run(dataset_key, workdir, output_dir, methods=None, miners=None, workers=8):
+def run(dataset_key, workdir, output_dir, methods=None, miners=None, workers=8,
+        cell_timeout=None, model_cache=True):
     """Run M1a–M1g in pure multi-process architecture.
 
-    Phase 1: serial model discovery for all 8 miners in the main process.
+    Phase 1: model discovery for all 8 miners (persistent PNML cache under
+             benchmark/models/<dataset_key>/ — discovery runs once per
+             dataset ever; pass model_cache=False to force rediscovery).
     Phase 2: submit every (miner, method) pair to a process pool
-             (``workers`` caps concurrency, default 8).
+             (``workers`` caps concurrency, default 8). ``cell_timeout``
+             (seconds) bounds each cell's METRIC time; discovery is outside
+             the budget by construction. A timed-out cell is written as a
+             -1 sentinel ("exceeds budget"), matching the benchmark protocol.
 
     If ``miners`` is provided (list of miner names), only those miners
     are run (see ``benchmark/statistics/_miner_availability.json``).
     """
-    from job_prepare import prepare_workdir
+    from job_prepare import prepare_workdir, MODEL_CACHE_ROOT
 
     # ── Filter miners if subset requested ────────────────────────────────
     _miners_dict = MINERS
@@ -185,30 +231,49 @@ def run(dataset_key, workdir, output_dir, methods=None, miners=None, workers=8):
     n_workers = min(workers, n_tasks, os.cpu_count() or 8)
     os.makedirs(output_dir, exist_ok=True)
 
-    # ── Phase 1: parallel model discovery (8 threads) ───────────────────
-    print("\nDiscovering models (8 threads):")
+    # ── Phase 1: parallel model discovery (8 threads, PNML-cache-backed) ──
+    cache_dir = os.path.join(MODEL_CACHE_ROOT, dataset_key)
+    if model_cache:
+        os.makedirs(cache_dir, exist_ok=True)
+    print(f"\nDiscovering models (8 threads{', cache: ' + cache_dir if model_cache else ''}):")
 
     def _discover_one(mn_fn):
         mn, fn = mn_fn
         t0 = time.time()
-        result = fn(log)
-        return mn, result, time.time() - t0
+        cached = os.path.join(cache_dir, f"{mn}.pnml")
+        if model_cache and os.path.exists(cached):
+            result = pm4py.read_pnml(cached)
+            src = "cache"
+        else:
+            result = fn(log)
+            if model_cache:
+                # atomic cache publish (concurrent jobs on a cold cache);
+                # tmp name must end in .pnml or pm4py appends the extension
+                tmp = f"{cached}.{os.getpid()}.tmp.pnml"
+                pm4py.write_pnml(result[0], result[1], result[2], tmp)
+                os.replace(tmp, cached)
+                # Evaluate the round-tripped net, so warm- and cold-cache
+                # runs score the identical artifact.
+                result = pm4py.read_pnml(cached)
+            src = "disc"
+        return mn, result, time.time() - t0, src
 
     cache = {}
     with ThreadPoolExecutor(max_workers=8) as pool:
         futs = [pool.submit(_discover_one, (mn, fn)) for mn, fn in _miners_dict.items()]
         for f in as_completed(futs):
-            mn, result, elapsed = f.result()
+            mn, result, elapsed, src = f.result()
             cache[mn] = result
             net = result[0]
-            print(f"  {mn:22s} {len(net.transitions)}t/{len(net.places)}p  ({elapsed:.1f}s)")
+            print(f"  {mn:22s} {len(net.transitions)}t/{len(net.places)}p  ({elapsed:.1f}s, {src})")
 
     # ── Set fork-shared globals ──────────────────────────────────────────
-    global _MP_LOG, _MP_DNAME, _MP_OUTPUT_DIR, _MP_CACHE
+    global _MP_LOG, _MP_DNAME, _MP_OUTPUT_DIR, _MP_CACHE, _MP_TIMEOUT
     _MP_LOG = log
     _MP_DNAME = dname
     _MP_OUTPUT_DIR = output_dir
     _MP_CACHE = cache
+    _MP_TIMEOUT = cell_timeout
 
     # ── Phase 2: submit all (miner, method) pairs to process pool ────────
     print(f"\n--- Evaluating {n_tasks} (miner×method) tasks ({n_workers} workers) ---")
@@ -262,10 +327,19 @@ def main():
     ap.add_argument("--methods", nargs="+", default=list(METHODS.keys()), choices=list(METHODS.keys()))
     ap.add_argument("--miners", nargs="*", default=None)
     ap.add_argument("--workers", type=int, default=8, help="Parallel workers (default: 8)")
+    ap.add_argument("--cell-timeout", type=int, default=3600,
+                    help="Per-cell METRIC budget in seconds (discovery excluded); "
+                         "timed-out cells become -1 sentinels. Benchmark protocol: "
+                         "3600 s for methods; references R1/R2 are exempt. "
+                         "0 = unlimited.")
+    ap.add_argument("--no-model-cache", action="store_true",
+                    help="Force rediscovery instead of using benchmark/models/<key>/")
     args = ap.parse_args()
     workdir = f"/tmp/benchmark_M1_{args.dataset}_{dt.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
     output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
-    run(args.dataset, workdir, output_dir, methods=args.methods, miners=args.miners, workers=args.workers)
+    run(args.dataset, workdir, output_dir, methods=args.methods, miners=args.miners,
+        workers=args.workers, cell_timeout=args.cell_timeout,
+        model_cache=not args.no_model_cache)
     shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")
 
 

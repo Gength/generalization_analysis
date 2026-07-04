@@ -26,6 +26,7 @@
 set -eo pipefail
 export TMPDIR=/tmp
 export PATH="$HOME/.local/bin:$PATH"
+export PYTHONHASHSEED=0
 
 echo "[miner_time] started: $(date)"
 echo "[miner_time] args: $*"

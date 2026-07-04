@@ -1,0 +1,35 @@
+{
+  "dataset": "BPI2019",
+  "miner": "Flower",
+  "method": "M1g",
+  "method_label": "HybridGen v2.6 (MLE)",
+  "timestamp": "2026-07-02T16:02:04Z",
+  "host": "local",
+  "seed": 42,
+  "parameters": {
+    "algorithm_version": "v2.6",
+    "num_shadow_traces": 1000,
+    "iterations": 5,
+    "successor_weighting": "mle"
+  },
+  "results": {
+    "mean": 1.0,
+    "std": 0.0,
+    "raw_iterations": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "runtime_s": 10.256246089935303,
+    "gen_accept": 1.0,
+    "gen_accept_std": 0.0,
+    "gen_shadow_regular": 1.0,
+    "gen_shadow_mutated": 1.0,
+    "duplicates_kept": 2,
+    "truncated_traces": 0,
+    "max_trace_length_used": 1000
+  },
+  "notes": "run_m1_family.py"
+}
