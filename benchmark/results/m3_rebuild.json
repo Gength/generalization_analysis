@@ -252,11 +252,11 @@
     "runtime_s": 2.2
   },
   "D5__Inductive_Infrequent": {
-    "er_proper": null,
-    "proper_note": "exceeds 20000 markings (unbounded?)",
+    "er_proper": 15.901,
     "er_dfg": 40.039,
     "rho_dfg": 0.127,
-    "runtime_s": 3.8
+    "runtime_s": 3.8,
+    "proper_cap": 150000
   },
   "D5__Inductive_Strict": {
     "er_proper": null,

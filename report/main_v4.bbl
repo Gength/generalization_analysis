@@ -37,6 +37,12 @@ Berti, A., van Zelst, S.J., van~der Aalst, W.M.P.: Process mining for {P}ython
   Proceedings of the ICPM Demo Track 2019. CEUR Workshop Proceedings,
   vol.~2374, pp. 13--16 (2019)
 
+\bibitem{vandenbroucke2014negative}
+vanden Broucke, S.K.L.M., Weerdt, J.D., Vanthienen, J., Baesens, B.:
+  Determining process model precision and generalization with weighted
+  artificial negative events. IEEE Transactions on Knowledge and Data
+  Engineering  \textbf{26}(8),  1877--1889 (2014)
+
 \bibitem{buijs2014quality}
 Buijs, J.C.A.M., van Dongen, B.F., van~der Aalst, W.M.P.: Quality dimensions in
   process discovery: The importance of fitness, precision, generalization and
@@ -84,10 +90,10 @@ Kabierski, M., Richter, M., Weidlich, M.: Addressing the log representativeness
   \doi{10.1109/ICPM60904.2023.10271952}
 
 \bibitem{karunaratne2024representativeness}
-Karunaratne, A., Polyvyanyy, A., Moffat, A.: The role of log representativeness
-  in estimating generalization in process mining. In: Proceedings of the 6th
-  International Conference on Process Mining (ICPM 2024). pp. 33--40. IEEE
-  (2024)
+Karunaratne, A., Polyvyanyy, A., Moffat, A.: Generalization estimation in
+  process mining: the impact of event data quality. Process Science
+  \textbf{2}(1), ~20 (2025), extended version of the ICPM 2024 paper on log
+  representativeness
 
 \bibitem{katz1987}
 Katz, S.M.: Estimation of probabilities from sparse data for the language model

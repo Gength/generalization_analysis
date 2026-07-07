@@ -54,5 +54,41 @@
     "er_proper": null,
     "note": "exceeds 150000 markings",
     "cap": 150000
+  },
+  "D4__Inductive_Strict": {
+    "er_proper": null,
+    "note": "alarm 900s",
+    "cap": 150000
+  },
+  "D5__Alpha": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D5__Alpha+": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D5__Heuristics": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D5__Heuristics_Strict": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D5__Inductive_Infrequent": {
+    "er_proper": 15.901,
+    "markings": 26955,
+    "cap": 150000,
+    "runtime_s": 24.4
+  },
+  "D5__Inductive_Strict": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
   }
 }
