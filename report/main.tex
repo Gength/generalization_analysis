@@ -506,7 +506,6 @@ Tables~\ref{tab:external}--\ref{tab:corr} compare paradigms against the cross-va
 The agreement is robust to the choice of cross-validation reference (Table~\ref{tab:r2}). Against the finer-grained leave-one-variant-out (R2), ShadowGen's ranking is identical (Kendall $\tau_b{=}1.0$) and its calibration is unchanged on D1 (MAE $0.014$); on D2 the ranking again holds while calibration stays strong (Pearson $0.97$, MAE $0.048$). The verdicts on every baseline are the same under R1 and R2.
 
 The litmus failures also replicate on D2: PM4Py scores the flower model $0.88$, AVATAR $0.74$, and SpeciAL $0.94$, all below the $1.0$ the construct requires, while the M1 family and the references stay at $1.0$.
-
 Figure~\ref{fig:calibration} plots each metric against the cross-validation ground truth directly; the raw per-cell scores are in Table~\ref{tab:external}.
 
 \begin{figure}[t]
@@ -599,7 +598,6 @@ Tables~\ref{tab:family}--\ref{tab:famcorr} report the three representative versi
 \subsection{The acceptance reading}
 \label{sec:eval:accept}
 \genaccept{} reports the fraction of shadow traces replayed perfectly, the strict membership-shaped reading. It is best read not as a competing quality score (it is bimodal and rank-uninformative, see below) but as a diagnostic that decomposes the graded one: $\genshadow$ is real acceptance plus partial credit, and the per-model gap between the two says how much of a score is real. Acceptance values must be validated against an acceptance-based ground truth (R1-accept: the fraction of held-out real traces replayed perfectly). Against the matching ground truth, v2.6-mle achieves Pearson $0.998$/$0.997$ and MAE $0.076$/$0.021$ on D1/D2; the D1 detail below carries the argument, and the same agreement holds on D2 (Table~\ref{tab:accept}, Fig.~\ref{fig:accept}).
-
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_accept_d1.pdf}

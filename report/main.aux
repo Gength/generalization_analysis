@@ -130,8 +130,6 @@
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {1.3}A generated shadow trace; the starred event is the Katz-consistent mutation.}{13}{lstlisting.1.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Baseline integration realities}{13}{subsection.1.5.4}\protected@file@percent }
 \newlabel{sec:impl:baselines}{{5.4}{13}{Baseline integration realities}{subsection.1.5.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Deviations from the formal method}{13}{subsection.1.5.5}\protected@file@percent }
-\newlabel{sec:impl:deviations}{{5.5}{13}{Deviations from the formal method}{subsection.1.5.5}{}}
 \citation{karunaratne2024representativeness}
 \citation{mannhardt2016sepsis}
 \citation{vanderaalst2004alpha}
@@ -139,6 +137,8 @@
 \citation{leemans2013im,leemans2014imf}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Benchmark datasets. TLRA $=1-|V|/|L|$.}}{14}{table.1.1}\protected@file@percent }
 \newlabel{tab:datasets}{{1}{14}{Benchmark datasets. TLRA $=1-|V|/|L|$}{table.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Deviations from the formal method}{14}{subsection.1.5.5}\protected@file@percent }
+\newlabel{sec:impl:deviations}{{5.5}{14}{Deviations from the formal method}{subsection.1.5.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Evaluation}{14}{section.1.6}\protected@file@percent }
 \newlabel{sec:eval}{{6}{14}{Evaluation}{section.1.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Experimental setup}{14}{subsection.1.6.1}\protected@file@percent }
@@ -149,19 +149,19 @@
 \newlabel{tab:versions}{{2}{15}{ShadowGen version lineage and benchmark roles}{table.1.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Methods and ground truth.}{15}{section*.26}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Protocol and agreement criteria.}{15}{section*.27}\protected@file@percent }
-\citation{polyvyanyy2022bootstrap}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Realized mutation rate vs.\ N-gram order on BPI 2017 (the one calibration of the metric). The rate climbs to a peak at $N{=}6$ and declines beyond, as Katz backoff increasingly rejects over-sparse high-order contexts; $N{=}6$ is then held fixed on every dataset.}}{16}{figure.1.3}\protected@file@percent }
 \newlabel{fig:nsweep}{{3}{16}{Realized mutation rate vs.\ N-gram order on BPI 2017 (the one calibration of the metric). The rate climbs to a peak at $N{=}6$ and declines beyond, as Katz backoff increasingly rejects over-sparse high-order contexts; $N{=}6$ is then held fixed on every dataset}{figure.1.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Feasibility results}{16}{subsection.1.6.2}\protected@file@percent }
 \newlabel{sec:eval:feasibility}{{6.2}{16}{Feasibility results}{subsection.1.6.2}{}}
 \citation{polyvyanyy2022bootstrap}
-\citation{theis2020avatar}
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces D1 Sepsis: scores per miner, mean $\pm $ std where applicable (seven miners of the external comparison). $^{\ddagger }$model fitness $<0.5$ on the log. $^{\dagger }$infeasible (no score on any cell).}}{17}{table.1.3}\protected@file@percent }
 \newlabel{tab:external}{{3}{17}{D1 Sepsis: scores per miner, mean $\pm $ std where applicable (seven miners of the external comparison). $^{\ddagger }$model fitness $<0.5$ on the log. $^{\dagger }$infeasible (no score on any cell)}{table.1.3}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Agreement with R1 on D1 (six real miners) and the flower litmus. $\tau _b$ is Kendall's tau-b.}}{17}{table.1.4}\protected@file@percent }
 \newlabel{tab:corr}{{4}{17}{Agreement with R1 on D1 (six real miners) and the flower litmus. $\tau _b$ is Kendall's tau-b}{table.1.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Cross-paradigm comparison on D1}{17}{subsection.1.6.3}\protected@file@percent }
 \newlabel{sec:eval:external}{{6.3}{17}{Cross-paradigm comparison on D1}{subsection.1.6.3}{}}
+\citation{polyvyanyy2022bootstrap}
+\citation{theis2020avatar}
 \citation{polyvyanyy2022bootstrap}
 \@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Robustness to the cross-validation reference on D1 (six real miners): agreement against both R1 (5-fold) and R2 (leave-one-variant-out, $50/846$ variants sampled). The qualitative verdict is identical under either reference.}}{18}{table.1.5}\protected@file@percent }
 \newlabel{tab:r2}{{5}{18}{Robustness to the cross-validation reference on D1 (six real miners): agreement against both R1 (5-fold) and R2 (leave-one-variant-out, $50/846$ variants sampled). The qualitative verdict is identical under either reference}{table.1.5}{}}
@@ -177,12 +177,12 @@
 \newlabel{tab:family}{{7}{20}{M1 family, mean $\pm $ std over $5$ iterations (seed $42$), with both poles. Tr.\ = filtered trace model}{table.1.7}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces M1-family agreement with R1 (six real miners), three representative versions.}}{21}{table.1.8}\protected@file@percent }
 \newlabel{tab:famcorr}{{8}{21}{M1-family agreement with R1 (six real miners), three representative versions}{table.1.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Two readings of the shadow log on D1 Sepsis (v2.6-mle): graded fitness (partial credit) vs.\ strict acceptance (perfect-replay fraction). Acceptance gives the construct's clean poles (Trace $0.00$, Flower $1.00$), and the gap between the bars exposes partial-credit inflation: e.g.\ Alpha+ scores $0.76$ fitness but $0.00$ acceptance, and the trace model $0.57$ fitness but $0.00$ acceptance.}}{21}{figure.1.5}\protected@file@percent }
-\newlabel{fig:accept}{{5}{21}{Two readings of the shadow log on D1 Sepsis (v2.6-mle): graded fitness (partial credit) vs.\ strict acceptance (perfect-replay fraction). Acceptance gives the construct's clean poles (Trace $0.00$, Flower $1.00$), and the gap between the bars exposes partial-credit inflation: e.g.\ Alpha+ scores $0.76$ fitness but $0.00$ acceptance, and the trace model $0.57$ fitness but $0.00$ acceptance}{figure.1.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Acceptance reading on D1 (v2.6-mle \ensuremath  {\mathit  {Gen}_{\mathit  {accept}}}) vs the acceptance ground truth (R1-accept).}}{21}{table.1.9}\protected@file@percent }
+\newlabel{tab:accept}{{9}{21}{Acceptance reading on D1 (v2.6-mle \genaccept ) vs the acceptance ground truth (R1-accept)}{table.1.9}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.6}The acceptance reading}{21}{subsection.1.6.6}\protected@file@percent }
 \newlabel{sec:eval:accept}{{6.6}{21}{The acceptance reading}{subsection.1.6.6}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Acceptance reading on D1 (v2.6-mle \ensuremath  {\mathit  {Gen}_{\mathit  {accept}}}) vs the acceptance ground truth (R1-accept).}}{22}{table.1.9}\protected@file@percent }
-\newlabel{tab:accept}{{9}{22}{Acceptance reading on D1 (v2.6-mle \genaccept ) vs the acceptance ground truth (R1-accept)}{table.1.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Two readings of the shadow log on D1 Sepsis (v2.6-mle): graded fitness (partial credit) vs.\ strict acceptance (perfect-replay fraction). Acceptance gives the construct's clean poles (Trace $0.00$, Flower $1.00$), and the gap between the bars exposes partial-credit inflation: e.g.\ Alpha+ scores $0.76$ fitness but $0.00$ acceptance, and the trace model $0.57$ fitness but $0.00$ acceptance.}}{22}{figure.1.5}\protected@file@percent }
+\newlabel{fig:accept}{{5}{22}{Two readings of the shadow log on D1 Sepsis (v2.6-mle): graded fitness (partial credit) vs.\ strict acceptance (perfect-replay fraction). Acceptance gives the construct's clean poles (Trace $0.00$, Flower $1.00$), and the gap between the bars exposes partial-credit inflation: e.g.\ Alpha+ scores $0.76$ fitness but $0.00$ acceptance, and the trace model $0.57$ fitness but $0.00$ acceptance}{figure.1.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Runtime}{22}{subsection.1.6.7}\protected@file@percent }
 \newlabel{sec:eval:runtime}{{6.7}{22}{Runtime}{subsection.1.6.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Discussion}{22}{subsection.1.6.8}\protected@file@percent }
@@ -194,7 +194,6 @@
 \@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{24}{section.1.7}\protected@file@percent }
 \newlabel{sec:conclusion}{{7}{24}{Conclusion}{section.1.7}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Contribution and findings.}{24}{section*.28}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Limitations.}{24}{section*.29}\protected@file@percent }
 \bibstyle{splncs04}
 \bibdata{references}
 \bibcite{vanderaalst2016pm}{1}
@@ -204,9 +203,10 @@
 \bibcite{augusto2019benchmark}{5}
 \bibcite{berti2019pm4py}{6}
 \bibcite{buijs2014quality}{7}
+\@writefile{toc}{\contentsline {subsubsection}{Limitations.}{25}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Future work.}{25}{section*.30}\protected@file@percent }
 \bibcite{vandongen2016anti}{8}
 \bibcite{gale1995gt}{9}
-\@writefile{toc}{\contentsline {subsubsection}{Future work.}{25}{section*.30}\protected@file@percent }
 \bibcite{janssenswillen2019confirmatory}{10}
 \bibcite{janssenswillen2017comparative}{11}
 \bibcite{kabierski2023species}{12}
@@ -221,4 +221,4 @@
 \bibcite{syring2019conformance}{21}
 \bibcite{theis2020avatar}{22}
 \bibcite{weijters2006hm}{23}
-\gdef \@abspage@last{26}
+\gdef \@abspage@last{27}
