@@ -1,0 +1,58 @@
+{
+  "D1__Alpha": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D1__Heuristics": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D1__Inductive_Strict": {
+    "er_proper": 21.909,
+    "markings": 38961,
+    "cap": 150000,
+    "runtime_s": 29.2
+  },
+  "D3__Alpha": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D3__Alpha+": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D3__Heuristics": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D3__Heuristics_Strict": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D4__Alpha": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D4__Alpha+": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D4__Heuristics": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  },
+  "D4__Heuristics_Strict": {
+    "er_proper": null,
+    "note": "exceeds 150000 markings",
+    "cap": 150000
+  }
+}

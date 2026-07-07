@@ -123,8 +123,6 @@
 \citation{polyvyanyy2022bootstrap}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Baseline integration realities}{12}{subsection.1.5.3}\protected@file@percent }
 \newlabel{sec:impl:baselines}{{5.3}{12}{Baseline integration realities}{subsection.1.5.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Deviations from the formal method}{12}{subsection.1.5.4}\protected@file@percent }
-\newlabel{sec:impl:deviations}{{5.4}{12}{Deviations from the formal method}{subsection.1.5.4}{}}
 \citation{karunaratne2024representativeness}
 \citation{mannhardt2016sepsis}
 \citation{steeman2013bpi}
@@ -136,6 +134,8 @@
 \citation{leemans2013im,leemans2014imf}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Benchmark datasets. TLRA $=1-|V|/|L|$.}}{13}{table.1.1}\protected@file@percent }
 \newlabel{tab:datasets}{{1}{13}{Benchmark datasets. TLRA $=1-|V|/|L|$}{table.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Deviations from the formal method}{13}{subsection.1.5.4}\protected@file@percent }
+\newlabel{sec:impl:deviations}{{5.4}{13}{Deviations from the formal method}{subsection.1.5.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Evaluation}{13}{section.1.6}\protected@file@percent }
 \newlabel{sec:eval}{{6}{13}{Evaluation}{section.1.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Experimental setup}{13}{subsection.1.6.1}\protected@file@percent }
@@ -157,12 +157,12 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Cross-paradigm comparison on D1}{16}{subsection.1.6.3}\protected@file@percent }
 \newlabel{sec:eval:external}{{6.3}{16}{Cross-paradigm comparison on D1}{subsection.1.6.3}{}}
 \citation{polyvyanyy2022bootstrap}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Per-method calibration against the cross-validation ground truth on D1 (six real miners; each point is one miner, dashed line $y{=}x$). The generative and resampling metrics (ShadowGen, Bootstrap adapted) sit on the line\textcolor {chgblue}{; the published Entropia \texttt  {-bgen} F-measure of the same bootstrap sample sits far below it (its F1 folds precision in, Sect.\nobreakspace  {}\ref {sec:eval:m6})}; PM4Py forms a flat high band that ignores the ground-truth gradient: it rates the pathological Alpha model (at R1$\approx 0.27$) as $0.91$; AVATAR and SpeciAL scatter off the line. Reading the vertical axis alone, a metric that spreads its six miners discriminates between them, whereas PM4Py compresses them into a narrow band.}}{17}{figure.1.4}\protected@file@percent }
-\newlabel{fig:calibration}{{4}{17}{Per-method calibration against the cross-validation ground truth on D1 (six real miners; each point is one miner, dashed line $y{=}x$). The generative and resampling metrics (ShadowGen, Bootstrap adapted) sit on the line\chg {; the published Entropia \texttt {-bgen} F-measure of the same bootstrap sample sits far below it (its F1 folds precision in, Sect.~\ref {sec:eval:m6})}; PM4Py forms a flat high band that ignores the ground-truth gradient: it rates the pathological Alpha model (at R1$\approx 0.27$) as $0.91$; AVATAR and SpeciAL scatter off the line. Reading the vertical axis alone, a metric that spreads its six miners discriminates between them, whereas PM4Py compresses them into a narrow band}{figure.1.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces The same \texttt  {bsgen} bootstrap sample on D1, scored four ways, vs R1 (six real miners). Only the readings free of precision pass the flower litmus.}}{18}{table.1.3}\protected@file@percent }
-\newlabel{tab:m6}{{3}{18}{The same \texttt {bsgen} bootstrap sample on D1, scored four ways, vs R1 (six real miners). Only the readings free of precision pass the flower litmus}{table.1.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}What contaminates a generalization score: a controlled bootstrap study}{18}{subsection.1.6.4}\protected@file@percent }
-\newlabel{sec:eval:m6}{{6.4}{18}{What contaminates a generalization score: a controlled bootstrap study}{subsection.1.6.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces The same \texttt  {bsgen} bootstrap sample on D1, scored four ways, vs R1 (six real miners). Only the readings free of precision pass the flower litmus.}}{17}{table.1.3}\protected@file@percent }
+\newlabel{tab:m6}{{3}{17}{The same \texttt {bsgen} bootstrap sample on D1, scored four ways, vs R1 (six real miners). Only the readings free of precision pass the flower litmus}{table.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}What contaminates a generalization score: a controlled bootstrap study}{17}{subsection.1.6.4}\protected@file@percent }
+\newlabel{sec:eval:m6}{{6.4}{17}{What contaminates a generalization score: a controlled bootstrap study}{subsection.1.6.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Per-method calibration against the cross-validation ground truth on D1 (six real miners; each point is one miner, dashed line $y{=}x$). The generative and resampling metrics (ShadowGen, Bootstrap adapted) sit on the line\textcolor {chgblue}{; the published Entropia \texttt  {-bgen} F-measure of the same bootstrap sample sits far below it (its F1 folds precision in, Sect.\nobreakspace  {}\ref {sec:eval:m6})}; PM4Py forms a flat high band that ignores the ground-truth gradient: it rates the pathological Alpha model (at R1$\approx 0.27$) as $0.91$; AVATAR and SpeciAL scatter off the line. Reading the vertical axis alone, a metric that spreads its six miners discriminates between them, whereas PM4Py compresses them into a narrow band.}}{18}{figure.1.4}\protected@file@percent }
+\newlabel{fig:calibration}{{4}{18}{Per-method calibration against the cross-validation ground truth on D1 (six real miners; each point is one miner, dashed line $y{=}x$). The generative and resampling metrics (ShadowGen, Bootstrap adapted) sit on the line\chg {; the published Entropia \texttt {-bgen} F-measure of the same bootstrap sample sits far below it (its F1 folds precision in, Sect.~\ref {sec:eval:m6})}; PM4Py forms a flat high band that ignores the ground-truth gradient: it rates the pathological Alpha model (at R1$\approx 0.27$) as $0.91$; AVATAR and SpeciAL scatter off the line. Reading the vertical axis alone, a metric that spreads its six miners discriminates between them, whereas PM4Py compresses them into a narrow band}{figure.1.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Results at scale: D3--D5}{18}{subsection.1.6.5}\protected@file@percent }
 \newlabel{sec:eval:scale}{{6.5}{18}{Results at scale: D3--D5}{subsection.1.6.5}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Agreement with R1 on all five logs (six real miners each): Pearson / MAE per log, and the flower-litmus range. AVATAR is measured on D1/D2 only (Sect.\nobreakspace  {}\ref {sec:eval:feasibility}); the SpeciAL D5 entry covers the four miners that returned within budget; M4/M8 return too few cells to rank.}}{19}{table.1.4}\protected@file@percent }

@@ -1,0 +1,288 @@
+{
+  "D1__Alpha": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 63.313,
+    "rho_dfg": 0.0,
+    "runtime_s": 11.1
+  },
+  "D1__Alpha+": {
+    "er_proper": 35.149,
+    "proper_states": 28,
+    "er_dfg": 93.514,
+    "rho_dfg": 1.0,
+    "runtime_s": 12.5
+  },
+  "D1__Heuristics": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 62.322,
+    "rho_dfg": 0.101,
+    "runtime_s": 0.7
+  },
+  "D1__Heuristics_Strict": {
+    "er_proper": 61.761,
+    "proper_states": 95,
+    "er_dfg": 61.844,
+    "rho_dfg": 0.185,
+    "runtime_s": 0.4
+  },
+  "D1__Inductive_Infrequent": {
+    "er_proper": 33.349,
+    "proper_states": 89,
+    "er_dfg": 69.723,
+    "rho_dfg": 0.432,
+    "runtime_s": 0.7
+  },
+  "D1__Inductive_Strict": {
+    "er_proper": 21.909,
+    "er_dfg": 61.118,
+    "rho_dfg": 0.719,
+    "runtime_s": 3.0,
+    "proper_cap": 150000
+  },
+  "D1__Trace_Filtered": {
+    "er_proper": 57.068,
+    "proper_states": 138,
+    "er_dfg": 46.485,
+    "rho_dfg": 0.592,
+    "runtime_s": 2.0
+  },
+  "D1__Flower": {
+    "er_proper": 52.268,
+    "proper_states": 1,
+    "er_dfg": 62.736,
+    "rho_dfg": 1.0,
+    "runtime_s": 0.2
+  },
+  "D2__Alpha": {
+    "er_proper": 22.467,
+    "proper_states": 2,
+    "er_dfg": 22.467,
+    "rho_dfg": 0.0,
+    "runtime_s": 1.9
+  },
+  "D2__Alpha+": {
+    "er_proper": 15.69,
+    "proper_states": 3,
+    "er_dfg": 21.984,
+    "rho_dfg": 1.0,
+    "runtime_s": 0.1
+  },
+  "D2__Heuristics": {
+    "er_proper": 12.512,
+    "proper_states": 5,
+    "er_dfg": 17.949,
+    "rho_dfg": 0.928,
+    "runtime_s": 0.1
+  },
+  "D2__Heuristics_Strict": {
+    "er_proper": 11.444,
+    "proper_states": 4,
+    "er_dfg": 17.086,
+    "rho_dfg": 0.981,
+    "runtime_s": 0.1
+  },
+  "D2__Inductive_Infrequent": {
+    "er_proper": 12.986,
+    "proper_states": 5,
+    "er_dfg": 13.16,
+    "rho_dfg": 0.932,
+    "runtime_s": 0.1
+  },
+  "D2__Inductive_Strict": {
+    "er_proper": 12.581,
+    "proper_states": 9,
+    "er_dfg": 20.663,
+    "rho_dfg": 1.0,
+    "runtime_s": 0.2
+  },
+  "D2__Trace_Filtered": {
+    "er_proper": 15.682,
+    "proper_states": 115,
+    "er_dfg": 11.591,
+    "rho_dfg": 0.985,
+    "runtime_s": 1.6
+  },
+  "D2__Flower": {
+    "er_proper": 16.35,
+    "proper_states": 1,
+    "er_dfg": 22.102,
+    "rho_dfg": 1.0,
+    "runtime_s": 0.1
+  },
+  "D3__Alpha": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 187.537,
+    "rho_dfg": 1.0,
+    "runtime_s": 16.7
+  },
+  "D3__Alpha+": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 189.574,
+    "rho_dfg": 0.785,
+    "runtime_s": 15.2
+  },
+  "D3__Heuristics": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 185.986,
+    "rho_dfg": 0.004,
+    "runtime_s": 1.1
+  },
+  "D3__Heuristics_Strict": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 185.547,
+    "rho_dfg": 0.009,
+    "runtime_s": 1.3
+  },
+  "D3__Inductive_Infrequent": {
+    "er_proper": 186.184,
+    "proper_states": 8,
+    "er_dfg": 186.184,
+    "rho_dfg": 0.0,
+    "runtime_s": 1.4
+  },
+  "D3__Inductive_Strict": {
+    "er_proper": 48.44,
+    "proper_states": 66,
+    "er_dfg": 184.906,
+    "rho_dfg": 0.022,
+    "runtime_s": 4.3
+  },
+  "D3__Trace_Filtered": {
+    "er_proper": 157.687,
+    "proper_states": 494,
+    "er_dfg": 109.778,
+    "rho_dfg": 0.64,
+    "runtime_s": 15.8
+  },
+  "D3__Flower": {
+    "er_proper": 151.188,
+    "proper_states": 1,
+    "er_dfg": 185.705,
+    "rho_dfg": 1.0,
+    "runtime_s": 1.0
+  },
+  "D4__Alpha": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 314.867,
+    "rho_dfg": 0.0,
+    "runtime_s": 19.3
+  },
+  "D4__Alpha+": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 309.144,
+    "rho_dfg": 1.0,
+    "runtime_s": 27.5
+  },
+  "D4__Heuristics": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 314.855,
+    "rho_dfg": 0.0,
+    "runtime_s": 63.7
+  },
+  "D4__Heuristics_Strict": {
+    "er_proper": null,
+    "proper_note": "exceeds 150000 markings (cap 150000)",
+    "er_dfg": 314.866,
+    "rho_dfg": 0.0,
+    "runtime_s": 121.9
+  },
+  "D4__Inductive_Infrequent": {
+    "er_proper": 290.567,
+    "proper_states": 44,
+    "er_dfg": 301.36,
+    "rho_dfg": 0.153,
+    "runtime_s": 10.7
+  },
+  "D4__Inductive_Strict": {
+    "er_proper": null,
+    "proper_note": "exceeds 20000 markings (unbounded?)",
+    "er_dfg": 314.866,
+    "rho_dfg": 0.0,
+    "runtime_s": 6.2
+  },
+  "D4__Trace_Filtered": {
+    "er_proper": 265.557,
+    "proper_states": 837,
+    "er_dfg": 255.018,
+    "rho_dfg": 0.315,
+    "runtime_s": 48.5
+  },
+  "D4__Flower": {
+    "er_proper": 212.325,
+    "proper_states": 1,
+    "er_dfg": 311.884,
+    "rho_dfg": 1.0,
+    "runtime_s": 3.0
+  },
+  "D5__Alpha": {
+    "er_proper": null,
+    "proper_note": "exceeds 20000 markings (unbounded?)",
+    "er_dfg": 39.827,
+    "rho_dfg": 0.0,
+    "runtime_s": 19.8
+  },
+  "D5__Alpha+": {
+    "er_proper": null,
+    "proper_note": "exceeds 20000 markings (unbounded?)",
+    "er_dfg": 40.046,
+    "rho_dfg": 0.018,
+    "runtime_s": 27.0
+  },
+  "D5__Heuristics": {
+    "er_proper": null,
+    "proper_note": "exceeds 20000 markings (unbounded?)",
+    "er_dfg": 29.471,
+    "rho_dfg": 0.851,
+    "runtime_s": 2.4
+  },
+  "D5__Heuristics_Strict": {
+    "er_proper": null,
+    "proper_note": "exceeds 20000 markings (unbounded?)",
+    "er_dfg": 28.111,
+    "rho_dfg": 0.87,
+    "runtime_s": 2.2
+  },
+  "D5__Inductive_Infrequent": {
+    "er_proper": null,
+    "proper_note": "exceeds 20000 markings (unbounded?)",
+    "er_dfg": 40.039,
+    "rho_dfg": 0.127,
+    "runtime_s": 3.8
+  },
+  "D5__Inductive_Strict": {
+    "er_proper": null,
+    "proper_note": "exceeds 20000 markings (unbounded?)",
+    "er_dfg": 39.706,
+    "rho_dfg": 0.047,
+    "runtime_s": 3.7
+  },
+  "D5__Trace_Filtered": {
+    "er_proper": 17.455,
+    "proper_states": 75,
+    "er_dfg": 18.814,
+    "rho_dfg": 0.866,
+    "runtime_s": 1.2
+  },
+  "D5__Flower": {
+    "er_proper": 24.781,
+    "proper_states": 1,
+    "er_dfg": 39.74,
+    "rho_dfg": 1.0,
+    "runtime_s": 1.8
+  },
+  "_provenance": {
+    "date": "2026-07-07",
+    "host": "cibox",
+    "validation": "ER matches Entropia -r to 3 decimals on all six Exp5 D1 SDFAs; DFG branch matches committed M3 where constructions coincide (JDFG2Aut lost)",
+    "cap": 150000
+  }
+}
