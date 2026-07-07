@@ -1,0 +1,149 @@
+{
+  "D1": {
+    "name": "Sepsis",
+    "cases": 1050,
+    "variants": 846,
+    "tlra": 0.1943,
+    "load_s": 0.8
+  },
+  "D2": {
+    "name": "BPI2013_Incidents",
+    "cases": 7554,
+    "variants": 1511,
+    "tlra": 0.8,
+    "load_s": 1.7
+  },
+  "D3": {
+    "name": "BPI2017",
+    "cases": 31509,
+    "variants": 15930,
+    "tlra": 0.4944,
+    "load_s": 32.9
+  },
+  "D4": {
+    "name": "BPI2018",
+    "cases": 43809,
+    "variants": 28457,
+    "tlra": 0.3504,
+    "load_s": 164.9
+  },
+  "D5": {
+    "name": "BPI2019",
+    "cases": 251734,
+    "variants": 11973,
+    "tlra": 0.9524,
+    "load_s": 71.0
+  },
+  "D6": {
+    "name": "BPI2013_Problem_Open",
+    "cases": 819,
+    "variants": 108,
+    "tlra": 0.8681,
+    "load_s": 1.3
+  },
+  "D7": {
+    "name": "BPI2013_Problem_Closed",
+    "cases": 1487,
+    "variants": 183,
+    "tlra": 0.8769,
+    "load_s": 0.2
+  },
+  "D8": {
+    "name": "BPI2015_Municipality_2",
+    "cases": 832,
+    "variants": 828,
+    "tlra": 0.0048,
+    "load_s": 2.1
+  },
+  "D9": {
+    "name": "BPI2015_Municipality_4",
+    "cases": 1053,
+    "variants": 1049,
+    "tlra": 0.0038,
+    "load_s": 2.3
+  },
+  "D10": {
+    "name": "BPI2015_Municipality_1",
+    "cases": 1199,
+    "variants": 1170,
+    "tlra": 0.0242,
+    "load_s": 2.9
+  },
+  "D11": {
+    "name": "BPI2011_Hospital",
+    "cases": 1143,
+    "variants": 981,
+    "tlra": 0.1417,
+    "load_s": 15.4
+  },
+  "D12": {
+    "name": "BPI2015_Municipality_5",
+    "cases": 1156,
+    "variants": 1153,
+    "tlra": 0.0026,
+    "load_s": 3.7
+  },
+  "D13": {
+    "name": "BPI2015_Municipality_3",
+    "cases": 1409,
+    "variants": 1349,
+    "tlra": 0.0426,
+    "load_s": 3.4
+  },
+  "D14": {
+    "name": "BPI2020_PrepaidTravel",
+    "cases": 2099,
+    "variants": 202,
+    "tlra": 0.9038,
+    "load_s": 0.9
+  },
+  "D15": {
+    "name": "BPI2020_InternationalDecl",
+    "cases": 6449,
+    "variants": 753,
+    "tlra": 0.8832,
+    "load_s": 2.8
+  },
+  "D16": {
+    "name": "BPI2020_RequestForPayment",
+    "cases": 6886,
+    "variants": 89,
+    "tlra": 0.9871,
+    "load_s": 1.1
+  },
+  "D17": {
+    "name": "BPI2020_PermitLog",
+    "cases": 7065,
+    "variants": 1478,
+    "tlra": 0.7908,
+    "load_s": 15.0
+  },
+  "D18": {
+    "name": "BPI2020_DomesticDecl",
+    "cases": 10500,
+    "variants": 99,
+    "tlra": 0.9906,
+    "load_s": 1.9
+  },
+  "D19": {
+    "name": "BPI2012",
+    "cases": 13087,
+    "variants": 4366,
+    "tlra": 0.6664,
+    "load_s": 4.6
+  },
+  "D20": {
+    "name": "Hospital_Billing",
+    "cases": 100000,
+    "variants": 1020,
+    "tlra": 0.9898,
+    "load_s": 13.7
+  },
+  "D21": {
+    "name": "Road_Traffic_Fine",
+    "cases": 150370,
+    "variants": 231,
+    "tlra": 0.9985,
+    "load_s": 13.5
+  }
+}

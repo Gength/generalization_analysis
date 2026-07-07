@@ -11,13 +11,14 @@
     "flag": "-bgen"
   },
   "results": {
-    "gen_score": 0.0,
+    "gen_score": -1,
     "precision": 0.0,
     "precision_std": 0.0,
     "recall": 0.0,
     "recall_std": 0.0,
     "n_replicates": 10,
-    "runtime_s": 335.9
+    "runtime_s": 335.9,
+    "original_recorded_gen_score": 0.0
   },
-  "notes": "renamed M6 -> M6bgen (published tool reading); honest re-run under the 3600 s budget"
+  "notes": "renamed M6 -> M6bgen (published tool reading); honest re-run under the 3600 s budget | CORRECTED 2026-07-07: tool returned p=N/A,r=N/A (failure inside Entropia), was misrecorded as 0.0; primary evidence cibox track_logs/m6bgen_d4.log lines 26/29/30"
 }

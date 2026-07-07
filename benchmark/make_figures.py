@@ -582,6 +582,40 @@ def fig_pareto_scale():
                     xytext=(dx, dy), fontsize=8, ha=ha)
         print(f"  pareto_scale {meth:7} t={t:>8.1f}s (min {tlo:.1f}, max {thi:.1f})  "
               f"MAE={mae:.3f} (min {mlo:.3f}, max {mhi:.3f})")
+
+    # ShadowGen 1-iteration "fast mode": ~same accuracy, 1/5 the time.
+    # calculate_gen_shadow_stable loops N identical generate+replay steps with
+    # no shared setup, so single-iteration time is the 5-iter median / 5
+    # (verified on BPI2017: measured 1-iter/5-iter ratio 5.3). Accuracy uses
+    # raw_iterations[0], the metric's own first-iteration score per cell.
+    import json as _j2
+    t5m = time_stats("M1g")[0]
+    t1 = t5m / 5.0
+    m1_pl = []
+    for _, ds in DS5:
+        d = []
+        for mn in REAL:
+            pm = f"{CFG_V1}/{ds}__{mn}__M1g.json"
+            pr = f"{CFG_V1}/{ds}__{mn}__R1.json"
+            if not (os.path.exists(pm) and os.path.exists(pr)):
+                continue
+            rm = _j2.load(open(pm, encoding="utf-8")).get("results", {})
+            rr = _j2.load(open(pr, encoding="utf-8")).get("results", {})
+            ri = rm.get("raw_iterations")
+            r1 = next((rr.get(k) for k in ("mean", "score", "gen_score")
+                       if rr.get(k) is not None), None)
+            if ri and r1 is not None:
+                d.append(abs(float(ri[0]) - float(r1)))
+        if len(d) >= 3:
+            m1_pl.append(np.mean(d))
+    if m1_pl and not np.isnan(t1):
+        m1 = float(np.mean(m1_pl)); c1 = cmap["ours"]
+        ax.annotate("", xy=(t1, m1), xytext=(t5m, mae_stats("M1g")[0]),
+                    arrowprops=dict(arrowstyle="->", color=c1, lw=0.8, alpha=0.55, zorder=2))
+        ax.scatter(t1, m1, s=80, facecolor="white", edgecolor=c1, linewidth=1.6, zorder=4)
+        ax.annotate("ShadowGen 1-iter (fast)", (t1, m1), textcoords="offset points",
+                    xytext=(2, -13), fontsize=8, ha="left", color=c1)
+        print(f"  pareto_scale M1g-1it t={t1:.1f}s MAE={m1:.3f}")
     ax.set_xscale("log")
     ax.set_xlabel("median time per model over all logs (s, log scale)", fontsize=9)
     ax.set_ylabel("mean MAE vs R1 over covered logs  (lower = better)", fontsize=9)

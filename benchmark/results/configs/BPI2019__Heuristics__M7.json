@@ -12,7 +12,8 @@
       "2-gram",
       "3-gram",
       "tv"
-    ]
+    ],
+    "special4pm_version": "0.1.3"
   },
   "results": {
     "c1_original": {
@@ -30,5 +31,5 @@
     "gen_score": 0.9444266417951526,
     "runtime_s": 370.9734845161438
   },
-  "notes": ""
+  "notes": "provenance 2026-07-07: cibox venv created 2026-07-02 (special4pm 0.1.3 dist-info mtime Jul 2 23:08); D1-D4 M7 ran 2026-06-08 in an earlier, replaced environment, exact old version unrecoverable"
 }

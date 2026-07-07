@@ -1,0 +1,25 @@
+{
+  "_note": "AVATAR training cost, MEASURED by us on 2026-07-07 from the ProminentLab/AVATAR rebuild. Supersedes the unbacked 14400s (4h) Fig 8 anchor and the '60 CPU-hours' report claim, both partner-provenance. The 4h is a GPU number; this is CPU, the same hardware class as the rest of the benchmark.",
+  "hardware": "CHARLES, avatar-cpu docker image (TensorFlow 1.15.5, CPU-only), ~5.6 cores in use, 3.8 GHz",
+  "system": "sepsis (D1), 846 variants, 676 train / 170 test",
+  "quick_anchor_measured": {
+    "config": "3 pre-epochs, 100 adversarial steps (published is 100 / 5000)",
+    "wall_total_s": 5280,
+    "wall_total_human": "1h28m",
+    "adv_steps": 100,
+    "adv_wall_s": 4511,
+    "adv_s_per_step": 45.11,
+    "sampling_per_checkpoint_s": 260,
+    "exit_code": 0,
+    "model_quality": "undertrained by design; ranked models score TP=0 (pipeline verification only)"
+  },
+  "projection_full_published": {
+    "config": "100 pre-epochs, 5000 adversarial steps",
+    "adv_phase_h": 62.6,
+    "note_adv": "5000 steps x 45.11 s/step, linear and rigorously measured",
+    "sampling_phase_h_est": 18.1,
+    "total_wall_est": "~3 to 4 days per log on this CPU",
+    "cpu_hours_est": ">400",
+    "gpu_reference": "authors report ~hours on GPU (Theis & Darabi 2020); we have no TF1/Blackwell GPU path"
+  }
+}

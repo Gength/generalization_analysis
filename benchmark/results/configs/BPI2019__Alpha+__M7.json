@@ -12,11 +12,12 @@
       "2-gram",
       "3-gram",
       "tv"
-    ]
+    ],
+    "special4pm_version": "0.1.3"
   },
   "results": {
     "gen_score": -1,
     "runtime_s": 3600.0001707077026
   },
-  "notes": "SpeciAL4PM error: exceeds cell budget (3600s)"
+  "notes": "SpeciAL4PM error: exceeds cell budget (3600s) | provenance 2026-07-07: cibox venv created 2026-07-02 (special4pm 0.1.3 dist-info mtime Jul 2 23:08); D1-D4 M7 ran 2026-06-08 in an earlier, replaced environment, exact old version unrecoverable"
 }
