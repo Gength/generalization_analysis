@@ -1,0 +1,485 @@
+{
+  "D1": {
+    "dataset": "Sepsis",
+    "n_variants": 846,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 3.060040235519409,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.010666666666666668,
+      "hit_rate_std": 0.004141926551202418,
+      "var_coverage_mean": 0.048061260006961364
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.003666666666666667,
+      "hit_rate_std": 0.004173993557999607,
+      "var_coverage_mean": 0.009848010210001163
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D2": {
+    "dataset": "BPI2013_Incidents",
+    "n_variants": 1511,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 3.1924078464508057,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.16553333333333334,
+      "hit_rate_std": 0.06495420609082131,
+      "var_coverage_mean": 0.10566811648052223
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.1092,
+      "hit_rate_std": 0.056829804387017444,
+      "var_coverage_mean": 0.05382525007467634
+    },
+    "random": {
+      "hit_rate_mean": 0.00013333333333333334,
+      "hit_rate_std": 0.000339934634239519,
+      "var_coverage_mean": 0.0004415011037527594
+    }
+  },
+  "D3": {
+    "dataset": "BPI2017",
+    "n_variants": 15930,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 56.23333215713501,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.08600000000000001,
+      "hit_rate_std": 0.017189143860782206,
+      "var_coverage_mean": 0.01431261770244821
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D4": {
+    "dataset": "BPI2018",
+    "n_variants": 28457,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 150.82876825332642,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.0008666666666666666,
+      "hit_rate_std": 0.0010873004286866728,
+      "var_coverage_mean": 0.00012884608532918784
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D5": {
+    "dataset": "BPI2019",
+    "n_variants": 11973,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 37.909284591674805,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.25860000000000005,
+      "hit_rate_std": 0.13130920252086928,
+      "var_coverage_mean": 0.01650932364982823
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.05526666666666667,
+      "hit_rate_std": 0.017923789281907503,
+      "var_coverage_mean": 0.008101605703871693
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D6": {
+    "dataset": "BPI2013_Problem_Open",
+    "n_variants": 108,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 0.8301601409912109,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.5085333333333334,
+      "hit_rate_std": 0.1673793562207983,
+      "var_coverage_mean": 0.5773809523809526
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.48899999999999993,
+      "hit_rate_std": 0.12918359028916945,
+      "var_coverage_mean": 0.6575396825396825
+    },
+    "random": {
+      "hit_rate_mean": 0.0222,
+      "hit_rate_std": 0.004777726097911712,
+      "var_coverage_mean": 0.3706349206349206
+    }
+  },
+  "D7": {
+    "dataset": "BPI2013_Problem_Closed",
+    "n_variants": 183,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 1.3627026081085205,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.5001333333333333,
+      "hit_rate_std": 0.2169318991962429,
+      "var_coverage_mean": 0.4727920227920227
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.5269333333333334,
+      "hit_rate_std": 0.13238150256822975,
+      "var_coverage_mean": 0.5078347578347578
+    },
+    "random": {
+      "hit_rate_mean": 0.0003333333333333333,
+      "hit_rate_std": 0.0005962847939999439,
+      "var_coverage_mean": 0.008974358974358974
+    }
+  },
+  "D8": {
+    "dataset": "BPI2015_Municipality_2",
+    "n_variants": 828,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 20.849777221679688,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.0003333333333333333,
+      "hit_rate_std": 0.0006992058987801011,
+      "var_coverage_mean": 0.0012121212121212121
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D9": {
+    "dataset": "BPI2015_Municipality_4",
+    "n_variants": 1049,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 16.008963346481323,
+    "v26_mle_N6": {
+      "hit_rate_mean": 6.666666666666667e-05,
+      "hit_rate_std": 0.0002494438257849294,
+      "var_coverage_mean": 0.0003189792663476874
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D10": {
+    "dataset": "BPI2015_Municipality_1",
+    "n_variants": 1170,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 18.346708297729492,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.00013333333333333334,
+      "hit_rate_std": 0.000339934634239519,
+      "var_coverage_mean": 0.0005698005698005699
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.0002,
+      "hit_rate_std": 0.0005416025603090641,
+      "var_coverage_mean": 0.0005698005698005699
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D11": {
+    "dataset": "BPI2011_Hospital",
+    "n_variants": 981,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 62.78692698478699,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.012400000000000001,
+      "hit_rate_std": 0.008530728769181055,
+      "var_coverage_mean": 0.02004730826340689
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.010000000000000002,
+      "hit_rate_std": 0.00817312669668102,
+      "var_coverage_mean": 0.01562553955592389
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D12": {
+    "dataset": "BPI2015_Municipality_5",
+    "n_variants": 1153,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 19.08664059638977,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 6.666666666666667e-05,
+      "hit_rate_std": 0.0002494438257849294,
+      "var_coverage_mean": 0.0002898550724637681
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D13": {
+    "dataset": "BPI2015_Municipality_3",
+    "n_variants": 1349,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 16.697810173034668,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.0006666666666666666,
+      "hit_rate_std": 0.0007888106377466155,
+      "var_coverage_mean": 0.0019717581055871017
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D14": {
+    "dataset": "BPI2020_PrepaidTravel",
+    "n_variants": 202,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 2.6972668170928955,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.14279999999999998,
+      "hit_rate_std": 0.06883138818881977,
+      "var_coverage_mean": 0.25222222222222224
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.10339999999999999,
+      "hit_rate_std": 0.07054435956663485,
+      "var_coverage_mean": 0.2178571428571429
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D15": {
+    "dataset": "BPI2020_InternationalDecl",
+    "n_variants": 753,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 3.0710811614990234,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.08833333333333333,
+      "hit_rate_std": 0.04031983245115099,
+      "var_coverage_mean": 0.10577777777777778
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.05733333333333333,
+      "hit_rate_std": 0.03218212064002136,
+      "var_coverage_mean": 0.06638779956427016
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D16": {
+    "dataset": "BPI2020_RequestForPayment",
+    "n_variants": 89,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 6.755926132202148,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.4796666666666667,
+      "hit_rate_std": 0.27572151812210005,
+      "var_coverage_mean": 0.4354808590102708
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.42440000000000005,
+      "hit_rate_std": 0.15938665774357233,
+      "var_coverage_mean": 0.4905695611577965
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D17": {
+    "dataset": "BPI2020_PermitLog",
+    "n_variants": 1478,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 5.830341339111328,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.03953333333333334,
+      "hit_rate_std": 0.015949364320317665,
+      "var_coverage_mean": 0.05591779471429114
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.035,
+      "hit_rate_std": 0.012769755936064976,
+      "var_coverage_mean": 0.02864141356690555
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D18": {
+    "dataset": "BPI2020_DomesticDecl",
+    "n_variants": 99,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 7.459957599639893,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.47333333333333333,
+      "hit_rate_std": 0.3061378048453924,
+      "var_coverage_mean": 0.46895499618611747
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.4133333333333333,
+      "hit_rate_std": 0.16867944615617977,
+      "var_coverage_mean": 0.48634630053394357
+    },
+    "random": {
+      "hit_rate_mean": 6.666666666666667e-05,
+      "hit_rate_std": 0.0002494438257849294,
+      "var_coverage_mean": 0.003508771929824561
+    }
+  },
+  "D19": {
+    "dataset": "BPI2012",
+    "n_variants": 4366,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 14.518970251083374,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.06613333333333334,
+      "hit_rate_std": 0.010423477773223718,
+      "var_coverage_mean": 0.047947012808179625
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.0029333333333333334,
+      "hit_rate_std": 0.004358389100981641,
+      "var_coverage_mean": 0.0012217530229278561
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D20": {
+    "dataset": "Hospital_Billing",
+    "n_variants": 1020,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 11.348048686981201,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.164,
+      "hit_rate_std": 0.05365444995524602,
+      "var_coverage_mean": 0.17843137254901956
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.48819999999999997,
+      "hit_rate_std": 0.1959871424354159,
+      "var_coverage_mean": 0.15588235294117647
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D21": {
+    "dataset": "Road_Traffic_Fine",
+    "n_variants": 231,
+    "k_folds": 5,
+    "folds": 15,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 12.799189805984497,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.010066666666666668,
+      "hit_rate_std": 0.004905325903772574,
+      "var_coverage_mean": 0.1385445575084798
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.10753333333333331,
+      "hit_rate_std": 0.14360263074037172,
+      "var_coverage_mean": 0.09947579401788469
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "Alpha": {
+    "error": "ValueError('reachability exceeds 50000 markings (unbounded?)')"
+  },
+  "Alpha+": {
+    "sdfa": "D1__Alpha+.sdfa",
+    "markings": 85,
+    "dfa_states": 60,
+    "sdfa_states_used": 28,
+    "transitions": 82,
+    "log_fit_frac": 0.8476
+  },
+  "Heuristics": {
+    "error": "ValueError('reachability exceeds 50000 markings (unbounded?)')"
+  },
+  "Heuristics_Strict": {
+    "sdfa": "D1__Heuristics_Strict.sdfa",
+    "markings": 138,
+    "dfa_states": 1413,
+    "sdfa_states_used": 95,
+    "transitions": 187,
+    "log_fit_frac": 0.1124
+  },
+  "Inductive_Strict": {
+    "sdfa": "D1__Inductive_Strict.sdfa",
+    "markings": 38961,
+    "dfa_states": 1228,
+    "sdfa_states_used": 122,
+    "transitions": 343,
+    "log_fit_frac": 1.0
+  },
+  "Inductive_Infrequent": {
+    "sdfa": "D1__Inductive_Infrequent.sdfa",
+    "markings": 293,
+    "dfa_states": 218,
+    "sdfa_states_used": 89,
+    "transitions": 220,
+    "log_fit_frac": 0.8171
+  },
+  "Trace_Filtered": {
+    "sdfa": "D1__Trace_Filtered.sdfa",
+    "markings": 423,
+    "dfa_states": 138,
+    "sdfa_states_used": 138,
+    "transitions": 172,
+    "log_fit_frac": 0.2457
+  },
+  "Flower": {
+    "sdfa": "D1__Flower.sdfa",
+    "markings": 1,
+    "dfa_states": 1,
+    "sdfa_states_used": 1,
+    "transitions": 16,
+    "log_fit_frac": 1.0
+  }
+}

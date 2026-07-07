@@ -1,0 +1,433 @@
+{
+ "_note": "Honest M4/M8 reruns, 1h cap per cell, seed-fixed; see README.md",
+ "M4": {
+  "D1": {
+   "Alpha": {
+    "outcome": "complete",
+    "value": 0.1030735278333402,
+    "wall_s": 29
+   },
+   "Alpha+": {
+    "outcome": "timeout",
+    "progress_pct": 1.0,
+    "wall_s": 3660
+   },
+   "Heuristics": {
+    "outcome": "timeout",
+    "progress_pct": 87.4,
+    "wall_s": 3660
+   },
+   "Heuristics_Strict": {
+    "outcome": "complete",
+    "value": 0.0002380952380952381,
+    "wall_s": 53
+   },
+   "Inductive_Infrequent": {
+    "outcome": "crash",
+    "error": "ArrayIndexOutOfBoundsException",
+    "progress_pct": 0.1,
+    "wall_s": 6
+   },
+   "Inductive_Strict": {
+    "outcome": "timeout",
+    "progress_pct": 0.1,
+    "wall_s": 3660
+   },
+   "Trace_Filtered": {
+    "outcome": "complete",
+    "value": 0.0,
+    "wall_s": 787
+   },
+   "Flower": {
+    "outcome": "timeout",
+    "progress_pct": 0.1,
+    "wall_s": 3660
+   }
+  },
+  "D2": {
+   "Alpha": {
+    "outcome": "complete",
+    "value": 0.40016547524490337,
+    "wall_s": 3
+   },
+   "Alpha+": {
+    "outcome": "timeout",
+    "progress_pct": 0.6,
+    "wall_s": 3660
+   },
+   "Heuristics": {
+    "outcome": "timeout",
+    "progress_pct": 0.1,
+    "wall_s": 3660
+   },
+   "Heuristics_Strict": {
+    "outcome": "timeout",
+    "progress_pct": 0.1,
+    "wall_s": 3660
+   },
+   "Inductive_Infrequent": {
+    "outcome": "timeout",
+    "progress_pct": 0.1,
+    "wall_s": 3660
+   },
+   "Inductive_Strict": {
+    "outcome": "complete",
+    "value": 0.09453564898879745,
+    "wall_s": 50
+   },
+   "Trace_Filtered": {
+    "outcome": "complete",
+    "value": 0.0,
+    "wall_s": 612
+   },
+   "Flower": {
+    "outcome": "timeout",
+    "progress_pct": 0.1,
+    "wall_s": 3660
+   }
+  },
+  "D3": {
+   "Alpha": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3669
+   },
+   "Alpha+": {
+    "outcome": "timeout",
+    "progress_pct": 7.1,
+    "wall_s": 3661
+   },
+   "Heuristics": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Heuristics_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Inductive_Infrequent": {
+    "outcome": "timeout",
+    "progress_pct": 2.6,
+    "wall_s": 3660
+   },
+   "Inductive_Strict": {
+    "outcome": "timeout",
+    "progress_pct": 0.0,
+    "wall_s": 3661
+   },
+   "Trace_Filtered": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Flower": {
+    "outcome": "timeout",
+    "progress_pct": 0.0,
+    "wall_s": 3660
+   }
+  },
+  "D4": {
+   "Alpha": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3694
+   },
+   "Alpha+": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3662
+   },
+   "Heuristics": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3697
+   },
+   "Heuristics_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3670
+   },
+   "Inductive_Infrequent": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3664
+   },
+   "Inductive_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3693
+   },
+   "Trace_Filtered": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Flower": {
+    "outcome": "timeout",
+    "progress_pct": 0.0,
+    "wall_s": 3660
+   }
+  },
+  "D5": {
+   "Alpha": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Alpha+": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Heuristics": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3664
+   },
+   "Heuristics_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3665
+   },
+   "Inductive_Infrequent": {
+    "outcome": "timeout",
+    "progress_pct": 6.2,
+    "wall_s": 3661
+   },
+   "Inductive_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3663
+   },
+   "Trace_Filtered": {
+    "outcome": "complete",
+    "value": 0.0,
+    "wall_s": 380
+   },
+   "Flower": {
+    "outcome": "timeout",
+    "progress_pct": 0.0,
+    "wall_s": 3660
+   }
+  }
+ },
+ "M8": {
+  "D1": {
+   "Alpha": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3668
+   },
+   "Alpha+": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Heuristics": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Heuristics_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3677
+   },
+   "Inductive_Infrequent": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Inductive_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3671
+   },
+   "Trace_Filtered": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3677
+   },
+   "Flower": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3669
+   }
+  },
+  "D2": {
+   "Alpha": {
+    "outcome": "crash",
+    "error": "NullPointerException",
+    "progress_pct": null,
+    "wall_s": 64
+   },
+   "Alpha+": {
+    "outcome": "crash",
+    "error": "NullPointerException",
+    "progress_pct": null,
+    "wall_s": 64
+   },
+   "Heuristics": {
+    "outcome": "complete",
+    "value": 0.9917247949128682,
+    "wall_s": 4
+   },
+   "Heuristics_Strict": {
+    "outcome": "complete",
+    "value": 0.9988003009562642,
+    "wall_s": 4
+   },
+   "Inductive_Infrequent": {
+    "outcome": "crash",
+    "error": "NullPointerException",
+    "progress_pct": null,
+    "wall_s": 64
+   },
+   "Inductive_Strict": {
+    "outcome": "crash",
+    "error": "NullPointerException",
+    "progress_pct": null,
+    "wall_s": 64
+   },
+   "Trace_Filtered": {
+    "outcome": "complete",
+    "value": 0.8972014973926299,
+    "wall_s": 7
+   },
+   "Flower": {
+    "outcome": "crash",
+    "error": "NullPointerException",
+    "progress_pct": null,
+    "wall_s": 64
+   }
+  },
+  "D3": {
+   "Alpha": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3664
+   },
+   "Alpha+": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3664
+   },
+   "Heuristics": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3664
+   },
+   "Heuristics_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Inductive_Infrequent": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Inductive_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Trace_Filtered": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Flower": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   }
+  },
+  "D4": {
+   "Alpha": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Alpha+": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Heuristics": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Heuristics_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Inductive_Infrequent": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Inductive_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Trace_Filtered": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Flower": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   }
+  },
+  "D5": {
+   "Alpha": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Alpha+": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Heuristics": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3660
+   },
+   "Heuristics_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Inductive_Infrequent": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Inductive_Strict": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Trace_Filtered": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   },
+   "Flower": {
+    "outcome": "timeout",
+    "progress_pct": null,
+    "wall_s": 3661
+   }
+  }
+ }
+}

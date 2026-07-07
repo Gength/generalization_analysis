@@ -15,7 +15,7 @@ Usage (repo root): PYTHONHASHSEED=0 python benchmark/generator_validation.py [D1
 Writes benchmark/results/generator_validation.json (analysis artifact, not a
 benchmark cell).
 """
-import os, sys, json, time, random
+import os, sys, json, time, random, argparse
 from collections import defaultdict
 import numpy as np
 import pm4py
@@ -33,7 +33,7 @@ def names(trace):
     return tuple(e["concept:name"] for e in trace)
 
 
-def partitions(variants):
+def partitions(variants, k=K):
     """R1-accept's exact fold partitions: seed once, cumulative shuffles."""
     rng = random.Random(SEED)
     order = list(variants)
@@ -41,9 +41,9 @@ def partitions(variants):
     for s in range(SHUFFLES):
         rng.shuffle(order)
         n = len(order)
-        fold = max(1, n // K)
-        for f in range(K):
-            start, end = f * fold, ((f + 1) * fold if f < K - 1 else n)
+        fold = max(1, n // k)
+        for f in range(k):
+            start, end = f * fold, ((f + 1) * fold if f < k - 1 else n)
             out.append((list(order), set(order[start:end])))
     return out
 
@@ -57,7 +57,7 @@ def random_traces(train_names, alphabet, n):
     return out
 
 
-def run_dataset(key):
+def run_dataset(key, k=K):
     ds = DATASETS[key]
     log = pm4py.convert_to_event_log(pm4py.read_xes(ds["log_path"]))
     vmap = defaultdict(list)
@@ -68,7 +68,7 @@ def run_dataset(key):
 
     res = {g: {"hit_rate": [], "var_coverage": []} for g in ("v26_mle_N6", "N1_ablation", "random")}
     t0 = time.time()
-    for order, held in partitions(variants):
+    for order, held in partitions(variants, k):
         train_vs = [v for v in order if v not in held]
         train_log = EventLog([t for v in train_vs for t in vmap[v]])
 
@@ -88,7 +88,7 @@ def run_dataset(key):
         res["random"]["var_coverage"].append(len(set(hits)) / len(held))
 
     out = {"dataset": ds["name"], "n_variants": len(variants),
-           "folds": SHUFFLES * K, "n_generated_per_fold": N_GEN,
+           "k_folds": k, "folds": SHUFFLES * k, "n_generated_per_fold": N_GEN,
            "runtime_s": time.time() - t0}
     for g, m in res.items():
         out[g] = {"hit_rate_mean": float(np.mean(m["hit_rate"])),
@@ -102,15 +102,20 @@ def run_dataset(key):
 
 
 if __name__ == "__main__":
-    keys = sys.argv[1:] or ["D1", "D2", "D3", "D4", "D5"]
+    ap = argparse.ArgumentParser()
+    ap.add_argument("datasets", nargs="*")
+    ap.add_argument("--folds", type=int, default=K)
+    ap.add_argument("--out", default=None)
+    args = ap.parse_args()
+    keys = args.datasets or ["D1", "D2", "D3", "D4", "D5"]
     results = {}
-    for k in keys:
+    for dk in keys:
         try:
-            results[k] = run_dataset(k)
+            results[dk] = run_dataset(dk, args.folds)
         except Exception as e:
-            results[k] = {"error": str(e)}
-            print(f"{k} ERROR: {e}", flush=True)
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+            results[dk] = {"error": str(e)}
+            print(f"{dk} ERROR: {e}", flush=True)
+    path = args.out or os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         "results", "generator_validation.json")
     with open(path, "w") as f:
         json.dump(results, f, indent=2)

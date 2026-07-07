@@ -1,0 +1,117 @@
+{
+  "D1": {
+    "dataset": "Sepsis",
+    "n_variants": 846,
+    "k_folds": 10,
+    "folds": 30,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 6.521548509597778,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.0055000000000000005,
+      "hit_rate_std": 0.0027898626011567907,
+      "var_coverage_mean": 0.048465608465608455
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.002533333333333333,
+      "hit_rate_std": 0.004326147888775367,
+      "var_coverage_mean": 0.011878306878306877
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D2": {
+    "dataset": "BPI2013_Incidents",
+    "n_variants": 1511,
+    "k_folds": 10,
+    "folds": 30,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 6.894225597381592,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.08856666666666667,
+      "hit_rate_std": 0.06496957407552828,
+      "var_coverage_mean": 0.10655716277448589
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.05806666666666667,
+      "hit_rate_std": 0.044959191372720315,
+      "var_coverage_mean": 0.05471709074009528
+    },
+    "random": {
+      "hit_rate_mean": 0.0001,
+      "hit_rate_std": 0.0003,
+      "var_coverage_mean": 0.0006622516556291391
+    }
+  },
+  "D3": {
+    "dataset": "BPI2017",
+    "n_variants": 15930,
+    "k_folds": 10,
+    "folds": 30,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 124.07312846183777,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.0478,
+      "hit_rate_std": 0.01573403953217355,
+      "var_coverage_mean": 0.016195856873822974
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D4": {
+    "dataset": "BPI2018",
+    "n_variants": 28457,
+    "k_folds": 10,
+    "folds": 30,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 333.4328291416168,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.0008333333333333334,
+      "hit_rate_std": 0.0012133516482134199,
+      "var_coverage_mean": 0.0002577621558289397
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  },
+  "D5": {
+    "dataset": "BPI2019",
+    "n_variants": 11973,
+    "k_folds": 10,
+    "folds": 30,
+    "n_generated_per_fold": 1000,
+    "runtime_s": 81.80709147453308,
+    "v26_mle_N6": {
+      "hit_rate_mean": 0.1587,
+      "hit_rate_std": 0.10095020224513337,
+      "var_coverage_mean": 0.019293163464216098
+    },
+    "N1_ablation": {
+      "hit_rate_mean": 0.02986666666666667,
+      "hit_rate_std": 0.014356725098557665,
+      "var_coverage_mean": 0.00902046783625731
+    },
+    "random": {
+      "hit_rate_mean": 0.0,
+      "hit_rate_std": 0.0,
+      "var_coverage_mean": 0.0
+    }
+  }
+}

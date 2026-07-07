@@ -630,6 +630,36 @@ def fig_genval():
     fig.tight_layout(); fig.savefig(f"{OUT}/fig_genval.pdf", bbox_inches="tight")
     plt.close(fig)
 
+def fig_genval_box():
+    """Generator premise over the full 21-log catalog (breadth): shadow-log
+    exact-match hit-rate vs the random floor, one dot per log. Reads the
+    extended run genval_21logs.json; skipped if absent. Makes the premise
+    point broadly without reopening the (log-dependent) 1-gram comparison."""
+    import json as _json
+    p = "benchmark/results/genval_21logs.json"
+    if not os.path.exists(p):
+        print("  genval_box: no 21-log results, skipped")
+        return
+    data = _json.load(open(p, encoding="utf-8"))
+    keys = [f"D{i}" for i in range(1, 22) if f"D{i}" in data and "error" not in data[f"D{i}"]]
+    shadow = [100 * data[k]["v26_mle_N6"]["hit_rate_mean"] for k in keys]
+    rnd = [100 * data[k]["random"]["hit_rate_mean"] for k in keys]
+    fig, ax = plt.subplots(figsize=(4.6, 4.2))
+    bp = ax.boxplot([shadow, rnd], showfliers=False, widths=0.5, patch_artist=True,
+                    medianprops=dict(color="black", lw=1.4))
+    for patch, c in zip(bp["boxes"], ["#1D9E75", "#b8403e"]):
+        patch.set_facecolor(c); patch.set_alpha(0.22)
+    rs = np.random.RandomState(1)
+    for i, (vals, c) in enumerate(zip([shadow, rnd], ["#1D9E75", "#b8403e"]), 1):
+        ax.scatter(rs.normal(i, 0.055, len(vals)), vals, s=26, color=c,
+                   edgecolor="white", linewidth=0.5, zorder=3, alpha=0.9)
+    ax.set_xticks([1, 2]); ax.set_xticklabels(["ShadowGen", "Random"], fontsize=10)
+    ax.set_ylabel("exact-match hit-rate, 21 logs (%)", fontsize=9)
+    ax.set_ylim(-2, 55); ax.axhline(0, color="0.7", lw=0.6)
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(axis="y", ls=":", alpha=.4)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_genval_box.pdf", bbox_inches="tight")
+    plt.close(fig)
+
 def fig_runtime_scale():
     """Median time per model vs event-log size, all five logs (log-log).
     Missing points are the feasibility story: SpeciAL crashed on D5, the
@@ -702,7 +732,7 @@ def main():
     fig_calibration(ds, tag); fig_calibration_v2(ds, tag); fig_accept(ds, tag); fig_nsweep(); fig_pareto()
     # cross-dataset summaries (D1-D5)
     fig_scale(); fig_accept_scale(); fig_accept_landscape(); fig_calibration_scale()
-    fig_runtime_scale(); fig_calibration_grid_scale(); fig_pareto_scale(); fig_genval()
+    fig_runtime_scale(); fig_calibration_grid_scale(); fig_pareto_scale(); fig_genval(); fig_genval_box()
     # kept for slides / reuse (not referenced by the current report)
     fig_landscape(ds, tag); fig_mae(ds, tag); fig_metric_corr(ds, tag)
     fig_ladder(); fig_runtime()

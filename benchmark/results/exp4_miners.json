@@ -1,0 +1,58 @@
+{
+  "D1": {
+    "dataset": "Sepsis",
+    "n_miners": 11,
+    "miners": [
+      "Alpha",
+      "Alpha+",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict",
+      "Inductive_n0.1",
+      "Inductive_n0.3",
+      "Inductive_n0.4",
+      "Heuristics_d0.7",
+      "Heuristics_d0.9"
+    ],
+    "ShadowGen": {
+      "Alpha": 0.2724,
+      "Alpha+": 0.7591,
+      "Heuristics": 0.8834,
+      "Heuristics_Strict": 0.9174,
+      "Inductive_Infrequent": 0.9723,
+      "Inductive_Strict": 0.9838,
+      "Inductive_n0.1": 0.9755,
+      "Inductive_n0.3": 0.9226,
+      "Inductive_n0.4": 0.9226,
+      "Heuristics_d0.7": 0.9238,
+      "Heuristics_d0.9": 0.9305
+    },
+    "R1": {
+      "Alpha": 0.3006,
+      "Alpha+": 0.7955,
+      "Heuristics": 0.8878,
+      "Heuristics_Strict": 0.9234,
+      "Inductive_Infrequent": 0.9682,
+      "Inductive_Strict": 0.9999,
+      "Inductive_n0.1": 0.9929,
+      "Inductive_n0.3": 0.9106,
+      "Inductive_n0.4": 0.907,
+      "Heuristics_d0.7": 0.9153,
+      "Heuristics_d0.9": 0.9159
+    },
+    "pearson": 0.997,
+    "spearman": 0.9066,
+    "mae": 0.0149,
+    "bootstrap": {
+      "pearson_ci95": [
+        0.953,
+        0.999
+      ],
+      "mae_ci95": [
+        0.0098,
+        0.0209
+      ]
+    }
+  }
+}

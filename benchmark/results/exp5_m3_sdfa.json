@@ -1,0 +1,25 @@
+{
+  "relevance_bits": {
+    "Alpha+": 35.149,
+    "Heuristics_Strict": 61.761,
+    "Inductive_Infrequent": 33.349,
+    "Inductive_Strict": 21.909,
+    "Flower": 52.268,
+    "Trace_Filtered": 57.068
+  },
+  "R1": {
+    "Alpha+": 0.829,
+    "Heuristics_Strict": 0.933,
+    "Inductive_Infrequent": 0.985,
+    "Inductive_Strict": 1.0
+  },
+  "spearman_4miners": 0.8,
+  "pearson_4miners": 0.262,
+  "flower_bits": 52.268,
+  "built": "6/8 (4/6 real miners + 2 poles)",
+  "unbuildable": [
+    "Alpha (unbounded, not WF-net)",
+    "Heuristics (>200k markings)"
+  ],
+  "verdict": "fails flower litmus; partial R1 tracking (Heuristics_Strict inverts via low fit); intractable on unbounded nets"
+}

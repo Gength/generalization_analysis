@@ -1,0 +1,49 @@
+{
+  "D1": {
+    "dataset": "Sepsis",
+    "miners": [
+      "Alpha",
+      "Alpha+",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict"
+    ],
+    "R1_align": {
+      "Alpha": 0.186,
+      "Alpha+": NaN,
+      "Heuristics": 0.6654,
+      "Heuristics_Strict": 0.7993,
+      "Inductive_Infrequent": 0.9334,
+      "Inductive_Strict": 0.9998
+    },
+    "R1_replay": {
+      "Alpha": 0.2748,
+      "Alpha+": 0.8293,
+      "Heuristics": 0.9023,
+      "Heuristics_Strict": 0.9329,
+      "Inductive_Infrequent": 0.9846,
+      "Inductive_Strict": 0.9999
+    },
+    "ShadowGen": {
+      "Alpha": 0.2724,
+      "Alpha+": 0.7591,
+      "Heuristics": 0.8787,
+      "Heuristics_Strict": 0.9174,
+      "Inductive_Infrequent": 0.9723,
+      "Inductive_Strict": 0.9838
+    },
+    "ShadowGen_vs_R1align": {
+      "pearson": NaN,
+      "mae": NaN
+    },
+    "ShadowGen_vs_R1replay": {
+      "pearson": 0.9963,
+      "mae": 0.0233
+    },
+    "R1align_vs_R1replay": {
+      "pearson": NaN,
+      "mae": NaN
+    }
+  }
+}
