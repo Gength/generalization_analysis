@@ -77,6 +77,8 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
     npre = "3" if quick else "100"
     nadv = "100" if quick else "5000"
 
+    training_elapsed = 0.0  # populated during training, reused in config
+
     # ── Training + Sampling ──────────────────────────────────────────────
     if eval_only:
         sdir = os.path.join(AVATAR_ABS, "data/avatar/variants")
@@ -107,6 +109,7 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
                             "-s", SYSTEM_NAME, "-j", "0", "-gpu", "0", "-n", "10000"],
                            capture_output=True, text=True)
         elapsed = time.time() - t0
+        training_elapsed = elapsed
         if r.returncode != 0:
             print(f"Training FAILED (exit={r.returncode})")
             # Print last 20 lines of stderr for diagnosis
@@ -217,7 +220,7 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
             "host": "docker", "seed": 42,
             "parameters": {"GAN": "RelGAN", "suffix": suffix, "strategy": "naive",
                            "npre_epochs": npre, "nadv_steps": nadv},
-            "results": {"score": score, "runtime_s": elapsed},
+            "results": {"score": score, "runtime_s": elapsed, "training_time": training_elapsed},
             "notes": "",
         }
         path = os.path.join(output_dir, f"{dname}__{name}__M5{tag}.json")

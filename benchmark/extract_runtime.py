@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """
-Universal result extractor for the Generalization Benchmark (Methodology v2).
+Runtime extractor for the Generalization Benchmark (Methodology v2).
+
+Extracts `runtime_s` from benchmark config JSONs and prints aligned Markdown tables.
 
 Usage:
-    uv run python benchmark/extract_results.py --dataset D3
-    uv run python benchmark/extract_results.py --dataset BPI2017
-    uv run python benchmark/extract_results.py --all
+    uv run python benchmark/extract_runtime.py --dataset D3
+    uv run python benchmark/extract_runtime.py --dataset BPI2017
+    uv run python benchmark/extract_runtime.py --all
+    uv run python benchmark/extract_runtime.py --dataset D3 --results-dir benchmark/results/configs_v2
 
 Output: Markdown table(s) to stdout.
 """
@@ -16,7 +19,6 @@ from pathlib import Path
 
 from tabulate import tabulate
 
-# Import dataset registry
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from benchmark.datasets import DATASETS
 
@@ -24,47 +26,22 @@ _DEFAULT_RESULTS_DIR = Path(__file__).resolve().parent / "results" / "configs"
 
 METHOD_ORDER = [
     "M1a", "M1b", "M1c", "M1d", "M1e", "M1f", "M1g",
-    "M2", "M3", "M5", "M6adapted", "M6original", "M7", "R1", "R2", "R3",
+    "M2", "M3", "M4", "M5", "M6adapted", "M6original", "M7", "R1", "R2", "R3",
 ]
 MINER_ORDER = [
     "Trace_Filtered", "Alpha", "Alpha+", "Heuristics", "Heuristics_Strict",
     "Inductive_Strict", "Inductive_Infrequent", "Flower",
 ]
 
-# For each method, the key under results{} to extract.
-# Methods not listed (e.g. M8) are always filled with "-".
-KEY_MAP = {
-    "M1a": "mean", "M1b": "mean", "M1c": "mean", "M1d": "mean",
-    "M1e": "mean", "M1f": "mean", "M1g": "mean",
-    "M2": "score",
-    "M3": "entropic_relevance_raw",
-    "M4": "gen_score",
-    "M5": "mean",           # fallback to "score" in extraction logic
-    "M6adapted": "gen_score",
-    "M6original": "gen_score",
-    "M7": "gen_score",
-    "R1": "mean", "R2": "mean", "R3": "mean",
-}
-
 
 def resolve_dataset(dataset_arg):
-    """Return (name, ds_key_or_None) for the given CLI argument.
-
-    Accepts:
-      - D-key like 'D3'  -> look up DATASETS dict
-      - Name like 'BPI2017' -> find matching DATASETS entry by 'name' field
-    """
-    # Try as a D-key first
+    """Return (name, ds_key_or_None) for the given CLI argument."""
     if dataset_arg.upper().startswith("D") and dataset_arg.upper() in DATASETS:
         ds_key = dataset_arg.upper()
-        info = DATASETS[ds_key]
-        return info["name"], ds_key
-
-    # Try matching by name (case-insensitive)
+        return DATASETS[ds_key]["name"], ds_key
     for ds_key, info in DATASETS.items():
         if info["name"].lower() == dataset_arg.lower():
             return info["name"], ds_key
-
     raise SystemExit(
         f"Unknown dataset '{dataset_arg}'. "
         f"Use a D-key (D1-D21) or a dataset name "
@@ -73,17 +50,7 @@ def resolve_dataset(dataset_arg):
 
 
 def extract_dataset(results_dir, name, label=None):
-    """Extract results for one dataset and print a Markdown table.
-
-    Parameters
-    ----------
-    results_dir : Path
-        Directory containing the config JSON files.
-    name : str
-        Dataset 'name' field used for file matching (e.g. 'BPI2017').
-    label : str or None
-        Optional section heading (e.g. 'D3 (BPI2017)'). If None, uses *name*.
-    """
+    """Extract runtime_s for one dataset and print an aligned Markdown table."""
     heading = label or name
     files = sorted(results_dir.glob(f"{name}__*.json"))
 
@@ -94,7 +61,6 @@ def extract_dataset(results_dir, name, label=None):
         print()
         return
 
-    # Build a lookup: (miner, method) -> formatted value
     data = {}
     for fpath in files:
         stem = fpath.stem
@@ -104,44 +70,33 @@ def extract_dataset(results_dir, name, label=None):
         _, miner, method = parts
         with open(fpath) as f:
             d = json.load(f)
-        key = KEY_MAP.get(method)
-        if key is None:
-            # Unregistered method -> dash
-            continue
-        try:
-            val = d["results"][key]
-        except KeyError:
-            # M5 fallback: some configs use "score" instead of "mean"
-            if method == "M5" and key == "mean":
-                try:
-                    val = d["results"]["score"]
-                except KeyError:
-                    val = "-"
-            else:
-                val = "-"
-        if isinstance(val, float):
-            val = round(val, 4)
+        rt = d.get("results", {}).get("runtime_s")
+        if rt is None or (isinstance(rt, (int, float)) and rt < 0):
+            val = "-"
+        elif isinstance(rt, (int, float)):
+            val = round(rt, 1)
+        else:
+            val = "-"
         data[(miner, method)] = val
 
-    print(f"### {heading}")
-    print()
-
-    headers = ["Miner"] + METHOD_ORDER
+    headers = ["Miner"] + [f"{m}(s)" for m in METHOD_ORDER]
     rows = []
     for miner in MINER_ORDER:
         rows.append([miner] + [str(data.get((miner, m), "-")) for m in METHOD_ORDER])
 
+    print(f"### {heading}")
+    print()
     print(tabulate(rows, headers=headers, tablefmt="pipe", numalign="right", stralign="left"))
     print()
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Extract benchmark results into Markdown tables.")
+    parser = argparse.ArgumentParser(description="Extract benchmark runtime_s into Markdown tables.")
     parser.add_argument("--results-dir", type=str, default=str(_DEFAULT_RESULTS_DIR),
                         help=f"Results directory (default: {_DEFAULT_RESULTS_DIR})")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--dataset", type=str, help="Dataset key (e.g. D3) or name (e.g. BPI2017)")
-    group.add_argument("--all", action="store_true", help="Extract results for every dataset with results")
+    group.add_argument("--all", action="store_true", help="Extract runtime for every dataset with results")
     args = parser.parse_args()
 
     results_dir = Path(args.results_dir)
@@ -152,12 +107,10 @@ def main():
         extract_dataset(results_dir, name, label=label)
 
     if args.all:
-        # Collect all dataset names that actually have result files
         seen = set()
         for fpath in results_dir.glob("*.json"):
             name = fpath.stem.split("__")[0]
             seen.add(name)
-        # Print in D-key order for consistency
         printed = 0
         for ds_key in sorted(DATASETS.keys()):
             name = DATASETS[ds_key]["name"]

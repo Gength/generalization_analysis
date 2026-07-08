@@ -7,15 +7,18 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --output=benchmark/logs/bench_M5_%j.log
 #
-# M5  AVATAR RelGAN — Docker GPU required (TF 1.15)
+# M5 — AVATAR RelGAN via Docker (TF 1.15 GPU)
 # ─────────────────────────────────────────────────────────────────────────────
+# Prerequisites:
+#   Docker image built: docker build -t avatar-tf1 -f benchmark/docker/Dockerfile.avatar .
+#   GPU + nvidia-container-toolkit required
+#
 # CLI arguments (all optional except --dataset):
 #   --dataset D1..D21          Dataset key (required)
 #   --output <dir>             Output directory (default: /tmp/<workdir>/results/)
 #   --miners Alpha Flower ...  Subset of miners (default: all 8)
 #   --quick                    3 pre-epochs + 100 adv steps (fast demo ~30 min)
 #   --eval-only                Skip training/sampling; reuse existing checkpoint
-#   --tf2                      Use TF2 container (avatar-tf2) instead of TF1
 #
 # Examples:
 #   bash benchmark/shell/m5.sh --dataset D1

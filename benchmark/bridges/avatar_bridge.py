@@ -1,7 +1,6 @@
 """
 AVATAR Bridge — M5 Generalization via RelGAN
-==============================================
-Requires: conda env `avatar-env` (Python 3.6 + TF 1.15 + PM4Py 1.2.6)
+===========================================================
 
 Pipeline:
   1. Convert event log to AVATAR variant format
@@ -180,8 +179,6 @@ print(f"    This may take a while (quick={quick_mode}: ~{NPRE_EPOCHS} pre-epochs
 
 # Modify the training script's parameters by overriding via environment
 train_env = os.environ.copy()
-train_env["AVATAR_NPRE_EPOCHS"] = str(NPRE_EPOCHS)
-train_env["AVATAR_NADV_STEPS"] = str(NADV_STEPS)
 train_env["AVATAR_BATCH_SIZE"] = "8"   # Reduced to avoid GPU OOM (seq_len=182 from real sepsis)
 train_env["AVATAR_GEN_EMB_DIM"] = "16"  # Reduced from 32 to save GPU memory
 train_env["AVATAR_DIS_EMB_DIM"] = "32"  # Reduced from 64
@@ -226,8 +223,8 @@ if suffix is None:
             env=train_env,
             cwd=AVATAR_DIR
         )
-        training_time = time.time() - t0
-        print(f"    Training completed in {training_time:.1f}s")
+        pipeline_time = time.time() - t0
+        print(f"    Training pipeline completed in {pipeline_time:.1f}s")
         # Find the latest suffix (epoch) from output
         suffix = "5000"  # default: use last adversarial step
         print(f"    Using suffix={suffix}")
