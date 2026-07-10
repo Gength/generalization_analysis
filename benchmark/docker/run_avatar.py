@@ -11,7 +11,7 @@ PROJ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 
 
 def docker_kill_all():
-    for img in ["avatar-tf1", "avatar-tf2"]:
+    for img in ["avatar-tf1"]:
         try:
             out = subprocess.run(["docker", "ps", "-q", "--filter", f"ancestor={img}"],
                                  capture_output=True, text=True, timeout=10)
@@ -22,8 +22,8 @@ def docker_kill_all():
             pass
 
 
-def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
-        eval_only=False, miners=None):
+def run(dataset_key, workdir, output_dir, quick=False,
+        eval_only=False, miners=None, n_runs=2):
     """Run M5. Reads XES from workdir, uses AVATAR source for Docker, writes configs."""
     mp = os.path.join(workdir, "manifest.json")
     if os.path.exists(mp):
@@ -35,8 +35,8 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
         ctx = prepare_workdir(workdir, dataset_key, copy_xes=True)
         dname, xes_path = ctx["dataset_name"], ctx["xes_path"]
 
-    DOCKER_IMAGE = "avatar-tf2" if tf2 else "avatar-tf1"
-    AVATAR_DIR = "src/AVATAR_tf2" if tf2 else "src/AVATAR"
+    DOCKER_IMAGE = "avatar-tf1"
+    AVATAR_DIR = "src/AVATAR"
     AVATAR_ABS = os.path.join(PROJ, AVATAR_DIR)
 
     from datasets import DATASETS
@@ -103,7 +103,7 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
                             "-w", "/workspace/src/AVATAR",
                             "-e", f"AVATAR_NPRE_EPOCHS={npre}",
                             "-e", f"AVATAR_NADV_STEPS={nadv}",
-                            "-e", f"AVATAR_BATCH_SIZE={os.environ.get('AVATAR_BATCH_SIZE', '8' if tf2 else '16')}", "-e", "CUDA_VISIBLE_DEVICES=0",
+                            "-e", f"AVATAR_BATCH_SIZE={os.environ.get('AVATAR_BATCH_SIZE', '16')}", "-e", "CUDA_VISIBLE_DEVICES=0",
                             "-e", "TF_GPU_ALLOCATOR=cuda_malloc_async",
                             DOCKER_IMAGE, "python", "-u", "-m", "avatar.training",
                             "-s", SYSTEM_NAME, "-j", "0", "-gpu", "0", "-n", "10000"],
@@ -112,10 +112,8 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
         training_elapsed = elapsed
         if r.returncode != 0:
             print(f"Training FAILED (exit={r.returncode})")
-            # Print last 20 lines of stderr for diagnosis
             stderr_lines = r.stderr.strip().split('\n')
             print('\n'.join(stderr_lines[-20:]))
-            # Don't continue to sampling
             return
         print(f"Training done ({elapsed:.0f}s)")
 
@@ -128,6 +126,7 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
         print(f"Checkpoint: suffix={suffix}")
 
         print("Sampling...")
+        t_samp = time.time()
         docker_kill_all()
         r2 = subprocess.run(["docker", "run", "--rm", "--gpus", "all", "--ipc=host",
                              "-v", f"{AVATAR_ABS}:/workspace/src/AVATAR",
@@ -142,7 +141,7 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
             stderr_lines = r2.stderr.strip().split('\n')
             print('\n'.join(stderr_lines[-20:]))
             return
-        print("Sampling done")
+        print(f"Sampling done ({time.time()-t_samp:.0f}s)")
         samp_path = os.path.join(AVATAR_ABS, f"data/avatar/variants/{SYSTEM_NAME}_relgan_{suffix}_j0_naive.txt")
         if not os.path.exists(samp_path):
             print(f"WARNING: sampling output not found at {samp_path}")
@@ -182,7 +181,7 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
     target = [(n, f) for n, f in all_miners if miners is None or n in miners]
 
     os.makedirs(output_dir, exist_ok=True)
-    tag = "_TF2" if tf2 else ""
+    t_gen = time.time()
     for name, fn in target:
         print(f"\n[{name}] ", end="", flush=True)
         try:
@@ -223,12 +222,12 @@ def run(dataset_key, workdir, output_dir, quick=False, tf2=False,
             "results": {"score": score, "runtime_s": elapsed, "training_time": training_elapsed},
             "notes": "",
         }
-        path = os.path.join(output_dir, f"{dname}__{name}__M5{tag}.json")
+        path = os.path.join(output_dir, f"{dname}__{name}__M5.json")
         with open(path, "w") as f:
             json.dump(cfg, f, indent=2)
         print(f"{'✅' if score>=0 else '❌'} score={score:.4f} ({elapsed:.0f}s)")
 
-    print(f"\nDone → {output_dir}/")
+    print(f"\nGeneralization done ({time.time()-t_gen:.0f}s) → {output_dir}/")
 
 
 def main():
@@ -238,7 +237,6 @@ def main():
     ap.add_argument("--miners", nargs="*", default=None)
     ap.add_argument("--eval-only", action="store_true")
     ap.add_argument("--quick", action="store_true")
-    ap.add_argument("--tf2", action="store_true")
     args = ap.parse_args()
 
     import shutil, secrets
@@ -247,7 +245,7 @@ def main():
     output_dir = args.output or os.path.join(workdir, "results")
     os.makedirs(output_dir, exist_ok=True)
 
-    run(args.dataset, workdir, output_dir, quick=args.quick, tf2=args.tf2,
+    run(args.dataset, workdir, output_dir, quick=args.quick,
         eval_only=args.eval_only, miners=args.miners)
     shutil.rmtree(workdir)
     print(f"  [clean] removed {workdir}")

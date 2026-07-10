@@ -72,6 +72,7 @@ See [benchmark/README.md](benchmark/README.md) — full benchmark command refere
 - **Dataset registry** in `benchmark/datasets.py` — the canonical definition of dataset names and paths. All benchmark scripts import from here; never define inline `DATASETS` dicts.
 - files labeled "teammate" are primarily authored by other teammate, should not be edited without permission, reference only; files labeled "coauthored" are jointly authored and can be edited by either teammate with proper care and communication.
 - Read `BenchmarkDesign.md` and `BenchmarkGuide.md` for detailed instructions on running benchmarks, handling data, and reporting results. The benchmark has strict requirements to ensure data integrity and experiment validity.
+- **⚠️ Before running any script under `benchmark/`, you MUST read [`benchmark/README.md`](benchmark/README.md).** It defines the output policy (`benchmark/results/configs_v2/` is the mandatory staging area), the job model, dataset quick-index, JSON key mapping per method, extraction commands, gotchas, and experiment safety rules. Skipping this document will cause misrouted output and data inconsistency.
 - All project documentation should be written in English.
 
 ## Benchmark quick-index

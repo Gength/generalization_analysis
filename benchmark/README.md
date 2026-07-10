@@ -52,16 +52,19 @@ the output destination.
 - `extract_results.py` — universal result extractor: `--dataset D3` or `--all`, outputs Markdown table
 - `extract_runtime.py` — runtime extraction utility
 - `results/`
-  - `configs/` — legacy benchmark config JSONs
-  - `configs_v2/` — current benchmark config JSONs (`{Dataset}__{Miner}__{Method}.json`)
+  - `configs/` — **formal archive** of finalized benchmark results. Once results are
+    validated and accepted, they are moved here. Do not write directly to this folder
+    from job scripts.
+  - `configs_v2/` — **temporary staging area** for benchmark experiment output.
+    Each run produces slightly different results; all method output goes here first
+    (`{Dataset}__{Miner}__{Method}.json`). After validation, results are promoted to
+    `configs/`. All shell scripts in `shell/` default `--output` to this directory.
   - `version_comparison_D1.csv`, `version_comparison_D2.csv` — multi-seed version comparison results
   - `alignment_spotcheck.json`, `generator_validation.json` — spot-check / validation outputs
 
-### Models (legacy)
+### Models (cached)
 
-- `models/` — pre-discovered PNML models for D1–D4 (Alpha, Alpha+, Flower, Heuristics,
-  Heuristics_Strict, Inductive_Infrequent, Inductive_Strict, Trace_Filtered).
-  **Legacy** — self-contained jobs prepare models in `/tmp`.
+- `models/` — pre-discovered PNML models on datasets to accelerate metrics. 
 
 ### Shell runners
 

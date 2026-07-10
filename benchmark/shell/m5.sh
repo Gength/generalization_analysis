@@ -17,20 +17,22 @@
 #   --dataset D1..D21          Dataset key (required)
 #   --output <dir>             Output directory (default: /tmp/<workdir>/results/)
 #   --miners Alpha Flower ...  Subset of miners (default: all 8)
-#   --quick                    3 pre-epochs + 100 adv steps (fast demo ~30 min)
 #   --eval-only                Skip training/sampling; reuse existing checkpoint
+#   AVATAR_BATCH_SIZE=64        GAN batch size for training (default: 16; override via env)
 #
 # Examples:
 #   bash benchmark/shell/m5.sh --dataset D1
-#   bash benchmark/shell/m5.sh --dataset D1 --quick              # fast demo
 #   bash benchmark/shell/m5.sh --dataset D1 --eval-only           # reuse checkpoint
 #   bash benchmark/shell/m5.sh --dataset D1 --output benchmark/results/configs_v2
+#   AVATAR_BATCH_SIZE=32 bash benchmark/shell/m5.sh --dataset D1  # reduced memory
 # ─────────────────────────────────────────────────────────────────────────────
 
 set -eo pipefail
 export TMPDIR=/tmp
 export PATH="$HOME/.local/bin:$PATH"
 export PYTHONHASHSEED=0
+# To override batch size, set AVATAR_BATCH_SIZE env var (default: 16, matching 16a1a1e pipeline).
+# Example: AVATAR_BATCH_SIZE=64 bash benchmark/shell/m5.sh --dataset D1
 
 # ── Miner configuration ──────────────────────────────────────────────────────
 # Edit this array to subset miners for a run.

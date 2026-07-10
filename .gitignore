@@ -11,6 +11,6 @@ reasonix.toml
 benchmark/models/
 .codegraph/
 archive/src_deps/
-ExecutionSummary.md
 # large regenerable input log copied beside SDFA results (Exp5, Entropia input)
 benchmark/results/sdfa/*.xes
+benchmark/results/configs_v2/

@@ -9,14 +9,17 @@ ap = argparse.ArgumentParser(description="M5 job")
 ap.add_argument("--dataset", required=True); ap.add_argument("--output", default=None)
 ap.add_argument("--miners", nargs="*", default=None)
 ap.add_argument("--eval-only", action="store_true"); ap.add_argument("--quick", action="store_true")
+ap.add_argument("--n-runs", type=int, default=2,
+                help="Number of sampling runs (default=2 for mean±std)")
 args = ap.parse_args()
 from datasets import DATASETS
 ds_name = DATASETS[args.dataset]["name"]
 miner_list = ", ".join(args.miners) if args.miners else "all 8"
 mode = "EVAL-ONLY" if args.eval_only else ("QUICK" if args.quick else "FULL")
-print(f"[M5] {args.dataset} ({ds_name}) | miners: {miner_list} | mode: {mode}")
+print(f"[M5] {args.dataset} ({ds_name}) | miners: {miner_list} | mode: {mode} | n_runs: {args.n_runs}")
 workdir = f"/tmp/benchmark_M5_{args.dataset}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{secrets.token_hex(4)}/"
 output_dir = args.output or os.path.join(workdir, "results"); os.makedirs(output_dir, exist_ok=True)
 prepare_workdir(workdir, args.dataset, copy_xes=True)
-run(args.dataset, workdir, output_dir, quick=args.quick, eval_only=args.eval_only, miners=args.miners)
+run(args.dataset, workdir, output_dir, quick=args.quick, eval_only=args.eval_only,
+    miners=args.miners, n_runs=args.n_runs)
 shutil.rmtree(workdir); print(f"  [clean] removed {workdir}")
