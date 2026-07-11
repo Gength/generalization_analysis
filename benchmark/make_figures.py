@@ -492,11 +492,13 @@ DS_MARKS = {"D1": ("o", "#378ADD"), "D2": ("s", "#1D9E75"), "D3": ("^", "#9673a6
             "D4": ("D", "#E8943A"), "D5": ("v", "#b8403e")}
 
 def _method_cover(meth):
-    """Datasets on which `meth` has valid scores over the six real miners."""
+    """Datasets on which `meth` has enough scored miners (>=3 of the six real
+    miners) to enter a per-log MAE. Same threshold as the pareto's mae_stats, so
+    the coverage label matches the plotted accuracy basis."""
     out = []
     for d, ds in DS5:
         vals = col(ds, meth)
-        if not np.all(np.isnan(vals)):
+        if np.sum(~np.isnan(vals)) >= 3:
             out.append((d, ds))
     return out
 
@@ -583,6 +585,7 @@ def fig_pareto_scale():
            ("M2 PM4Py", "M2", "work", None, 8, 8, "left"),
            ("M7 SpeciAL", "M7", "work", None, 8, -11, "left"),
            ("M6adapted", "M6adapted", "work", None, 8, -14, "left"),
+           ("M9 neg-events", "M9", "fail", None, 9, 3, "left"),
            ("M6original -bgen", "M6original", "fail", None, -8, 6, "right"),
            ("M5 AVATAR", "M5", "slow", AVATAR_ANCHOR_S, -8, 4, "right")]
     cmap = {"ours": "#1D9E75", "work": "#378ADD", "slow": "#E8943A",

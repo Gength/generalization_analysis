@@ -1,0 +1,16 @@
+{
+ "dataset": "BPI2013_Incidents",
+ "miner": "Heuristics_Strict",
+ "method": "M9",
+ "method_label": "Weighted Negative Events (CoBeFra)",
+ "host": "cibox",
+ "seed": 42,
+ "parameters": {
+  "config": "cobefra"
+ },
+ "results": {
+  "score": 1.0,
+  "runtime_s": 1.94
+ },
+ "notes": "converted from m9_negative_events.jsonl"
+}

@@ -1,0 +1,16 @@
+{
+ "dataset": "BPI2017",
+ "miner": "Flower",
+ "method": "M9",
+ "method_label": "Weighted Negative Events (CoBeFra)",
+ "host": "cibox",
+ "seed": 42,
+ "parameters": {
+  "config": "cobefra"
+ },
+ "results": {
+  "score": 0.499219,
+  "runtime_s": 899.9
+ },
+ "notes": "converted from m9_negative_events.jsonl"
+}

@@ -1,0 +1,16 @@
+{
+ "dataset": "Sepsis",
+ "miner": "Inductive_Strict",
+ "method": "M9",
+ "method_label": "Weighted Negative Events (CoBeFra)",
+ "host": "cibox",
+ "seed": 42,
+ "parameters": {
+  "config": "cobefra"
+ },
+ "results": {
+  "score": 0.19243,
+  "runtime_s": 37.0
+ },
+ "notes": "converted from m9_negative_events.jsonl"
+}

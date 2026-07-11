@@ -1,0 +1,16 @@
+{
+ "dataset": "Sepsis",
+ "miner": "Trace_Filtered",
+ "method": "M9",
+ "method_label": "Weighted Negative Events (CoBeFra)",
+ "host": "cibox",
+ "seed": 42,
+ "parameters": {
+  "config": "cobefra"
+ },
+ "results": {
+  "score": 0.484643,
+  "runtime_s": 522.02
+ },
+ "notes": "converted from m9_negative_events.jsonl"
+}

@@ -1,0 +1,340 @@
+{
+ "D1": [
+  {
+   "dataset": "Sepsis",
+   "miner": "Trace_Filtered",
+   "k1_s": 3.832,
+   "k1_mean": 0.6031,
+   "k5_s": 19.285,
+   "k5_mean": 0.5998,
+   "ratio": 5.03
+  },
+  {
+   "dataset": "Sepsis",
+   "miner": "Alpha",
+   "k1_s": 0.619,
+   "k1_mean": 0.2723,
+   "k5_s": 3.489,
+   "k5_mean": 0.2724,
+   "ratio": 5.64
+  },
+  {
+   "dataset": "Sepsis",
+   "miner": "Alpha+",
+   "k1_s": 0.734,
+   "k1_mean": 0.7643,
+   "k5_s": 3.871,
+   "k5_mean": 0.7591,
+   "ratio": 5.27
+  },
+  {
+   "dataset": "Sepsis",
+   "miner": "Heuristics",
+   "k1_s": 1.457,
+   "k1_mean": 0.8815,
+   "k5_s": 7.194,
+   "k5_mean": 0.8834,
+   "ratio": 4.94
+  },
+  {
+   "dataset": "Sepsis",
+   "miner": "Heuristics_Strict",
+   "k1_s": 1.354,
+   "k1_mean": 0.9182,
+   "k5_s": 6.75,
+   "k5_mean": 0.9174,
+   "ratio": 4.99
+  },
+  {
+   "dataset": "Sepsis",
+   "miner": "Inductive_Strict",
+   "k1_s": 1.254,
+   "k1_mean": 0.9863,
+   "k5_s": 6.363,
+   "k5_mean": 0.9838,
+   "ratio": 5.07
+  },
+  {
+   "dataset": "Sepsis",
+   "miner": "Inductive_Infrequent",
+   "k1_s": 1.06,
+   "k1_mean": 0.9741,
+   "k5_s": 5.282,
+   "k5_mean": 0.9723,
+   "ratio": 4.98
+  },
+  {
+   "dataset": "Sepsis",
+   "miner": "Flower",
+   "k1_s": 0.653,
+   "k1_mean": 1.0,
+   "k5_s": 3.509,
+   "k5_mean": 1.0,
+   "ratio": 5.37
+  }
+ ],
+ "D2": [
+  {
+   "dataset": "BPI2013_Incidents",
+   "miner": "Trace_Filtered",
+   "k1_s": 2.017,
+   "k1_mean": 0.6491,
+   "k5_s": 10.066,
+   "k5_mean": 0.6474,
+   "ratio": 4.99
+  },
+  {
+   "dataset": "BPI2013_Incidents",
+   "miner": "Alpha",
+   "k1_s": 0.402,
+   "k1_mean": 0.2543,
+   "k5_s": 2.055,
+   "k5_mean": 0.2572,
+   "ratio": 5.11
+  },
+  {
+   "dataset": "BPI2013_Incidents",
+   "miner": "Alpha+",
+   "k1_s": 0.422,
+   "k1_mean": 0.6353,
+   "k5_s": 1.786,
+   "k5_mean": 0.6301,
+   "ratio": 4.23
+  },
+  {
+   "dataset": "BPI2013_Incidents",
+   "miner": "Heuristics",
+   "k1_s": 0.637,
+   "k1_mean": 0.9936,
+   "k5_s": 2.869,
+   "k5_mean": 0.9935,
+   "ratio": 4.5
+  },
+  {
+   "dataset": "BPI2013_Incidents",
+   "miner": "Heuristics_Strict",
+   "k1_s": 0.532,
+   "k1_mean": 0.998,
+   "k5_s": 2.883,
+   "k5_mean": 0.9978,
+   "ratio": 5.42
+  },
+  {
+   "dataset": "BPI2013_Incidents",
+   "miner": "Inductive_Strict",
+   "k1_s": 0.635,
+   "k1_mean": 1.0,
+   "k5_s": 3.212,
+   "k5_mean": 1.0,
+   "ratio": 5.06
+  },
+  {
+   "dataset": "BPI2013_Incidents",
+   "miner": "Inductive_Infrequent",
+   "k1_s": 0.545,
+   "k1_mean": 0.991,
+   "k5_s": 2.853,
+   "k5_mean": 0.9907,
+   "ratio": 5.23
+  },
+  {
+   "dataset": "BPI2013_Incidents",
+   "miner": "Flower",
+   "k1_s": 0.33,
+   "k1_mean": 1.0,
+   "k5_s": 1.774,
+   "k5_mean": 1.0,
+   "ratio": 5.38
+  }
+ ],
+ "D5": [
+  {
+   "dataset": "BPI2019",
+   "miner": "Trace_Filtered",
+   "k1_s": 3.8,
+   "k1_mean": 0.5455,
+   "k5_s": 19.637,
+   "k5_mean": 0.5519,
+   "ratio": 5.17
+  },
+  {
+   "dataset": "BPI2019",
+   "miner": "Alpha",
+   "k1_s": 2.873,
+   "k1_mean": 0.357,
+   "k5_s": 15.566,
+   "k5_mean": 0.3679,
+   "ratio": 5.42
+  },
+  {
+   "dataset": "BPI2019",
+   "miner": "Alpha+",
+   "k1_s": 3.161,
+   "k1_mean": 0.334,
+   "k5_s": 17.197,
+   "k5_mean": 0.3259,
+   "ratio": 5.44
+  },
+  {
+   "dataset": "BPI2019",
+   "miner": "Heuristics",
+   "k1_s": 5.844,
+   "k1_mean": 0.8381,
+   "k5_s": 28.981,
+   "k5_mean": 0.837,
+   "ratio": 4.96
+  },
+  {
+   "dataset": "BPI2019",
+   "miner": "Heuristics_Strict",
+   "k1_s": 5.817,
+   "k1_mean": 0.8949,
+   "k5_s": 29.319,
+   "k5_mean": 0.897,
+   "ratio": 5.04
+  },
+  {
+   "dataset": "BPI2019",
+   "miner": "Inductive_Strict",
+   "k1_s": 4.684,
+   "k1_mean": 0.9964,
+   "k5_s": 24.64,
+   "k5_mean": 0.9958,
+   "ratio": 5.26
+  },
+  {
+   "dataset": "BPI2019",
+   "miner": "Inductive_Infrequent",
+   "k1_s": 3.545,
+   "k1_mean": 0.964,
+   "k5_s": 17.518,
+   "k5_mean": 0.9617,
+   "ratio": 4.94
+  },
+  {
+   "dataset": "BPI2019",
+   "miner": "Flower",
+   "k1_s": 4.009,
+   "k1_mean": 1.0,
+   "k5_s": 14.073,
+   "k5_mean": 1.0,
+   "ratio": 3.51
+  }
+ ],
+ "D3": [
+  {
+   "dataset": "BPI2017",
+   "miner": "Trace_Filtered",
+   "k1_s": 28.424,
+   "k1_mean": 0.6153,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2017",
+   "miner": "Alpha",
+   "k1_s": 4.799,
+   "k1_mean": 0.3881,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2017",
+   "miner": "Alpha+",
+   "k1_s": 4.558,
+   "k1_mean": 0.8583,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2017",
+   "miner": "Heuristics",
+   "k1_s": 6.48,
+   "k1_mean": 0.9515,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2017",
+   "miner": "Heuristics_Strict",
+   "k1_s": 6.338,
+   "k1_mean": 0.9606,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2017",
+   "miner": "Inductive_Strict",
+   "k1_s": 7.045,
+   "k1_mean": 0.9995,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2017",
+   "miner": "Inductive_Infrequent",
+   "k1_s": 6.801,
+   "k1_mean": 0.9761,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2017",
+   "miner": "Flower",
+   "k1_s": 4.766,
+   "k1_mean": 1.0,
+   "ratio": null
+  }
+ ],
+ "D4": [
+  {
+   "dataset": "BPI2018",
+   "miner": "Trace_Filtered",
+   "k1_s": 64.798,
+   "k1_mean": 0.5661,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2018",
+   "miner": "Alpha",
+   "k1_s": 11.5,
+   "k1_mean": 0.2194,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2018",
+   "miner": "Alpha+",
+   "k1_s": 11.69,
+   "k1_mean": 0.6017,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2018",
+   "miner": "Heuristics",
+   "k1_s": 22.96,
+   "k1_mean": 0.8738,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2018",
+   "miner": "Heuristics_Strict",
+   "k1_s": 22.903,
+   "k1_mean": 0.9316,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2018",
+   "miner": "Inductive_Strict",
+   "k1_s": 440.589,
+   "k1_mean": 0.9756,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2018",
+   "miner": "Inductive_Infrequent",
+   "k1_s": 13.843,
+   "k1_mean": 0.9699,
+   "ratio": null
+  },
+  {
+   "dataset": "BPI2018",
+   "miner": "Flower",
+   "k1_s": 11.236,
+   "k1_mean": 1.0,
+   "ratio": null
+  }
+ ]
+}

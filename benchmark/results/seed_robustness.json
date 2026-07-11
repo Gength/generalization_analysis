@@ -1,0 +1,93 @@
+{
+ "cell_std_median_all": 0.0012,
+ "cell_std_p90_all": 0.0064,
+ "cell_std_max_all": 0.0078,
+ "note": "each of the 5 raw_iterations is an independent 1000-trace draw; single-draw = K=1, the shipped default; 5-draw mean = K=5, benchmarked.",
+ "per_log": {
+  "L1": {
+   "cell_std_median": 0.0019,
+   "cell_std_max": 0.0053,
+   "pearson_5iter_mean": 0.9963,
+   "pearson_per_draw_min": 0.9957,
+   "pearson_per_draw_max": 0.997,
+   "pearson_per_draw_std": 0.0005,
+   "mae_per_draw_min": 0.0216,
+   "mae_per_draw_max": 0.0259,
+   "spearman_per_draw": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "L2": {
+   "cell_std_median": 0.0005,
+   "cell_std_max": 0.0078,
+   "pearson_5iter_mean": 0.994,
+   "pearson_per_draw_min": 0.9916,
+   "pearson_per_draw_max": 0.9957,
+   "pearson_per_draw_std": 0.0015,
+   "mae_per_draw_min": 0.0164,
+   "mae_per_draw_max": 0.0226,
+   "spearman_per_draw": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "L3": {
+   "cell_std_median": 0.0006,
+   "cell_std_max": 0.0016,
+   "pearson_5iter_mean": 0.9992,
+   "pearson_per_draw_min": 0.9991,
+   "pearson_per_draw_max": 0.9994,
+   "pearson_per_draw_std": 0.0001,
+   "mae_per_draw_min": 0.0063,
+   "mae_per_draw_max": 0.0069,
+   "spearman_per_draw": [
+    0.943,
+    0.943,
+    0.943,
+    0.943,
+    0.943
+   ]
+  },
+  "L4": {
+   "cell_std_median": 0.0007,
+   "cell_std_max": 0.0045,
+   "pearson_5iter_mean": 0.9992,
+   "pearson_per_draw_min": 0.9987,
+   "pearson_per_draw_max": 0.9994,
+   "pearson_per_draw_std": 0.0003,
+   "mae_per_draw_min": 0.0152,
+   "mae_per_draw_max": 0.0175,
+   "spearman_per_draw": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  "L5": {
+   "cell_std_median": 0.0016,
+   "cell_std_max": 0.0076,
+   "pearson_5iter_mean": 0.9859,
+   "pearson_per_draw_min": 0.9829,
+   "pearson_per_draw_max": 0.9891,
+   "pearson_per_draw_std": 0.0023,
+   "mae_per_draw_min": 0.0397,
+   "mae_per_draw_max": 0.0466,
+   "spearman_per_draw": [
+    0.943,
+    0.943,
+    0.943,
+    0.943,
+    0.943
+   ]
+  }
+ }
+}
