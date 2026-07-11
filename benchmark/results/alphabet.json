@@ -1,0 +1,86 @@
+{
+ "D1": {
+  "name": "Sepsis",
+  "n_activities": 16
+ },
+ "D2": {
+  "name": "BPI2013_Incidents",
+  "n_activities": 4
+ },
+ "D3": {
+  "name": "BPI2017",
+  "n_activities": 26
+ },
+ "D4": {
+  "name": "BPI2018",
+  "n_activities": 41
+ },
+ "D5": {
+  "name": "BPI2019",
+  "n_activities": 42
+ },
+ "D6": {
+  "name": "BPI2013_Problem_Open",
+  "n_activities": 3
+ },
+ "D7": {
+  "name": "BPI2013_Problem_Closed",
+  "n_activities": 4
+ },
+ "D8": {
+  "name": "BPI2015_Municipality_2",
+  "n_activities": 410
+ },
+ "D9": {
+  "name": "BPI2015_Municipality_4",
+  "n_activities": 356
+ },
+ "D10": {
+  "name": "BPI2015_Municipality_1",
+  "n_activities": 398
+ },
+ "D11": {
+  "name": "BPI2011_Hospital",
+  "n_activities": 624
+ },
+ "D12": {
+  "name": "BPI2015_Municipality_5",
+  "n_activities": 389
+ },
+ "D13": {
+  "name": "BPI2015_Municipality_3",
+  "n_activities": 383
+ },
+ "D14": {
+  "name": "BPI2020_PrepaidTravel",
+  "n_activities": 29
+ },
+ "D15": {
+  "name": "BPI2020_InternationalDecl",
+  "n_activities": 34
+ },
+ "D16": {
+  "name": "BPI2020_RequestForPayment",
+  "n_activities": 19
+ },
+ "D17": {
+  "name": "BPI2020_PermitLog",
+  "n_activities": 51
+ },
+ "D18": {
+  "name": "BPI2020_DomesticDecl",
+  "n_activities": 17
+ },
+ "D19": {
+  "name": "BPI2012",
+  "n_activities": 24
+ },
+ "D20": {
+  "name": "Hospital_Billing",
+  "n_activities": 18
+ },
+ "D21": {
+  "name": "Road_Traffic_Fine",
+  "n_activities": 11
+ }
+}

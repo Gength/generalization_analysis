@@ -30,6 +30,13 @@ CFG_V2 = "benchmark/results/configs"
 OUT = "report/figures"
 os.makedirs(OUT, exist_ok=True)
 
+# AVATAR cost anchor: full published config (100 pre-epochs, 5000 adversarial
+# steps) projected from the measured D1 CPU anchor (45.11 s/adv-step, 88 min
+# for the reduced config; see results/avatar_rebuild/quick_anchor_timing.json).
+# 302400 s = 3.5 days wall per log on benchmark-class CPU. Supersedes the
+# unbacked 14400 s (4 h, GPU, partner-provenance) anchor.
+AVATAR_ANCHOR_S = 302400.0
+
 MINERS7 = ["Alpha", "Alpha+", "Heuristics", "Heuristics_Strict",
            "Inductive_Infrequent", "Inductive_Strict", "Flower"]
 MINERS8 = ["Trace_Filtered"] + MINERS7
@@ -97,17 +104,18 @@ def plot_heatmap(M, rows, cols, cmap, vmin, vmax, fmt, out, cbar_label):
 
 def plot_grouped_bars(rows, fit, acc, out):
     x = np.arange(len(rows)); w = 0.38
-    fig, ax = plt.subplots(figsize=(7.2, 3.2))
+    fig, ax = plt.subplots(figsize=(6.6, 3.0))
     b1 = ax.bar(x - w/2, fit, w, label="Fitness (graded)", color="#378ADD")
     b2 = ax.bar(x + w/2, acc, w, label="Acceptance (strict)", color="#1D9E75")
-    ax.set_xticks(x); ax.set_xticklabels(rows, rotation=30, ha="right", fontsize=8)
-    ax.set_ylabel("score", fontsize=9); ax.set_ylim(0, 1.12)
-    ax.legend(fontsize=8, frameon=False, ncol=2, loc="upper left")
+    ax.set_xticks(x); ax.set_xticklabels(rows, rotation=30, ha="right", fontsize=10)
+    ax.set_ylabel("score", fontsize=11); ax.set_ylim(0, 1.12)
+    ax.tick_params(axis="y", labelsize=10)
+    ax.legend(fontsize=10, frameon=False, ncol=2, loc="upper left")
     for bars in (b1, b2):
         for bar in bars:
             h = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2, h + 0.015, f"{h:.2f}",
-                    ha="center", va="bottom", fontsize=6.5)
+                    ha="center", va="bottom", fontsize=8)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout(); fig.savefig(out, bbox_inches="tight"); plt.close(fig)
 
@@ -140,28 +148,45 @@ def fig_landscape(ds, tag):
                  out=f"{OUT}/fig_landscape_{tag}.pdf", cbar_label="generalization score")
 
 def fig_calibration_v2(ds, tag):
-    """Single-version calibration small-multiples: the final metric plus the five
-    external readings (v1 panel replaced by the published Entropia -bgen F1).
-    Written to fig_calibration_<tag>v2.pdf so the original figure stays intact."""
-    r1 = col(ds, "R1")
-    panels = [("ShadowGen (ours)", "M1g"), ("PM4Py", "M2"), ("AVATAR", "M5"),
-              ("Bootstrap adapted", "M6adapted"), ("Entropia -bgen", "M6original"), ("SpeciAL", "M7")]
-    fig, axes = plt.subplots(2, 3, figsize=(7.4, 5.0), sharex=True, sharey=True)
+    """Cross-paradigm calibration across ALL FIVE logs, one panel per metric.
+    Each panel plots the metric vs R1 over the six non-degenerate miners of every
+    log (up to 30 points), marked by log. This subsumes the former single-log
+    panel and the M1-only scale scatter (fig_calibration_scale). AVATAR shows only
+    its off-protocol L1/L2 points, which is itself the feasibility story: metrics
+    that could not run on every log appear with fewer points."""
+    from matplotlib.lines import Line2D
+    MARKS = {"D1": ("o", "#378ADD"), "D2": ("s", "#1D9E75"), "D3": ("^", "#9673a6"),
+             "D4": ("D", "#E8943A"), "D5": ("v", "#b8403e")}
+    panels = [("M1 ShadowGen (ours)", "M1g"), ("M2 PM4Py", "M2"), ("M5 AVATAR", "M5"),
+              ("M6adapted", "M6adapted"), ("M6original -bgen", "M6original"), ("M7 SpeciAL", "M7")]
+    fig, axes = plt.subplots(2, 3, figsize=(7.4, 5.2), sharex=True, sharey=True)
     for ax, (name, meth) in zip(axes.ravel(), panels):
-        y = col(ds, meth)
         ax.plot([0, 1], [0, 1], ls="--", c="0.6", lw=1, zorder=1)
-        ax.scatter(r1, y, c="#378ADD", s=30, zorder=3, edgecolor="white", linewidth=0.6)
-        mae = np.nanmean(np.abs(y - r1))
-        ax.set_title(f"{name}  (MAE {mae:.3f})", fontsize=9)
+        xs, ys = [], []
+        for d, dsname in DS5:
+            r1 = col(dsname, "R1"); y = col(dsname, meth)
+            mk, c = MARKS[d]
+            ax.scatter(r1, y, marker=mk, s=22, color=c, edgecolor="white",
+                       linewidth=0.35, zorder=3, alpha=0.9)
+            m = ~(np.isnan(r1) | np.isnan(y))
+            xs.append(np.asarray(r1)[m]); ys.append(np.asarray(y)[m])
+        xs = np.concatenate(xs) if xs else np.array([])
+        ys = np.concatenate(ys) if ys else np.array([])
+        mae = float(np.mean(np.abs(ys - xs))) if xs.size else float("nan")
+        ax.set_title(f"{name}  (MAE {mae:.3f})", fontsize=10.5)
         ax.set_xlim(0, 1.05); ax.set_ylim(0, 1.05); ax.set_aspect("equal")
-        ax.tick_params(labelsize=7)
+        ax.tick_params(labelsize=8.5)
     for ax in axes[-1]:
-        ax.set_xlabel("R1 cross-validation fitness", fontsize=8)
+        ax.set_xlabel("R1 cross-validation fitness", fontsize=9.5)
     for ax in axes[:, 0]:
-        ax.set_ylabel("metric score", fontsize=8)
-    fig.suptitle("Calibration against held-out ground truth (six real miners; on the dashed line = perfect)",
-                 fontsize=9)
-    fig.tight_layout(rect=[0, 0, 1, 0.96])
+        ax.set_ylabel("metric score", fontsize=9.5)
+    handles = [Line2D([0], [0], marker=MARKS[d][0], color="w", markerfacecolor=MARKS[d][1],
+                      markeredgecolor="white", markersize=7, label=f"L{d[1]}") for d, _ in DS5]
+    fig.legend(handles=handles, loc="upper center", ncol=5, fontsize=9,
+               frameon=False, bbox_to_anchor=(0.5, 0.945))
+    fig.suptitle("Calibration against R1 across all five logs (six non-degenerate miners; on the dashed line = perfect)",
+                 fontsize=10, y=0.995)
+    fig.tight_layout(rect=[0, 0, 1, 0.90])
     fig.savefig(f"{OUT}/fig_calibration_{tag}v2.pdf", bbox_inches="tight"); plt.close(fig)
 
 def fig_mae(ds, tag):
@@ -285,9 +310,9 @@ def fig_calibration_scale():
         mk, c = MARKS[d]
         ax.scatter(r1[mask], mg[mask], marker=mk, s=52, color=c, edgecolor="white",
                    linewidth=0.7, zorder=3,
-                   label=f"{d}  (r={pear:.3f}, MAE {mae:.3f})")
+                   label=f"L{d[1]}  (r={pear:.3f}, MAE {mae:.3f})")
     ax.set_xlabel("R1 cross-validation fitness (ground truth)", fontsize=9)
-    ax.set_ylabel("ShadowGen v2.6-mle", fontsize=9)
+    ax.set_ylabel("M1 ShadowGen", fontsize=9)
     ax.set_xlim(0.1, 1.03); ax.set_ylim(0.1, 1.03); ax.set_aspect("equal")
     ax.legend(fontsize=8, frameon=False, loc="upper left")
     ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.4)
@@ -298,14 +323,15 @@ def fig_nsweep():
     """Realized mutation rate vs N (BPI 2017 sweep)."""
     N = list(range(1, 9))
     rate = [0.027, 0.211, 0.376, 0.664, 0.882, 1.333, 1.255, 1.208]  # x1e-3
-    fig, ax = plt.subplots(figsize=(5.6, 3.2))
+    fig, ax = plt.subplots(figsize=(5.2, 3.0))
     ax.plot(N, rate, "o-", color="#378ADD")
     ax.scatter([6], [1.333], s=90, facecolor="none", edgecolor="#b8403e", linewidth=1.6, zorder=5)
-    ax.annotate("peak at $N{=}6$", xy=(6, 1.333), xytext=(6.15, 0.85), fontsize=8,
+    ax.annotate("peak at $N{=}6$", xy=(6, 1.333), xytext=(6.15, 0.85), fontsize=11,
                 arrowprops=dict(arrowstyle="->", color="0.45"))
-    ax.set_xlabel("N-gram order $N$", fontsize=9)
-    ax.set_ylabel(r"realized mutation rate ($\times10^{-3}$)", fontsize=9)
-    ax.set_xticks(N); ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.5)
+    ax.set_xlabel("N-gram order $N$", fontsize=12)
+    ax.set_ylabel(r"realized mutation rate ($\times10^{-3}$)", fontsize=12)
+    ax.set_xticks(N); ax.tick_params(labelsize=11)
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.5)
     fig.tight_layout(); fig.savefig(f"{OUT}/fig_nsweep.pdf", bbox_inches="tight"); plt.close(fig)
 
 def fig_runtime():
@@ -313,7 +339,7 @@ def fig_runtime():
     data = [("PM4Py (M2)", 0.4, "work"), ("SpeciAL (M7)", 1.0, "work"),
             ("R3 random", 4.4, "work"), ("ShadowGen", 5.4, "ours"),
             ("Bootstrap (M6adapted)", 11.1, "work"), ("R1 5-fold CV", 120, "gt"),
-            ("M8 pattern", 600, "infeasible"), ("AVATAR (M5)", 14400, "slow"),
+            ("M8 pattern", 600, "infeasible"), ("AVATAR (M5)", AVATAR_ANCHOR_S, "slow"),
             ("M4 anti-align.", 48414, "infeasible")]
     data.sort(key=lambda t: t[1])
     labels = [d[0] for d in data]; vals = [d[1] for d in data]
@@ -325,7 +351,7 @@ def fig_runtime():
     for i, v in enumerate(vals):
         lab = f"{v:.0f}s" if v < 90 else (f"{v/60:.0f} min" if v < 5400 else f"{v/3600:.1f} h")
         ax.text(v * 1.18, i, lab, va="center", fontsize=7)
-    ax.set_xlim(0.2, 3e5); ax.tick_params(labelsize=8)
+    ax.set_xlim(0.2, 1.5e6); ax.tick_params(labelsize=8)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout(); fig.savefig(f"{OUT}/fig_runtime.pdf", bbox_inches="tight"); plt.close(fig)
 
@@ -339,7 +365,7 @@ def fig_pareto():
            ("Bootstrap (M6adapted)", 11.1, "M6adapted", "work", 8, -12, "left"),
            ("PM4Py (M2)", 0.4, "M2", "work", 8, 0, "left"),
            ("SpeciAL (M7)", 1.0, "M7", "work", 8, 2, "left"),
-           ("AVATAR (M5)", 14400, "M5", "slow", -8, 4, "right"),
+           ("AVATAR (M5)", AVATAR_ANCHOR_S, "M5", "slow", -8, 4, "right"),
            ("R3 random floor", 4.4, "R3", "floor", 0, 9, "center")]
     cmap = {"ours": "#1D9E75", "work": "#378ADD", "slow": "#E8943A", "floor": "0.55"}
     fig, ax = plt.subplots(figsize=(6.4, 4.0))
@@ -352,7 +378,7 @@ def fig_pareto():
     ax.set_xscale("log")
     ax.set_xlabel("time per model (s, log scale)", fontsize=9)
     ax.set_ylabel("MAE vs R1  (lower = better)", fontsize=9)
-    ax.set_ylim(-0.02, 0.33); ax.set_xlim(0.2, 6e4)
+    ax.set_ylim(-0.02, 0.33); ax.set_xlim(0.2, 1e6)
     ax.annotate("better", xy=(0.55, 0.005), xytext=(4.0, 0.075), fontsize=9, color="0.3",
                 arrowprops=dict(arrowstyle="->", color="0.45"))
     ax.text(0.98, 0.97, "M4, M8: no score (infeasible)", transform=ax.transAxes,
@@ -550,15 +576,15 @@ def fig_pareto_scale():
 
     def covnote(meth):
         dd = [d for d, _ in _method_cover(meth)]
-        return "" if len(dd) == 5 else " (" + "+".join(dd) + ")"
+        return "" if len(dd) == 5 else " (" + "+".join("L" + d[1] for d in dd) + ")"
 
     # (label base, method, kind, time override, dx, dy, ha)
-    pts = [("ShadowGen (ours)", "M1g", "ours", None, 8, 4, "left"),
-           ("PM4Py", "M2", "work", None, 8, 8, "left"),
-           ("SpeciAL", "M7", "work", None, 8, -11, "left"),
-           ("Bootstrap adapted", "M6adapted", "work", None, -8, -14, "right"),
-           ("Entropia -bgen", "M6original", "fail", None, -8, 6, "right"),
-           ("AVATAR", "M5", "slow", 14400.0, -8, 4, "right")]
+    pts = [("M1 ShadowGen (ours)", "M1g", "ours", None, 8, 4, "left"),
+           ("M2 PM4Py", "M2", "work", None, 8, 8, "left"),
+           ("M7 SpeciAL", "M7", "work", None, 8, -11, "left"),
+           ("M6adapted", "M6adapted", "work", None, 8, -14, "left"),
+           ("M6original -bgen", "M6original", "fail", None, -8, 6, "right"),
+           ("M5 AVATAR", "M5", "slow", AVATAR_ANCHOR_S, -8, 4, "right")]
     cmap = {"ours": "#1D9E75", "work": "#378ADD", "slow": "#E8943A",
             "fail": "#b8403e", "floor": "0.55"}
     fig, ax = plt.subplots(figsize=(6.6, 4.2))
@@ -570,8 +596,9 @@ def fig_pareto_scale():
             continue
         c = cmap[kind]
         # whiskers so the point does not hide the spread: horizontal = min-max
-        # cell runtime, vertical = min-max per-log MAE. AVATAR's x is a fixed
-        # budget anchor, not a measured median, so it gets no time whisker.
+        # cell runtime, vertical = min-max per-log MAE. AVATAR's x is the
+        # projected full-training cost (AVATAR_ANCHOR_S), not a measured
+        # median, so it gets no time whisker.
         if t_over is None and not np.isnan(tlo):
             ax.plot([tlo, thi], [mae, mae], color=c, lw=0.9, alpha=0.45, zorder=2)
         if not np.isnan(mlo) and mhi > mlo:
@@ -613,13 +640,13 @@ def fig_pareto_scale():
         ax.annotate("", xy=(t1, m1), xytext=(t5m, mae_stats("M1g")[0]),
                     arrowprops=dict(arrowstyle="->", color=c1, lw=0.8, alpha=0.55, zorder=2))
         ax.scatter(t1, m1, s=80, facecolor="white", edgecolor=c1, linewidth=1.6, zorder=4)
-        ax.annotate("ShadowGen 1-iter (fast)", (t1, m1), textcoords="offset points",
-                    xytext=(2, -13), fontsize=8, ha="left", color=c1)
+        ax.annotate("M1 1-iter (fast)", (t1, m1), textcoords="offset points",
+                    xytext=(-6, -14), fontsize=8, ha="left", color=c1)
         print(f"  pareto_scale M1g-1it t={t1:.1f}s MAE={m1:.3f}")
     ax.set_xscale("log")
     ax.set_xlabel("median time per model over all logs (s, log scale)", fontsize=9)
     ax.set_ylabel("mean MAE vs R1 over covered logs  (lower = better)", fontsize=9)
-    ax.set_ylim(-0.03, 0.72); ax.set_xlim(0.2, 6e4)
+    ax.set_ylim(-0.03, 0.72); ax.set_xlim(0.2, 1e6)
     ax.annotate("better", xy=(0.55, 0.01), xytext=(4.0, 0.13), fontsize=9, color="0.3",
                 arrowprops=dict(arrowstyle="->", color="0.45"))
     ax.text(0.98, 0.97, "M4, M8: no score on any log (infeasible)",
@@ -665,32 +692,50 @@ def fig_genval():
     plt.close(fig)
 
 def fig_genval_box():
-    """Generator premise over the full 21-log catalog (breadth): shadow-log
-    exact-match hit-rate vs the random floor, one dot per log. Reads the
-    extended run genval_21logs.json; skipped if absent. Makes the premise
-    point broadly without reopening the (log-dependent) 1-gram comparison."""
+    """Generator premise over the full 21-log catalog (breadth): exact-match
+    hit-rate against log representativeness (TLRA), ShadowGen crosses coloured by
+    alphabet size vs the uniformly random floor (open circles), one point per log.
+    Joins genval_21logs.json (hit-rate), tlra.json (per-log TLRA) and
+    alphabet.json (per-log |A|), all keyed D1..D21; skipped if any is absent.
+    Shows the two structural drivers of exact-matchability at once: hit-rate rises
+    with representativeness (x) and falls with alphabet size (colour), so the
+    large-alphabet municipality logs sit on the floor regardless of TLRA."""
     import json as _json
-    p = "benchmark/results/genval_21logs.json"
-    if not os.path.exists(p):
-        print("  genval_box: no 21-log results, skipped")
+    from matplotlib.colors import LogNorm
+    from matplotlib.lines import Line2D
+    pg = "benchmark/results/genval_21logs.json"
+    pt = "benchmark/results/tlra.json"
+    pa = "benchmark/results/alphabet.json"
+    if not all(os.path.exists(p) for p in (pg, pt, pa)):
+        print("  genval_box: missing 21-log / tlra / alphabet results, skipped")
         return
-    data = _json.load(open(p, encoding="utf-8"))
-    keys = [f"D{i}" for i in range(1, 22) if f"D{i}" in data and "error" not in data[f"D{i}"]]
-    shadow = [100 * data[k]["v26_mle_N6"]["hit_rate_mean"] for k in keys]
-    rnd = [100 * data[k]["random"]["hit_rate_mean"] for k in keys]
-    fig, ax = plt.subplots(figsize=(4.6, 4.2))
-    bp = ax.boxplot([shadow, rnd], showfliers=False, widths=0.5, patch_artist=True,
-                    medianprops=dict(color="black", lw=1.4))
-    for patch, c in zip(bp["boxes"], ["#1D9E75", "#b8403e"]):
-        patch.set_facecolor(c); patch.set_alpha(0.22)
-    rs = np.random.RandomState(1)
-    for i, (vals, c) in enumerate(zip([shadow, rnd], ["#1D9E75", "#b8403e"]), 1):
-        ax.scatter(rs.normal(i, 0.055, len(vals)), vals, s=26, color=c,
-                   edgecolor="white", linewidth=0.5, zorder=3, alpha=0.9)
-    ax.set_xticks([1, 2]); ax.set_xticklabels(["ShadowGen", "Random"], fontsize=10)
-    ax.set_ylabel("exact-match hit-rate, 21 logs (%)", fontsize=9)
-    ax.set_ylim(-2, 55); ax.axhline(0, color="0.7", lw=0.6)
-    ax.spines[["top", "right"]].set_visible(False); ax.grid(axis="y", ls=":", alpha=.4)
+    g = _json.load(open(pg, encoding="utf-8"))
+    tl = _json.load(open(pt, encoding="utf-8"))
+    al = _json.load(open(pa, encoding="utf-8"))
+    keys = [k for k in g if k in tl and k in al and "error" not in g[k]]
+    tlra = [tl[k]["tlra"] for k in keys]
+    A = [al[k]["n_activities"] for k in keys]
+    shadow = [100 * g[k]["v26_mle_N6"]["hit_rate_mean"] for k in keys]
+    rnd = [100 * g[k]["random"]["hit_rate_mean"] for k in keys]
+    fig, ax = plt.subplots(figsize=(6.0, 4.0))
+    ax.scatter(tlra, rnd, marker="o", s=30, facecolor="none", edgecolor="0.55",
+               linewidth=1.0, zorder=2)
+    sc = ax.scatter(tlra, shadow, marker="X", s=78, c=A, cmap="viridis",
+                    norm=LogNorm(vmin=min(A), vmax=max(A)), edgecolor="0.3",
+                    linewidth=0.5, zorder=3)
+    cb = fig.colorbar(sc, ax=ax, pad=0.02)
+    cb.set_label(r"alphabet size $|\mathcal{A}|$ (log scale)", fontsize=11)
+    cb.ax.tick_params(labelsize=9)
+    ax.set_xlabel("TLRA (log representativeness)", fontsize=12)
+    ax.set_ylabel("exact-match hit-rate (%)", fontsize=12)
+    ax.tick_params(labelsize=11)
+    ax.set_xlim(0, 1.0); ax.set_ylim(-2, max(shadow) * 1.12)
+    handles = [Line2D([0], [0], marker="X", color="w", markerfacecolor="0.4",
+                      markersize=10, label="ShadowGen"),
+               Line2D([0], [0], marker="o", color="w", markerfacecolor="none",
+                      markeredgecolor="0.55", markersize=8, label="Random")]
+    ax.legend(handles=handles, fontsize=10, frameon=False, loc="upper left")
+    ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.4)
     fig.tight_layout(); fig.savefig(f"{OUT}/fig_genval_box.pdf", bbox_inches="tight")
     plt.close(fig)
 
