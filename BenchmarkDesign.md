@@ -467,7 +467,7 @@ For setup (Docker build, dataset preparation) and execution, see [`BenchmarkGuid
 | Aspect | Detail |
 |--------|--------|
 | Docker images | `avatar-tf1` (TF1.15) / `avatar-tf2` (TF2) |
-| Training | 5000 adv steps, checkpoint suffix=4981 |
+| Training | 5000 adv steps, checkpoint suffix varies by dataset (tp_eval-based: D1=3901, D2=3781) |
 | Sampling | 10000 traces, naive strategy, greedy longest-match decoding |
 | Multi-word fix | GAN token output → greedy longest-match reconstruction (see [BenchmarkGuide.md §M5](BenchmarkGuide.md#per-method-scripts)) |
 | Results (D1, 2 runs) | See [BenchmarkGuide.md §5](BenchmarkGuide.md#5-results-d1-sepsis) table |

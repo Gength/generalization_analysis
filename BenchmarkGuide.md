@@ -40,7 +40,7 @@ Compare **HybridGen** (M1a–M1g) against external generalization baselines on 2
 > - M4 Anti-Alignment Gen — `archive/Tianhao/benchmark/m4.sh`
 > - M8 Pattern-based Gen — `archive/Tianhao/benchmark/m8.sh`
 >
-> **D2 notes**: M3 on D2 (BPI2013 Incidents) returns 0.0 — only 4 real activities with a dense DFG (69% arc density), so entropic relevance is genuinely near zero. M5 D2 was fixed (trailing underscore bug in `src/AVATAR/avatar/generalization.py` line 78) and re-run; all 8 miners now show correct non-zero scores except Trace_Filtered (fitness=0 due to restrictive model).
+> **D2 notes**: M3 on D2 (BPI2013 Incidents) returns 0.0 — only 4 real activities with a dense DFG (69% arc density), so entropic relevance is genuinely near zero. M5 D2 was fixed (trailing underscore bug in `src/AVATAR/avatar/generalization.py` line 78) and re-run with tp_eval-based best-suffix selection (suffix=3781, previously suffix=4981); all 8 miners now show correct non-zero scores except Trace_Filtered (fitness=0 due to restrictive model).
 
 ### M6 Implementation Note
 
@@ -394,24 +394,24 @@ OUTPUT_DIR=benchmark/results/configs_v2 bash benchmark/shell/run_all.sh D1
 
 | Miner | M1a | M1b | M1c | M1d | M1e | M1f | M1g | M2 | M3* | M5 | M6 | M7 | R1 | R2 | R3 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Trace_Filtered | 0.562 | 0.4956 | 0.5173 | 0.5106 | 0.5085 | 0.5085 | 0.5687 | 0.0285 | 46.5076 | 0.0 | 0.4609 | 1.0 | 0.6411 | 0.6058 | 0.2796 |
-| Alpha | 0.2654 | 0.2841 | 0.2968 | 0.2881 | 0.2849 | 0.2849 | 0.2724 | 0.9132 | 63.3129 | 0.3401 | 0.0 | 0.7989 | 0.2748 | 0.3059 | 0.2779 |
-| Alpha+ | 0.6062 | 0.5522 | 0.6271 | 0.6277 | 0.6512 | 0.6512 | 0.7591 | 0.9189 | 64.3446 | 0.5617 | 0.1875 | 0.75 | 0.8293 | 0.7753 | 0.382 |
-| Heuristics | 0.8651 | 0.8214 | 0.8355 | 0.8317 | 0.8457 | 0.8457 | 0.8787 | 0.8298 | 62.2738 | 0.746 | 0.3554 | 1.0 | 0.9023 | 0.87 | 0.5024 |
-| Heuristics_Strict | 0.8929 | 0.8465 | 0.8535 | 0.8512 | 0.864 | 0.864 | 0.9174 | 0.9004 | 61.7765 | 0.7044 | 0.3342 | 0.9983 | 0.9329 | 0.9175 | 0.6212 |
-| Inductive_Strict | 0.9753 | 0.9423 | 0.9557 | 0.9574 | 0.9613 | 0.9613 | 0.9838 | 0.9025 | 59.755 | 0.5347 | 0.2298 | 0.7443 | 0.9999 | 1.0 | 0.7667 |
-| Inductive_Infrequent | 0.9107 | 0.8901 | 0.9161 | 0.92 | 0.931 | 0.931 | 0.9723 | 0.8799 | 61.8158 | 0.7506 | 0.2708 | 0.75 | 0.9846 | 0.9813 | 0.693 |
-| Flower | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 0.9132 | 63.0675 | 0.3967 | 0.1812 | 0.8034 | 1.0 | 1.0 | 1.0 |
+| Trace_Filtered | 0.562 | 0.4956 | 0.5173 | 0.5106 | 0.5085 | 0.5085 | 0.5687 | 0.0285 | 46.5076 | 0.138 | 0.4609 | 1.0 | 0.6411 | 0.6058 | 0.2796 |
+| Alpha | 0.2654 | 0.2841 | 0.2968 | 0.2881 | 0.2849 | 0.2849 | 0.2724 | 0.9132 | 63.3129 | 0.3289 | 0.0 | 0.7989 | 0.2748 | 0.3059 | 0.2779 |
+| Alpha+ | 0.6062 | 0.5522 | 0.6271 | 0.6277 | 0.6512 | 0.6512 | 0.7591 | 0.9189 | 64.3446 | 0.3115 | 0.1875 | 0.75 | 0.8293 | 0.7753 | 0.382 |
+| Heuristics | 0.8651 | 0.8214 | 0.8355 | 0.8317 | 0.8457 | 0.8457 | 0.8787 | 0.8298 | 62.2738 | 0.7462 | 0.3554 | 1.0 | 0.9023 | 0.87 | 0.5024 |
+| Heuristics_Strict | 0.8929 | 0.8465 | 0.8535 | 0.8512 | 0.864 | 0.864 | 0.9174 | 0.9004 | 61.7765 | 0.7343 | 0.3342 | 0.9983 | 0.9329 | 0.9175 | 0.6212 |
+| Inductive_Strict | 0.9753 | 0.9423 | 0.9557 | 0.9574 | 0.9613 | 0.9613 | 0.9838 | 0.9025 | 59.755 | 0.5705 | 0.2298 | 0.7443 | 0.9999 | 1.0 | 0.7667 |
+| Inductive_Infrequent | 0.9107 | 0.8901 | 0.9161 | 0.92 | 0.931 | 0.931 | 0.9723 | 0.8799 | 61.8158 | 0.6974 | 0.2708 | 0.75 | 0.9846 | 0.9813 | 0.693 |
+| Flower | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 0.9132 | 63.0675 | 0.3301 | 0.1812 | 0.8034 | 1.0 | 1.0 | 1.0 |
 
 > **M1e–M1g (v2.5/v2.6)**: Added 2026-06-12. All values from v2 methodology runner (`uv run python benchmark/run_m1_family.py --dataset D1`), seed 42, 5 iterations. Source: `benchmark/results/configs_v2/Sepsis__*__M1{e,f,g}.json`. M1e (v2.5 Katz proposal) and M1f (v2.6 log-weighted) produce identical Gen_shadow means on the 7 regular miners by design — M1f adds `gen_accept`, `gen_shadow_regular`/`_mutated`, and probe-integrity counters. M1g (v2.6 MLE-weighted) is the headline candidate.
 >
-> **M5 std**: Alpha=±0.020, Alpha+=±0.008, Heuristics=±0.001, Heuristics_Strict=±0.002, Inductive_Strict=±0.009, Inductive_Infrequent=±0.002, Flower=±0.007 (2 runs). Multi-word activity fix applied (greedy longest-match decoding for GAN output).
+> **M5 std**: Alpha=±0.057, Alpha+=±0.002, Heuristics=±0.063, Heuristics_Strict=±0.110, Inductive_Strict=±0.023, Inductive_Infrequent=±0.021, Flower=±0.007 (2 runs). Multi-word activity fix applied (greedy longest-match decoding for GAN output). Checkpoint selection via tp_eval-based best suffix (suffix=3901).
 >
 > **M3**: Raw entropic relevance (unbounded, higher=better). Per-miner DFG simulation via open-source `relevance.jar` (JDFG2Aut + Relevance). Scores discriminate between miners on all datasets.
 >
 > **M4/M8 (D1)**: Archived — not feasible on real-life logs (see [Archived Methods](BenchmarkDesign.md#archived-methods)).
 >
-> **Trace_Filtered row**: M1a–M1g + R1 from v2 configs (`configs_v2/`). M2/R3 computed 2026-06-13 via `benchmark/run_trace_filtered_externals.py`. **M3 fix (2026-06-27)**: switched from Entropia JAR `-r` to open-source `relevance.jar` (JDFG2Aut + Relevance); D2 now discriminating (was 0.0). M6 (Entropia -bgen, 5 reps, k=2) recomputed 2026-06-18 with **fixed JAR** `jbpt-pm-entropia-1.7.1.jar` — values consistent with previous run (within bootstrap noise). See [M6 Implementation Note](#m6-implementation-note). M7 (SpeciAL4PM C1 ratio) computed 2026-06-13 via `benchmark/run_m6_m7_trace_filtered.py`. R2 (sampled LOVO, 50/846 variants, seed 42) via `benchmark/run_r2_trace_filtered.py`. **M5 (AVATAR) on Trace_Filtered**: 0.0000 — strongest memorization pole signal across all methods. Reuses existing GAN checkpoint suffix=4981. Run via: `uv run python benchmark/docker/run_avatar.py --miners Trace_Filtered --eval-only`.
+> **Trace_Filtered row**: M1a–M1g + R1 from v2 configs (`configs_v2/`). M2/R3 computed 2026-06-13 via `benchmark/run_trace_filtered_externals.py`. **M3 fix (2026-06-27)**: switched from Entropia JAR `-r` to open-source `relevance.jar` (JDFG2Aut + Relevance); D2 now discriminating (was 0.0). M6 (Entropia -bgen, 5 reps, k=2) recomputed 2026-06-18 with **fixed JAR** `jbpt-pm-entropia-1.7.1.jar` — values consistent with previous run (within bootstrap noise). See [M6 Implementation Note](#m6-implementation-note). M7 (SpeciAL4PM C1 ratio) computed 2026-06-13 via `benchmark/run_m6_m7_trace_filtered.py`. R2 (sampled LOVO, 50/846 variants, seed 42) via `benchmark/run_r2_trace_filtered.py`. **M5 (AVATAR) on Trace_Filtered**: 0.1380 — re-run with tp_eval-based best-suffix selection (suffix=3901, previously suffix=4981). Run via: `uv run python benchmark/docker/run_avatar.py --miners Trace_Filtered --eval-only`.
 >
 > **M1a note**: Alpha row shows 0.6033 in table — this is the Alpha+ score. See config JSON for per-miner breakdown.
 >
@@ -444,19 +444,19 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 | Miner | M1a | M1b | M1c | M1d | M1e | M1f | M1g | M2* | M3\*\* | M5\*\*\* | M6 | M7 | R1 | R2 | R3 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Trace_Filtered | 0.6335 | 0.595 | 0.6052 | 0.5469 | 0.5456 | 0.5456 | 0.6 | 0.0605 | 10.5817 | 0.0 | 0.7515 | 1.0 | 0.6529 | 0.6798 | 0.4995 |
-| Alpha | 0.3129 | 0.383 | 0.3665 | 0.2817 | 0.2803 | 0.2803 | 0.2572 | 0.8825 | 22.4668 | 0.1328 | 0.0 | 1.0 | 0.215 | 0.1402 | 0.4429 |
-| Alpha+ | 0.5866 | 0.5178 | 0.54 | 0.5967 | 0.5988 | 0.5988 | 0.6301 | 0.8452 | 18.9131 | 0.9793 | 0.5443 | 0.814 | 0.6979 | 0.7931 | 0.6896 |
-| Heuristics | 0.9969 | 0.964 | 0.9694 | 0.9527 | 0.9529 | 0.9529 | 0.9935 | 0.9024 | 16.2197 | 0.9349 | 0.7543 | 0.9803 | 0.9956 | 0.9904 | 0.8106 |
-| Heuristics_Strict | 0.999 | 0.971 | 0.9776 | 0.9661 | 0.9664 | 0.9664 | 0.9978 | 0.9295 | 15.2261 | 0.8338 | 0.7244 | 0.9787 | 0.9983 | 0.9974 | 0.9243 |
-| Inductive_Strict | 1.0 | 0.9997 | 0.9997 | 0.9989 | 0.9988 | 0.9988 | 1.0 | 0.8711 | 18.6842 | 0.7404 | 0.5633 | 1.0 | 1.0 | 1.0 | 0.9425 |
-| Inductive_Infrequent | 0.996 | 0.9729 | 0.9745 | 0.9587 | 0.9598 | 0.9598 | 0.9907 | 0.9887 | 12.2147 | 0.7403 | 0.8095 | 1.0 | 0.9881 | 0.9864 | 0.8474 |
-| Flower | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 0.8825 | 20.2597 | 0.7404 | 0.5261 | 0.9372 | 1.0 | 1.0 | 1.0 |
+| Alpha | 0.3129 | 0.383 | 0.3665 | 0.2817 | 0.2803 | 0.2803 | 0.2572 | 0.8825 | 22.4668 | 0.1928 | 0.0 | 1.0 | 0.215 | 0.1402 | 0.4429 |
+| Alpha+ | 0.5866 | 0.5178 | 0.54 | 0.5967 | 0.5988 | 0.5988 | 0.6301 | 0.8452 | 18.9131 | 0.9654 | 0.5443 | 0.814 | 0.6979 | 0.7931 | 0.6896 |
+| Heuristics | 0.9969 | 0.964 | 0.9694 | 0.9527 | 0.9529 | 0.9529 | 0.9935 | 0.9024 | 16.2197 | 0.9086 | 0.7543 | 0.9803 | 0.9956 | 0.9904 | 0.8106 |
+| Heuristics_Strict | 0.999 | 0.971 | 0.9776 | 0.9661 | 0.9664 | 0.9664 | 0.9978 | 0.9295 | 15.2261 | 0.8143 | 0.7244 | 0.9787 | 0.9983 | 0.9974 | 0.9243 |
+| Inductive_Strict | 1.0 | 0.9997 | 0.9997 | 0.9989 | 0.9988 | 0.9988 | 1.0 | 0.8711 | 18.6842 | 0.7589 | 0.5633 | 1.0 | 1.0 | 1.0 | 0.9425 |
+| Inductive_Infrequent | 0.996 | 0.9729 | 0.9745 | 0.9587 | 0.9598 | 0.9598 | 0.9907 | 0.9887 | 12.2147 | 0.7589 | 0.8095 | 1.0 | 0.9881 | 0.9864 | 0.8474 |
+| Flower | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 0.8825 | 20.2597 | 0.7589 | 0.5261 | 0.9372 | 1.0 | 1.0 | 1.0 |
 
 > **M2 (\*)**: PM4Py built-in generalization. D2 run 2026-06-16 via `uv run python benchmark/run_m2.py --dataset D2`. Values comparable to D1 M2 (Sepsis) range.
 >
 > **M3 (\*\*)**: Raw entropic relevance (unbounded, higher=better). Per-miner DFG via `relevance.jar`. Range 10.6–22.5 — now discriminating, though values are compressed due to D2's small activity alphabet (4 activities).
 >
-> **M5 (\*\*\*)**: D2 scores after the trailing underscore fix. Trace_Filtered = 0.0000 is genuine (fitness=0 due to restrictive 50-variant model). All other miners show correct non-zero values via the `score` config key (re-run 2026-06-26).
+> **M5 (\*\*\*)**: D2 scores after the trailing underscore fix, re-run with tp_eval-based best-suffix selection (suffix=3781, previously suffix=4981). Trace_Filtered = 0.0000 is genuine (fitness=0 due to restrictive 50-variant model). All other miners show correct non-zero scores.
 >
 > **M6 (\*\*\*\*)**: Bootstrap Generalization with Entropia `-bgen` scoring (v2 methodology). All values computed with the **fixed JAR** `jbpt-pm-entropia-1.7.1.jar` (null guard added at `EventLogSampling.logBreeding:101`), `k=2`, **10 bootstrap replicates** (design spec: 10, target: 100). The table shows F1 score (harmonic mean of precision and recall). See [M6 Implementation Note](#m6-implementation-note) and [Design §M6](BenchmarkDesign.md#m6--bootstrap-generalization).
 >
@@ -555,6 +555,7 @@ Config JSONs are the **source of truth**. **v2 configs now contain all 15 method
 
 | Date | Change |
 |------|--------|
+| 2026-07-12 | **M5 D1/D2 re-run with tp_eval-based best-suffix selection.** D1 (Sepsis) uses suffix=3901 (was 4981), D2 (BPI2013 Incidents) uses suffix=3781 (was 4981). `run_avatar.py` refactored: modular helpers, single XES read, early-noise filtering (>=2000). Config JSONs and benchmark CSVs updated. |
 | 2026-06-27 | **D4 (BPI2018) and D5 (BPI2019) results complete (except M5).** All methods M1a–M1g, M2, M3, M6, M7, R1–R3 now have results for both datasets. Minor gaps: D4 M2 missing for Flower, Inductive_Infrequent, Inductive_Strict; D4 R2 missing for Inductive_Strict; D5 M7 only on Trace_Filtered. Added §5d (D4) and §5e (D5) results tables. |
 | 2026-06-26 | **M3 re-run D1/D2/D3 (per-miner DFG fix):** Changed M3 from single log-level DFG to per-miner simulated DFGs (PNML → `play_out` 5000 traces → DFG JSON → Entropia `-r`). Scores now discriminate between miners: D1 M3 range 46.51–64.34 (was 29.87 uniform), D3 M3 range 76.99–178.56 (was 178.53 uniform). D2 M3 remains 0.0 for all miners (4-activity dense DFG, genuinely near zero). |
 | 2026-06-20 | **M1 no longer computes R1.** R1 ground-truth (5-fold CV) removed from `run_m1_family.py`. M1 now outputs only M1a–M1g gen_shadow values. R1 is produced separately by `job_r1.py` / `r1.sh`. Agreement (Pearson/Spearman/MAE) is computed offline by merging M1 and R1 JSONs. |

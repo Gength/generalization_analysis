@@ -171,7 +171,7 @@ the flower model).
 | Bootstrap (M6) | 1.00 | ~0.015 | 0.74 |
 | PM4Py (M2) | −0.43 | ~0.17 | 0.08 |
 | SpeciAL (M7) | −0.37 | ~0.21 | 0.26 |
-| AVATAR (M5) | 0.37 | ~0.24 | 0.41 |
+| AVATAR (M5) | 0.54 | ~0.31 | 0.61 |
 | Random floor (R3) | 1.00 | ~0.28 | 0.49 |
 
 Reading: Spearman alone cannot separate Gen_shadow from the floor (both 1.00) — MAE and spread
