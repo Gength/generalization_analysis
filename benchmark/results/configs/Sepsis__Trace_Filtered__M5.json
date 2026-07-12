@@ -3,20 +3,29 @@
   "miner": "Trace_Filtered",
   "method": "M5",
   "method_label": "AVATAR (RelGAN)",
-  "timestamp": "2026-06-13T21:34:52Z",
+  "timestamp": "2026-07-12T10:38:49Z",
   "host": "docker",
   "seed": 42,
   "parameters": {
     "GAN": "RelGAN",
-    "checkpoint_suffix": "4981",
+    "suffix": "3901",
     "strategy": "naive",
+    "npre_epochs": "100",
+    "nadv_steps": "5000",
     "n_samples": 10000,
-    "env": "docker-tf1.15",
-    "trace_model_top_k": 50
+    "n_runs": 2,
+    "decoding": "greedy_longest_match"
   },
   "results": {
-    "score": 0.0,
-    "runtime_s": 16.39557981491089
+    "mean": 0.137985,
+    "std": 0.028953,
+    "raw_runs": [
+      0.158458,
+      0.117512
+    ],
+    "n_runs": 2,
+    "runtime_s": 7.272,
+    "training_time": 42334.0
   },
-  "notes": "Single run. Reuses existing GAN checkpoint from full D1 training. Discovery on 80/20 variant split."
+  "notes": "2 evaluation run(s); multi-word activity fix (corrected CSV)."
 }

@@ -3,24 +3,29 @@
   "miner": "Inductive_Strict",
   "method": "M5",
   "method_label": "AVATAR (RelGAN)",
-  "timestamp": "2026-06-09T20:07:17Z",
+  "timestamp": "2026-07-12T10:42:21Z",
   "host": "docker",
+  "seed": 42,
   "parameters": {
     "GAN": "RelGAN",
-    "suffix": "4981",
+    "suffix": "3901",
     "strategy": "naive",
+    "npre_epochs": "100",
+    "nadv_steps": "5000",
     "n_samples": 10000,
     "n_runs": 2,
     "decoding": "greedy_longest_match"
   },
   "results": {
-    "mean": 0.534745,
-    "std": 0.009201,
+    "mean": 0.570527,
+    "std": 0.023059,
     "raw_runs": [
-      0.543946,
-      0.525544
+      0.586831,
+      0.554222
     ],
-    "n_runs": 2
+    "n_runs": 2,
+    "runtime_s": 37.001,
+    "training_time": 42334.0
   },
-  "notes": "2 sampling runs; multi-word activity fix."
+  "notes": "2 evaluation run(s); multi-word activity fix (corrected CSV)."
 }

@@ -3,24 +3,29 @@
   "miner": "Flower",
   "method": "M5",
   "method_label": "AVATAR (RelGAN)",
-  "timestamp": "2026-06-09T20:07:17Z",
+  "timestamp": "2026-07-12T10:43:52Z",
   "host": "docker",
+  "seed": 42,
   "parameters": {
     "GAN": "RelGAN",
-    "suffix": "4981",
+    "suffix": "3901",
     "strategy": "naive",
+    "npre_epochs": "100",
+    "nadv_steps": "5000",
     "n_samples": 10000,
     "n_runs": 2,
     "decoding": "greedy_longest_match"
   },
   "results": {
-    "mean": 0.396654,
-    "std": 0.007434,
+    "mean": 0.330149,
+    "std": 0.006697,
     "raw_runs": [
-      0.404089,
-      0.38922
+      0.334884,
+      0.325413
     ],
-    "n_runs": 2
+    "n_runs": 2,
+    "runtime_s": 11.565,
+    "training_time": 42334.0
   },
-  "notes": "2 sampling runs; multi-word activity fix."
+  "notes": "2 evaluation run(s); multi-word activity fix (corrected CSV)."
 }

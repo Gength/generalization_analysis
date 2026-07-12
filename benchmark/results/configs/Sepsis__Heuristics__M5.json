@@ -3,24 +3,29 @@
   "miner": "Heuristics",
   "method": "M5",
   "method_label": "AVATAR (RelGAN)",
-  "timestamp": "2026-06-09T20:07:17Z",
+  "timestamp": "2026-07-12T10:40:06Z",
   "host": "docker",
+  "seed": 42,
   "parameters": {
     "GAN": "RelGAN",
-    "suffix": "4981",
+    "suffix": "3901",
     "strategy": "naive",
+    "npre_epochs": "100",
+    "nadv_steps": "5000",
     "n_samples": 10000,
     "n_runs": 2,
     "decoding": "greedy_longest_match"
   },
   "results": {
-    "mean": 0.746007,
-    "std": 0.001393,
+    "mean": 0.74621,
+    "std": 0.06304,
     "raw_runs": [
-      0.747399,
-      0.744614
+      0.790786,
+      0.701635
     ],
-    "n_runs": 2
+    "n_runs": 2,
+    "runtime_s": 9.566,
+    "training_time": 42334.0
   },
-  "notes": "2 sampling runs; multi-word activity fix."
+  "notes": "2 evaluation run(s); multi-word activity fix (corrected CSV)."
 }
