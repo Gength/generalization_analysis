@@ -1,0 +1,266 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{vanderaalst2016pm}
+\citation{buijs2014quality}
+\@writefile{toc}{\contentsline {title}{Quantifying Process Model Generalization:\unskip \ \ignorespaces  A Generative N-gram Metric and a Cross-Paradigm Benchmark\unskip {}}{1}{chapter.1}\protected@file@percent }
+\@writefile{toc}{\authcount {2}}
+\@writefile{toc}{\contentsline {author}{Christian Daniel Krengel \and Tianhao Geng}{1}{chapter.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1.1}{}}
+\citation{karunaratne2024representativeness}
+\citation{buijs2014quality}
+\citation{alkhammash2022entropic}
+\citation{vandongen2016anti}
+\citation{theis2020avatar}
+\citation{polyvyanyy2022bootstrap}
+\citation{vandenbroucke2014negative}
+\citation{kabierski2023species}
+\citation{janssenswillen2017comparative}
+\citation{berti2019pm4py}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Generalization as a set relation. The system produces the valid traces; the log is the observed sample; the model accepts some language of traces. Generalization asks how much of the unseen valid behavior the model accepts (the shaded region outside $L$) and is undermined by the lower-left region (future valid behavior the model rejects). The lower-right region, invalid but accepted behavior, is the concern of precision, not of generalization; replaying $L$ itself is the concern of fitness. Every metric only ever sees $L$, so the two unseen regions must be estimated.}}{2}{figure.1.1}\protected@file@percent }
+\newlabel{fig:venn}{{1}{2}{Generalization as a set relation. The system produces the valid traces; the log is the observed sample; the model accepts some language of traces. Generalization asks how much of the unseen valid behavior the model accepts (the shaded region outside $L$) and is undermined by the lower-left region (future valid behavior the model rejects). The lower-right region, invalid but accepted behavior, is the concern of precision, not of generalization; replaying $L$ itself is the concern of fitness. Every metric only ever sees $L$, so the two unseen regions must be estimated}{figure.1.1}{}}
+\citation{katz1987}
+\citation{gale1995gt}
+\citation{rozinat2008conformance}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background}{3}{section.1.2}\protected@file@percent }
+\newlabel{sec:background}{{2}{3}{Background}{section.1.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Event logs}{3}{subsection.1.2.1}\protected@file@percent }
+\citation{rozinat2008conformance}
+\citation{augusto2019benchmark}
+\citation{katz1987}
+\citation{gale1995gt}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Process models and discovery}{4}{subsection.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Token replay and its two readings}{4}{subsection.1.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Hold-out evaluation}{4}{subsection.1.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Variable-order language models}{4}{subsection.1.2.5}\protected@file@percent }
+\citation{buijs2014quality,berti2019pm4py}
+\citation{alkhammash2022entropic}
+\citation{vandongen2016anti}
+\citation{theis2020avatar}
+\citation{polyvyanyy2022bootstrap}
+\citation{kabierski2023species}
+\citation{reissner2022pattern}
+\citation{vandenbroucke2014negative}
+\citation{buijs2014quality,berti2019pm4py}
+\citation{vanderaalst2016pm}
+\citation{vandenbroucke2014negative}
+\citation{alkhammash2022entropic}
+\citation{leemans2019emsc}
+\citation{vandongen2016anti}
+\citation{theis2020avatar}
+\citation{polyvyanyy2022bootstrap}
+\citation{kabierski2023species}
+\citation{reissner2022pattern}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Published generalization paradigms and this report's metric. ``Blended in'' names what enters the score besides acceptance of unseen valid behavior, the construct of Sect.\nobreakspace  {}\ref {sec:method:construct}.}}{5}{table.1.1}\protected@file@percent }
+\newlabel{tab:paradigms}{{1}{5}{Published generalization paradigms and this report's metric. ``Blended in'' names what enters the score besides acceptance of unseen valid behavior, the construct of Sect.~\ref {sec:method:construct}}{table.1.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Related Work}{5}{section.1.3}\protected@file@percent }
+\newlabel{sec:related}{{3}{5}{Related Work}{section.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}The paradigms in brief}{5}{subsection.1.3.1}\protected@file@percent }
+\citation{vanderaalst2016pm}
+\citation{rozinat2008conformance}
+\citation{janssenswillen2017comparative}
+\citation{janssenswillen2019confirmatory}
+\citation{vanderaalst2018propositions,syring2019conformance}
+\citation{augusto2019benchmark}
+\citation{janssenswillen2017comparative}
+\citation{janssenswillen2019confirmatory}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Membership versus graded semantics}{6}{subsection.1.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Evaluating the metrics themselves}{6}{subsection.1.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}The gap, and how ShadowGen differs}{6}{subsection.1.3.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The two construct poles for a log with variants $\langle a,b\rangle $ and $\langle a,c\rangle $ over $\mathcal  {A}=\{a,b,c\}$. The trace model memorizes the variants and accepts nothing unseen; the flower model accepts everything, so a construct-pure metric must score it $1$ (its uselessness is a precision and simplicity verdict, not a generalization verdict).}}{7}{figure.1.2}\protected@file@percent }
+\newlabel{fig:poles}{{2}{7}{The two construct poles for a log with variants $\langle a,b\rangle $ and $\langle a,c\rangle $ over $\mathcal {A}=\{a,b,c\}$. The trace model memorizes the variants and accepts nothing unseen; the flower model accepts everything, so a construct-pure metric must score it $1$ (its uselessness is a precision and simplicity verdict, not a generalization verdict)}{figure.1.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Method}{7}{section.1.4}\protected@file@percent }
+\newlabel{sec:method}{{4}{7}{Method}{section.1.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Construct: what generalization is and is not}{7}{subsection.1.4.1}\protected@file@percent }
+\newlabel{sec:method:construct}{{4.1}{7}{Construct: what generalization is and is not}{subsection.1.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Framework}{7}{subsection.1.4.2}\protected@file@percent }
+\newlabel{sec:method:framework}{{4.2}{7}{Framework}{subsection.1.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces ShadowGen pipeline. From the variants of the event log $L$, N-gram statistics up to order $N$ feed a stochastic walker (Katz backoff; novelty probability $\ensuremath  {p_{\mathit  {unseen}}}$; termination probability $\ensuremath  {p_{\mathit  {end}}}$). Generated traces are deduplicated against $L$, so the shadow log $\ensuremath  {L_S}$ contains only unseen traces. The model $M$ under evaluation enters only at the replay step, which yields the metric: the graded score \ensuremath  {\mathit  {Gen}_{\mathit  {shadow}}}{}, averaged over $K$ draws. A strict acceptance reading of the same shadow log (\ensuremath  {\mathit  {Gen}_{\mathit  {accept}}}) exists as a validation diagnostic (Sect.\nobreakspace  {}\ref {sec:eval:accept}), not as part of the released metric.}}{8}{figure.1.3}\protected@file@percent }
+\newlabel{fig:pipeline}{{3}{8}{ShadowGen pipeline. From the variants of the event log $L$, N-gram statistics up to order $N$ feed a stochastic walker (Katz backoff; novelty probability $\punseen $; termination probability $\pend $). Generated traces are deduplicated against $L$, so the shadow log $\shlog $ contains only unseen traces. The model $M$ under evaluation enters only at the replay step, which yields the metric: the graded score \genshadow {}, averaged over $K$ draws. A strict acceptance reading of the same shadow log (\genaccept ) exists as a validation diagnostic (Sect.~\ref {sec:eval:accept}), not as part of the released metric}{figure.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Shadow log generation}{8}{subsection.1.4.3}\protected@file@percent }
+\newlabel{sec:method:gen}{{4.3}{8}{Shadow log generation}{subsection.1.4.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}Variant statistics.}{8}{subsubsection.1.4.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}Katz backoff.}{8}{subsubsection.1.4.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3}Good--Turing novelty.}{9}{subsubsection.1.4.3.3}\protected@file@percent }
+\newlabel{eq:gt}{{1}{9}{Good--Turing novelty}{equation.1.4.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.4}Mutation proposal (Katz-consistent).}{9}{subsubsection.1.4.3.4}\protected@file@percent }
+\newlabel{eq:proposal}{{2}{9}{Mutation proposal (Katz-consistent)}{equation.1.4.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.5}Exploitation: two sampling modes.}{9}{subsubsection.1.4.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.6}Context-aware termination.}{9}{subsubsection.1.4.3.6}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Shadow-log generation (one iteration)}}{10}{algorithm.1}\protected@file@percent }
+\newlabel{alg:gen}{{1}{10}{Algorithm}{algorithm.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.7}Deduplication and scoring.}{10}{subsubsection.1.4.3.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Algorithm}{10}{subsection.1.4.4}\protected@file@percent }
+\newlabel{sec:method:algo}{{4.4}{10}{Algorithm}{subsection.1.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Running example}{10}{subsection.1.4.5}\protected@file@percent }
+\newlabel{sec:method:example}{{4.5}{10}{Running example}{subsection.1.4.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Worked example ($N{=}2$, $\tau {=}3$). A toy log of four variants, the successor multisets its N-grams induce, and two generated shadow traces: a recombination of attested steps, and a Katz-consistent mutation ($e^{*}$) whose rate came from the resolved order-2 context and whose proposal came from the order-1 context.}}{11}{figure.1.4}\protected@file@percent }
+\newlabel{fig:example}{{4}{11}{Worked example ($N{=}2$, $\tau {=}3$). A toy log of four variants, the successor multisets its N-grams induce, and two generated shadow traces: a recombination of attested steps, and a Katz-consistent mutation ($e^{*}$) whose rate came from the resolved order-2 context and whose proposal came from the order-1 context}{figure.1.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Time and space complexity}{11}{subsection.1.4.6}\protected@file@percent }
+\newlabel{sec:method:complexity}{{4.6}{11}{Time and space complexity}{subsection.1.4.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}Assumptions, scope, and limitations of the approach}{11}{subsection.1.4.7}\protected@file@percent }
+\newlabel{sec:method:scope}{{4.7}{11}{Assumptions, scope, and limitations of the approach}{subsection.1.4.7}{}}
+\citation{berti2023pm4pysi}
+\citation{polyvyanyy2020entropia}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Implementation}{12}{section.1.5}\protected@file@percent }
+\newlabel{sec:impl}{{5}{12}{Implementation}{section.1.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Architecture}{12}{subsection.1.5.1}\protected@file@percent }
+\newlabel{sec:impl:arch}{{5.1}{12}{Architecture}{subsection.1.5.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Key design decisions}{12}{subsection.1.5.2}\protected@file@percent }
+\newlabel{sec:impl:decisions}{{5.2}{12}{Key design decisions}{subsection.1.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Baseline integration realities}{12}{subsection.1.5.3}\protected@file@percent }
+\newlabel{sec:impl:baselines}{{5.3}{12}{Baseline integration realities}{subsection.1.5.3}{}}
+\citation{polyvyanyy2022bootstrap}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Deviations from the formal method}{13}{subsection.1.5.4}\protected@file@percent }
+\newlabel{sec:impl:deviations}{{5.4}{13}{Deviations from the formal method}{subsection.1.5.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Evaluation}{13}{section.1.6}\protected@file@percent }
+\newlabel{sec:eval}{{6}{13}{Evaluation}{section.1.6}{}}
+\citation{karunaratne2024representativeness}
+\citation{karunaratne2024representativeness}
+\citation{karunaratne2024representativeness}
+\citation{mannhardt2016sepsis}
+\citation{steeman2013bpi}
+\citation{vandongen2017bpi}
+\citation{vandongen2018bpi}
+\citation{vandongen2019bpi}
+\citation{vanderaalst2004alpha}
+\citation{weijters2006hm}
+\citation{leemans2013im,leemans2014imf}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Benchmark event logs. TLRA $=1-|V(L)|/|L|$ is the trace-based log representativeness approximation\nobreakspace  {}\cite  {karunaratne2024representativeness}.}}{14}{table.1.2}\protected@file@percent }
+\newlabel{tab:datasets}{{2}{14}{Benchmark event logs. TLRA $=1-|V(L)|/|L|$ is the trace-based log representativeness approximation~\cite {karunaratne2024representativeness}}{table.1.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Experimental setup}{14}{subsection.1.6.1}\protected@file@percent }
+\newlabel{sec:eval:setup}{{6.1}{14}{Experimental setup}{subsection.1.6.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.1}Datasets.}{14}{subsubsection.1.6.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.2}Discovery configurations.}{14}{subsubsection.1.6.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.3}Methods and ground truth.}{14}{subsubsection.1.6.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.4}Protocol and agreement criteria.}{15}{subsubsection.1.6.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Results}{15}{subsection.1.6.2}\protected@file@percent }
+\newlabel{sec:eval:results}{{6.2}{15}{Results}{subsection.1.6.2}{}}
+\citation{theis2020avatar}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Feasibility under the $1$-hour budget: the methods with restricted or no coverage (M2, M6adapted, M6original, and M7 score at scale; Sect.\nobreakspace  {}\ref {sec:eval:scale}). Full evidence in Appendix\nobreakspace  {}\ref {sec:appendix:feasibility}.}}{16}{table.1.3}\protected@file@percent }
+\newlabel{tab:feasibility}{{3}{16}{Feasibility under the $1$-hour budget: the methods with restricted or no coverage (M2, M6adapted, M6original, and M7 score at scale; Sect.~\ref {sec:eval:scale}). Full evidence in Appendix~\ref {sec:appendix:feasibility}}{table.1.3}{}}
+\newlabel{sec:eval:feasibility}{{6.2.1}{16}{Feasibility}{subsubsection.1.6.2.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.1}Feasibility.}{16}{subsubsection.1.6.2.1}\protected@file@percent }
+\citation{polyvyanyy2022bootstrap}
+\citation{theis2020avatar}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Agreement with R1 on L1 (six non-degenerate miners) and the flower litmus. $\tau _b$ is Kendall's tau-b. $^{*}$M6adapted uses adapted scoring (Sect.\nobreakspace  {}\ref {sec:impl:baselines}).}}{17}{table.1.4}\protected@file@percent }
+\newlabel{tab:corr}{{4}{17}{Agreement with R1 on L1 (six non-degenerate miners) and the flower litmus. $\tau _b$ is Kendall's tau-b. \chg {$^{*}$M6adapted uses adapted scoring (Sect.~\ref {sec:impl:baselines}).}}{table.1.4}{}}
+\newlabel{sec:eval:external}{{6.2.2}{17}{Cross-paradigm agreement on L1}{subsubsection.1.6.2.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.2}Cross-paradigm agreement on L1.}{17}{table.1.4}\protected@file@percent }
+\citation{polyvyanyy2022bootstrap}
+\newlabel{sec:eval:m6}{{6.2.3}{18}{What contaminates a generalization score: a controlled bootstrap study}{subsubsection.1.6.2.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.3}What contaminates a generalization score: a controlled bootstrap study.}{18}{subsubsection.1.6.2.3}\protected@file@percent }
+\newlabel{sec:eval:scale}{{6.2.4}{18}{Agreement at scale (L3--L5) and the ablation}{subsubsection.1.6.2.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.4}Agreement at scale (L3--L5) and the ablation.}{18}{subsubsection.1.6.2.4}\protected@file@percent }
+\citation{karunaratne2024representativeness}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Agreement with R1 on all five logs (six non-degenerate miners each): Pearson / MAE per log, and the flower-litmus range. AVATAR is a budget sentinel on all five logs (Sect.\nobreakspace  {}\ref {sec:eval:feasibility}); the SpeciAL L5 entry covers the four miners that returned within budget; the Entropia \texttt  {-bgen} L4 entry covers the three that returned; M4/M8 return too few cells to rank, and M9 is degenerate on L2/L5 and infeasible at scale, so neither is ranked here (its speed/accuracy point is in Fig.\nobreakspace  {}\ref {fig:pareto}).}}{19}{table.1.5}\protected@file@percent }
+\newlabel{tab:scale}{{5}{19}{Agreement with R1 on all five logs (six non-degenerate miners each): Pearson / MAE per log, and the flower-litmus range. \chg {AVATAR is a budget sentinel on all five logs (Sect.~\ref {sec:eval:feasibility});} the SpeciAL L5 entry covers the four miners that returned within budget; \chg {the Entropia \texttt {-bgen} L4 entry covers the three that returned;} M4/M8 return too few cells to rank, and M9 is degenerate on L2/L5 and infeasible at scale, so neither is ranked here (its speed/accuracy point is in Fig.~\ref {fig:pareto})}{table.1.5}{}}
+\citation{karunaratne2024representativeness}
+\newlabel{sec:eval:accept}{{6.2.5}{20}{The acceptance reading}{subsubsection.1.6.2.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.5}The acceptance reading.}{20}{subsubsection.1.6.2.5}\protected@file@percent }
+\newlabel{sec:eval:genval}{{6.2.6}{20}{The generator premise, tested directly}{subsubsection.1.6.2.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.6}The generator premise, tested directly.}{20}{subsubsection.1.6.2.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Generator premise across the 21-log catalog: exact-match hit-rate against log representativeness (TLRA), ShadowGen crosses coloured by alphabet size $|\mathcal  {A}|$ vs the uniformly random floor (open circles), one point per log. ShadowGen exceeds random on every log (random never above $2.2\%$). Two structural properties shape exact-matchability: hit-rate correlates with representativeness (Pearson $0.66$ with TLRA) and against alphabet size (Pearson $-0.65$ on $\log |\mathcal  {A}|$). The floor cluster is the large-alphabet municipality logs ($|\mathcal  {A}|$ up to $624$), which are also the least representative, so both properties push them to zero.}}{21}{figure.1.5}\protected@file@percent }
+\newlabel{fig:genvalbox}{{5}{21}{Generator premise across the 21-log catalog: exact-match hit-rate against log representativeness (TLRA), ShadowGen crosses coloured by alphabet size $|\mathcal {A}|$ vs the uniformly random floor (open circles), one point per log. ShadowGen exceeds random on every log (random never above $2.2\%$). Two structural properties shape exact-matchability: hit-rate correlates with representativeness (Pearson $0.66$ with TLRA) and against alphabet size (Pearson $-0.65$ on $\log |\mathcal {A}|$). The floor cluster is the large-alphabet municipality logs ($|\mathcal {A}|$ up to $624$), which are also the least representative, so both properties push them to zero}{figure.1.5}{}}
+\newlabel{sec:eval:runtime}{{6.2.7}{21}{Runtime}{subsubsection.1.6.2.7}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.7}Runtime.}{21}{subsubsection.1.6.2.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Speed against accuracy over all five logs: median time per model (log scale) versus mean of the per-log MAEs to R1; lower-left is better. Whiskers show the spread the aggregates hide: horizontal, min to max cell runtime; vertical, min to max per-log MAE. M1 ShadowGen and M6adapted are alone in the accurate corner; M2 PM4Py is fast but never accurate; M9 negative events is fast but poorly calibrated (plotted on the three logs it covers); the Entropia \texttt  {-bgen} F-measure (M6original) is slow and the worst-calibrated method that returns; M5 AVATAR is a budget sentinel on all five logs, plotted at its measured GPU training cost (median ${\sim }10$\,h per log over L1/L2; the CPU projection is $3$--$4$ days; Sect.\nobreakspace  {}\ref {sec:eval:feasibility}) without a time whisker, its accuracy read from the two small logs it scores off-protocol. Partial-coverage points carry their logs in the label. M4 and M8 do not complete a scorable comparison.}}{22}{figure.1.6}\protected@file@percent }
+\newlabel{fig:pareto}{{6}{22}{Speed against accuracy over all five logs: median time per model (log scale) versus mean of the per-log MAEs to R1; lower-left is better. Whiskers show the spread the aggregates hide: horizontal, min to max cell runtime; vertical, min to max per-log MAE. M1 ShadowGen and M6adapted are alone in the accurate corner; M2 PM4Py is fast but never accurate; M9 negative events is fast but poorly calibrated (plotted on the three logs it covers); the Entropia \texttt {-bgen} F-measure (M6original) is slow and the worst-calibrated method that returns; M5 AVATAR is a budget sentinel on all five logs, plotted at its measured GPU training cost (median ${\sim }10$\,h per log over L1/L2; the CPU projection is $3$--$4$ days; Sect.~\ref {sec:eval:feasibility}) without a time whisker, its accuracy read from the two small logs it scores off-protocol. Partial-coverage points carry their logs in the label. M4 and M8 do not complete a scorable comparison}{figure.1.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Discussion}{22}{subsection.1.6.3}\protected@file@percent }
+\newlabel{sec:eval:discussion}{{6.3}{22}{Discussion}{subsection.1.6.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Threats to validity}{23}{subsection.1.6.4}\protected@file@percent }
+\newlabel{sec:eval:threats}{{6.4}{23}{Threats to validity}{subsection.1.6.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{24}{section.1.7}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{24}{Conclusion}{section.1.7}{}}
+\citation{polyvyanyy2022bootstrap}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Acceptance-reading agreement}{25}{section.A.1}\protected@file@percent }
+\newlabel{sec:appendix:accept}{{A}{25}{Acceptance-reading agreement}{section.A.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Raw cross-paradigm scores on L1}{25}{section.A.2}\protected@file@percent }
+\newlabel{sec:appendix:external}{{B}{25}{Raw cross-paradigm scores on L1}{section.A.2}{}}
+\citation{vandongen2016anti}
+\citation{reissner2022pattern}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Acceptance reading on L1 (\ensuremath  {\mathit  {Gen}_{\mathit  {accept}}}) vs the acceptance ground truth (R1-accept), per miner.}}{26}{table.A.6}\protected@file@percent }
+\newlabel{tab:accept}{{6}{26}{Acceptance reading on L1 (\genaccept ) vs the acceptance ground truth (R1-accept), per miner}{table.A.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Acceptance reading (\ensuremath  {\mathit  {Gen}_{\mathit  {accept}}}) vs the acceptance ground truth (R1-accept): agreement over the six non-degenerate miners per log, plus the two construct poles. Both anchor the trace and flower poles at $0$ and $1$ on every log (largest deviation $0.003$, the L5 trace model; Sect.\nobreakspace  {}\ref {sec:eval:accept}). $^{*}$Pearson is uninformative on L4: strict acceptance saturates at trace depth (mean $57$ events), leaving only two mid-range cells with signal (Sect.\nobreakspace  {}\ref {sec:eval:accept}).}}{26}{table.A.7}\protected@file@percent }
+\newlabel{tab:accept-scale}{{7}{26}{Acceptance reading (\genaccept ) vs the acceptance ground truth (R1-accept): agreement over the six non-degenerate miners per log, plus the two construct poles. Both anchor the trace and flower poles at $0$ and $1$ on every log (largest deviation $0.003$, the L5 trace model; Sect.~\ref {sec:eval:accept}). $^{*}$Pearson is uninformative on L4: strict acceptance saturates at trace depth (mean $57$ events), leaving only two mid-range cells with signal (Sect.~\ref {sec:eval:accept})}{table.A.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}The bootstrap contamination reading}{26}{section.A.3}\protected@file@percent }
+\newlabel{sec:appendix:m6}{{C}{26}{The bootstrap contamination reading}{section.A.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Feasibility forensics}{26}{section.A.4}\protected@file@percent }
+\newlabel{sec:appendix:feasibility}{{D}{26}{Feasibility forensics}{section.A.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces L1 Sepsis: scores per miner, mean $\pm $ std where applicable (seven miners of the external comparison). $^{\ddagger }$model fitness $<0.5$ on the log. $^{\dagger }$returns too few comparable cells (Sect.\nobreakspace  {}\ref {sec:eval:feasibility}). \textsuperscript  {\S  }off-protocol budget sentinel (Sect.\nobreakspace  {}\ref {sec:eval:feasibility}): shown for the litmus and Fig.\nobreakspace  {}\ref {fig:calibration}, excluded from the agreement statistics.}}{27}{table.A.8}\protected@file@percent }
+\newlabel{tab:external}{{8}{27}{L1 Sepsis: scores per miner, mean $\pm $ std where applicable (seven miners of the external comparison). $^{\ddagger }$model fitness $<0.5$ on the log. $^{\dagger }$returns too few comparable cells (Sect.~\ref {sec:eval:feasibility}). \chg {\textsuperscript {\S }off-protocol budget sentinel (Sect.~\ref {sec:eval:feasibility}): shown for the litmus and Fig.~\ref {fig:calibration}, excluded from the agreement statistics.}}{table.A.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces The same \texttt  {bsgen} bootstrap sample on L1, scored four ways, vs R1 (six non-degenerate miners). Only the readings free of precision pass the flower litmus.}}{27}{table.A.9}\protected@file@percent }
+\newlabel{tab:m6}{{9}{27}{The same \texttt {bsgen} bootstrap sample on L1, scored four ways, vs R1 (six non-degenerate miners). Only the readings free of precision pass the flower litmus}{table.A.9}{}}
+\citation{vandenbroucke2014negative}
+\citation{theis2020avatar}
+\citation{polyvyanyy2020entropia}
+\@writefile{toc}{\contentsline {section}{\numberline {E}Per-method calibration across the five logs}{28}{section.A.5}\protected@file@percent }
+\newlabel{sec:appendix:calibration}{{E}{28}{Per-method calibration across the five logs}{section.A.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {F}Generator premise per log}{28}{section.A.6}\protected@file@percent }
+\newlabel{sec:appendix:genval}{{F}{28}{Generator premise per log}{section.A.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {G}Baseline integration details}{28}{section.A.7}\protected@file@percent }
+\newlabel{sec:appendix:baselines}{{G}{28}{Baseline integration details}{section.A.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Per-method calibration against the cross-validation ground truth R1 across all five logs (six non-degenerate miners per log, up to 30 points, one marker per log; dashed line $y{=}x$). The generative and resampling metrics (M1 ShadowGen, M6adapted) sit on the line on every log; the published Entropia \texttt  {-bgen} F-measure of the same bootstrap sample (M6original) sits far below it (its F1 folds precision in, Sect.\nobreakspace  {}\ref {sec:eval:m6}); M2 PM4Py forms a flat band that ignores the ground-truth gradient; M5 AVATAR (shown off-protocol on L1/L2 only, Sect.\nobreakspace  {}\ref {sec:eval:feasibility}) and M7 SpeciAL scatter off the line. Metrics that could not run on every log appear with fewer points: AVATAR's sparse panel is itself the feasibility verdict.}}{29}{figure.A.7}\protected@file@percent }
+\newlabel{fig:calibration}{{7}{29}{Per-method calibration against the cross-validation ground truth R1 across all five logs (six non-degenerate miners per log, up to 30 points, one marker per log; dashed line $y{=}x$). The generative and resampling metrics (M1 ShadowGen, M6adapted) sit on the line on every log; the published Entropia \texttt {-bgen} F-measure of the same bootstrap sample (M6original) sits far below it (its F1 folds precision in, Sect.~\ref {sec:eval:m6}); M2 PM4Py forms a flat band that ignores the ground-truth gradient; M5 AVATAR (shown off-protocol on L1/L2 only, Sect.~\ref {sec:eval:feasibility}) and M7 SpeciAL scatter off the line. Metrics that could not run on every log appear with fewer points: AVATAR's sparse panel is itself the feasibility verdict}{figure.A.7}{}}
+\citation{rozinat2008conformance}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Two readings of the shadow log on L1 Sepsis: graded fitness (partial credit) vs.\ strict acceptance (perfect-replay fraction). Acceptance gives the construct's clean poles (Trace $0.00$, Flower $1.00$), and the gap between the bars exposes partial-credit inflation: e.g.\ Alpha+ scores $0.76$ fitness but $0.00$ acceptance, and the trace model $0.57$ fitness but $0.00$ acceptance (Sect.\nobreakspace  {}\ref {sec:eval:accept}).}}{30}{figure.A.8}\protected@file@percent }
+\newlabel{fig:accept}{{8}{30}{Two readings of the shadow log on L1 Sepsis: graded fitness (partial credit) vs.\ strict acceptance (perfect-replay fraction). Acceptance gives the construct's clean poles (Trace $0.00$, Flower $1.00$), and the gap between the bars exposes partial-credit inflation: e.g.\ Alpha+ scores $0.76$ fitness but $0.00$ acceptance, and the trace model $0.57$ fitness but $0.00$ acceptance (Sect.~\ref {sec:eval:accept})}{figure.A.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Generator premise: share of generated traces that exactly match held-out real variants (mean over $15$ folds, in \%), and the share of the held-out variant set reached (coverage, in \%). TLRA (trace-based log representativeness, Table\nobreakspace  {}\ref {tab:datasets}) is repeated here: the hit-rate tracks it at Pearson $0.97$.}}{30}{table.A.10}\protected@file@percent }
+\newlabel{tab:genval}{{10}{30}{Generator premise: share of generated traces that exactly match held-out real variants (mean over $15$ folds, in \%), and the share of the held-out variant set reached (coverage, in \%). TLRA (trace-based log representativeness, Table~\ref {tab:datasets}) is repeated here: the hit-rate tracks it at Pearson $0.97$}{table.A.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {H}Choosing the context bound}{30}{section.A.8}\protected@file@percent }
+\newlabel{sec:appendix:nsweep}{{H}{30}{Choosing the context bound}{section.A.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Complexity derivation}{30}{section.A.9}\protected@file@percent }
+\newlabel{sec:appendix:complexity}{{I}{30}{Complexity derivation}{section.A.9}{}}
+\bibstyle{splncs04}
+\bibdata{references}
+\bibcite{vanderaalst2016pm}{1}
+\bibcite{vanderaalst2018propositions}{2}
+\bibcite{vanderaalst2004alpha}{3}
+\bibcite{alkhammash2022entropic}{4}
+\bibcite{augusto2019benchmark}{5}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Choosing the context bound $N$, swept on all five logs ($\tau {=}5$, $K{=}1$). (a) MAE to R1 plateaus from $N{\approx }4$ on every log; $N{=}6$ is optimal on L1 and within $0.004$ on L2--L4. (b) The realized per-step mutation rate rises monotonically with $N$ on every log (log scale) and offers no maximum, so calibration, not novelty, fixes $N$. The band marks the chosen $N{=}6$.}}{31}{figure.A.9}\protected@file@percent }
+\newlabel{fig:nsweep}{{9}{31}{Choosing the context bound $N$, swept on all five logs ($\tau {=}5$, $K{=}1$). (a) MAE to R1 plateaus from $N{\approx }4$ on every log; $N{=}6$ is optimal on L1 and within $0.004$ on L2--L4. (b) The realized per-step mutation rate rises monotonically with $N$ on every log (log scale) and offers no maximum, so calibration, not novelty, fixes $N$. The band marks the chosen $N{=}6$}{figure.A.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {J}Katz mutation at realistic counts}{31}{section.A.10}\protected@file@percent }
+\newlabel{sec:appendix:mutation}{{J}{31}{Katz mutation at realistic counts}{section.A.10}{}}
+\bibcite{berti2019pm4py}{6}
+\bibcite{berti2023pm4pysi}{7}
+\bibcite{vandenbroucke2014negative}{8}
+\bibcite{buijs2014quality}{9}
+\bibcite{vandongen2017bpi}{10}
+\bibcite{vandongen2019bpi}{11}
+\bibcite{vandongen2018bpi}{12}
+\bibcite{vandongen2016anti}{13}
+\bibcite{gale1995gt}{14}
+\bibcite{janssenswillen2019confirmatory}{15}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Katz-consistent mutation at realistic counts (illustrative; activities abstracted to $x,y,z$). Backoff sets both \emph  {how often} to invent an event (the rate, resolved at order\nobreakspace  {}5) and \emph  {what} to invent (the proposal, found at order\nobreakspace  {}4): novel in the exact context, yet attested in a related shorter one.}}{32}{figure.A.10}\protected@file@percent }
+\newlabel{fig:mutation}{{10}{32}{Katz-consistent mutation at realistic counts (illustrative; activities abstracted to $x,y,z$). Backoff sets both \emph {how often} to invent an event (the rate, resolved at order~5) and \emph {what} to invent (the proposal, found at order~4): novel in the exact context, yet attested in a related shorter one}{figure.A.10}{}}
+\bibcite{janssenswillen2017comparative}{16}
+\bibcite{kabierski2023species}{17}
+\bibcite{karunaratne2024representativeness}{18}
+\bibcite{katz1987}{19}
+\bibcite{leemans2013im}{20}
+\bibcite{leemans2014imf}{21}
+\bibcite{leemans2019emsc}{22}
+\bibcite{mannhardt2016sepsis}{23}
+\bibcite{polyvyanyy2020entropia}{24}
+\bibcite{polyvyanyy2022bootstrap}{25}
+\bibcite{reissner2022pattern}{26}
+\bibcite{rozinat2008conformance}{27}
+\bibcite{steeman2013bpi}{28}
+\bibcite{syring2019conformance}{29}
+\bibcite{theis2020avatar}{30}
+\bibcite{weijters2006hm}{31}
+\gdef \@abspage@last{34}
