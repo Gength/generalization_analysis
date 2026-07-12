@@ -53,8 +53,8 @@ def run(dskey, Ns, taus, num_traces=1000, iters=5):
             grid[f"N{N}_t{tau}"] = {"mae": round(mae, 4), "pearson": round(pear, 4),
                                     "scores": [round(x, 4) for x in gs]}
             print(f"  N={N} tau={tau:>2}: MAE={mae:.4f}  Pearson={pear:.4f}", flush=True)
-    return {"dataset": dsname, "Ns": Ns, "taus": taus, "r1": [round(x, 4) for x in r1],
-            "grid": grid}
+    return {"dataset": dsname, "Ns": Ns, "taus": taus, "iters": iters,
+            "r1": [round(x, 4) for x in r1], "grid": grid}
 
 
 if __name__ == "__main__":
@@ -62,13 +62,15 @@ if __name__ == "__main__":
     ap.add_argument("datasets", nargs="*", default=None)
     ap.add_argument("--Ns", type=int, nargs="+", default=[2, 3, 4, 5, 6, 7, 8])
     ap.add_argument("--taus", type=int, nargs="+", default=[2, 5, 10])
+    ap.add_argument("--iters", type=int, default=5,
+                    help="K, the number of independent draws averaged (1 = shipped default)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     keys = args.datasets or ["D1"]
     out = {}
     for dk in keys:
         try:
-            out[dk] = run(dk, args.Ns, args.taus)
+            out[dk] = run(dk, args.Ns, args.taus, iters=args.iters)
         except Exception as e:
             out[dk] = {"error": repr(e)}
             print(f"{dk} ERROR: {e!r}", flush=True)
