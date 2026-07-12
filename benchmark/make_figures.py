@@ -30,12 +30,14 @@ CFG_V2 = "benchmark/results/configs"
 OUT = "report/figures"
 os.makedirs(OUT, exist_ok=True)
 
-# AVATAR cost anchor: full published config (100 pre-epochs, 5000 adversarial
-# steps) projected from the measured D1 CPU anchor (45.11 s/adv-step, 88 min
-# for the reduced config; see results/avatar_rebuild/quick_anchor_timing.json).
-# 302400 s = 3.5 days wall per log on benchmark-class CPU. Supersedes the
-# unbacked 14400 s (4 h, GPU, partner-provenance) anchor.
-AVATAR_ANCHOR_S = 302400.0
+# AVATAR cost anchor: MEASURED GPU training of the full published config
+# (100 pre-epochs, 5000 adv steps): D1 42334 s (11.8 h) + D2 31045 s (8.6 h),
+# committed per-cell as results.training_time (a8ac16d); median 36690 s ~ 10.2 h
+# per log. The configs' runtime_s (seconds) is sampling/eval only, NOT the cost.
+# Supersedes the 302400 s CPU projection (3-4 days, from the reduced-config
+# anchor in results/avatar_rebuild/quick_anchor_timing.json), which stays in
+# the report text as the CPU-class figure.
+AVATAR_ANCHOR_S = 36690.0
 
 MINERS7 = ["Alpha", "Alpha+", "Heuristics", "Heuristics_Strict",
            "Inductive_Infrequent", "Inductive_Strict", "Flower"]
@@ -320,18 +322,47 @@ def fig_calibration_scale():
     plt.close(fig)
 
 def fig_nsweep():
-    """Realized mutation rate vs N (BPI 2017 sweep)."""
-    N = list(range(1, 9))
-    rate = [0.027, 0.211, 0.376, 0.664, 0.882, 1.333, 1.255, 1.208]  # x1e-3
-    fig, ax = plt.subplots(figsize=(5.2, 3.0))
-    ax.plot(N, rate, "o-", color="#378ADD")
-    ax.scatter([6], [1.333], s=90, facecolor="none", edgecolor="#b8403e", linewidth=1.6, zorder=5)
-    ax.annotate("peak at $N{=}6$", xy=(6, 1.333), xytext=(6.15, 0.85), fontsize=11,
-                arrowprops=dict(arrowstyle="->", color="0.45"))
-    ax.set_xlabel("N-gram order $N$", fontsize=12)
-    ax.set_ylabel(r"realized mutation rate ($\times10^{-3}$)", fontsize=12)
-    ax.set_xticks(N); ax.tick_params(labelsize=11)
-    ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.5)
+    """Choosing the context bound N, measured on all five logs (tau=5, K=1):
+    (a) MAE to R1 vs N is a plateau with N=6 at/near each per-log optimum,
+    (b) the realized per-step mutation rate rises monotonically with N on every
+    log (log scale), so it offers no maximum to select; calibration fixes N.
+    Reads results/nt_sweep.json (nt_sweep.py) and results/nt_perstep_sweep.json
+    (nt_perstep_sweep.py); skipped if either is absent. Replaces the earlier
+    one-log peak-at-6 proxy figure, which does not reproduce with v2.6."""
+    import json as _json
+    pm = "benchmark/results/nt_sweep.json"
+    pr = "benchmark/results/nt_perstep_sweep.json"
+    if not (os.path.exists(pm) and os.path.exists(pr)):
+        print("  nsweep: missing N-sweep results, skipped")
+        return
+    mae = _json.load(open(pm, encoding="utf-8"))
+    rate = _json.load(open(pr, encoding="utf-8"))
+    marks = {"D1": ("o", "#378ADD"), "D2": ("s", "#1D9E75"), "D3": ("^", "#9673a6"),
+             "D4": ("D", "#E8943A"), "D5": ("v", "#b8403e")}
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.6, 3.1))
+    for ax in (a1, a2):
+        ax.axvspan(5.5, 6.5, color="0.92", zorder=0)
+        ax.set_xlabel("context bound $N$", fontsize=10)
+        ax.tick_params(labelsize=9)
+        ax.spines[["top", "right"]].set_visible(False)
+        ax.grid(ls=":", alpha=.5)
+    Nm = [2, 3, 4, 5, 6, 7, 8]
+    for d in ("D1", "D2", "D3", "D4", "D5"):
+        mk, c = marks[d]
+        a1.plot(Nm, [mae[d]["grid"][f"N{n}_t5"]["mae"] for n in Nm],
+                marker=mk, color=c, lw=1.4, ms=4.5, label="L" + d[1])
+    a1.set_xticks(Nm); a1.set_ylim(0, 0.065)
+    a1.set_ylabel("MAE vs R1", fontsize=10)
+    a1.set_title("(a) calibration: plateau", fontsize=10)
+    a1.legend(fontsize=7.5, frameon=False, ncol=2, loc="upper right")
+    Nr = [1, 2, 3, 4, 5, 6, 7, 8]
+    for d in ("D1", "D2", "D3", "D4", "D5"):
+        mk, c = marks[d]
+        a2.plot(Nr, [rate[d][str(n)]["per_step"] * 1000 for n in Nr],
+                marker=mk, color=c, lw=1.4, ms=4.5)
+    a2.set_yscale("log"); a2.set_xticks(Nr)
+    a2.set_ylabel(r"per-step mutation rate ($\times10^{-3}$)", fontsize=10)
+    a2.set_title("(b) novelty: monotone, no maximum", fontsize=10)
     fig.tight_layout(); fig.savefig(f"{OUT}/fig_nsweep.pdf", bbox_inches="tight"); plt.close(fig)
 
 def fig_runtime():
@@ -444,7 +475,7 @@ def fig_accept_scale():
                 xs.append(ra); ys.append(ga)
         mk, c = MARKS[d]
         ax.scatter(xs, ys, marker=mk, s=52, color=c, edgecolor="white",
-                   linewidth=0.7, label=d, zorder=3)
+                   linewidth=0.7, label="L" + d[1], zorder=3)
     ax.set_xlabel("R1-accept (held-out real traces replayed perfectly)", fontsize=9)
     ax.set_ylabel("gen_accept (shadow traces replayed perfectly)", fontsize=9)
     ax.set_xlim(-0.03, 1.05); ax.set_ylim(-0.03, 1.05); ax.set_aspect("equal")
@@ -770,7 +801,7 @@ def fig_runtime_scale():
             return (np.nan, np.nan, np.nan)
         return (float(np.median(ts)), float(min(ts)), float(max(ts)))
 
-    METHS = [("ShadowGen v2.6-mle (ours)", "M1g", "#1D9E75", "o-"),
+    METHS = [("M1 ShadowGen (ours)", "M1g", "#1D9E75", "o-"),
              ("PM4Py", "M2", "#378ADD", "s-"),
              ("SpeciAL", "M7", "#9673a6", "^-"),
              ("Entropia -bgen", "M6original", "#E8943A", "D-"),
@@ -794,8 +825,8 @@ def fig_runtime_scale():
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("event log size (events, log scale)", fontsize=9)
     ax.set_ylabel("time per model (s, log scale)\nmarker = median, whiskers = min to max", fontsize=8.5)
-    ax.text(0.98, 0.04, "SpeciAL: crashed on D5 (1.6M events)\n"
-                        "Entropia -bgen: timeout on D4 (2.5M events)",
+    ax.text(0.98, 0.04, "SpeciAL: crashed on L5 (1.6M events)\n"
+                        "Entropia -bgen: timeout on L4 (2.5M events)",
             transform=ax.transAxes, fontsize=7.5, color="#b8403e",
             ha="right", va="bottom")
     ax.legend(fontsize=8, frameon=False, loc="upper left")
