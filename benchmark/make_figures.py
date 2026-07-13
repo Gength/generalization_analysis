@@ -611,49 +611,50 @@ def fig_pareto_scale():
         dd = [d for d, _ in _method_cover(meth)]
         return "" if len(dd) == 5 else " (" + "+".join("L" + d[1] for d in dd) + ")"
 
-    # (label base, method, kind, time override, dx, dy, ha)
-    # M1 carries a distinct star marker instead of an "(ours)" label.
-    pts = [("M1 ShadowGen", "M1g", "ours", None, 8, 4, "left"),
-           ("M2 PM4Py", "M2", "work", None, 8, 8, "left"),
-           ("M7 SpeciAL", "M7", "work", None, 8, -11, "left"),
-           ("M6adapted", "M6adapted", "work", None, 8, -14, "left"),
-           ("M9 neg-events", "M9", "fail", None, 9, 3, "left"),
-           ("M6original -bgen", "M6original", "fail", None, -8, 6, "right"),
-           ("M5 AVATAR", "M5", "slow", AVATAR_ANCHOR_S, -8, 4, "right")]
-    cmap = {"ours": "#1D9E75", "work": "#378ADD", "slow": "#E8943A",
-            "fail": "#b8403e", "floor": "0.55"}
+    # No M5 (its 9-12 h GPU point forced a log axis); linear time axis. M1 is
+    # plotted at its shipped single-draw (K=1) operating point.
+    def fmt_dur(s):
+        if s >= 3600:
+            return f"{s/3600:.1f} h"
+        if s >= 90:
+            return f"{s/60:.0f} min"
+        return f"{s:.0f} s"
+
+    pts = [("M2 PM4Py", "M2", "work", 8, 8, "left"),
+           ("M7 SpeciAL", "M7", "work", 8, -13, "left"),
+           ("M6adapted", "M6adapted", "work", 8, 6, "left"),
+           ("M9 neg-events", "M9", "fail", 9, 3, "left"),
+           ("M6original -bgen", "M6original", "fail", -8, 6, "right")]
+    cmap = {"ours": "#1D9E75", "work": "#378ADD", "fail": "#b8403e"}
+    XMAX = 150
     fig, ax = plt.subplots(figsize=(6.6, 4.2))
-    for base, meth, kind, t_over, dx, dy, ha in pts:
-        tmed, tlo, thi = time_stats(meth)
-        t = t_over if t_over is not None else tmed
+    for base, meth, kind, dx, dy, ha in pts:
+        t, tlo, thi = time_stats(meth)
         mae, mlo, mhi = mae_stats(meth)
         if np.isnan(t) or np.isnan(mae):
             continue
         c = cmap[kind]
-        # whiskers so the point does not hide the spread: horizontal = min-max
-        # cell runtime, vertical = min-max per-log MAE. AVATAR's x is the
-        # projected full-training cost (AVATAR_ANCHOR_S), not a measured
-        # median, so it gets no time whisker.
-        if t_over is None and not np.isnan(tlo):
-            ax.plot([tlo, thi], [mae, mae], color=c, lw=0.9, alpha=0.45, zorder=2)
+        # horizontal min-max cell-time whisker; the worst cells run to hours,
+        # off this linear axis, so clip at the edge with an arrow and label the
+        # true maximum. vertical whisker = min-max per-log MAE.
+        if not np.isnan(tlo):
+            if thi > XMAX:
+                ax.annotate("", xy=(XMAX - 1, mae), xytext=(tlo, mae),
+                            arrowprops=dict(arrowstyle="->", color=c, lw=0.9, alpha=0.5), zorder=2)
+                ax.annotate(fmt_dur(thi), (XMAX - 2, mae), textcoords="offset points",
+                            xytext=(0, 4), fontsize=7, ha="right", color=c, alpha=0.9)
+            else:
+                ax.plot([tlo, thi], [mae, mae], color=c, lw=0.9, alpha=0.45, zorder=2)
         if not np.isnan(mlo) and mhi > mlo:
             ax.plot([t, t], [mlo, mhi], color=c, lw=0.9, alpha=0.45, zorder=2)
-        ax.scatter(t, mae, s=170 if meth == "M1g" else 80, color=c,
-                   marker="*" if meth == "M1g" else "o", edgecolor="white",
-                   linewidth=0.8, zorder=3)
+        ax.scatter(t, mae, s=80, color=c, edgecolor="white", linewidth=0.8, zorder=3)
         ax.annotate(base + covnote(meth), (t, mae), textcoords="offset points",
-                    xytext=(dx, dy), fontsize=8, ha=ha)
-        print(f"  pareto_scale {meth:7} t={t:>8.1f}s (min {tlo:.1f}, max {thi:.1f})  "
-              f"MAE={mae:.3f} (min {mlo:.3f}, max {mhi:.3f})")
+                    xytext=(dx, dy), fontsize=8.5, ha=ha)
+        print(f"  pareto {meth:11} t={t:>7.1f}s (max {thi:.0f})  MAE={mae:.3f}")
 
-    # ShadowGen 1-iteration "fast mode": ~same accuracy, 1/5 the time.
-    # calculate_gen_shadow_stable loops N identical generate+replay steps with
-    # no shared setup, so single-iteration time is the 5-iter median / 5
-    # (verified on BPI2017: measured 1-iter/5-iter ratio 5.3). Accuracy uses
-    # raw_iterations[0], the metric's own first-iteration score per cell.
-    import json as _j2
-    t5m = time_stats("M1g")[0]
-    t1 = t5m / 5.0
+    # M1 at its shipped single-draw (K=1) operating point: time = K=5 median / 5
+    # (measured ratio 5.0), accuracy = first-draw scores vs R1 per cell.
+    t1 = time_stats("M1g")[0] / 5.0
     m1_pl = []
     for _, ds in DS5:
         d = []
@@ -662,34 +663,33 @@ def fig_pareto_scale():
             pr = f"{CFG_V1}/{ds}__{mn}__R1.json"
             if not (os.path.exists(pm) and os.path.exists(pr)):
                 continue
-            rm = _j2.load(open(pm, encoding="utf-8")).get("results", {})
-            rr = _j2.load(open(pr, encoding="utf-8")).get("results", {})
+            rm = _json.load(open(pm, encoding="utf-8")).get("results", {})
+            rr = _json.load(open(pr, encoding="utf-8")).get("results", {})
             ri = rm.get("raw_iterations")
             r1 = next((rr.get(k) for k in ("mean", "score", "gen_score")
                        if rr.get(k) is not None), None)
             if ri and r1 is not None:
                 d.append(abs(float(ri[0]) - float(r1)))
         if len(d) >= 3:
-            m1_pl.append(np.mean(d))
-    if m1_pl and not np.isnan(t1):
-        m1 = float(np.mean(m1_pl)); c1 = cmap["ours"]
-        ax.annotate("", xy=(t1, m1), xytext=(t5m, mae_stats("M1g")[0]),
-                    arrowprops=dict(arrowstyle="->", color=c1, lw=0.8, alpha=0.55, zorder=2))
-        ax.scatter(t1, m1, s=170, marker="*", facecolor="white", edgecolor=c1,
-                   linewidth=1.4, zorder=4)
-        ax.annotate("M1 single draw (K=1)", (t1, m1), textcoords="offset points",
-                    xytext=(-6, -14), fontsize=8, ha="left", color=c1)
-        print(f"  pareto_scale M1g-1it t={t1:.1f}s MAE={m1:.3f}")
-    ax.set_xscale("log")
-    ax.set_xlabel("median time per model over all logs (s, log scale)", fontsize=9)
-    ax.set_ylabel("mean MAE vs R1 over covered logs  (lower = better)", fontsize=9)
-    ax.set_ylim(-0.03, 0.72); ax.set_xlim(0.2, 1e6)
-    ax.annotate("better", xy=(0.55, 0.01), xytext=(4.0, 0.13), fontsize=9, color="0.3",
+            m1_pl.append(float(np.mean(d)))
+    m1, m1lo, m1hi = float(np.mean(m1_pl)), float(min(m1_pl)), float(max(m1_pl))
+    c1 = cmap["ours"]
+    ax.plot([t1, t1], [m1lo, m1hi], color=c1, lw=0.9, alpha=0.45, zorder=2)
+    ax.scatter(t1, m1, s=220, marker="*", color=c1, edgecolor="white",
+               linewidth=0.8, zorder=4)
+    ax.annotate("M1 ShadowGen", (t1, m1), textcoords="offset points",
+                xytext=(8, 6), fontsize=9, ha="left")
+    print(f"  pareto M1g K=1 t={t1:.1f}s MAE={m1:.3f}")
+
+    ax.set_xlabel("median time per model over all logs (s)", fontsize=9.5)
+    ax.set_ylabel("mean MAE vs R1 over covered logs  (lower = better)", fontsize=9.5)
+    ax.set_xlim(0, XMAX); ax.set_ylim(-0.02, 0.72)
+    ax.annotate("better", xy=(4, 0.02), xytext=(22, 0.14), fontsize=9, color="0.3",
                 arrowprops=dict(arrowstyle="->", color="0.45"))
-    ax.text(0.98, 0.97, "M4, M8: no score on any log (infeasible)",
-            transform=ax.transAxes, ha="right", va="top", fontsize=7.5, color="#b8403e")
-    ax.text(0.02, 0.97, "bars: min-max over cells (horizontal)\nand over per-log error (vertical)",
-            transform=ax.transAxes, ha="left", va="top", fontsize=7, color="0.4")
+    ax.text(0.98, 0.97, "not shown: M5 AVATAR (9–12 h GPU per log);\nM4, M8 infeasible on every log",
+            transform=ax.transAxes, ha="right", va="top", fontsize=8, color="#b8403e")
+    ax.text(0.63, 0.115, "bars: min–max over cells (horizontal, arrows run off axis,\nlabel = worst cell) and over per-log error (vertical)",
+            transform=ax.transAxes, ha="center", va="bottom", fontsize=7, color="0.4")
     ax.spines[["top", "right"]].set_visible(False); ax.grid(ls=":", alpha=.5)
     fig.tight_layout(); fig.savefig(f"{OUT}/fig_pareto_scale.pdf", bbox_inches="tight")
     plt.close(fig)
