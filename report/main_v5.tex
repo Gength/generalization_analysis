@@ -372,30 +372,34 @@ Figure~\ref{fig:mutation} shows the same two-job split of backoff at realistic c
 
 \begin{figure}[t]
 \centering
-\scalebox{0.82}{%
+\scalebox{0.90}{%
 \begin{tikzpicture}[
-  font=\footnotesize, node distance=4mm,
-  lvl/.style={draw, rounded corners=2pt, align=left, inner sep=4pt, text width=80mm},
-  ev/.style={draw, rounded corners=1pt, font=\scriptsize, inner sep=1.5pt},
+  font=\scriptsize,
+  rung/.style={draw, rounded corners=2pt, align=center, inner sep=3.5pt, text width=48mm},
+  note/.style={align=center, text width=50mm},
   arr/.style={-{Stealth[length=2mm]}, semithick}
 ]
-\node[ev] (a) {$\dots\ x$};
-\node[ev, right=1mm of a] (b) {$y$};
-\node[ev, right=1mm of b, fill=blue!12] (c) {$z^{*}$};
-\node[right=1.5mm of c, font=\scriptsize] {(inserted)};
-\node[lvl, fill=red!6, below=5mm of a.west, anchor=north west] (n6)
-  {\textbf{Order 6} (last 6 events): seen only $5\times$, every successor once.\\
-   Too sparse to trust ($\punseen=5/5=1$).};
-\node[lvl, fill=green!9, below=of n6] (n5)
-  {\textbf{Order 5}: seen $35\times$, one rare successor.\\
-   Sets the \emph{rate}: $\punseen=1/35\approx3\%$, and the mutation fires.};
-\node[lvl, fill=blue!8, below=of n5] (n4)
-  {\textbf{Order 4}: first shorter context offering an activity unseen here.\\
-   Sets the \emph{proposal}: insert $z$.};
-\draw[arr] (n6) -- node[right=1pt,font=\scriptsize]{back off} (n5);
-\draw[arr] (n5) -- node[right=1pt,font=\scriptsize]{back off} (n4);
+% panel frames
+\node[draw=black!25, fill=black!3, rounded corners=8pt, minimum width=58mm, minimum height=56mm] (P1) at (0,0) {};
+\node[draw=black!25, fill=black!3, rounded corners=8pt, minimum width=58mm, minimum height=56mm] (P2) at (6.9,0) {};
+% ---- step 1: resolve ----
+\node[green!45!black, font=\scriptsize\bfseries] at (0,2.35) {Step 1: resolve the context};
+\node[black!55, font=\scriptsize\itshape, align=center] at (0,1.8) {back off to the deepest context\\with support};
+\node[rung, fill=black!8, draw=black!35, text=black!60] at (0,1.0) {order 6: seen $5\times$, each successor once $\to$ too sparse, skip};
+\node[black!55] at (0,0.38) {$\downarrow$ back off};
+\node[rung, fill=green!9, draw=green!45!black] at (0,-0.28) {order 5: seen $35\times$ $\to$ \textbf{resolved context}};
+\node[note] at (0,-1.6) {the next step samples from here; its one singleton successor sets the novelty rate $\punseen=1/35\approx3\%$ (Good--Turing)};
+% ---- step 2: invent ----
+\node[blue!45!black, font=\scriptsize\bfseries] at (6.9,2.35) {Step 2: find a novel event};
+\node[black!55, font=\scriptsize\itshape, align=center] at (6.9,1.8) {when the mutation fires:\\back off again};
+\node[rung, fill=black!8, draw=black!35, text=black!60] at (6.9,1.0) {order 5: its successors are all attested};
+\node[black!55] at (6.9,0.38) {$\downarrow$ back off};
+\node[rung, fill=blue!8, draw=blue!45!black] at (6.9,-0.28) {order 4: offers $z$, unseen at order 5 $\to$ \textbf{insert $z$}};
+\node[note] at (6.9,-1.6) {$z$ is novel in the resolved context, yet attested in a shorter one: novel, but grounded};
+% connector
+\draw[arr, black!45] (P1.east) -- (P2.west);
 \end{tikzpicture}}
-\caption{Katz-consistent mutation at realistic counts (illustrative; activities abstracted to $x,y,z$). Backoff sets both \emph{how often} to invent an event (the rate, resolved at order~5) and \emph{what} to invent (the proposal, found at order~4): novel in the exact context, yet attested in a related shorter one.}
+\caption{Katz backoff does the work twice (illustrative counts; activities abstracted). Step 1 resolves the deepest context with support, which supplies the next step and the Good--Turing novelty rate $\punseen$ (Eq.~\eqref{eq:gt}). When the mutation fires, step 2 backs off one level further, to the deepest shorter context offering an activity unseen in the resolved one (Eq.~\eqref{eq:proposal}): the inserted $z$ is novel in the exact context, yet attested in a related shorter one.}
 \label{fig:mutation}
 \end{figure}
 
@@ -510,7 +514,7 @@ Before any agreement can be compared, each method must return scores within the 
 \toprule
 Method & Pearson & Spearman & $\tau_b$ & MAE & Spread & Flower \\
 \midrule
-M1 ShadowGen (ours)  & 0.996 & 1.00 & 1.00 & 0.023 & 0.71 & 1.00 \\
+M1 ShadowGen  & 0.996 & 1.00 & 1.00 & 0.023 & 0.71 & 1.00 \\
 M2 PM4Py         & $-$0.35 & $-$0.43 & $-$0.20 & 0.17 & 0.09 & 0.91 \\
 M6adapted$^{*}$ & 0.998 & 1.00 & 1.00 & 0.018 & 0.74 & 1.00 \\
 M7 SpeciAL       & 0.12 & $-$0.46 & $-$0.41 & 0.21 & 0.26 & 0.80 \\
@@ -561,7 +565,7 @@ The three large logs multiply the event volume by up to $165\times$ over L1 and 
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
 Method & Pear. & MAE & Pear. & MAE & Pear. & MAE & Pear. & MAE & Pear. & MAE & \\
 \midrule
-M1 ShadowGen (ours) & .996 & .023 & .994 & .019 & .999 & .006 & .999 & .016 & .986 & .043 & 1.00 (all) \\
+M1 ShadowGen & .996 & .023 & .994 & .019 & .999 & .006 & .999 & .016 & .986 & .043 & 1.00 (all) \\
 M6adapted & .998 & .018 & .978 & .034 & .999 & .006 & .993 & .020 & .998 & .014 & 1.00 (all) \\
 M2 PM4Py & $-$.35 & .172 & .41 & .184 & $-$.65 & .135 & $-$.53 & .208 & $-$.33 & .229 & .88--.98 \\
 M7 SpeciAL & .12 & .209 & .12 & .158 & .63 & .122 & .76 & .162 & $-$.24 & .079 & .76--.94 \\
@@ -740,7 +744,7 @@ L5 BPI 2019 & 0.999 & 0.075 & 0.00\,/\,1.00 \\
 \toprule
 Method & Alpha$^{\ddagger}$ & Alpha$+$ & Heur. & Heur.S & Ind.Inf & Ind.S & Flower \\
 \midrule
-\chg{ShadowGen (ours)} & .272$\pm$.004 & .759$\pm$.005 & .879$\pm$.002 & .917$\pm$.002 & .972$\pm$.002 & .984$\pm$.002 & 1.00 \\
+\chg{M1 ShadowGen} & .272$\pm$.004 & .759$\pm$.005 & .879$\pm$.002 & .917$\pm$.002 & .972$\pm$.002 & .984$\pm$.002 & 1.00 \\
 M2 PM4Py & .913 & .919 & .830 & .900 & .880 & .902 & .913 \\
 M5 AVATAR\chg{\textsuperscript{\S}} & .329$\pm$.057 & .312$\pm$.002 & .746$\pm$.063 & .734$\pm$.110 & .697$\pm$.021 & .571$\pm$.023 & .330$\pm$.007 \\
 M6adapted$^{*}$ & .250$\pm$.010 & .775$\pm$.018 & .891$\pm$.003 & .930$\pm$.003 & .976$\pm$.003 & .994$\pm$.001 & 1.00 \\

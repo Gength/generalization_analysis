@@ -159,7 +159,7 @@ def fig_calibration_v2(ds, tag):
     from matplotlib.lines import Line2D
     MARKS = {"D1": ("o", "#378ADD"), "D2": ("s", "#1D9E75"), "D3": ("^", "#9673a6"),
              "D4": ("D", "#E8943A"), "D5": ("v", "#b8403e")}
-    panels = [("M1 ShadowGen (ours)", "M1g"), ("M2 PM4Py", "M2"), ("M5 AVATAR", "M5"),
+    panels = [("M1 ShadowGen", "M1g"), ("M2 PM4Py", "M2"), ("M5 AVATAR", "M5"),
               ("M6adapted", "M6adapted"), ("M6original -bgen", "M6original"), ("M7 SpeciAL", "M7")]
     fig, axes = plt.subplots(2, 3, figsize=(7.4, 5.2), sharex=True, sharey=True)
     for ax, (name, meth) in zip(axes.ravel(), panels):
@@ -536,7 +536,7 @@ def _method_cover(meth):
 def fig_calibration_grid_scale():
     """Per-method calibration against R1 with EVERY dataset the method returned
     on (points marked per dataset). Partial coverage is stated in the panel title."""
-    panels = [("v1", "M1a"), ("v2.6-mle", "M1g"), ("PM4Py", "M2"),
+    panels = [("M1 1-gram ablation", "M1a"), ("M1 ShadowGen", "M1g"), ("PM4Py", "M2"),
               ("AVATAR", "M5"), ("Bootstrap adapted", "M6adapted"), ("SpeciAL", "M7")]
     fig, axes = plt.subplots(2, 3, figsize=(7.6, 5.4), sharex=True, sharey=True)
     for ax, (name, meth) in zip(axes.ravel(), panels):
@@ -612,7 +612,8 @@ def fig_pareto_scale():
         return "" if len(dd) == 5 else " (" + "+".join("L" + d[1] for d in dd) + ")"
 
     # (label base, method, kind, time override, dx, dy, ha)
-    pts = [("M1 ShadowGen (ours)", "M1g", "ours", None, 8, 4, "left"),
+    # M1 carries a distinct star marker instead of an "(ours)" label.
+    pts = [("M1 ShadowGen", "M1g", "ours", None, 8, 4, "left"),
            ("M2 PM4Py", "M2", "work", None, 8, 8, "left"),
            ("M7 SpeciAL", "M7", "work", None, 8, -11, "left"),
            ("M6adapted", "M6adapted", "work", None, 8, -14, "left"),
@@ -637,7 +638,8 @@ def fig_pareto_scale():
             ax.plot([tlo, thi], [mae, mae], color=c, lw=0.9, alpha=0.45, zorder=2)
         if not np.isnan(mlo) and mhi > mlo:
             ax.plot([t, t], [mlo, mhi], color=c, lw=0.9, alpha=0.45, zorder=2)
-        ax.scatter(t, mae, s=80, color=c, edgecolor="white",
+        ax.scatter(t, mae, s=170 if meth == "M1g" else 80, color=c,
+                   marker="*" if meth == "M1g" else "o", edgecolor="white",
                    linewidth=0.8, zorder=3)
         ax.annotate(base + covnote(meth), (t, mae), textcoords="offset points",
                     xytext=(dx, dy), fontsize=8, ha=ha)
@@ -673,8 +675,9 @@ def fig_pareto_scale():
         m1 = float(np.mean(m1_pl)); c1 = cmap["ours"]
         ax.annotate("", xy=(t1, m1), xytext=(t5m, mae_stats("M1g")[0]),
                     arrowprops=dict(arrowstyle="->", color=c1, lw=0.8, alpha=0.55, zorder=2))
-        ax.scatter(t1, m1, s=80, facecolor="white", edgecolor=c1, linewidth=1.6, zorder=4)
-        ax.annotate("M1 1-iter (fast)", (t1, m1), textcoords="offset points",
+        ax.scatter(t1, m1, s=170, marker="*", facecolor="white", edgecolor=c1,
+                   linewidth=1.4, zorder=4)
+        ax.annotate("M1 single draw (K=1)", (t1, m1), textcoords="offset points",
                     xytext=(-6, -14), fontsize=8, ha="left", color=c1)
         print(f"  pareto_scale M1g-1it t={t1:.1f}s MAE={m1:.3f}")
     ax.set_xscale("log")
@@ -801,7 +804,8 @@ def fig_runtime_scale():
             return (np.nan, np.nan, np.nan)
         return (float(np.median(ts)), float(min(ts)), float(max(ts)))
 
-    METHS = [("M1 ShadowGen (ours)", "M1g", "#1D9E75", "o-"),
+    # M1 carries a distinct star marker instead of an "(ours)" label
+    METHS = [("M1 ShadowGen", "M1g", "#1D9E75", "*-"),
              ("PM4Py", "M2", "#378ADD", "s-"),
              ("SpeciAL", "M7", "#9673a6", "^-"),
              ("Entropia -bgen", "M6original", "#E8943A", "D-"),
@@ -816,7 +820,7 @@ def fig_runtime_scale():
                 pts.append((EVENTS[ds], med, lo, hi))
         pts.sort()  # connect points in log-size order, not dataset order
         xs = [p[0] for p in pts]; ys = [p[1] for p in pts]
-        ax.plot(xs, ys, mk, color=c, label=name, ms=4.5, lw=1.4)
+        ax.plot(xs, ys, mk, color=c, label=name, ms=9 if mk == "*-" else 4.5, lw=1.4)
         # min-max whiskers: the median hides the tail; show the worst cell too
         ax.errorbar(xs, ys,
                     yerr=[[y - p[2] for y, p in zip(ys, pts)],
