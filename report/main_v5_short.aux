@@ -211,10 +211,10 @@
 \newlabel{sec:appendix:calibration}{{E}{28}{Per-method calibration across the five logs}{section.A.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {F}Generator premise per log}{28}{section.A.6}\protected@file@percent }
 \newlabel{sec:appendix:genval}{{F}{28}{Generator premise per log}{section.A.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {G}Baseline integration details}{28}{section.A.7}\protected@file@percent }
-\newlabel{sec:appendix:baselines}{{G}{28}{Baseline integration details}{section.A.7}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Per-method calibration against the cross-validation ground truth R1 across all five logs (six non-degenerate miners per log, up to 30 points, one marker per log; dashed line $y{=}x$). The generative and resampling metrics (M1 ShadowGen, M6adapted) sit on the line on every log; the published Entropia \texttt  {-bgen} F-measure of the same bootstrap sample (M6original) sits far below it (its F1 folds precision in, Sect.\nobreakspace  {}\ref {sec:eval:m6}); M2 PM4Py forms a flat band that ignores the ground-truth gradient; M5 AVATAR (shown off-protocol on L1/L2 only, Sect.\nobreakspace  {}\ref {sec:eval:feasibility}) and M7 SpeciAL scatter off the line. Metrics that could not run on every log appear with fewer points: AVATAR's sparse panel is itself the feasibility verdict.}}{29}{figure.A.7}\protected@file@percent }
 \newlabel{fig:calibration}{{7}{29}{Per-method calibration against the cross-validation ground truth R1 across all five logs (six non-degenerate miners per log, up to 30 points, one marker per log; dashed line $y{=}x$). The generative and resampling metrics (M1 ShadowGen, M6adapted) sit on the line on every log; the published Entropia \texttt {-bgen} F-measure of the same bootstrap sample (M6original) sits far below it (its F1 folds precision in, Sect.~\ref {sec:eval:m6}); M2 PM4Py forms a flat band that ignores the ground-truth gradient; M5 AVATAR (shown off-protocol on L1/L2 only, Sect.~\ref {sec:eval:feasibility}) and M7 SpeciAL scatter off the line. Metrics that could not run on every log appear with fewer points: AVATAR's sparse panel is itself the feasibility verdict}{figure.A.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {G}Baseline integration details}{29}{section.A.7}\protected@file@percent }
+\newlabel{sec:appendix:baselines}{{G}{29}{Baseline integration details}{section.A.7}{}}
 \citation{rozinat2008conformance}
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Two readings of the shadow log on L1 Sepsis: graded fitness (partial credit) vs.\ strict acceptance (perfect-replay fraction). Acceptance gives the construct's clean poles (Trace $0.00$, Flower $1.00$), and the gap between the bars exposes partial-credit inflation: e.g.\ Alpha+ scores $0.76$ fitness but $0.00$ acceptance, and the trace model $0.57$ fitness but $0.00$ acceptance (Sect.\nobreakspace  {}\ref {sec:eval:accept}).}}{30}{figure.A.8}\protected@file@percent }
 \newlabel{fig:accept}{{8}{30}{Two readings of the shadow log on L1 Sepsis: graded fitness (partial credit) vs.\ strict acceptance (perfect-replay fraction). Acceptance gives the construct's clean poles (Trace $0.00$, Flower $1.00$), and the gap between the bars exposes partial-credit inflation: e.g.\ Alpha+ scores $0.76$ fitness but $0.00$ acceptance, and the trace model $0.57$ fitness but $0.00$ acceptance (Sect.~\ref {sec:eval:accept})}{figure.A.8}{}}
@@ -230,11 +230,11 @@
 \bibcite{vanderaalst2018propositions}{2}
 \bibcite{vanderaalst2004alpha}{3}
 \bibcite{alkhammash2022entropic}{4}
-\bibcite{augusto2019benchmark}{5}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Choosing the context bound $N$, swept on all five logs ($\tau {=}5$, $K{=}1$). (a) MAE to R1 plateaus from $N{\approx }4$ on every log; $N{=}6$ is optimal on L1 and within $0.004$ on L2--L4. (b) The realized per-step mutation rate rises monotonically with $N$ on every log (log scale) and offers no maximum, so calibration, not novelty, fixes $N$. The band marks the chosen $N{=}6$.}}{31}{figure.A.9}\protected@file@percent }
 \newlabel{fig:nsweep}{{9}{31}{Choosing the context bound $N$, swept on all five logs ($\tau {=}5$, $K{=}1$). (a) MAE to R1 plateaus from $N{\approx }4$ on every log; $N{=}6$ is optimal on L1 and within $0.004$ on L2--L4. (b) The realized per-step mutation rate rises monotonically with $N$ on every log (log scale) and offers no maximum, so calibration, not novelty, fixes $N$. The band marks the chosen $N{=}6$}{figure.A.9}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {J}Katz mutation at realistic counts}{31}{section.A.10}\protected@file@percent }
 \newlabel{sec:appendix:mutation}{{J}{31}{Katz mutation at realistic counts}{section.A.10}{}}
+\bibcite{augusto2019benchmark}{5}
 \bibcite{berti2019pm4py}{6}
 \bibcite{berti2023pm4pysi}{7}
 \bibcite{vandenbroucke2014negative}{8}
@@ -242,9 +242,9 @@
 \bibcite{vandongen2017bpi}{10}
 \bibcite{vandongen2019bpi}{11}
 \bibcite{vandongen2018bpi}{12}
-\bibcite{vandongen2016anti}{13}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Katz backoff does the work twice (illustrative counts; activities abstracted). Step 1 resolves the deepest context with support, which supplies the next step and the Good--Turing novelty rate $\ensuremath  {p_{\mathit  {unseen}}}$ (Eq.\nobreakspace  {}\eqref  {eq:gt}). When the mutation fires, step 2 backs off one level further, to the deepest shorter context offering an activity unseen in the resolved one (Eq.\nobreakspace  {}\eqref  {eq:proposal}): the inserted $z$ is novel in the exact context, yet attested in a related shorter one.}}{32}{figure.A.10}\protected@file@percent }
 \newlabel{fig:mutation}{{10}{32}{Katz backoff does the work twice (illustrative counts; activities abstracted). Step 1 resolves the deepest context with support, which supplies the next step and the Good--Turing novelty rate $\punseen $ (Eq.~\eqref {eq:gt}). When the mutation fires, step 2 backs off one level further, to the deepest shorter context offering an activity unseen in the resolved one (Eq.~\eqref {eq:proposal}): the inserted $z$ is novel in the exact context, yet attested in a related shorter one}{figure.A.10}{}}
+\bibcite{vandongen2016anti}{13}
 \bibcite{gale1995gt}{14}
 \bibcite{janssenswillen2019confirmatory}{15}
 \bibcite{janssenswillen2017comparative}{16}
