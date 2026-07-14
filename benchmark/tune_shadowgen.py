@@ -46,6 +46,7 @@ Usage:
   python benchmark/tune_shadowgen.py genval  --grid full
 """
 import os, sys, json, time, random, argparse, itertools
+import multiprocessing as mp
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -169,6 +170,105 @@ def score_cell(log, net, im, fm, cfg):
         successor_weighting=d["weighting"])
     mutrate = r["mutation_counts"][0] / float(d["num_traces"])
     return float(r["mean"]), float(mutrate)
+
+
+def score_log_cfg(log, nets, cfg):
+    """All six miners for one (log, config).
+
+    The shadow log is a function of (log, config, seed) only: generation never
+    looks at the Petri net. So generate it ONCE and replay it on each of the six
+    nets, instead of regenerating it per miner. That is bit-identical to scoring
+    each cell separately (same seed, same generator call) and does a sixth of the
+    generation work. The equality is asserted empirically by `validate`, which
+    reproduces the serial results.
+    """
+    d = {**DEFAULT, **cfg}
+    set_knobs(d)
+    random.seed(SEED)
+    np.random.seed(SEED)
+    shadow, flags, _dup, _tr, _cap = NS["generate_shadow_log"](
+        log, num_traces=d["num_traces"], safe_threshold=d["safe_threshold"],
+        max_n=d["max_n"], successor_weighting=d["weighting"])
+    mutrate = (sum(1 for f in flags if f) / len(flags)) if flags else 0.0
+    tr = NS["token_replay"]
+    scores = {}
+    for m in REAL:
+        net, im, fm = nets[m]
+        replayed = tr.apply(shadow, net, im, fm)
+        fits = [r["trace_fitness"] for r in replayed]
+        scores[m] = float(sum(fits) / len(fits)) if fits else 0.0
+    return scores, float(mutrate)
+
+
+# Workers inherit these by fork (Linux). Nothing large is ever pickled.
+_G = {}
+
+
+def _task(ci):
+    return (ci,) + score_log_cfg(_G["log"], _G["nets"], _G["cfgs"][ci])
+
+
+def eval_mae_all(cfgs, dslist, workers=1, partial_out=None):
+    """Every config x every log, parallel over configs within each log."""
+    per = {ci: {} for ci in range(len(cfgs))}
+    for dk in dslist:
+        t0 = time.time()
+        ds = DATASETS[dk]["name"]
+        log = load_log(dk)
+        nets = {m: MINERS[m](log) for m in REAL}
+        _G["log"], _G["nets"], _G["cfgs"] = log, nets, cfgs
+        r1 = np.array([r1_of(ds, m) for m in REAL])
+        if workers > 1:
+            # fork, not the 3.14 default forkserver: workers must INHERIT the
+            # loaded log and nets (copy-on-write), never pickle them.
+            ctx = mp.get_context("fork")
+            with ctx.Pool(workers) as pool:
+                res = pool.map(_task, range(len(cfgs)), chunksize=1)
+        else:
+            res = [_task(ci) for ci in range(len(cfgs))]
+        for ci, scores, mut in res:
+            ys = np.array([scores[m] for m in REAL])
+            per[ci][dk] = {
+                "mae": float(np.mean(np.abs(ys - r1))),
+                "pearson": float(np.corrcoef(ys, r1)[0, 1]) if np.std(ys) > 0 else float("nan"),
+                "spread": float(ys.max() - ys.min()),
+                "mutrate": mut,
+                "scores": [round(float(v), 4) for v in ys],
+            }
+        print(f"[{dk} {ds}] {len(cfgs)} configs in {time.time()-t0:.0f}s "
+              f"({workers} workers)", flush=True)
+        if partial_out:      # checkpoint: a later OOM cannot destroy earlier logs
+            with open(partial_out, "w", encoding="utf-8") as f:
+                json.dump({"logs_done": [d for d in dslist
+                                         if d in per[0]], "per": per}, f)
+    return per
+
+
+def validate(grid_name, dslist, workers):
+    """The parallel path must reproduce the committed serial results exactly."""
+    ref_path = os.path.join(OUT, f"tune_mae_{grid_name}.json")
+    if not os.path.exists(ref_path):
+        print("no reference file; skipping validation")
+        return True
+    ref = {r["label"]: r for r in json.load(open(ref_path, encoding="utf-8"))["results"]}
+    cfgs = grid(grid_name)
+    per = eval_mae_all(cfgs, dslist, workers)
+    ok = True
+    for ci, cfg in enumerate(cfgs):
+        lab = label(cfg)
+        if lab not in ref:
+            continue
+        for dk in dslist:
+            if dk not in ref[lab]["per_log"]:
+                continue
+            a = per[ci][dk]["mae"]
+            b = ref[lab]["per_log"][dk]["mae"]
+            if abs(a - b) > 1e-9:
+                print(f"  MISMATCH {lab} {dk}: parallel {a:.9f} vs committed {b:.9f}")
+                ok = False
+    print("VALIDATE", "PASS: parallel path reproduces the serial results"
+          if ok else "FAIL")
+    return ok
 
 
 def eval_mae(cfg, dslist, cache):
@@ -352,7 +452,9 @@ def selftest():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("objective", choices=["selftest", "mae", "genval"])
+    ap.add_argument("objective", choices=["selftest", "validate", "mae", "genval"])
+    ap.add_argument("--workers", type=int, default=1,
+                    help="parallelise over configs within each log (fork; Linux)")
     ap.add_argument("--grid", default="coord")
     ap.add_argument("--logs", default="D1,D2,D3,D4,D5")
     ap.add_argument("--shuffles", type=int, default=1)
@@ -363,8 +465,28 @@ def main():
         raise SystemExit(selftest())
 
     dslist = a.logs.split(",")
+    if a.objective == "validate":
+        raise SystemExit(0 if validate(a.grid, dslist, a.workers) else 1)
+
     cfgs = grid(a.grid)
     print(f"[{a.objective}] grid={a.grid}  {len(cfgs)} configs x {len(dslist)} logs", flush=True)
+
+    if a.objective == "mae" and a.workers > 1:
+        per = eval_mae_all(cfgs, dslist, a.workers,
+                           partial_out=(a.out or '') + '.partial')
+        results = []
+        for ci, cfg in enumerate(cfgs):
+            agg = float(np.mean([v["mae"] for v in per[ci].values()]))
+            results.append({"cfg": {**DEFAULT, **cfg}, "label": label(cfg),
+                            "per_log": per[ci], "agg": agg})
+            print(f"  {label(cfg):28} meanMAE={agg:.4f}", flush=True)
+        out = a.out or os.path.join(OUT, f"tune_{a.objective}_{a.grid}.json")
+        with open(out, "w", encoding="utf-8") as f:
+            json.dump({"objective": a.objective, "grid": a.grid, "logs": dslist,
+                       "results": results}, f, indent=1)
+        print("written:", out)
+        return
+
     cache = build_cache(dslist, need_nets=(a.objective == "mae"))
 
     results = []

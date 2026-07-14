@@ -81,7 +81,6 @@ def noise_band(ax, ys, floor=None):
 # --------------------------------------------------------------------------- #
 def fig_sweeps():
     coord = load("tune_mae_coord.json")["results"]
-    rt = runtimes(os.path.join(RES, "tune_coord_sweep.txt"))   # .txt, not .log: *.log is gitignored and the runtime axis needs this file
     fig, axes = plt.subplots(2, 2, figsize=(10.4, 7.2))
 
     # (a) N, swept to 20
@@ -148,15 +147,14 @@ def fig_sweeps():
     ax.set_xscale("log")
     ax.set_xlabel(r"shadow-log size $\theta$ (traces, log scale)", fontsize=9.5)
     ax.set_ylabel("mean MAE vs R1", fontsize=9.5)
-    ax.set_title(r"$\theta$: inert. the error floor is systematic", fontsize=10, loc="left")
-    ax2 = ax.twinx()
-    ts = [rt.get(r["label"]) for _, _, r in s]
-    if all(t is not None for t in ts):
-        ax2.plot(xs, ts, "-s", color=RED, ms=3.5, lw=1.0, alpha=0.65)
-        ax2.set_ylabel("runtime per config (s)", fontsize=9, color=RED)
-        ax2.tick_params(axis="y", labelsize=8, colors=RED)
-        ax2.spines["top"].set_visible(False)
-    ax.text(0.03, 0.06, "16x the traces does not move MAE:\nresidual error is not sampling noise",
+    ax.set_title(r"$\theta$: inert (cost grows with $\theta$; accuracy does not)",
+                 fontsize=10, loc="left")
+    # No runtime overlay: the five-log sweep runs in parallel and does not record
+    # per-config wall time, and borrowing the three-log serial timings would put two
+    # different runs in one panel. The cost claim lives in the caption instead.
+    ax.text(0.03, 0.06, "every point is inside the noise band:\n"
+                        "16x the shadow log does not move MAE, so the\n"
+                        "residual error is systematic, not sampling",
             transform=ax.transAxes, fontsize=7.5, color="0.45")
 
     for ax in axes.ravel():

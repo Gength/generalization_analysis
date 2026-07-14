@@ -1,7 +1,7 @@
 # ShadowGen parameter search: findings
 
 Search of the shipped configuration against every parameter the generator has,
-plus three it did not have. Ran 2026-07-14 on the five R1 logs.
+plus three it did not have. Ran 2026-07-14 on all five R1 logs (32-core box).
 
 **Headline: no configuration beats the shipped defaults.** Every knob is either
 at a genuine optimum, or inert. The search also produced one new scientific
@@ -17,13 +17,21 @@ injects new knobs at asserted anchors, and execs the copy. A selftest asserts th
 injected copy is bit-identical to the frozen module at default knobs
 (`python benchmark/tune_shadowgen.py selftest` -> IDENTICAL on three L1 cells).
 
-Caveat, stated once and applying throughout: the benchmark scored PNMLs from a
-model cache that no longer exists locally (it lived on the cibox). This harness
-re-discovers the nets, so absolute MAE differs slightly from the committed matrix
-(e.g. L1 Heuristics 0.8815 here vs 0.8774 committed) through the discovery/replay
-tie-breaking drift the report already documents. Every comparison below is
-therefore a delta against the shipped default *measured in the same harness*, on
-the same nets, never against the published numbers.
+Caveat, stated once and applying throughout: this harness RE-DISCOVERS the six
+nets rather than loading the benchmark's cached PNMLs, so absolute MAE differs
+slightly from the committed matrix (e.g. L1 Heuristics 0.8815 here vs 0.8774
+committed) through the discovery/replay tie-breaking drift the report already
+documents. Every comparison below is therefore a delta against the shipped default
+*measured in the same harness*, on the same nets, never against the published
+numbers. (The cached PNMLs have since been recovered from the compute box and are
+now committed under `benchmark/models/`, so a future run can score byte-identical
+nets and drop this caveat entirely.)
+
+The sweep runs on all five logs. It was executed on a 32-core box: `--workers N`
+parallelises over configs within each log, and `score_log_cfg` generates the shadow
+log ONCE per (log, config) and replays it on all six nets, since generation never
+looks at the net. Both are validated: serial and parallel agree to 1e-12 on the
+same machine.
 
 ## Knobs already in the generator
 
@@ -38,23 +46,23 @@ the same nets, never against the published numbers.
 
 ```
 N:    2     3     4     5     6*    7     8     10    12    15    20
-MAE: .0383 .0327 .0262 .0268 .0265 .0261 .0276 .0283 .0280 .0272 .0285
+MAE: .0337 .0255 .0209 .0211 .0203 .0199 .0204 .0213 .0207 .0208 .0215
 ```
-Everything from N=4 to N=20 sits in a 0.0024 band (noise). Cost rises steadily
-(N=20 is ~1.8x the runtime of N=6) for zero accuracy. This closes the obvious
-attack on N=6 ("did you look far enough?"): we looked to 20. Nothing is there.
+Everything from N=4 to N=20 sits in a 0.0016 band (noise). Cost rises steadily for
+zero accuracy. This closes the obvious attack on N=6 ("did you look far enough?"):
+we looked to 20, on every log. Nothing is there.
 
 ### tau: a shallow basin with the minimum at the shipped value
 
 ```
 tau:   1     2     3     5*    8     10    15    20
-MAE: .0277 .0282 .0277 .0265 .0274 .0293 .0300 .0332
-     <----- within sampling noise of tau=5 ----->  ^ clearly worse
+MAE: .0209 .0214 .0211 .0203 .0210 .0220 .0226 .0244
+     <--------- within sampling noise of tau=5 --------->
 ```
-tau=5 is the minimum, but honesty requires the qualifier: every value from 1 to 8
-is within the metric's own draw-to-draw variance (~0.004) of it, and even tau=15 is
-marginal. Only tau=20 (+0.0067) is unambiguously worse. The default is well placed;
-it is not a sharp optimum.
+tau=5 is the minimum, but honesty requires the qualifier: every value from 1 to 15
+is within the metric's own draw-to-draw variance (~0.004) of it. Only tau=20
+(+0.0041) approaches a real difference. The default is well placed; it is not a
+sharp optimum.
 
 ### weighting: MLE sits at the bottom of a symmetric well
 
@@ -62,24 +70,25 @@ w(c) = c^(1/T). T=1 IS the shipped `mle`, so temperature strictly generalises th
 binary mle/log choice the algorithm currently ships.
 
 ```
-T:     0.5   0.75   1.0*   1.5    2.0    3.0    5.0    inf(uniform)   [log: .0490]
-MAE:  .0515 .0351  .0265  .0352  .0394  .0473  .0552    .0698
+T:     0.5   0.75   1.0*   1.5    2.0    3.0    5.0    inf(uniform)   [log: .0456]
+MAE:  .0374 .0254  .0203  .0293  .0354  .0443  .0509    .0675
       <- sharper           flatter ->
 ```
-Deviating from raw frequency by the same factor in either direction costs the same
-~0.009. Uniform weighting (keep the N-gram structure, discard the frequencies)
-costs 2.6x the calibration error: this quantifies how much of ShadowGen's accuracy
-comes from the successor frequencies rather than the context structure.
+Deviating from raw frequency in either direction costs roughly the same (0.0051
+sharper, 0.0090 flatter). Uniform weighting (keep the N-gram structure, discard the
+frequencies) costs 3.3x the calibration error, and the shipped `log` alternative
+2.2x: this quantifies how much of ShadowGen's accuracy comes from the successor
+frequencies rather than from the context structure.
 
 ### theta: inert; the residual error is systematic, not sampling noise
 
 ```
 theta:  250   500   1000*  2000  4000
-MAE:   .0277 .0275 .0265  .0280 .0285
-time:   18s   25s   36s    59s   99s
+MAE:   .0213 .0211 .0203  .0211 .0215
 ```
-The estimate saturates by ~250 traces. 16x the shadow log does not move MAE.
-**The residual ~0.026 is therefore not sampling error but the systematic gap
+The estimate saturates by ~250 traces (cost, however, grows linearly with theta).
+16x the shadow log does not move MAE.
+**The residual ~0.020 is therefore not sampling error but the systematic gap
 between "accepts my generated plausible behavior" and "accepts real held-out
 variants".** It cannot be bought down with more traces. (A 2x speedup at
 theta=250 is available at no measurable accuracy cost, if ever needed.)
@@ -230,23 +239,25 @@ the provenance files the report advertises as its source of truth. Suggested tex
 
 ## Tuning does not transfer: the fixed-defaults protocol is measurably correct
 
-Over the 46-configuration coordinate sweep, the shipped default ranks 9th, and the
+Over the 46-configuration coordinate sweep, the shipped default ranks 6th, and the
 eight configurations nominally above it are all within 0.0011 (noise). So far, so
 unremarkable. The leave-one-log-out test is the real result. Choose the best
 configuration on two logs, then score it on the third:
 
 ```
-L1: winner-on-others = N=3       -> 0.0466  vs shipped 0.0213   (-0.0253)
+L1: winner-on-others = N=7       -> 0.0243  vs shipped 0.0212   (-0.0031)
 L2: winner-on-others = alpha=0   -> 0.0184  vs shipped 0.0178   (-0.0005)
-L5: winner-on-others = temp=0.75 -> 0.0784  vs shipped 0.0404   (-0.0380)
+L3: winner-on-others = alpha=0   -> 0.0063  vs shipped 0.0063   ( 0.0000)
+L4: winner-on-others = alpha=0   -> 0.0166  vs shipped 0.0159   (-0.0008)
+L5: winner-on-others = temp=0.75 -> 0.0784  vs shipped 0.0405   (-0.0379)
 
-mean out-of-sample gain over shipped: -0.0213   (tuning does NOT transfer)
+mean out-of-sample gain over shipped: -0.0085   (tuning does NOT transfer)
 ```
 
-**Tuning on a subset of logs and carrying the result to a new log roughly doubles
-the error versus simply using the principled defaults.** The per-log optima
-actively conflict: L2 and L5 (shallow, repetitive) jointly prefer N=3, which is
-catastrophic on the deep-trace Sepsis. This is the report's own observation ("only
+**Tuning on a subset of logs and carrying the result to a new log is worse than
+simply using the principled defaults.** The per-log optima
+actively conflict: the logs disagree: L5 wants a flatter weighting that is catastrophic
+for it when chosen elsewhere, and L1 wants a deeper N than the rest. This is the report's own observation ("only
 the short-trace L5 prefers a shallow bound") turned into a quantified hazard.
 
 This changes the standing of the protocol. The report currently lists per-domain
@@ -273,7 +284,7 @@ backfires out-of-sample. The defensible line at a defense is now:
 
 ```
 python benchmark/tune_shadowgen.py selftest
-python benchmark/tune_shadowgen.py mae    --grid coord --logs D1,D2,D5
+python benchmark/tune_shadowgen.py mae    --grid coord --logs D1,D2,D3,D4,D5 --workers 6
 python benchmark/tune_shadowgen.py mae    --grid alpha
 python benchmark/tune_shadowgen.py genval --grid alpha --logs D1,D2,D3,D5
 python benchmark/genval_novelty_split.py     D1 D2 D3 D5
