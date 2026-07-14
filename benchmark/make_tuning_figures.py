@@ -20,6 +20,8 @@ import matplotlib.pyplot as plt
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "results")
 OUT = RES
+# vector copies for the report appendix (report/figures is the convention)
+REPFIG = os.path.join(os.path.dirname(HERE), "report", "figures")
 GREEN, BLUE, ORANGE, RED, PURPLE = "#1D9E75", "#378ADD", "#E8943A", "#b8403e", "#9673a6"
 GREY = "0.55"
 SHIP = dict(max_n=6, safe_threshold=5, num_traces=1000, weighting="mle",
@@ -165,6 +167,7 @@ def fig_sweeps():
                  fontsize=11.5, y=0.99)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
     fig.savefig(f"{OUT}/fig_tuning_sweeps.png", dpi=190, bbox_inches="tight")
+    fig.savefig(os.path.join(REPFIG, "fig_tuning_sweeps.pdf"), bbox_inches="tight")
     plt.close(fig)
     print("  fig_tuning_sweeps.png")
 
@@ -261,6 +264,7 @@ def fig_novelty():
                  fontsize=11.5, y=1.00)
     fig.tight_layout(rect=[0, 0, 1, 0.96])
     fig.savefig(f"{OUT}/fig_tuning_novelty.png", dpi=190, bbox_inches="tight")
+    fig.savefig(os.path.join(REPFIG, "fig_tuning_novelty.pdf"), bbox_inches="tight")
     plt.close(fig)
     print("  fig_tuning_novelty.png")
 

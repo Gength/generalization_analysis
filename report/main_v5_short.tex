@@ -404,7 +404,7 @@ Bootstrap (M6adapted) is a construct-faithful adaptation: we run the genuine \te
 
 \subsection{Deviations from the formal method}
 \label{sec:impl:deviations}
-Three deviations are worth recording. (i) The N-gram model is rebuilt each of the $K$ iterations rather than once; this is a performance artifact, not a semantic one, and the complexity of Sect.~\ref{sec:method:complexity} already carries the factor $K$. (ii) The strict reading counts a shadow trace as accepted when PM4Py's token replay flags it as perfectly fitting (\texttt{trace\_is\_fit}). That flag is a fast but approximate test of language membership, which is properly decided by a cost-zero alignment. On nets with invisible (silent) or duplicate-label transitions the two can disagree, so our acceptance number is a proxy\chg{; Sect.~\ref{sec:eval:accept} quantifies the disagreement per net class}. (iii) \chg{The data-driven length cap never binds on L1/L2 (\texttt{truncated\_traces}${=}0$). On the deep-trace logs it does, and it pays: on L4 the cap alone improves calibration from MAE $0.038$ to $0.027$ (log weighting throughout, cap the only change; the headline MLE configuration reaches $0.016$).}
+Three deviations are worth recording. (i) The N-gram model is rebuilt each of the $K$ iterations rather than once; this is a performance artifact, not a semantic one, and the complexity of Sect.~\ref{sec:method:complexity} already carries the factor $K$. (ii) The strict reading counts a shadow trace as accepted when PM4Py's token replay flags it as perfectly fitting (\texttt{trace\_is\_fit}). That flag is a fast but approximate test of language membership, which is properly decided by a cost-zero alignment. On nets with invisible (silent) or duplicate-label transitions the two can disagree, so our acceptance number is a proxy\chg{; Sect.~\ref{sec:eval:accept} quantifies the disagreement per net class}. (iii) \chg{The data-driven length cap does not bind under the shipped configuration: \texttt{truncated\_traces} is $0$ on all five logs. It matters nonetheless, because the fixed cap of $100$ it replaced did bind, cutting legitimate long walks (Sepsis reaches length $185$) and artifactually depressing fitness on strict models. The relaxation improves L4 calibration from MAE $0.038$ to $0.027$ (log weighting throughout, cap the only change; the headline MLE configuration reaches $0.016$).}
 
 % =====================================================================
 \section{Evaluation}
@@ -832,6 +832,24 @@ Figure~\ref{fig:mutation} illustrates the two-job split of backoff (Sect.~\ref{s
 \end{tikzpicture}}
 \caption{Katz backoff does the work twice (illustrative counts; activities abstracted). Step 1 resolves the deepest context with support, which supplies the next step and the Good--Turing novelty rate $\punseen$ (Eq.~\eqref{eq:gt}). When the mutation fires, step 2 backs off one level further, to the deepest shorter context offering an activity unseen in the resolved one (Eq.~\eqref{eq:proposal}): the inserted $z$ is novel in the exact context, yet attested in a related shorter one.}
 \label{fig:mutation}
+\end{figure}
+
+\section{Parameter robustness}
+\label{sec:appendix:tuning}
+The threats section states that no configuration improves on the shipped defaults and that tuning does not transfer (Sect.~\ref{sec:eval:threats}); this section records the evidence. Figure~\ref{fig:tuning-sweeps} sweeps each parameter one factor at a time against the calibration objective: the context bound to $N{=}20$, the support threshold to $\tau{=}20$, a weighting temperature $w(c)=c^{1/T}$ that generalizes the shipped MLE weighting ($T{=}1$) continuously, and the shadow-log size to $\theta{=}4{,}000$. Figure~\ref{fig:tuning-novelty} adds a novelty ablation, a scale $\alpha$ on the Good--Turing rate with $\alpha{=}0$ disabling novelty entirely. The harness loads the frozen generator source, injects the added parameters at asserted anchors, and reproduces the shipped scores bit-exactly at the default setting (\texttt{benchmark/tune\_shadowgen.py}).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/fig_tuning_sweeps.pdf}
+\caption{One-factor sweeps around the shipped configuration (star): MAE to R1 over the six non-degenerate miners of L1, L2, and L5 at $K{=}1$; the shaded band is the metric's own sampling variance ($0.004$). $N$ plateaus from $4$ out to $20$. $\tau$ is a shallow basin with its minimum at the shipped $5$. The weighting is a symmetric well with MLE at the bottom; the \texttt{log} alternative costs $1.8\times$ and uniform weighting $2.6\times$ the calibration error. $\theta$ is flat while runtime grows, so the residual error is systematic, not sampling noise.}
+\label{fig:tuning-sweeps}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/fig_tuning_novelty.pdf}
+\caption{(a) The novelty scale $\alpha$ per log, on all five logs: L1 degrades with added novelty, L5 improves, L2--L4 are flat, and the mean cancels; the shipped $\alpha{=}1$ is the raw Good--Turing rate. (b) Shadow traces carrying a context-novel event land within $3$ edits of a real held-out variant $13$--$57\%$ of the time (L1, L2, L3, L5), against a $4.6\%$ random floor: novel, but plausible. (c) The best configuration on two of the three swept logs is worse than the shipped defaults on the held-out third: tuning does not transfer.}
+\label{fig:tuning-novelty}
 \end{figure}
 
 % flush any appendix floats before the bibliography: without this, the
