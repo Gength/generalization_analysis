@@ -1,0 +1,308 @@
+{
+ "objective": "genval",
+ "grid": "alpha",
+ "logs": [
+  "D1",
+  "D2",
+  "D3",
+  "D5"
+ ],
+ "results": [
+  {
+   "cfg": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_traces": 1000,
+    "weighting": "mle",
+    "alpha": 0.0,
+    "pu_clamp": 1.0,
+    "temp": 1.0,
+    "cap_mult": 2.0,
+    "mut_uniform": false
+   },
+   "label": "N6_t5_mle_a0.0",
+   "per_log": {
+    "D1": {
+     "hit_rate": 1.3800000000000001,
+     "coverage": 5.201531500174035,
+     "mutrate": 0.0
+    },
+    "D2": {
+     "hit_rate": 16.839999999999996,
+     "coverage": 10.190588595283371,
+     "mutrate": 0.0
+    },
+    "D3": {
+     "hit_rate": 8.379999999999999,
+     "coverage": 1.431261770244821,
+     "mutrate": 0.0
+    },
+    "D5": {
+     "hit_rate": 26.1,
+     "coverage": 1.8206551004126919,
+     "mutrate": 0.0
+    }
+   },
+   "agg": 13.174999999999999
+  },
+  {
+   "cfg": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_traces": 1000,
+    "weighting": "mle",
+    "alpha": 0.25,
+    "pu_clamp": 1.0,
+    "temp": 1.0,
+    "cap_mult": 2.0,
+    "mut_uniform": false
+   },
+   "label": "N6_t5_mle_a0.25",
+   "per_log": {
+    "D1": {
+     "hit_rate": 1.28,
+     "coverage": 5.319874695440306,
+     "mutrate": 0.22139999999999999
+    },
+    "D2": {
+     "hit_rate": 16.82,
+     "coverage": 10.190588595283371,
+     "mutrate": 0.0052
+    },
+    "D3": {
+     "hit_rate": 8.579999999999998,
+     "coverage": 1.4500941619585688,
+     "mutrate": 0.0058
+    },
+    "D5": {
+     "hit_rate": 25.779999999999998,
+     "coverage": 1.7872486807339585,
+     "mutrate": 0.0494
+    }
+   },
+   "agg": 13.114999999999998
+  },
+  {
+   "cfg": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_traces": 1000,
+    "weighting": "mle",
+    "alpha": 0.5,
+    "pu_clamp": 1.0,
+    "temp": 1.0,
+    "cap_mult": 2.0,
+    "mut_uniform": false
+   },
+   "label": "N6_t5_mle_a0.5",
+   "per_log": {
+    "D1": {
+     "hit_rate": 1.34,
+     "coverage": 5.318482422554821,
+     "mutrate": 0.3578
+    },
+    "D2": {
+     "hit_rate": 16.7,
+     "coverage": 10.256595195943435,
+     "mutrate": 0.0094
+    },
+    "D3": {
+     "hit_rate": 8.68,
+     "coverage": 1.4500941619585688,
+     "mutrate": 0.0124
+    },
+    "D5": {
+     "hit_rate": 25.64,
+     "coverage": 1.7789049176968286,
+     "mutrate": 0.09259999999999999
+    }
+   },
+   "agg": 13.09
+  },
+  {
+   "cfg": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_traces": 1000,
+    "weighting": "mle",
+    "alpha": 0.75,
+    "pu_clamp": 1.0,
+    "temp": 1.0,
+    "cap_mult": 2.0,
+    "mut_uniform": false
+   },
+   "label": "N6_t5_mle_a0.75",
+   "per_log": {
+    "D1": {
+     "hit_rate": 1.32,
+     "coverage": 5.905325443786982,
+     "mutrate": 0.47519999999999996
+    },
+    "D2": {
+     "hit_rate": 16.7,
+     "coverage": 10.058356829060392,
+     "mutrate": 0.0144
+    },
+    "D3": {
+     "hit_rate": 8.62,
+     "coverage": 1.431261770244821,
+     "mutrate": 0.0194
+    },
+    "D5": {
+     "hit_rate": 25.44,
+     "coverage": 1.728831883630645,
+     "mutrate": 0.1312
+    }
+   },
+   "agg": 13.02
+  },
+  {
+   "cfg": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_traces": 1000,
+    "weighting": "mle",
+    "alpha": 1.0,
+    "pu_clamp": 1.0,
+    "temp": 1.0,
+    "cap_mult": 2.0,
+    "mut_uniform": false
+   },
+   "label": "N6_t5_mle",
+   "per_log": {
+    "D1": {
+     "hit_rate": 1.0600000000000003,
+     "coverage": 4.9606682909850335,
+     "mutrate": 0.5555999999999999
+    },
+    "D2": {
+     "hit_rate": 16.799999999999997,
+     "coverage": 10.124581994623302,
+     "mutrate": 0.018000000000000002
+    },
+    "D3": {
+     "hit_rate": 8.54,
+     "coverage": 1.3998744507219085,
+     "mutrate": 0.025
+    },
+    "D5": {
+     "hit_rate": 24.979999999999997,
+     "coverage": 1.7288109719438356,
+     "mutrate": 0.16419999999999998
+    }
+   },
+   "agg": 12.844999999999999
+  },
+  {
+   "cfg": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_traces": 1000,
+    "weighting": "mle",
+    "alpha": 1.5,
+    "pu_clamp": 1.0,
+    "temp": 1.0,
+    "cap_mult": 2.0,
+    "mut_uniform": false
+   },
+   "label": "N6_t5_mle_a1.5",
+   "per_log": {
+    "D1": {
+     "hit_rate": 1.0,
+     "coverage": 4.018099547511313,
+     "mutrate": 0.6928000000000001
+    },
+    "D2": {
+     "hit_rate": 16.78,
+     "coverage": 10.323257491312043,
+     "mutrate": 0.023799999999999998
+    },
+    "D3": {
+     "hit_rate": 8.579999999999998,
+     "coverage": 1.4500941619585686,
+     "mutrate": 0.0408
+    },
+    "D5": {
+     "hit_rate": 24.699999999999996,
+     "coverage": 1.6703732631537123,
+     "mutrate": 0.219
+    }
+   },
+   "agg": 12.764999999999999
+  },
+  {
+   "cfg": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_traces": 1000,
+    "weighting": "mle",
+    "alpha": 2.0,
+    "pu_clamp": 1.0,
+    "temp": 1.0,
+    "cap_mult": 2.0,
+    "mut_uniform": false
+   },
+   "label": "N6_t5_mle_a2.0",
+   "per_log": {
+    "D1": {
+     "hit_rate": 0.88,
+     "coverage": 3.901148625130526,
+     "mutrate": 0.7654000000000001
+    },
+    "D2": {
+     "hit_rate": 16.86,
+     "coverage": 10.38948265687496,
+     "mutrate": 0.0304
+    },
+    "D3": {
+     "hit_rate": 8.62,
+     "coverage": 1.4940364092906464,
+     "mutrate": 0.0516
+    },
+    "D5": {
+     "hit_rate": 24.36,
+     "coverage": 1.6202688615573142,
+     "mutrate": 0.26280000000000003
+    }
+   },
+   "agg": 12.68
+  },
+  {
+   "cfg": {
+    "max_n": 6,
+    "safe_threshold": 5,
+    "num_traces": 1000,
+    "weighting": "mle",
+    "alpha": 3.0,
+    "pu_clamp": 1.0,
+    "temp": 1.0,
+    "cap_mult": 2.0,
+    "mut_uniform": false
+   },
+   "label": "N6_t5_mle_a3.0",
+   "per_log": {
+    "D1": {
+     "hit_rate": 1.26,
+     "coverage": 4.845109641489732,
+     "mutrate": 0.8568
+    },
+    "D2": {
+     "hit_rate": 16.82,
+     "coverage": 10.521932988000788,
+     "mutrate": 0.0418
+    },
+    "D3": {
+     "hit_rate": 8.54,
+     "coverage": 1.4500941619585686,
+     "mutrate": 0.07120000000000001
+    },
+    "D5": {
+     "hit_rate": 22.959999999999997,
+     "coverage": 1.4281741065220412,
+     "mutrate": 0.3362
+    }
+   },
+   "agg": 12.395
+  }
+ ]
+}

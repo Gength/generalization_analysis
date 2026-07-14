@@ -183,19 +183,19 @@
 \newlabel{sec:eval:discussion}{{6.3}{22}{Discussion}{subsection.1.6.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Threats to validity}{23}{subsection.1.6.4}\protected@file@percent }
 \newlabel{sec:eval:threats}{{6.4}{23}{Threats to validity}{subsection.1.6.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{24}{section.1.7}\protected@file@percent }
-\newlabel{sec:conclusion}{{7}{24}{Conclusion}{section.1.7}{}}
-\citation{polyvyanyy2022bootstrap}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{25}{section.1.7}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{25}{Conclusion}{section.1.7}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {A}Acceptance-reading agreement}{25}{section.A.1}\protected@file@percent }
 \newlabel{sec:appendix:accept}{{A}{25}{Acceptance-reading agreement}{section.A.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B}Raw cross-paradigm scores on L1}{25}{section.A.2}\protected@file@percent }
-\newlabel{sec:appendix:external}{{B}{25}{Raw cross-paradigm scores on L1}{section.A.2}{}}
+\citation{polyvyanyy2022bootstrap}
 \citation{vandongen2016anti}
 \citation{reissner2022pattern}
 \@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Acceptance reading on L1 (\ensuremath  {\mathit  {Gen}_{\mathit  {accept}}}) vs the acceptance ground truth (R1-accept), per miner.}}{26}{table.A.6}\protected@file@percent }
 \newlabel{tab:accept}{{6}{26}{Acceptance reading on L1 (\genaccept ) vs the acceptance ground truth (R1-accept), per miner}{table.A.6}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Acceptance reading (\ensuremath  {\mathit  {Gen}_{\mathit  {accept}}}) vs the acceptance ground truth (R1-accept): agreement over the six non-degenerate miners per log, plus the two construct poles. Both anchor the trace and flower poles at $0$ and $1$ on every log (largest deviation $0.003$, the L5 trace model; Sect.\nobreakspace  {}\ref {sec:eval:accept}). $^{*}$Pearson is uninformative on L4: strict acceptance saturates at trace depth (mean $57$ events), leaving only two mid-range cells with signal (Sect.\nobreakspace  {}\ref {sec:eval:accept}).}}{26}{table.A.7}\protected@file@percent }
 \newlabel{tab:accept-scale}{{7}{26}{Acceptance reading (\genaccept ) vs the acceptance ground truth (R1-accept): agreement over the six non-degenerate miners per log, plus the two construct poles. Both anchor the trace and flower poles at $0$ and $1$ on every log (largest deviation $0.003$, the L5 trace model; Sect.~\ref {sec:eval:accept}). $^{*}$Pearson is uninformative on L4: strict acceptance saturates at trace depth (mean $57$ events), leaving only two mid-range cells with signal (Sect.~\ref {sec:eval:accept})}{table.A.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Raw cross-paradigm scores on L1}{26}{section.A.2}\protected@file@percent }
+\newlabel{sec:appendix:external}{{B}{26}{Raw cross-paradigm scores on L1}{section.A.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {C}The bootstrap contamination reading}{26}{section.A.3}\protected@file@percent }
 \newlabel{sec:appendix:m6}{{C}{26}{The bootstrap contamination reading}{section.A.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {D}Feasibility forensics}{26}{section.A.4}\protected@file@percent }
@@ -224,16 +224,18 @@
 \newlabel{sec:appendix:nsweep}{{H}{30}{Choosing the context bound}{section.A.8}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Complexity derivation}{30}{section.A.9}\protected@file@percent }
 \newlabel{sec:appendix:complexity}{{I}{30}{Complexity derivation}{section.A.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Choosing the context bound $N$, swept on all five logs ($\tau {=}5$, $K{=}1$). (a) MAE to R1 plateaus from $N{\approx }4$ on every log; $N{=}6$ is optimal on L1 and within $0.004$ on L2--L4. (b) The realized per-step mutation rate rises monotonically with $N$ on every log (log scale) and offers no maximum, so calibration, not novelty, fixes $N$. The band marks the chosen $N{=}6$.}}{31}{figure.A.9}\protected@file@percent }
+\newlabel{fig:nsweep}{{9}{31}{Choosing the context bound $N$, swept on all five logs ($\tau {=}5$, $K{=}1$). (a) MAE to R1 plateaus from $N{\approx }4$ on every log; $N{=}6$ is optimal on L1 and within $0.004$ on L2--L4. (b) The realized per-step mutation rate rises monotonically with $N$ on every log (log scale) and offers no maximum, so calibration, not novelty, fixes $N$. The band marks the chosen $N{=}6$}{figure.A.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {J}Katz mutation at realistic counts}{31}{section.A.10}\protected@file@percent }
+\newlabel{sec:appendix:mutation}{{J}{31}{Katz mutation at realistic counts}{section.A.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Katz backoff does the work twice (illustrative counts; activities abstracted). Step 1 resolves the deepest context with support, which supplies the next step and the Good--Turing novelty rate $\ensuremath  {p_{\mathit  {unseen}}}$ (Eq.\nobreakspace  {}\eqref  {eq:gt}). When the mutation fires, step 2 backs off one level further, to the deepest shorter context offering an activity unseen in the resolved one (Eq.\nobreakspace  {}\eqref  {eq:proposal}): the inserted $z$ is novel in the exact context, yet attested in a related shorter one.}}{32}{figure.A.10}\protected@file@percent }
+\newlabel{fig:mutation}{{10}{32}{Katz backoff does the work twice (illustrative counts; activities abstracted). Step 1 resolves the deepest context with support, which supplies the next step and the Good--Turing novelty rate $\punseen $ (Eq.~\eqref {eq:gt}). When the mutation fires, step 2 backs off one level further, to the deepest shorter context offering an activity unseen in the resolved one (Eq.~\eqref {eq:proposal}): the inserted $z$ is novel in the exact context, yet attested in a related shorter one}{figure.A.10}{}}
 \bibstyle{splncs04}
 \bibdata{references}
 \bibcite{vanderaalst2016pm}{1}
 \bibcite{vanderaalst2018propositions}{2}
 \bibcite{vanderaalst2004alpha}{3}
 \bibcite{alkhammash2022entropic}{4}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Choosing the context bound $N$, swept on all five logs ($\tau {=}5$, $K{=}1$). (a) MAE to R1 plateaus from $N{\approx }4$ on every log; $N{=}6$ is optimal on L1 and within $0.004$ on L2--L4. (b) The realized per-step mutation rate rises monotonically with $N$ on every log (log scale) and offers no maximum, so calibration, not novelty, fixes $N$. The band marks the chosen $N{=}6$.}}{31}{figure.A.9}\protected@file@percent }
-\newlabel{fig:nsweep}{{9}{31}{Choosing the context bound $N$, swept on all five logs ($\tau {=}5$, $K{=}1$). (a) MAE to R1 plateaus from $N{\approx }4$ on every log; $N{=}6$ is optimal on L1 and within $0.004$ on L2--L4. (b) The realized per-step mutation rate rises monotonically with $N$ on every log (log scale) and offers no maximum, so calibration, not novelty, fixes $N$. The band marks the chosen $N{=}6$}{figure.A.9}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {J}Katz mutation at realistic counts}{31}{section.A.10}\protected@file@percent }
-\newlabel{sec:appendix:mutation}{{J}{31}{Katz mutation at realistic counts}{section.A.10}{}}
 \bibcite{augusto2019benchmark}{5}
 \bibcite{berti2019pm4py}{6}
 \bibcite{berti2023pm4pysi}{7}
@@ -242,8 +244,6 @@
 \bibcite{vandongen2017bpi}{10}
 \bibcite{vandongen2019bpi}{11}
 \bibcite{vandongen2018bpi}{12}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Katz backoff does the work twice (illustrative counts; activities abstracted). Step 1 resolves the deepest context with support, which supplies the next step and the Good--Turing novelty rate $\ensuremath  {p_{\mathit  {unseen}}}$ (Eq.\nobreakspace  {}\eqref  {eq:gt}). When the mutation fires, step 2 backs off one level further, to the deepest shorter context offering an activity unseen in the resolved one (Eq.\nobreakspace  {}\eqref  {eq:proposal}): the inserted $z$ is novel in the exact context, yet attested in a related shorter one.}}{32}{figure.A.10}\protected@file@percent }
-\newlabel{fig:mutation}{{10}{32}{Katz backoff does the work twice (illustrative counts; activities abstracted). Step 1 resolves the deepest context with support, which supplies the next step and the Good--Turing novelty rate $\punseen $ (Eq.~\eqref {eq:gt}). When the mutation fires, step 2 backs off one level further, to the deepest shorter context offering an activity unseen in the resolved one (Eq.~\eqref {eq:proposal}): the inserted $z$ is novel in the exact context, yet attested in a related shorter one}{figure.A.10}{}}
 \bibcite{vandongen2016anti}{13}
 \bibcite{gale1995gt}{14}
 \bibcite{janssenswillen2019confirmatory}{15}
@@ -263,4 +263,4 @@
 \bibcite{syring2019conformance}{29}
 \bibcite{theis2020avatar}{30}
 \bibcite{weijters2006hm}{31}
-\gdef \@abspage@last{34}
+\gdef \@abspage@last{35}
