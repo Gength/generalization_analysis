@@ -16,13 +16,16 @@ Note the threshold is RELATIVE, so it means different things per log: on L5
 (38.2) it allows ~4 edits. That is the point: it answers "how close is the
 shadow log to real future behavior" in units that scale with trace depth.
 
-L4 is skipped: with 28k variants and 57-event traces the banded search is
-hours of CPU for one cell, and the near-match reading already covers it.
+L4 (28k variants, 57-event traces) needs the parallel path: --workers N maps the
+similarity search across cores. best_sim is a pure function, so the results are
+identical to the serial path, only faster.
 
 Usage: python benchmark/genval_relaxed.py D1 D2 D3 D5
+       python benchmark/genval_relaxed.py D4 --workers 32 --out results/genval_relaxed_d4.json
 """
-import os, sys, json, random
+import os, sys, json, random, argparse
 import numpy as np
+from multiprocessing import Pool
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -101,13 +104,25 @@ def best_sim(s, by_len, lens_sorted):
     return best
 
 
+_W = {}
+
+
+def _init_worker(by_len, lens_sorted):
+    _W["by_len"] = by_len
+    _W["lens"] = lens_sorted
+
+
+def _sim_one(s):
+    return best_sim(s, _W["by_len"], _W["lens"])
+
+
 def random_traces(train_names, alphabet, n, rng):
     lens = [len(t) for t in train_names]
     return [tuple(rng.choice(alphabet) for _ in range(rng.choice(lens)))
             for _ in range(n)]
 
 
-def run(dk):
+def run(dk, workers=1):
     log = pm4py.convert_to_event_log(pm4py.read_xes(DATASETS[dk]["log_path"]))
     vmap = defaultdict(list)
     for t in log:
@@ -137,7 +152,12 @@ def run(dk):
                 "random": random_traces(train_vs, alphabet, THETA,
                                         random.Random(SEED))}
         for g, seqs in gens.items():
-            sims = [best_sim(s, by_len, lens_sorted) for s in seqs]
+            if workers > 1:
+                with Pool(workers, initializer=_init_worker,
+                          initargs=(dict(by_len), lens_sorted)) as pool:
+                    sims = pool.map(_sim_one, seqs, chunksize=8)
+            else:
+                sims = [best_sim(s, by_len, lens_sorted) for s in seqs]
             exact = [s for s in seqs if s in held]
             acc[g][("exact",)].append(len(exact) / len(seqs))
             for t in THRESHOLDS:
@@ -152,17 +172,24 @@ def run(dk):
 
 
 if __name__ == "__main__":
-    keys = sys.argv[1:] or ["D1", "D2", "D3", "D5"]
+    ap = argparse.ArgumentParser()
+    ap.add_argument("datasets", nargs="*", default=None)
+    ap.add_argument("--workers", type=int, default=1,
+                    help="parallelise the similarity search (pure function; "
+                         "results are identical, only faster)")
+    ap.add_argument("--out", default=None)
+    a = ap.parse_args()
+    keys = a.datasets or ["D1", "D2", "D3", "D5"]
     res = {}
     hdr = f"{'log':5} {'gen':7} {'exact':>7} {'>=90%':>7} {'>=80%':>7} {'>=70%':>7}"
     print(hdr, flush=True)
     for dk in keys:
-        r = run(dk)
+        r = run(dk, workers=a.workers)
         res[dk] = r
         for g in ("shadow", "random"):
             v = r[g]
             print(f"{dk:5} {g:7} {v['exact']:>7.2f} {v['sim90']:>7.2f} "
                   f"{v['sim80']:>7.2f} {v['sim70']:>7.2f}", flush=True)
-        json.dump(res, open(os.path.join(HERE, "results", "genval_relaxed.json"),
-                            "w", encoding="utf-8"), indent=1)
-    print("written: benchmark/results/genval_relaxed.json")
+        out = a.out or os.path.join(HERE, "results", "genval_relaxed.json")
+        json.dump(res, open(out, "w", encoding="utf-8"), indent=1)
+    print("written:", out)
