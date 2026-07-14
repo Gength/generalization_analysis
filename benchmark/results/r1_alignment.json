@@ -1,49 +1,96 @@
 {
-  "D1": {
-    "dataset": "Sepsis",
-    "miners": [
-      "Alpha",
-      "Alpha+",
-      "Heuristics",
-      "Heuristics_Strict",
-      "Inductive_Infrequent",
-      "Inductive_Strict"
-    ],
-    "R1_align": {
-      "Alpha": 0.186,
-      "Alpha+": NaN,
-      "Heuristics": 0.6654,
-      "Heuristics_Strict": 0.7993,
-      "Inductive_Infrequent": 0.9334,
-      "Inductive_Strict": 0.9998
-    },
-    "R1_replay": {
-      "Alpha": 0.2748,
-      "Alpha+": 0.8293,
-      "Heuristics": 0.9023,
-      "Heuristics_Strict": 0.9329,
-      "Inductive_Infrequent": 0.9846,
-      "Inductive_Strict": 0.9999
-    },
-    "ShadowGen": {
-      "Alpha": 0.2724,
-      "Alpha+": 0.7591,
-      "Heuristics": 0.8787,
-      "Heuristics_Strict": 0.9174,
-      "Inductive_Infrequent": 0.9723,
-      "Inductive_Strict": 0.9838
-    },
-    "ShadowGen_vs_R1align": {
-      "pearson": NaN,
-      "mae": NaN
-    },
-    "ShadowGen_vs_R1replay": {
-      "pearson": 0.9963,
-      "mae": 0.0233
-    },
-    "R1align_vs_R1replay": {
-      "pearson": NaN,
-      "mae": NaN
-    }
+ "D1": {
+  "dataset": "Sepsis",
+  "miners": [
+   "Alpha",
+   "Alpha+",
+   "Heuristics",
+   "Heuristics_Strict",
+   "Inductive_Infrequent",
+   "Inductive_Strict"
+  ],
+  "R1_align": {
+   "Alpha": 0.186,
+   "Alpha+": NaN,
+   "Heuristics": 0.6654,
+   "Heuristics_Strict": 0.7993,
+   "Inductive_Infrequent": 0.9334,
+   "Inductive_Strict": 0.9998
+  },
+  "R1_replay": {
+   "Alpha": 0.2748,
+   "Alpha+": 0.8293,
+   "Heuristics": 0.9023,
+   "Heuristics_Strict": 0.9329,
+   "Inductive_Infrequent": 0.9846,
+   "Inductive_Strict": 0.9999
+  },
+  "ShadowGen": {
+   "Alpha": 0.2724,
+   "Alpha+": 0.7591,
+   "Heuristics": 0.8787,
+   "Heuristics_Strict": 0.9174,
+   "Inductive_Infrequent": 0.9723,
+   "Inductive_Strict": 0.9838
+  },
+  "ShadowGen_vs_R1align": {
+   "pearson": NaN,
+   "mae": NaN
+  },
+  "ShadowGen_vs_R1replay": {
+   "pearson": 0.9963,
+   "mae": 0.0233
+  },
+  "R1align_vs_R1replay": {
+   "pearson": NaN,
+   "mae": NaN
   }
+ },
+ "D2": {
+  "dataset": "BPI2013_Incidents",
+  "miners": [
+   "Alpha",
+   "Alpha+",
+   "Heuristics",
+   "Heuristics_Strict",
+   "Inductive_Infrequent",
+   "Inductive_Strict"
+  ],
+  "R1_align": {
+   "Alpha": 0.2518,
+   "Alpha+": 0.3656,
+   "Heuristics": 0.9929,
+   "Heuristics_Strict": 0.9966,
+   "Inductive_Infrequent": 0.9759,
+   "Inductive_Strict": 0.9999
+  },
+  "R1_replay": {
+   "Alpha": 0.215,
+   "Alpha+": 0.6979,
+   "Heuristics": 0.9956,
+   "Heuristics_Strict": 0.9983,
+   "Inductive_Infrequent": 0.9881,
+   "Inductive_Strict": 1.0
+  },
+  "ShadowGen": {
+   "Alpha": 0.2572,
+   "Alpha+": 0.6301,
+   "Heuristics": 0.9935,
+   "Heuristics_Strict": 0.9978,
+   "Inductive_Infrequent": 0.9907,
+   "Inductive_Strict": 1.0
+  },
+  "ShadowGen_vs_R1align": {
+   "pearson": 0.958,
+   "mae": 0.0478
+  },
+  "ShadowGen_vs_R1replay": {
+   "pearson": 0.994,
+   "mae": 0.0192
+  },
+  "R1align_vs_R1replay": {
+   "pearson": 0.921,
+   "mae": 0.0643
+  }
+ }
 }

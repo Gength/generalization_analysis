@@ -1,0 +1,50 @@
+{
+ "_note": "Full leave-one-variant-out on L1: one rediscovery per held-out variant, all 846 variants, no sampling. The benchmark's R2 samples 50 of 846; this run checks that approximation and gives the exact agreement.",
+ "dataset": "Sepsis",
+ "variants": 846,
+ "sampled_in_benchmark": 50,
+ "R2_full": {
+  "Alpha+": 0.823458166071042,
+  "Alpha": 0.28386031571227777,
+  "Flower": 1.0,
+  "Heuristics_Strict": 0.9224948609998306,
+  "Heuristics": 0.8853576539993114,
+  "Inductive_Infrequent": 0.9887787760532957,
+  "Inductive_Strict": 0.9999170615305368,
+  "Trace_Filtered": 0.6046408487553548
+ },
+ "R2_sampled": {
+  "Alpha": 0.30594936377094134,
+  "Alpha+": 0.7753391016485645,
+  "Heuristics": 0.869979564002984,
+  "Heuristics_Strict": 0.9174778562813458,
+  "Inductive_Infrequent": 0.9812932146134616,
+  "Inductive_Strict": 1.0
+ },
+ "ShadowGen": {
+  "Alpha": 0.2723690380000451,
+  "Alpha+": 0.7591123412816672,
+  "Heuristics": 0.8787036233857289,
+  "Heuristics_Strict": 0.9173911701766503,
+  "Inductive_Infrequent": 0.9723248730499077,
+  "Inductive_Strict": 0.983849163589927
+ },
+ "full_vs_sampled": {
+  "pearson": 0.9969808425113665,
+  "spearman": 1.0,
+  "max_abs_diff": 0.0481190644224776
+ },
+ "shadowgen_vs_full": {
+  "pearson": 0.9966046478180148,
+  "spearman": 1.0,
+  "mae": 0.020019437480394697
+ },
+ "shadowgen_vs_sampled": {
+  "pearson": 0.9992428269312964,
+  "mae": 0.013956168266476823
+ },
+ "poles": {
+  "trace": 0.6046408487553548,
+  "flower": 1.0
+ }
+}
