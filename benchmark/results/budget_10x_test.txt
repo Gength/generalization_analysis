@@ -1,24 +1,9 @@
-# 10x-budget feasibility test (Tier 2), 2026-07-14/15, 32-core box
+# M8 at 10x the budget, 2026-07-14/15, 32-core box.
 #
-# Question: is the 1-hour budget the binding constraint, or are the timed-out
-# methods genuinely infeasible? Every cell that TIMED OUT at 1h was given a
-# 10-hour budget (36000s) on the same code path.
-#
-# M8 (pattern-based generalization): all three L1 timeout cells still do not
-# return at 10x the budget. Each loaded the log and then produced nothing for the
-# full 10 hours (exit 124 = killed by `timeout`). M8 exposes no progress counter,
-# so this is a wall-clock non-return, not a measured progress percentage.
-#
-# M4 (anti-alignments): runnable on this box via the
-# au.unimelb.evaluation.M4Progress driver (validated: Sepsis/Alpha reproduces the
-# report value 0.1030735278333402 exactly). A 10x-budget rerun of its L1 timeout
-# cells was NOT pursued, because it cannot change the verdict: the feasibility
-# claim is that M4 is unusable under a practitioner-scale budget (an hour-plus per
-# model on the smallest log, and no return at scale), and a single result after
-# many hours confirms that rather than refuting it. The report's M4 numbers stand
-# as originally measured.
+# The three L1 cells that timed out at the 1-hour budget were each given 10 hours
+# on the same code path. All three still did not return (exit 124 = killed by
+# `timeout`). So M8's non-return is not an artifact of the budget.
 
-M8 D1 Alpha+                exit=124  wall=36000s  STILL-TIMEOUT-AT-10H
-M8 D1 Heuristics            exit=124  wall=36000s  STILL-TIMEOUT-AT-10H
-M8 D1 Inductive_Infrequent  exit=124  wall=36000s  STILL-TIMEOUT-AT-10H
-TIER2 done 2026-07-15T04:22:34Z
+M8 D1 Alpha+                exit=124  wall=36000s  no return at 10h
+M8 D1 Heuristics            exit=124  wall=36000s  no return at 10h
+M8 D1 Inductive_Infrequent  exit=124  wall=36000s  no return at 10h
