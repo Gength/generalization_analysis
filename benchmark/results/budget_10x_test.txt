@@ -1,0 +1,20 @@
+# 10x-budget feasibility test (Tier 2), 2026-07-14/15, 32-core box
+#
+# Question: is the 1-hour budget the binding constraint for M4/M8, or are they
+# genuinely infeasible? Every cell that TIMED OUT at 1h was given a 10-hour budget
+# (36000s) on the same code path.
+#
+# M8 (pattern-based generalization): all three L1 timeout cells still do not
+# return at 10x the budget. Each loaded the log and then produced nothing for the
+# full 10 hours (exit 124 = killed by `timeout`). M8 exposes no progress counter,
+# so this is a wall-clock non-return, not a measured progress percentage.
+#
+# M4 (anti-alignments): NOT testable on this box. The m4bridge jar and its source
+# are absent, there is no maven/gradle, and only Java 8 is installed (the bridge
+# targets Java 21). The report's M4 claims stand as originally measured.
+#
+BLOCKED: M4 cannot be rerun on this box (m4bridge jar and source absent; no maven; java 8 only)
+M8 D1 Alpha+ exit=124 wall=36000s STILL-TIMEOUT-AT-10H
+M8 D1 Heuristics exit=124 wall=36000s STILL-TIMEOUT-AT-10H
+M8 D1 Inductive_Infrequent exit=124 wall=36000s STILL-TIMEOUT-AT-10H
+TIER2 done 2026-07-15T04:22:34Z
