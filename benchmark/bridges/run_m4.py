@@ -1,7 +1,7 @@
 """
 M4 — Anti-Alignment Generalization (ProcessM TwoPhaseDFS)
 ==========================================================
-Provides run() for job wrappers. CLI via main().
+Provides run() for job_prepare. CLI via main().
 
 Pipeline:
   1. Load PNML → export as ProcessM-compatible JSON

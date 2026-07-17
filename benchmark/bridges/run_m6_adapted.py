@@ -27,7 +27,7 @@ Sentinel protocol: a -1 sentinel config is written for every target miner
 BEFORE its evaluation starts and overwritten on completion, so a killed job
 leaves "-1 (did not complete)" cells instead of silent holes.
 
-Provides run() for job wrappers. CLI via main().
+Provides run() for job_prepare. CLI via main().
 """
 import os, sys, json, math, time, random, argparse
 from datetime import datetime, timezone

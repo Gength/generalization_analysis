@@ -19,8 +19,8 @@ runner** (needs `src/` vendor code and Linux; `run_m1_family.py` uses fork).
   construction. First run seeds the cache; delete the folder to force
   rediscovery. Disable per run with `--no-model-cache` (M1 only).
 - **Per-cell metric budget (protocol: 3600 s, references exempt)**:
-  `--cell-timeout <seconds>` on `job_m1.py`, `job_m6.py`, `job_m6_adapted.py`,
-  `job_m7.py` (and the bridges' own CLIs), **default 3600** (1 h). Counts
+  `--cell-timeout <seconds>` on `run_m1_family.py`, `run_m6_bgen.py`, `run_m6_adapted.py`,
+  `run_m7.py` (and the bridges' own CLIs), **default 3600** (1 h). Counts
   METRIC time only; model discovery is excluded (cached and shared). A
   timed-out cell is written as a `-1` sentinel with note "exceeds budget".
   `--cell-timeout 0` = unlimited. **R1/R2 (and r1_accept) have no timeout by
@@ -47,8 +47,8 @@ numbers; everything else should match to 4 decimals.
 | File | Change |
 |---|---|
 | `benchmark/run_m1_family.py` | Bug fix: configs again include `gen_accept`, `gen_accept_std`, regular/mutated split, `duplicates_kept`, `truncated_traces`, `max_trace_length_used` (whenever the algorithm version reports them). Output format verified identical to the old D1/D2 configs. |
-| `benchmark/bridges/run_m6_adapted.py` (new) | The construct-faithful M6 (bsgen breeding + PM4Py token replay), ported from `archive/Tianhao/benchmark/bridges/run_m6.py` into the job architecture. Same parameters and scoring as the D1 run (seed 42, 10 replicates, 10 generations, k=2, p=1.0, n=200). One deliberate change: RNG re-seeded per miner (cells order-independent). Needs `src/bsgen/bsgen_eval.py`. |
-| `benchmark/job_m6_adapted.py` + `benchmark/shell/m6_adapted.sh` (new) | Job wrapper + SLURM script, same pattern as the other methods. |
+| `benchmark/bridges/run_m6_adapted.py` (new) | The construct-faithful M6 (bsgen breeding + PM4Py token replay), ported from `archive/Tianhao/benchmark/bridges/run_m6.py` into the benchmark architecture. CLI: `uv run python benchmark/bridges/run_m6_adapted.py --dataset D1`. |
+| `benchmark/shell/m6_adapted.sh` (new) | SLURM script, same pattern as the other methods. |
 | `benchmark/bridges/run_m7.py` | Sentinel pre-write: every target miner gets a `-1` config before evaluation starts, overwritten on completion. A killed job now leaves "-1 did not complete" cells instead of holes (the BPI2019 problem). |
 | `benchmark/r1_accept.py` | Works for all datasets (D1–D21 via `datasets.py`), writes provenance configs (`<Name>__<miner>__R1accept.json`), and skips the M1f/M1g comparison with a clear message when `gen_accept` is missing. Computation unchanged (verified: reproduces the D1 numbers). |
 

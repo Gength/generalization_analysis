@@ -1,10 +1,12 @@
 """
 M6 — Bootstrap Generalization (Entropia -bgen)
 ===============================================
-Provides run() for job wrappers. CLI via main().
+Provides run() for job_prepare. CLI via main().
 """
 import os, sys, json, re, time, argparse, subprocess
 from datetime import datetime, timezone
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 ENTROPIA_DIR = os.path.join(os.path.dirname(__file__), "..", "..",
                             "src", "codebase", "jbpt-pm", "entropia")

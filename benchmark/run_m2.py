@@ -1,7 +1,7 @@
 """
 M2 — PM4Py Built-in Generalization
 ===================================
-Provides run() for job wrappers. CLI via main().
+Provides run() for job_prepare. CLI via main().
 """
 import os, sys, json, time, argparse
 from datetime import datetime, timezone

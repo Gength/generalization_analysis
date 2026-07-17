@@ -11,7 +11,7 @@ Architecture (pure multi-process):
   internal re-seeding, so the sub-process-level seed is inherited
   deterministically.  Isolated processes → no thread RNG interference.
 
-Provides run() for job wrappers (job_m1.py). CLI via main().
+Provides run() for job_prepare. CLI via main().
 """
 import os, sys, json, time, signal
 # Fix Python hash randomization so set/dict iteration order is deterministic

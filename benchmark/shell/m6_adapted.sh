@@ -18,11 +18,13 @@
 # CLI arguments:
 #   --dataset D1..D21          Dataset key (required)
 #   --output <dir>             Output directory (default: benchmark/results/configs)
+#   --miners Alpha Flower ...  Subset of miners (default: all 8)
 #
 # Examples:
+#   bash benchmark/shell/m6_adapted.sh --dataset D1
+#   bash benchmark/shell/m6_adapted.sh --dataset D1 --output benchmark/results/configs_v2
+#   bash benchmark/shell/m6_adapted.sh --dataset D1 --miners Alpha Flower
 #   sbatch benchmark/shell/m6_adapted.sh --dataset D3
-#   sbatch benchmark/shell/m6_adapted.sh --dataset D5
-#   sbatch benchmark/shell/m6_adapted.sh --dataset D4   # expect long replay times
 # ─────────────────────────────────────────────────────────────────────────────
 
 set -eo pipefail
@@ -34,4 +36,14 @@ export PYTHONHASHSEED=0
 # Edit this array to subset miners for a run.
 MINERS=(Trace_Filtered Alpha Alpha+ Heuristics Heuristics_Strict Inductive_Strict Inductive_Infrequent Flower)
 
-uv run python benchmark/job_m6_adapted.py --miners "${MINERS[@]}" --workers 8 "$@"
+# Parse --miners from CLI args; everything else passes through
+PASSTHRU=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --miners) shift; MINERS=()
+            while [[ $# -gt 0 && ! "$1" =~ ^-- ]]; do MINERS+=("$1"); shift; done ;;
+        *) PASSTHRU+=("$1"); shift ;;
+    esac
+done
+
+uv run python benchmark/bridges/run_m6_adapted.py --miners "${MINERS[@]}" --workers 8 "${PASSTHRU[@]}"

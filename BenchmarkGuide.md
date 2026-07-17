@@ -115,18 +115,18 @@ Every method is a self-contained job. No preparation step needed — each script
 
 ```bash
 # Default: results → /tmp/<workdir>/results/
-uv run python benchmark/job_m1.py --dataset D1   # M1a–M1g (~3 min)
-uv run python benchmark/job_m2.py --dataset D1   # M2 (~10 s)
-uv run python benchmark/job_m3.py --dataset D1   # M3 (~1 min)
-uv run python benchmark/job_m6.py --dataset D1   # M6 (~2 min)
-uv run python benchmark/job_m7.py --dataset D1   # M7 (~2 min)
-uv run python benchmark/job_m5.py --dataset D1   # M5 (~4 h, FULL)
-uv run python benchmark/job_r1.py --dataset D1   # R1 (~5 min)
-uv run python benchmark/job_r2.py --dataset D1   # R2 (~10 min)
-uv run python benchmark/job_r3.py --dataset D1   # R3 (~2 min)
+uv run python benchmark/run_m1_family.py --dataset D1   # M1a–M1g (~3 min)
+uv run python benchmark/run_m2.py --dataset D1          # M2 (~10 s)
+uv run python benchmark/bridges/run_m3.py --dataset D1  # M3 (~1 min)
+uv run python benchmark/bridges/run_m6_bgen.py --dataset D1   # M6 (~2 min)
+uv run python benchmark/bridges/run_m7.py --dataset D1  # M7 (~2 min)
+uv run python benchmark/docker/run_avatar.py --dataset D1     # M5 (~4 h, FULL)
+uv run python benchmark/run_r_family.py --method R1 --dataset D1  # R1 (~5 min)
+uv run python benchmark/run_r_family.py --method R2 --dataset D1  # R2 (~10 min)
+uv run python benchmark/run_r_family.py --method R3 --dataset D1  # R3 (~2 min)
 
 # Production output:
-uv run python benchmark/job_m1.py --dataset D1 --output benchmark/results/configs_v2
+uv run python benchmark/run_m1_family.py --dataset D1 --output benchmark/results/configs_v2
 ```
 
 All scripts accept `--dataset D1..D21` and `--output <dir>`. Each produces one JSON file per (dataset, miner, method).

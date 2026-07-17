@@ -42,4 +42,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-uv run python benchmark/job_m1.py --miners "${MINERS[@]}" "${PASSTHRU[@]}"
+uv run python benchmark/run_m1_family.py --miners "${MINERS[@]}" "${PASSTHRU[@]}"

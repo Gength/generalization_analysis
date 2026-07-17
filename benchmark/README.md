@@ -8,36 +8,33 @@
 
 ## Layout
 
-### Job scripts (self-contained)
+### Job scripts (directly callable)
 
-Each job creates a unique `/tmp/benchmark_{METHOD}_{DS}_{TIMESTAMP}_{RAND}/` workdir,
+Each script creates a unique `/tmp/benchmark_{METHOD}_{DS}_{TIMESTAMP}_{RAND}/` workdir,
 prepares its own data, runs, writes results, and cleans up. `--output <dir>` overrides
 the output destination.
 
+- `run_m1_family.py` — M1 family (M1a–M1g): calculates `mean` in results. CLI: `uv run python benchmark/run_m1_family.py --dataset D1`
+- `run_m2.py` — M2 (PM4Py Built-in Gen): calculates `score` in results. CLI: `uv run python benchmark/run_m2.py --dataset D1`
+- `run_r_family.py` — R-family (R1/R2/R3): calculates `mean` in results. CLI: `uv run python benchmark/run_r_family.py --method R1 --dataset D1`
+- `bridges/run_m3.py` — M3 entropic relevance, CLI: `uv run python benchmark/bridges/run_m3.py --dataset D1`
+- `bridges/run_m4.py` — M4 anti-alignment, CLI: `uv run python benchmark/bridges/run_m4.py --dataset D1`
+- `bridges/run_m6_adapted.py` — M6 adapted variant (bsgen + token replay), CLI: `uv run python benchmark/bridges/run_m6_adapted.py --dataset D1`
+- `bridges/run_m6_bgen.py` — M6 bootstrap gen (Entropia -bgen), CLI: `uv run python benchmark/bridges/run_m6_bgen.py --dataset D1`
+- `bridges/run_m7.py` — M7 SpeciAL4PM, CLI: `uv run python benchmark/bridges/run_m7.py --dataset D1`
+- `docker/run_avatar.py` — M5 AVATAR via Docker, CLI: `uv run python benchmark/docker/run_avatar.py --dataset D1`
 - `job_prepare.py` — `prepare_workdir(workdir, dataset_key, mode)` with 4 modes:
   `minimal`, `log_dfg`, `pnml`, `per_miner_dfgs`
-- `job_m1.py` … `job_m7.py` — thin wrappers for methods M1–M7
-- `job_m4.py` — M4 job wrapper
-- `job_m5.py` — M5 AVATAR self-contained job
-- `job_m6_adapted.py` — M6 adapted variant job
-- `job_r.py` — shared R-family entry point
-- `job_r1.py`, `job_r2.py`, `job_r3.py` — thin wrappers for R1–R3
-
-### Core algorithm implementations
-
-- `run_m1_family.py` — M1 family (M1a–M1g): calculates `mean` in results
-- `run_m2.py` — M2 (HybridGen): calculates `score` in results
-- `run_r_family.py` — R-family (R1/R2/R3): calculates `mean` in results
 
 ### Bridges (external tool integrations)
 
-- `bridges/run_m3.py` — M3 entropic relevance (per-miner DFG-based)
-- `bridges/run_m4.py` — M4 implementation
+- `bridges/run_m3.py` — M3 entropic relevance. CLI: `uv run python benchmark/bridges/run_m3.py --dataset D1`
+- `bridges/run_m4.py` — M4 anti-alignment. CLI: `uv run python benchmark/bridges/run_m4.py --dataset D1`
+- `bridges/run_m6_bgen.py` — M6 bootstrap gen (Entropia -bgen). CLI: `uv run python benchmark/bridges/run_m6_bgen.py --dataset D1`
+- `bridges/run_m6_adapted.py` — M6 adapted (bsgen + token replay). CLI: `uv run python benchmark/bridges/run_m6_adapted.py --dataset D1`
+- `bridges/run_m7.py` — M7 SpeciAL4PM. CLI: `uv run python benchmark/bridges/run_m7.py --dataset D1`
 - `bridges/m4_export.py` — M4 model export helper
-- `bridges/run_m6_bgen.py` — M6 BGEN bridge (requires patched `jbpt-pm-entropia-1.7.1.jar`)
-- `bridges/run_m6_adapted.py` — M6 adapted variant
-- `bridges/run_m7.py` — M7 implementation
-- `docker/run_avatar.py` — AVATAR (M5) via Docker TF1 (see [`src/AVATAR`](../src/AVATAR))
+- `docker/run_avatar.py` — M5 AVATAR via Docker. CLI: `uv run python benchmark/docker/run_avatar.py --dataset D1`
 - `bridges/avatar_bridge.py` — AVATAR (M5) native bridge (deprecated; use docker/run_avatar.py)
 - `bridges/bsgen_eval.py` — BSGen evaluation utilities
 
@@ -98,21 +95,16 @@ the output destination.
 ## Commands
 
 ```bash
-# --- Benchmark: Self-contained jobs (recommended) ---
-# Each job creates its own /tmp workdir, prepares data, runs, cleans up.
-# Default output: /tmp/<workdir>/results/ (safe, no project pollution).
-# Production: add --output <dir> or set OUTPUT_DIR=<dir>.
-
-# Run a single method on a dataset
-uv run python benchmark/job_m1.py --dataset D1
-uv run python benchmark/job_m2.py --dataset D2
-uv run python benchmark/job_m3.py --dataset D1
-uv run python benchmark/job_m6.py --dataset D1
-uv run python benchmark/job_m7.py --dataset D1
-uv run python benchmark/job_r.py --dataset D1
+# --- Run a method on a dataset (direct CLI) ---
+uv run python benchmark/run_m1_family.py --dataset D1
+uv run python benchmark/run_m2.py --dataset D1
+uv run python benchmark/bridges/run_m3.py --dataset D1
+uv run python benchmark/bridges/run_m6_bgen.py --dataset D1
+uv run python benchmark/bridges/run_m7.py --dataset D1
+uv run python benchmark/run_r_family.py --method R1 --dataset D1
 
 # Production run (writes to configs_v2/)
-uv run python benchmark/job_m2.py --dataset D1 --output benchmark/results/configs_v2
+uv run python benchmark/run_m2.py --dataset D1 --output benchmark/results/configs_v2
 
 # --- Full pipeline (sequential) ---
 bash benchmark/shell/run_all.sh

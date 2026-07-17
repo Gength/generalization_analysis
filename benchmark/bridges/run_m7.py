@@ -1,7 +1,7 @@
 """
 M7 — SpeciAL4PM (Species-based Generalization)
 ===============================================
-Provides run() for job wrappers. CLI via main().
+Provides run() for job_prepare. CLI via main().
 """
 import os, sys, json, time, argparse
 from datetime import datetime, timezone
@@ -9,6 +9,7 @@ from functools import partial
 
 import numpy as np
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, "src/SpeciAL-core")
 from special4pm.estimation import SpeciesEstimator
 from special4pm.species import retrieve_species_n_gram, retrieve_species_trace_variant

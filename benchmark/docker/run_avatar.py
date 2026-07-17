@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """M5 — AVATAR (RelGAN) via Docker
 ===================================
-Provides run() for job wrappers. CLI via main().
+Provides run() for job_prepare. CLI via main().
 """
 import subprocess, os, sys, json, time, glob, re, argparse, csv, shutil, secrets
 from datetime import datetime, timezone
@@ -9,6 +9,8 @@ from collections import defaultdict
 
 import pm4py
 from pm4py.objects.log.obj import EventLog
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from miners import MINERS
 from datasets import DATASETS
