@@ -1,135 +1,97 @@
-# Process Model Generalization — HybridGen Metric & Benchmark
+# ShadowGen: Quantifying Process Model Generalization
 
-> **Quantifying process model generalization** via generative N-gram analysis.
->
-> Generalization — the ability of a discovered process model to accept *future, valid*
-> behavior absent from the recorded event log — is the least understood of the four
-> established process model quality dimensions (fitness, precision, generalization,
-> simplicity). This project builds **HybridGen**, a metric that derives a stochastic
-> trace generator from the event log via variable-order N-gram statistics with
-> Katz-style backoff and Good–Turing novelty estimation, and scores a model by
-> replaying the resulting synthetic **shadow log**. A cross-paradigm benchmark
-> confronts the metric against seven published baselines anchored by variant-based
-> cross-validation as ground truth.
+Generalization, the ability of a discovered process model to accept future, valid
+behavior absent from the recorded event log, is the least validated of the four
+process model quality dimensions (fitness, precision, generalization, simplicity).
 
----
+This repository contains:
 
-## Project Layout
+- **ShadowGen**, a generative N-gram metric: it learns a variable-order Markov
+  model of the log (Katz backoff, Good-Turing novelty), generates a synthetic
+  *shadow log* of plausible-but-unseen traces, and scores a model by how well it
+  replays them. Median cost: 3 seconds per model.
+- **A cross-paradigm benchmark** that validates ShadowGen and eight published
+  generalization metrics (M2-M9) against variant-based hold-out ground truth on
+  five real-life logs. ShadowGen tracks the ground truth on every log (Pearson
+  0.986-0.999); the widely used PM4Py metric is anti-correlated on four of five.
 
-```
-.
-├── pyproject.toml                    # Python project config (uv package manager)
-│
-├── Method_GenShadow.md               # ★ Authoritative metric specification
-├── BenchmarkDesign.md                # ★ Benchmark methodology v2 (coauthored)
-├── BenchmarkGuide.md                 # Quick-start guide for running benchmarks
-│
-├── HybridGen/                        # ★ Core metric package
-│   ├── algorithm/                    #   Versioned algorithm files (v1.py … v26.py)
-│   └── experiment/                   #   Experiment runners (v1.py, v2.py)
-│
-├── benchmark/                        # Benchmark scripts, miners, results
-│   ├── run_m1_family.py              #   M1-family core + CLI
-│   ├── run_m2.py                     #   M2 core + CLI
-│   ├── run_r_family.py               #   R1/R2/R3 core + CLI
-│   ├── bridges/
-│   │   ├── run_m3.py                 #   M3 (Entropic Relevance) + CLI
-│   │   ├── run_m4.py                 #   M4 (Anti-Alignment) + CLI
-│   │   ├── run_m6_adapted.py         #   M6 adapted (bsgen) + CLI
-│   │   ├── run_m6_bgen.py            #   M6 (Bootstrap Gen) + CLI
-│   │   └── run_m7.py                 #   M7 (SpeciAL4PM) + CLI
-│   ├── docker/
-│   │   ├── Dockerfile.avatar / .tf2
-│   │   └── run_avatar.py             #   M5 (AVATAR) + CLI
-│   ├── docker/                       #   Docker infrastructure for AVATAR (M5)
-│   │   ├── Dockerfile.avatar / .tf2
-│   │   └── run_avatar.py
-│   ├── shell/                        #   SLURM-ready shell scripts
-│   │   ├── m1.sh … m7.sh             #   Per-method (sbatch/bash dual-use)
-│   │   ├── r1.sh, r2.sh, r3.sh       #   Reference methods
-│   │   └── run_all.sh                #   Full pipeline entry point
-│   ├── miners.py                     #   Miner definitions
-│   ├── datasets.py                   # ★ Canonical D1–D21 dataset registry
-│   ├── utils.py                      #   Shared utilities
-│   ├── models/                       #   Pre-discovered PNML + DFG JSON
-│   └── results/                      #   methodology results
-│
-├── data/                             # Event logs (XES .gz)
-├── report/                           # LaTeX paper (main.tex, main.pdf, references.bib)
-├── output/                           # HybridGen experiment JSON results
-```
+The full study is the report in [`report/`](report/): `main_v5_short.pdf` is the
+submitted version, `main_v5.pdf` the long version with the complete appendix.
 
----
+> Naming: the Python package keeps the project's legacy name `HybridGen`; the
+> metric itself is called ShadowGen throughout the report. They are the same thing.
 
-## HybridGen Metric — How It Works
+## Requirements
 
-The metric has three stages:
+- Python 3.12+ with [uv](https://docs.astral.sh/uv/) (`uv sync` creates the venv)
+- **Git LFS** (the event logs in `data/` are LFS objects; without
+  `git lfs install` before cloning you get pointer files, not logs)
 
-### 1. N-gram Statistics
-
-The log is reduced to its variants with frequency weights. For every order n = 1..6, the algorithm records per observed n-gram context the frequency of each successor activity and the frequency with which the context occurs at trace end.
-
-### 2. Shadow Log Generation
-
-A stochastic walker generates synthetic traces:
-
-| Step | Mechanism |
-|------|-----------|
-| **Context resolution** | Katz-style backoff — try the deepest context first; fall back if support < τ = 5 |
-| **Novelty estimation** | Good–Turing `p_unseen(s) = N₁(s) / N(s)` — probability the next event is unseen |
-| **Mutation** | With probability `p_unseen`, insert a novel activity. **v2.5+**: drawn from backed-off lower-order context (Katz-consistent); **v2.4−**: uniform over alphabet |
-| **Exploitation** | Otherwise, sample successor proportionally to `ln(f+1)` (log damping) or raw frequency (MLE, v2.6+) |
-| **Termination** | Context-aware `p_end(s)` resolved with same backoff |
-
-### 3. Replay & Score
-
-Replay the shadow log on the model via PM4Py token replay.
-`Gen_shadow = mean trace-level replay fitness` over 5 independent runs.
-
----
-
-## Algorithm Versions
-
-| Version | Key Innovation | Status |
-|---------|---------------|--------|
-| v1 | 1-gram DFG + Good–Turing | Historical |
-| v2–v2.2 | N-gram + backoff evolution | Historical |
-| **v2.3** | Context-aware termination; fixed mutation rate over-estimation | Historical |
-| **v2.4** | Stable baseline; uniform mutation, ln-damped sampling | **v1 benchmark baseline** |
-| **v2.5** | Katz-consistent mutation proposal; probe-integrity counters | ✅ |
-| **v2.6 (log)** | v2.5 + acceptance rate + data-driven length cap | ✅ Stress-test mode |
-| **v2.6 (mle)** | v2.6 with `successor_weighting='mle'` | **🏆 Headline candidate** |
-
-> **Latest recommendation (2026-06-11):** v2.6-mle (M1g) dominates all other versions
-> on every agreement criterion vs. ground truth, is the only mode that ranks D2
-> correctly (Spearman 1.0 vs 0.943), and costs the same runtime.
-
----
-
-## Quick Start
+## Quick start
 
 ```bash
-# Install dependencies (auto-creates venv)
+git lfs install
+git clone <this repo> && cd generalization_analysis
 uv sync
 ```
 
----
+Score a model in three lines (discovers a model, then scores it):
 
-## Benchmark
+```python
+import pm4py
+from shadowgen import gen_shadow
 
-Full documentation — layout, job model, commands, dataset quick-index, result extraction, and gotchas — is at **[`benchmark/README.md`](benchmark/README.md)**.
+log = pm4py.convert_to_event_log(pm4py.read_xes("data/Sepsis Cases - Event Log_1_all/Sepsis Cases - Event Log.xes.gz"))
+net, im, fm = pm4py.discover_petri_net_inductive(log)
+print(gen_shadow(log, net, im, fm))   # graded generalization score in [0, 1], ~3 s
+```
 
-Key documents:
-- [`BenchmarkDesign.md`](BenchmarkDesign.md) — methodology and metric definitions
-- [`BenchmarkGuide.md`](BenchmarkGuide.md) — step-by-step operations and result formats
+Or from the command line, if you already have a Petri net:
 
----
+```bash
+uv run python shadowgen.py LOG.xes MODEL.pnml            # single draw (the default)
+uv run python shadowgen.py LOG.xes MODEL.pnml --iterations 5 --details   # adds an error bar
+```
 
-## Documentation
+The shipped configuration (one draw, N=6, tau=5, MLE weighting, seed 42) is the
+exact configuration validated in the report; every parameter is overridable.
 
-| Document | Description |
-|----------|-------------|
-| `Method_GenShadow.md` | **Authoritative** metric specification & design rationale |
-| `BenchmarkDesign.md` | Benchmark methodology v2 — full protocol, methods, datasets |
-| `BenchmarkGuide.md` | Quick-start guide for running experiments |
-| `report/main.pdf` | LaTeX paper (LNCS format) |
+## Reproducing the benchmark
+
+[`benchmark/README.md`](benchmark/README.md) documents the harness: one runner
+per method, `shell/run_all.sh` as the full pipeline, one sidecar JSON per
+(log, miner, method) cell.
+
+- `benchmark/results/configs/` is the committed source of truth: 800 result
+  files with exact parameters, raw scores, and runtimes. Every number in the
+  report regenerates from these.
+- Figures regenerate via `benchmark/make_figures.py` (and `make_*_figure.py`
+  for the supplementary validations).
+- `benchmark/results/NEW_EXPERIMENTS.md` documents three independent
+  validations beyond the main matrix: a temporal train/future split, a
+  synthetic known-system study, and bootstrap confidence intervals.
+- Models are re-discovered on first run (discovery is seeded; the residual
+  replay drift is quantified in the report's threats section).
+
+## Repository layout
+
+```
+shadowgen.py            # the released metric: CLI + gen_shadow() API
+HybridGen/              # metric package (frozen, versioned algorithm modules)
+benchmark/              # harness, per-method bridges, miners, results
+  results/configs/      # provenance: one JSON per benchmark cell
+data/                   # event logs (Git LFS; L1-L5 + the 21-log catalog)
+report/                 # LaTeX report + figures
+presentation/           # final talk and defense notes
+archive/                # earlier exploratory work, kept for the record
+Method_GenShadow.md     # metric specification
+BenchmarkDesign.md      # benchmark methodology
+BenchmarkGuide.md       # operations guide
+```
+
+## Algorithm versions
+
+`HybridGen/algorithm/` keeps every historical version as a frozen module
+(v1 through v2.6), so all report numbers regenerate from the exact code that
+produced them. The released metric is v2.6 with MLE weighting, reported as M1
+(ShadowGen) in the report; `shadowgen.py` wraps it behind one function.

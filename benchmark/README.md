@@ -1,6 +1,5 @@
 # Benchmark — Layout & Quick Reference
 
-> See [`AGENTS.md`](../AGENTS.md) for the complete project guide.
 > See [`BenchmarkDesign.md`](../BenchmarkDesign.md) for methodology.
 > See [`BenchmarkGuide.md`](../BenchmarkGuide.md) for operations and result formats.
 
