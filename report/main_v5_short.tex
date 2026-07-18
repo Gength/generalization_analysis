@@ -11,14 +11,14 @@
 % toy example), evaluation regrouped into Setup / Results / Discussion /
 % Threats, log ids renamed from D-prefix to L1-L5, paragraph-free conclusion.
 % The \chg highlighting of v4 is neutralized (renders black).
-% main.tex and main_v2/v3/v4.tex are untouched.
 % ---------------------------------------------------------------------
 % SHORT VERSION (main_v5_short): same content as main_v5, body cut to the
-% 20-25 page window. Moved to the appendix: feasibility forensics, the
-% per-method calibration figure, the acceptance figure, the genval fold
-% table, baseline integration details, the complexity derivation, and the
-% Katz-mutation illustration. Related work, the M6 study, and acceptance
-% prose are compressed; no result or disclosure is dropped.
+% 20-25 page window. Appendix (5 sections): acceptance agreement, the
+% per-method calibration and acceptance figures, the genval fold table, the
+% context-bound sweep, and parameter robustness. Feasibility is one body
+% paragraph. Cut for length: the raw-scores and bootstrap tables (their
+% numbers stay in the body prose), the feasibility forensics, and the
+% baseline-integration, complexity-derivation, and Katz-mutation appendices.
 % =====================================================================
 \documentclass[runningheads]{llncs}
 
@@ -149,7 +149,7 @@ An N-gram language model predicts the next symbol of a sequence from its precedi
 \section{Related Work}
 \label{sec:related}
 
-We group published generalization metrics by paradigm. Table~\ref{tab:paradigms} compares them along the two construct questions this report keeps asking: does the metric confront the model with unseen behavior, and what does it blend into the score besides acceptance of valid behavior? The identifiers M2--M9 name the metrics throughout the report; M1 is our own metric. Below we summarize each paradigm, review how such metrics have been evaluated so far, and state the gap.
+We group published generalization metrics by paradigm. Table~\ref{tab:paradigms} compares them along the two construct questions this report keeps asking: does the metric confront the model with unseen behavior, and what does it blend into the score besides acceptance of valid behavior? The identifiers M2--M9 name the metrics throughout the report; M1 is our own metric. Below we note two grouping decisions and the closest baselines, review how such metrics have been evaluated so far, and state the gap.
 
 \begin{table}[t]
 \centering
@@ -174,25 +174,18 @@ M9 & negative events~\cite{vandenbroucke2014negative} & replay against artificia
 \end{tabular}
 \end{table}
 
-\subsection{The paradigms in brief}
-Structural counting (M2), the generalization metric built into PM4Py~\cite{buijs2014quality,berti2019pm4py}, deems a model general when its internal parts are visited often while replaying the log; it never confronts the model with unseen behavior, and alignment-based generalization~\cite{vanderaalst2016pm} shares this blind spot, so we group it with M2. Negative-event generalization (M9) completes the log with events assumed forbidden~\cite{vandenbroucke2014negative}; the negatives are induced from the log itself, which folds a precision-shaped signal into the score. Entropic relevance (M3) measures the bits to encode the log under a stochastic model~\cite{alkhammash2022entropic}; it blends fitness- and precision-like aspects and needs a stochastic model that a plain Petri net does not provide. Earth Mover's Stochastic Conformance~\cite{leemans2019emsc} shares both properties, so we treat both as outside a pure generalization comparison.
-
-Anti-alignments (M4) derive precision and generalization from a model's maximally deviating runs~\cite{vandongen2016anti}; the underlying search is exponential. AVATAR (M5) trains a sequence GAN to approximate the system and scores an F-measure against its samples~\cite{theis2020avatar}; it is the closest paradigm to ours, at hours of GPU training per log, and the F-measure folds precision in. Bootstrap generalization (M6) resamples the log and breeds recombined traces via genetic crossover~\cite{polyvyanyy2022bootstrap}; its target, model--system recall, coincides with our construct and makes it the strongest baseline, but its test traces are recombinations of observed material, never novel events. SpeciAL (M7) transfers species-richness estimation from ecology to event data~\cite{kabierski2023species}; we use the coverage ratio between model-simulated and original logs as its generalization proxy. Pattern-based generalization (M8) mines behavioral patterns from the log and checks, via alignments, whether the model realizes them with generalizing structures~\cite{reissner2022pattern}.
+\subsection{Paradigm groupings and the closest baselines}
+Table~\ref{tab:paradigms} states, per metric, what it judges a model by, whether it probes unseen behavior, and what besides acceptance it blends into the score; we do not repeat it row by row. Two grouping decisions matter: alignment-based generalization~\cite{vanderaalst2016pm} shares structural counting's blind spot and joins M2, while Earth Mover's Stochastic Conformance~\cite{leemans2019emsc} shares entropic relevance's fitness-and-precision blend and joins M3, both outside a pure generalization comparison. Two baselines are the ones to beat: bootstrap (M6) targets model--system recall, the same construct as ours, which makes it the strongest baseline, though its bred traces are recombinations of observed material and never novel events; AVATAR (M5) is the closest paradigm, generative, at hours of GPU training per log, its F-measure folding precision in. For SpeciAL (M7) we read the coverage ratio between simulated and original logs as its generalization proxy.
 
 \subsection{Membership versus graded semantics}
 Textbook definitions are membership-shaped (the likelihood that previously unseen but valid behavior is allowed~\cite{vanderaalst2016pm}; yes/no per trace), whereas token- and alignment-based fitness made the prevailing practice graded~\cite{rozinat2008conformance}. Our metric reports both readings of the shadow log and validates each against its own ground truth.
 
-\subsection{Evaluating the metrics themselves}
-A few studies assess the metrics rather than the models. Janssenswillen et al.~\cite{janssenswillen2017comparative} found that, unlike fitness and precision, generalization metrics \emph{do not agree with one another}, and a follow-up on synthetic known-system logs judged objective measurement ``nearly impossible''~\cite{janssenswillen2019confirmatory}. Others check conformance measures against axioms~\cite{vanderaalst2018propositions,syring2019conformance} or benchmark discovery algorithms using these metrics as given~\cite{augusto2019benchmark}.
-
 \subsection{The gap, and how ShadowGen differs}
-Three gaps recur. First, no cross-paradigm validation: metrics have been compared to one another~\cite{janssenswillen2017comparative} or on synthetic known-system data~\cite{janssenswillen2019confirmatory}, never against an empirical hold-out ground truth on common real logs, so it is unknown which paradigm actually tracks held-out acceptance. Second, opacity: the most faithful baselines (neural, bootstrap) return a number with little insight into why a model scored as it did. Third, construct drift: several metrics fold precision in (Table~\ref{tab:paradigms}, last column), which conflates two orthogonal failure modes. ShadowGen differs from every other row of the table in combining three properties: it is validated against a cross-validation ground truth and shown to track it; it is interpretable, exposing per-context novelty, mutation flags, an openness profile, and a strict acceptance reading; and it is construct-pure by design, with a benchmark that makes construct drift visible through the flower-model litmus.
+Three gaps recur. First, no cross-paradigm validation. The studies that assess the metrics themselves found that generalization metrics, unlike fitness and precision, \emph{do not agree with one another}~\cite{janssenswillen2017comparative}, and a follow-up on synthetic known-system logs judged objective measurement ``nearly impossible''~\cite{janssenswillen2019confirmatory}; others check conformance measures against axioms~\cite{vanderaalst2018propositions,syring2019conformance} or benchmark discovery algorithms with these metrics as given~\cite{augusto2019benchmark}. None validates the metrics against an empirical hold-out ground truth on common real logs, so it is unknown which paradigm actually tracks held-out acceptance. Second, opacity: the most faithful baselines (neural, bootstrap) return a number with little insight into why a model scored as it did. Third, construct drift: several metrics fold precision in (Table~\ref{tab:paradigms}, last column), which conflates two orthogonal failure modes. ShadowGen differs from every other row of the table in combining three properties: it is validated against a cross-validation ground truth and shown to track it; it is interpretable, exposing per-context novelty, mutation flags, an openness profile, and a strict acceptance reading; and it is construct-pure by design, with a benchmark that makes construct drift visible through the flower-model litmus.
 
 % =====================================================================
 \section{Method}
 \label{sec:method}
-This section defines the construct ShadowGen measures (Sect.~\ref{sec:method:construct}), the scoring framework (Sect.~\ref{sec:method:framework}), the generator (Sect.~\ref{sec:method:gen}), its pseudocode (Sect.~\ref{sec:method:algo}), a worked example (Sect.~\ref{sec:method:example}), the complexity (Sect.~\ref{sec:method:complexity}), and the assumptions and limitations of the approach (Sect.~\ref{sec:method:scope}).
-
 \subsection{Construct: what generalization is and is not}
 \label{sec:method:construct}
 We adopt a strict construct: \textbf{generalization is the degree to which a model accepts future, valid behavior of the underlying process that is absent from the log, and nothing else.} Generalization is \emph{not} precision. Detecting over-permissiveness (acceptance of \emph{invalid} behavior) is the precision dimension's task. Folding a permissiveness penalty into a generalization score makes any mid-range value ambiguous: one cannot tell ``rejects future valid behavior'' from ``accepts invalid behavior.'' That destroys the diagnostic value of the quality quadrant. Metrics that blend the two (for example, AVATAR's harmonic mean of fitness and precision, an F-measure) measure a legitimate but \emph{different} construct and must not be read as pure generalization.
@@ -373,11 +366,11 @@ Figure~\ref{fig:example} works the method end to end on a toy log over $\mathcal
 \label{fig:example}
 \end{figure}
 
-The same two-job split of backoff holds at realistic counts: an over-sparse deep context is skipped entirely, the deepest supported order sets how often to invent an event (the rate), and a still shorter one sets what to invent (the proposal). Figure~\ref{fig:mutation} (appendix) illustrates this at real successor counts.
+The same two-job split of backoff holds at realistic counts: an over-sparse deep context is skipped entirely, the deepest supported order sets how often to invent an event (the rate), and a still shorter one sets what to invent (the proposal).
 
 \subsection{Time and space complexity}
 \label{sec:method:complexity}
-Per evaluated model the total cost is $O\!\big(K\,(N\,E_V + \theta\,\lambda\,\bar b + \theta\,\lambda\,|M_P|)\big)$: building the N-gram statistics, generating $\theta$ traces of capped length $\lambda$, and replaying them on the net of size $|M_P|$, where $E_V$ is the summed variant length and $\bar b\le|\mathcal{A}|$ the mean branching factor (Appendix~\ref{sec:appendix:complexity} derives each term). One observation matters. The cost is linear in the log \emph{through its variants}, not its cases: variant compression makes the metric scale with behavioral diversity rather than volume. This contrasts sharply with the leave-one-variant-out ground truth, which performs $|V(L)|$ full discoveries and is orders of magnitude more expensive on variant-rich logs.
+Per evaluated model the total cost is $O\!\big(K\,(N\,E_V + \theta\,\lambda\,\bar b + \theta\,\lambda\,|M_P|)\big)$: building the N-gram statistics, generating $\theta$ traces of capped length $\lambda$, and replaying them on the net of size $|M_P|$, where $E_V$ is the summed variant length and $\bar b\le|\mathcal{A}|$ the mean branching factor. One observation matters. The cost is linear in the log \emph{through its variants}, not its cases: variant compression makes the metric scale with behavioral diversity rather than volume. This contrasts sharply with the leave-one-variant-out ground truth, which performs $|V(L)|$ full discoveries and is orders of magnitude more expensive on variant-rich logs.
 
 \subsection{Assumptions, scope, and limitations of the approach}
 \label{sec:method:scope}
@@ -386,8 +379,6 @@ ShadowGen assumes a control-flow view over a finite activity alphabet: traces ar
 % =====================================================================
 \section{Implementation}
 \label{sec:impl}
-This section describes the reference implementation and the benchmark harness: the architecture (Sect.~\ref{sec:impl:arch}), the design decisions that matter for validity (Sect.~\ref{sec:impl:decisions}), how each external metric was integrated (Sect.~\ref{sec:impl:baselines}), and where the implementation deviates from the formal method (Sect.~\ref{sec:impl:deviations}).
-
 \subsection{Architecture}
 \label{sec:impl:arch}
 The metric is implemented in Python using PM4Py~\cite{berti2023pm4pysi} for log handling, discovery, and token replay. The code is organized as a registry of frozen modules: the released metric and its 1-gram ablation variant (Sect.~\ref{sec:eval:setup}) are separate modules loaded by name, so every number in this report regenerates from the exact code that produced it. A release module (\texttt{shadowgen.py}) exposes the shipped configuration behind a single function: one draw ($K{=}1$), the graded score as the only return value, and every parameter overridable, with more draws as an option that adds an error bar. The benchmark layer adds model preparation, per-method bridges (including subprocess bridges to Java/Docker baselines), the ground-truth scripts, and a runner with a uniform \texttt{evaluate\_miner(log, miner)} entry point.
@@ -396,9 +387,9 @@ The metric is implemented in Python using PM4Py~\cite{berti2023pm4pysi} for log 
 \label{sec:impl:decisions}
 \textbf{Determinism.} All random number generators are seeded ($\mathit{seed}{=}42$) so that every cell is reproducible; the residual nondeterminism of the replay library itself is measured in Sect.~\ref{sec:eval:threats}. \textbf{Provenance.} Every (log, miner, method) cell writes a sidecar JSON with exact parameters, raw per-iteration scores, runtime, and integrity counters (\texttt{duplicates\_kept} and \texttt{truncated\_traces}, which surface any deviation of the shadow log from its specification); these files are the single source of truth for all tables, and a result without a matching config is invalid.
 
-\subsection{Baseline integration realities}
+\subsection{Baseline integration}
 \label{sec:impl:baselines}
-Integrating the eight external metrics (M2--M9, Table~\ref{tab:paradigms}) surfaced engineering realities that materially affect the evaluation; Appendix~\ref{sec:appendix:baselines} records them in full. The PM4Py metric (M2) is a one-line library call. AVATAR (M5) runs in a TensorFlow~1 Docker image and required a greedy longest-match decoder for multi-word activity names. SpeciAL (M7) is used directly, with a disclosed version skew between L5 (the released PyPI package) and L1--L4 (the authors' source copy; Sect.~\ref{sec:eval:threats}). \chg{Anti-alignments (M4) and pattern-based generalization (M8) run only on the small logs and finish only part of the miners} (Sect.~\ref{sec:eval:feasibility}). Entropic relevance (M3) needs a Petri-net-to-stochastic-automaton conversion, reported two ways: a DFG-based approximation that runs on all five logs, and a proper reachability-graph conversion for the construct test; both are validated against the Entropia tool~\cite{polyvyanyy2020entropia} ($3$-decimal agreement on every L1 automaton).
+Integrating the eight external metrics (M2--M9, Table~\ref{tab:paradigms}) surfaced engineering realities that materially affect the evaluation. The PM4Py metric (M2) is a one-line library call. AVATAR (M5) runs in a TensorFlow~1 Docker image and required a greedy longest-match decoder for multi-word activity names. SpeciAL (M7) is used directly, with a disclosed version skew between L5 (the released PyPI package) and L1--L4 (the authors' source copy; Sect.~\ref{sec:eval:threats}). \chg{Anti-alignments (M4) and pattern-based generalization (M8) run only on the small logs and finish only part of the miners} (Sect.~\ref{sec:eval:feasibility}). Entropic relevance (M3) needs a Petri-net-to-stochastic-automaton conversion, reported two ways: a DFG-based approximation that runs on all five logs, and a proper reachability-graph conversion for the construct test; both are validated against the Entropia tool~\cite{polyvyanyy2020entropia} ($3$-decimal agreement on every L1 automaton).
 
 Bootstrap (M6adapted) is a construct-faithful adaptation: we run the genuine \texttt{bsgen} bootstrap-with-breeding sampler (our reimplementation of the published algorithms; it reproduces the published L1 values within $0.008$ on every cell) and score the bred traces by token-replay fitness, a graded model--system recall, exactly the construct the paper defines~\cite{polyvyanyy2022bootstrap}. We deliberately avoid the Entropia \texttt{-bgen} F-measure: it folds precision back in and fails the flower litmus; we carry it as its own method id (M6original) so the contamination stays measurable (Sects.~\ref{sec:eval:m6},~\ref{sec:eval:scale}). The price is twofold: M6adapted is an adaptation, not a drop-in published baseline, and its token-replay core is shared with R1 and our own metric, a shared-ruler effect flagged in Sect.~\ref{sec:eval:threats}.
 
@@ -409,7 +400,7 @@ Three deviations are worth recording. (i) The N-gram model is rebuilt each of th
 % =====================================================================
 \section{Evaluation}
 \label{sec:eval}
-We measure how well each metric agrees with an empirical generalization ground truth across discovery configurations and logs, and we attribute the proposed metric's behavior to specific design decisions through a measured ablation. Section~\ref{sec:eval:setup} fixes the setup, Sect.~\ref{sec:eval:results} reports the results, Sect.~\ref{sec:eval:discussion} discusses them, and Sect.~\ref{sec:eval:threats} states the threats to validity.
+We measure how well each metric agrees with an empirical generalization ground truth across discovery configurations and logs, and we attribute the proposed metric's behavior to specific design decisions through a measured ablation.
 
 \subsection{Experimental setup}
 \label{sec:eval:setup}
@@ -444,21 +435,19 @@ Eight discovery configurations per log span the construct's poles: six process d
 Our metric is M1: ShadowGen as specified in Sect.~\ref{sec:method}. A single ablation variant replaces the variable-order model by its 1-gram floor, a directly-follows generator with the same Good--Turing novelty and termination machinery, and isolates what deep context contributes (Sect.~\ref{sec:eval:scale}). The external metrics are M2--M9 (Sect.~\ref{sec:related}, Table~\ref{tab:paradigms}). Three reference measurements complete the battery. R1 is the empirical ground truth: variant-based 5-fold cross-validation fitness ($3$ shuffles), i.e.\ discover on four fifths of the variants, replay the held-out fifth. R2, leave-one-variant-out, checks that the verdicts do not depend on the fold granularity. R3 is a floor, not a ground truth: the replay of uniformly random traces, which any metric claiming to measure more than permissiveness must beat. R1-accept, the fraction of held-out traces replayed perfectly, validates the acceptance reading.
 
 \subsubsection{Protocol and agreement criteria.}
-ShadowGen runs at the defaults fixed here, once, for all logs: context bound $N{=}6$, support threshold $\tau{=}5$, $K{=}5$ iterations of $\theta{=}1{,}000$ shadow traces ($\theta$ capped by $|L|$), \texttt{mle} weighting, seed $42$; each cell reports mean $\pm$ std. We benchmark at $K{=}5$ so every cell carries an error bar, but the shipped default is a single draw ($K{=}1$), which is five times faster and reproduces the result (Sect.~\ref{sec:eval:threats}). Each external method runs with its own stochasticity protocol. Agreement with the ground truth is reported on \emph{four criteria}: Pearson (calibration shape), Spearman and Kendall's $\tau_b$ (ordering), mean absolute error (MAE, absolute calibration), and discriminative spread (max$-$min over the six non-degenerate miners). All four are computed over those six miners; the two poles are excluded and reported separately as litmus values. Rank correlation alone is too weak a test: as Sect.~\ref{sec:eval:external} shows, a random-replay baseline also reaches Spearman and Kendall $1.0$. The context bound is fixed at $N{=}6$ and held on every log, so the metric is never tuned per dataset. Figure~\ref{fig:nsweep} (appendix) shows the measurement behind the choice, swept over all five logs. Calibration picks $N$, and it is a plateau, not a peak: for $N\ge4$ the five-log mean MAE stays within $0.020$--$0.021$, $N{=}6$ is the optimum on L1 and within $0.004$ of it on L2--L4, and the gaps sit inside the metric's own sampling variance (Sect.~\ref{sec:eval:threats}). Only the short-trace L5 (mean length $6.3$) prefers a shallow bound, consistent with its 1-gram result (Sect.~\ref{sec:eval:scale}). The realized mutation rate offers no optimum to select: it rises monotonically with $N$ on every log, so a deeper bound buys more novelty at more cost and no better calibration.
+ShadowGen runs at the defaults fixed here, once, for all logs: context bound $N{=}6$, support threshold $\tau{=}5$, $K{=}5$ iterations of $\theta{=}1{,}000$ shadow traces ($\theta$ capped by $|L|$), \texttt{mle} weighting, seed $42$; each cell reports mean $\pm$ std. We benchmark at $K{=}5$ so every cell carries an error bar, but the shipped default is a single draw ($K{=}1$), which is five times faster and reproduces the result (Sect.~\ref{sec:eval:threats}). Each external method runs with its own stochasticity protocol. Agreement with the ground truth is reported on \emph{four criteria}: Pearson (calibration shape), Spearman and Kendall's $\tau_b$ (ordering), mean absolute error (MAE, absolute calibration), and discriminative spread (max$-$min over the six non-degenerate miners). All four are computed over those six miners; the two poles are excluded and reported separately as litmus values. Rank correlation alone is too weak a test: as Sect.~\ref{sec:eval:external} shows, a random-replay baseline also reaches Spearman and Kendall $1.0$. The context bound is fixed at $N{=}6$ and held on every log, so the metric is never tuned per dataset. The five-log sweep behind the choice (Fig.~\ref{fig:nsweep}, appendix) shows a plateau, not a peak: for $N\ge4$ the five-log mean MAE stays within $0.020$--$0.021$, with only the short-trace L5 preferring a shallow bound (Sect.~\ref{sec:eval:scale}).
 
 \emph{Compute budget.} Every method is granted $1$ hour of metric time per cell. Model discovery is excluded: models are discovered once per cell, cached, and shared by all methods. The references (R1, R2, R1-accept) are exempt; they define the ground truth. A cell that does not return within the budget is recorded as a sentinel with the measured evidence, excluded from the agreement statistics, and not re-run. Since the working metrics complete a cell in seconds, this turns runtime into a first-class outcome: a method's inability to finish is a result, not an omission.
 
 \subsection{Results}
 \label{sec:eval:results}
-We report the results in a fixed order: which methods return scores at all under the budget (Sect.~\ref{sec:eval:feasibility}); the cross-paradigm agreement on the primary log (Sect.~\ref{sec:eval:external}); a controlled study of what contaminates a generalization score (Sect.~\ref{sec:eval:m6}); the agreement at scale, including the ablation (Sect.~\ref{sec:eval:scale}); the strict acceptance reading (Sect.~\ref{sec:eval:accept}); a direct test of the generator premise (Sect.~\ref{sec:eval:genval}); and runtime (Sect.~\ref{sec:eval:runtime}).
-
 \subsubsection{Feasibility.}
 \label{sec:eval:feasibility}
-Before any agreement can be compared, each method must return scores within the budget. Table~\ref{tab:feasibility} summarizes the verdicts; Appendix~\ref{sec:appendix:feasibility} documents the full per-method evidence.
+Before any agreement can be compared, each method must return scores within the budget. Table~\ref{tab:feasibility} summarizes the verdicts.
 
 \begin{table}[t]
 \centering
-\caption{Feasibility under the $1$-hour budget: the methods with restricted or no coverage (M2, M6adapted, M6original, and M7 score at scale; Sect.~\ref{sec:eval:scale}). Full evidence in Appendix~\ref{sec:appendix:feasibility}.}
+\caption{Feasibility under the $1$-hour budget: the methods with restricted or no coverage (M2, M6adapted, M6original, and M7 score at scale; Sect.~\ref{sec:eval:scale}).}
 \label{tab:feasibility}
 \setlength{\tabcolsep}{3.5pt}
 \footnotesize
@@ -475,14 +464,10 @@ M9 & fails as shipped & anti-correlated on L1 ($-0.55$); constant $1.0$ on L2/L5
 \end{tabular}
 \end{table}
 
-\chg{In brief. M4 and M8 return on too few models to be scored: at most two of the six non-degenerate miners, on the small logs only; where M4 scores, the trace model reads $0.0$ (the correct pole), while M8 reads it $0.90$ (a memorizing model read as general). Entropic relevance (M3) runs on all five logs as a directly-follows approximation, but its agreement with the ground truth is unstable; computed properly, from each net's reachability graph, it converts on only $24$ of $40$ cells and fails the flower litmus, so we keep it out of the agreement tables as a fitness and precision blend. Negative-event generalization (M9) tracks held-out generalization on no log: anti-correlated on L1 (Pearson $-0.55$, more negative than PM4Py), degenerate on L2 and L5 (every model $1.0$, including the memorizing trace pole), and infeasible at depth on L3/L4; its speed and poor accuracy still place it on the runtime pareto (Fig.~\ref{fig:pareto}). AVATAR (M5) meets the budget on no log: the full published configuration needs $11.8$ hours of GPU training on L1 and $8.6$ on L2~\cite{theis2020avatar}, the measured CPU projection is $3$--$4$ days per log, L3 spent its full CPU hour inside GAN pretraining, and L4 was killed at a $24$\,GB memory cap; its two small-log scorecards, obtained off-protocol, are read for the flower litmus and the calibration illustration (Fig.~\ref{fig:calibration}), never as agreement rows.}
-
-\chg{Two boundary results at scale: the published Entropia \texttt{-bgen} tool needs $6$ to $10$ minutes per L4 cell (five of eight cells return within the hour; the other three fail inside the tool), and SpeciAL scores six of eight L5 cells (Alpha and Alpha+ exceed the hour). In sum, M2, M3, M6adapted, M6original, and M7 score at scale with these sentinels; M5 exceeds the budget on every log; M4 and M8 return only on the small logs, always leaving models unscored, and no non-degenerate miner at scale. We also disclose five L4 cells kept in the tables despite overrunning the hour before returning, against the sentinel rule: M2 Inductive-strict ($3.5$\,h), the 1-gram ablation's Inductive-strict ($4.0$\,h), SpeciAL Heuristics-strict ($2.2$\,h) and Heuristics ($1.2$\,h), and the R3 floor's Inductive-strict ($1.2$\,h). They are real measurements, and sentineling them would only remove scored cells from baselines that already fail, so we keep and flag them.}
+\chg{In brief, M4 and M8 return on too few models to be scored: at most two of the six non-degenerate miners, on the small logs only; where M4 scores, the trace model reads $0.0$ (the correct pole), while M8 reads it $0.90$ (a memorizing model read as general). AVATAR (M5) meets the budget on no log: the full published configuration needs $11.8$ hours of GPU training on L1 and $8.6$ on L2~\cite{theis2020avatar}, and the measured CPU projection is $3$--$4$ days per log, so its two off-protocol small-log scorecards are read only for the flower litmus and the calibration illustration (Fig.~\ref{fig:calibration}), never as agreement rows. Entropic relevance (M3) runs on all five logs but its agreement with the ground truth is unstable (per-log Pearson $-0.80$ to $+0.95$), and computed properly it converts on only $24$ of $40$ cells and fails the flower litmus. Negative-event generalization (M9) tracks held-out generalization on no log: anti-correlated on L1 (Pearson $-0.55$, more negative than PM4Py) and degenerate on L2 and L5 (every model $1.0$, including the memorizing trace pole). All four stay out of the agreement tables. Five L4 cells are kept despite overrunning the hour before returning (M2 and the 1-gram ablation's Inductive-strict, SpeciAL's Heuristics and Heuristics-strict, and the R3 floor's Inductive-strict; $1.2$--$4.0$\,h): real measurements we flag rather than drop.}
 
 \subsubsection{Cross-paradigm agreement on L1.}
 \label{sec:eval:external}
-
-% tab:external moved to the appendix (Sect.~\ref{sec:appendix:external}, Raw cross-paradigm scores on L1)
 
 \begin{table}[t]
 \centering
@@ -514,11 +499,11 @@ Table~\ref{tab:corr} compares the paradigms against the cross-validation referen
 The agreement is robust to the reference and to the miner sample. Against leave-one-variant-out (R2\chg{, $50/846$ variants sampled}) the ranking is identical ($\tau_b{=}1.0$) and calibration unchanged (L1 MAE $0.014$; L2 Pearson $0.97$), with every baseline verdict the same. \chg{Extending L1 to eleven discovery configurations holds Pearson $0.997$ (bootstrap $95\%$ CI $[0.953, 0.999]$, MAE $0.015$), so the result is not an artifact of a six-point sample.}
 
 The litmus failures also replicate on L2: PM4Py scores the flower model $0.88$, AVATAR $0.76$ \chg{(off-protocol)}, and SpeciAL $0.94$, all below the $1.0$ the construct requires, while \chg{ShadowGen} and the references stay at $1.0$.
-Figure~\ref{fig:calibration} (appendix) plots each metric against the cross-validation ground truth over the six non-degenerate miners of all five logs; the L1 four-criteria detail is Table~\ref{tab:corr} and the per-cell scores are in the appendix (Table~\ref{tab:external}). The generative and resampling metrics stay on the diagonal on every log, while the structural and diversity metrics do not, which previews the scale result of Sect.~\ref{sec:eval:scale} in visual form.
+Figure~\ref{fig:calibration} (appendix) plots each metric against the cross-validation ground truth over the six non-degenerate miners of all five logs; the L1 four-criteria detail is Table~\ref{tab:corr}. The generative and resampling metrics stay on the diagonal on every log, while the structural and diversity metrics do not, which previews the scale result of Sect.~\ref{sec:eval:scale} in visual form.
 
-\subsubsection{What contaminates a generalization score: a controlled bootstrap study.}
+\subsubsection{What contaminates a generalization score.}
 \label{sec:eval:m6}
-Bootstrap generalization is published as a metric in its own right~\cite{polyvyanyy2022bootstrap}, so it is worth asking why the number a user typically reads off it (the Entropia \texttt{-bgen} F1 of model--system precision and recall) fails the flower litmus. We hold the bred \texttt{bsgen} sample fixed and vary only the scoring (Table~\ref{tab:m6}, appendix): the two readings that include precision fail the litmus (flower $0.18$, $0.10$) and miscalibrate badly (MAE $0.59$, $0.68$); the two recall-only readings pass and track R1. The F1 still reaches Pearson $0.87$, which is why the protocol uses four criteria and not one. It is the precision component, not the bootstrap sampler, that throws the bootstrap off, and why we report M6adapted by token-replay fitness, faithful to the paper's recall construct (Sect.~\ref{sec:impl:baselines}). This is the construct argument of Sect.~\ref{sec:method:construct} made empirical: folding precision into a generalization score measurably destroys calibration and the litmus.
+Bootstrap generalization is published as a metric in its own right~\cite{polyvyanyy2022bootstrap}, so it is worth asking why the number a user typically reads off it (the Entropia \texttt{-bgen} F1 of model--system precision and recall) fails the flower litmus. We hold the bred \texttt{bsgen} sample fixed and vary only the scoring: the two readings that include precision fail the litmus (flower $0.18$, $0.10$) and miscalibrate badly (MAE $0.59$, $0.68$); the two recall-only readings pass and track R1. The F1 still reaches Pearson $0.87$, which is why the protocol uses four criteria and not one. It is the precision component, not the bootstrap sampler, that throws the bootstrap off, and why we report M6adapted by token-replay fitness, faithful to the paper's recall construct (Sect.~\ref{sec:impl:baselines}). This is the construct argument of Sect.~\ref{sec:method:construct} made empirical: folding precision into a generalization score measurably destroys calibration and the litmus.
 
 \subsubsection{Agreement at scale (L3--L5) and the ablation.}
 \label{sec:eval:scale}
@@ -545,7 +530,6 @@ R3 Random floor & .83 & .281 & .97 & .116 & .70 & .265 & .88 & .176 & .84 & .196
 \bottomrule
 \end{tabular}
 \end{table}
-
 
 Six findings.
 \begin{enumerate}
@@ -575,7 +559,7 @@ Across the full 21-log catalog the premise holds broadly (Fig.~\ref{fig:genvalbo
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.62\textwidth]{figures/fig_genval_box.pdf}
-\caption{Generator premise across the 21-log catalog: exact-match hit-rate against log representativeness (TLRA), ShadowGen crosses coloured by alphabet size $|\mathcal{A}|$ vs the uniformly random floor (open circles), one point per log. ShadowGen exceeds random on every log (random never above $2.2\%$). Two structural properties shape exact-matchability: hit-rate correlates with representativeness (Pearson $0.66$ with TLRA) and against alphabet size (Pearson $-0.65$ on $\log|\mathcal{A}|$). The floor cluster is the large-alphabet municipality logs ($|\mathcal{A}|$ up to $624$), which are also the least representative, so both properties push them to zero.}
+\caption{Generator premise across the 21-log catalog: exact-match hit-rate against log representativeness (TLRA), ShadowGen crosses coloured by alphabet size $|\mathcal{A}|$, the uniformly random floor as open circles, one point per log. The floor cluster is the large-alphabet municipality logs ($|\mathcal{A}|$ up to $624$), which are also the least representative.}
 \label{fig:genvalbox}
 \end{figure}
 
@@ -598,11 +582,11 @@ On five real-life logs spanning $15$ thousand to $2.5$ million events, the metho
 \label{sec:eval:threats}
 Seven threats qualify the results; each is stated with what limits it.
 
-\chg{Breadth: the study covers five logs and eight discovery configurations per log, but every correlation is computed over six non-degenerate miners (fewer where flagged), a deliberately small, interpretable sample (an L1 check over eleven configurations gives the same calibration, Sect.~\ref{sec:eval:external}); dataset-specific structure can still favor particular methods, and the AVATAR comparison rests on two off-protocol small-log scorecards, so its verdict is correspondingly limited.}
+\chg{Breadth: the study covers five logs and eight discovery configurations per log, but every correlation is computed over six non-degenerate miners (fewer where flagged), a deliberately small, interpretable sample (an L1 check over eleven configurations gives the same calibration, Sect.~\ref{sec:eval:external}); dataset-specific structure can still favor particular methods, and the AVATAR comparison rests on two off-protocol small-log scorecards, so its verdict is correspondingly limited.} \chg{Resampling quantifies the small per-log sample: over all $30$ log-miner cells the pooled agreement is Pearson $0.993$ (bootstrap 95\% CI $[0.986,0.998]$, Spearman $0.984$), the eleven-configuration L1 check gives $0.997$ (CI $[0.954,0.999]$), and the PM4Py interval straddles zero ($-0.12$, CI $[-0.40,0.19]$); in $10{,}000$ paired resamples ShadowGen is the better-calibrated of the two every time.}
 
 Shared measurement core: the metric, R1, R3, and M6adapted all score via token replay, so part of their mutual agreement may reflect a shared fitness notion rather than shared generalization semantics. R1's per-fold rediscovery limits but does not eliminate this, and the acceptance reading was validated against a separately computed ground truth (R1-accept). \chg{We also tested the engine directly: recomputing R1 on L1 with cost-zero alignments leaves ShadowGen's ranking unchanged (Spearman $1.0$, Pearson $0.96$ over the five sound nets), and on L2, where the tool accepts all six nets, the recomputation again keeps the ranking (Spearman $1.0$, Pearson $0.96$). Alignment fitness is undefined on unsound nets (the tool refuses Alpha+, which token replay scores), one reason the metric uses token replay.}
 
-Ground truth and representativeness: our validation rests on agreement with variant-based hold-out (R1/R2), the strongest available empirical reference because its test traces are provably valid where a shadow trace is only plausible by construction. Both are computed from the log, so both are only as faithful to the system as the log is representative of it, a responsibility of the data-gathering stage rather than of the metric (Sect.~\ref{sec:related}). \chg{The registered prediction that our calibration error grows as representativeness falls was tested and refuted (Sect.~\ref{sec:eval:scale}); the bound is real, but TLRA alone does not govern it.}
+Ground truth and representativeness: our validation rests on agreement with variant-based hold-out (R1/R2), the strongest available empirical reference because its test traces are provably valid where a shadow trace is only plausible by construction. Both are computed from the log, so both are only as faithful to the system as the log is representative of it, a responsibility of the data-gathering stage rather than of the metric (Sect.~\ref{sec:related}). \chg{The registered prediction that our calibration error grows as representativeness falls was tested and refuted (Sect.~\ref{sec:eval:scale}); the bound is real, but TLRA alone does not govern it.} \chg{Two additional references relax the log-derivation itself, and both are scored under the same four-criterion protocol as the benchmark. A temporal split discovers the models on the earliest $70\%$ of cases and scores generalization as replay fitness of the latest $30\%$, the literal future; on L1, $76\%$ of those future cases are variants unseen in training. All four criteria hold on every log: Pearson $0.96$--$1.00$, the ranking exact on four of five logs (Spearman and Kendall $\tau_b$ both $1.0$; $0.89$ and $0.73$ on L5), MAE $0.006$--$0.060$, and a spread of $0.61$--$0.77$ that tracks the ground truth's own $0.53$--$0.76$. The PM4Py metric (M2) compresses the same six models to a spread of $0.05$--$0.19$ and its calibration is negative on four of five logs. A synthetic-system study removes the log from the reference entirely. Each of $78$ random process-tree systems is sampled twice: an incomplete $300$-trace training log, from which the models are discovered and the metric is computed, and a fresh $2{,}500$-trace sample whose replay fitness is the reference; the metric never sees the system or the fresh sample. On the $61$ systems where true recall meaningfully varies across the six miners (standard deviation at least $0.05$), the per-system medians are Pearson $0.90$ (positive on $90\%$ of systems), Spearman $0.83$, Kendall $\tau_b$ $0.73$, MAE $0.067$, and a spread of $0.32$ against a true spread of $0.33$. M2's medians are $-0.08$ on calibration and $0.03$ on spread, a tenfold compression of the true range, and ShadowGen's correlation exceeds M2's on $88\%$ of systems. The poles anchor against the known referent: the flower model's true recall is $1.0$ on every system, ShadowGen scores it $1.0$ on every system, and its true precision averages $0.41$, so the construct stays separated from precision where both are measurable. Two limits: the synthetic reference is itself replay-scored, so this tests the shared log rather than the shared engine (the engine is the alignment recomputation above), and pooling across systems of different baseline recall lowers the global correlation to $0.59$, which is why the per-system reading is the one that carries.}
 
 \chg{Generator validity: the premise that the shadow log resembles valid future behavior is tested directly (Sect.~\ref{sec:eval:genval}): up to $25.9\%$ of generated traces are exact held-out real variants, against at most $0.01\%$ for random traces. The residual threat is that exact matching is a lower-bound criterion: on deep-trace logs it cannot certify realism (L4: $0.09\%$), where the premise is supported only indirectly by the graded calibration and by the near-match reading ($2\%$ of L4 traces within three edits of a held-out variant, both floors zero).}
 
@@ -636,8 +620,6 @@ was reviewed and verified by the authors, who take full responsibility for it.
 \appendix
 \section{Acceptance-reading agreement}
 \label{sec:appendix:accept}
-Table~\ref{tab:accept} gives the per-miner acceptance detail on L1 (\genaccept{} vs the acceptance ground truth R1-accept); Table~\ref{tab:accept-scale} reports the per-log agreement, the acceptance companion to the graded-fitness scale table (Table~\ref{tab:scale}). Both back Sect.~\ref{sec:eval:accept}.
-
 \begin{table}[h]
 \centering
 \caption{Acceptance reading on L1 (\genaccept) vs the acceptance ground truth (R1-accept), per miner.}
@@ -673,74 +655,8 @@ L5 BPI 2019 & 0.999 & 0.075 & 0.00\,/\,1.00 \\
 \end{tabular}
 \end{table}
 
-\section{Raw cross-paradigm scores on L1}
-\label{sec:appendix:external}
-\chg{Table~\ref{tab:external} gives the full per-cell scores behind the L1 calibration (Sect.~\ref{sec:eval:external}): the metrics of the L1 comparison and the cross-validation references on each of the seven miners. It is the numeric backing for Figure~\ref{fig:calibration} and Table~\ref{tab:corr}; the R3-Random row is the construct floor made concrete, collapsing in the mid-permissiveness cells ($.502$, $.621$) where the real ground truth ($.902$, $.933$) does not.}
-
-\begin{table}[h]
-\centering
-\caption{L1 Sepsis: scores per miner, mean $\pm$ std where applicable (seven miners of the external comparison). $^{\ddagger}$model fitness $<0.5$ on the log. $^{\dagger}$returns too few comparable cells (Sect.~\ref{sec:eval:feasibility}). \chg{\textsuperscript{\S}off-protocol budget sentinel (Sect.~\ref{sec:eval:feasibility}): shown for the litmus and Fig.~\ref{fig:calibration}, excluded from the agreement statistics.}}
-\label{tab:external}
-\setlength{\tabcolsep}{1.6pt}
-\scriptsize
-\begin{tabular}{@{}lccccccc@{}}
-\toprule
-Method & Alpha$^{\ddagger}$ & Alpha$+$ & Heur. & Heur.S & Ind.Inf & Ind.S & Flower \\
-\midrule
-\chg{M1 ShadowGen} & .272$\pm$.004 & .759$\pm$.005 & .879$\pm$.002 & .917$\pm$.002 & .972$\pm$.002 & .984$\pm$.002 & 1.00 \\
-M2 PM4Py & .913 & .919 & .830 & .900 & .880 & .902 & .913 \\
-M5 AVATAR\chg{\textsuperscript{\S}} & .329$\pm$.057 & .312$\pm$.002 & .746$\pm$.063 & .734$\pm$.110 & .697$\pm$.021 & .571$\pm$.023 & .330$\pm$.007 \\
-M6adapted$^{*}$ & .250$\pm$.010 & .775$\pm$.018 & .891$\pm$.003 & .930$\pm$.003 & .976$\pm$.003 & .994$\pm$.001 & 1.00 \\
-M7 SpeciAL & .799 & .750 & 1.00 & .998 & .750 & .744 & .803 \\
-M4 Anti-align.$^{\dagger}$ & \multicolumn{7}{c}{\emph{two of seven L1 cells, anti-alignment scale, not comparable}} \\
-M8 Pattern$^{\dagger}$ & \multicolumn{7}{c}{\emph{no L1 cell within the hour}} \\
-\midrule
-R1 5-fold CV & .275$\pm$.001 & .829$\pm$.002 & .902$\pm$.005 & .933$\pm$.001 & .985$\pm$.002 & 1.00 & 1.00 \\
-R2 LOVO & .306$\pm$.075 & .775$\pm$.177 & .870$\pm$.051 & .917$\pm$.044 & .981$\pm$.053 & 1.00 & 1.00 \\
-R3 Random & .278$\pm$.004 & .382$\pm$.004 & .502$\pm$.005 & .621$\pm$.003 & .693$\pm$.001 & .767$\pm$.002 & 1.00 \\
-\bottomrule
-\end{tabular}\\[2pt]
-{\scriptsize $^{*}$M6adapted scores the genuine \texttt{bsgen} bootstrap sample by token-replay fitness (a graded model--system recall, the construct the bootstrap paper defines~\cite{polyvyanyy2022bootstrap}), not the Entropia \texttt{-bgen} precision/recall F-measure (Sect.~\ref{sec:impl:baselines}). $^{\dagger}$M4 returns two L1 cells (Alpha, Heuristics-strict) as anti-alignment scores, not on this table's fitness scale, and exceeds the hour or aborts on the rest; M8 returns no L1 cell within the hour.}
-\end{table}
-
-\section{The bootstrap contamination reading}
-\label{sec:appendix:m6}
-Table~\ref{tab:m6} is the numeric backing for the controlled bootstrap study of Sect.~\ref{sec:eval:m6}: one bred \texttt{bsgen} sample on L1, scored four ways against R1. Only the readings free of precision pass the flower litmus.
-
-\begin{table}[h]
-\centering
-\caption{The same \texttt{bsgen} bootstrap sample on L1, scored four ways, vs R1 (six non-degenerate miners). Only the readings free of precision pass the flower litmus.}
-\label{tab:m6}
-\setlength{\tabcolsep}{5pt}
-\footnotesize
-\begin{tabular}{@{}lrrrrl@{}}
-\toprule
-Reading of the bootstrap sample & Pearson & $\tau_b$ & MAE & Flower & litmus \\
-\midrule
-M6original \texttt{-bgen} F1(prec, rec) & 0.87 & 0.20 & 0.59 & 0.18 & fail \\
-\quad its precision component & 0.82 & 0.20 & 0.68 & 0.10 & fail \\
-\quad its \textbf{recall} component & 0.98 & 0.73 & 0.11 & 1.00 & pass \\
-\textbf{M6adapted} (token-replay) & 1.00 & 1.00 & 0.018 & 1.00 & pass \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\section{Feasibility forensics}
-\label{sec:appendix:feasibility}
-This section records the full per-method evidence behind the feasibility verdicts of Sect.~\ref{sec:eval:feasibility} (Table~\ref{tab:feasibility}).
-
-\emph{M4 and M8.} Anti-alignments (M4) run the published implementation~\cite{vandongen2016anti} under the same budget. It scores three of the eight L1 models and three of the eight L2 models, never more than two of the six non-degenerate miners, nothing on L3 or L4, and only the trace pole on L5; on L4 the $2.5$ million event log does not finish even the alignment step within the hour. On L1 Inductive-infrequent aborts inside the solver on an internal index overflow, Alpha+ reaches $1\%$ of its traces within the hour, Heuristics reaches $87\%$ at the kill (the one near-miss) and Inductive-strict $0.1\%$, and the flower model never returns. Where M4 does score, the trace model reads $0.0$, the correct pole. Pattern-based generalization (M8)~\cite{reissner2022pattern} fails similarly: it scores three of the eight L2 models in seconds (Heuristics $0.99$, Heuristics-strict $0.999$, and the trace model), crashes with a null alignment on the other five, and returns nothing on L1, L3, L4, or L5. Unlike M4, it exposes no progress counter, so its non-returns are wall-clock kills without a measured progress percentage. Its $0.90$ on the trace model is the wrong pole, a memorizing model read as general. Neither returns all six non-degenerate miners on any log, so neither can be placed on the four-criteria agreement.
-
-\emph{M3.} Entropic relevance is feasible on all five logs as a directly-follows approximation (Sect.~\ref{sec:impl:baselines}), but its agreement with the ground truth is unstable (per-log Pearson against R1 from $-0.80$ to $+0.95$), so we do not read it as tracking held-out fitness. Computed properly, from a stochastic automaton built from each net's reachability graph, it confirms the problem directly: on L1 two of the six non-degenerate miners (Alpha, Heuristics) have no finite automaton, and on the four that convert it places the flower model mid-field ($52$ bits against $22$ to $62$ for the real models), failing the flower litmus. Extended to all five logs, the proper conversion builds on $24$ of $40$ cells (all $8$ on the $4$-activity L2, $3$ of $8$ on L5, at a $150$k-marking cap); the deeper the concurrency, the fewer nets convert. Entropic relevance scores a fitness and precision blend, not generalization, so we keep it out of the agreement tables.
-
-\emph{M9.} Negative-event generalization~\cite{vandenbroucke2014negative}, run through the CoBeFra implementation in its shipped configuration (weighted artificial negatives with token replay), does not track held-out generalization on any log. On L1 it is anti-correlated with the ground truth over the six non-degenerate miners (Pearson $-0.55$, more negative than PM4Py), rating the well-generalizing Heuristics models near zero; on the four-activity L2 and the short-trace L5 it collapses, scoring every model $1.0$ including the memorizing trace pole, so it discriminates nothing (MAE $0.18$ and $0.23$). It passes the flower litmus on the small logs ($1.0$). Its trace pole reads $0.48$ on L1; we do not count this against it, since every graded reading inflates that pole (the graded ground truth reads $0.64$ on the same model, our own metric $0.57$) and only strict acceptance anchors it (Sect.~\ref{sec:eval:accept}). On L2 and L5 the trace pole reads a full $1.0$, a memorizing model rated maximally general. It also does not scale: on L3 only two of the six non-degenerate miners return within the hour and on L4 (mean trace length $57$) none do. Its scores are also non-deterministic on nets with silent transitions (L1 Inductive-infrequent, std $0.07$ across runs), the same token-replay tie-breaking that affects the acceptance proxy (Sect.~\ref{sec:eval:accept}). Because it is degenerate on L2 and L5 and infeasible at scale on L3 and L4, no scorable four-criteria result exists. The run and driver are in \texttt{benchmark/m9/}.
-
-\emph{M5.} AVATAR's two small-log scorecards are obtained off-protocol (two of the $3$--$5$ published runs). The cost evidence is measured on both hardware classes. On GPU, the full published configuration ($100$ pre-epochs, $5{,}000$ adversarial steps) needs $11.8$ hours of training on L1 and $8.6$ on L2, an order of magnitude past the budget on the two smallest logs, consistent with the authors' reported training times~\cite{theis2020avatar}. On benchmark-class CPU, a reduced L1 anchor ($3$ of $100$ pre-epochs, $100$ of $5{,}000$ adversarial steps) already needs $88$ minutes, and its per-step rate ($45$\,s) projects the full configuration to ${\sim}3$--$4$ days per log (over $400$ CPU-hours); L3 spent its full CPU hour without leaving GAN pretraining, and L4 was killed at both a $16$ and a $24$\,GB memory cap. Its published configuration also caps sequences at $20$ events, below the mean trace length of L3 ($38.2$) and L4 ($57.4$), so its scores there would truncate the behavior generalization asks about; raising the cap is a configuration change that only adds to the already prohibitive cost.
-
 \section{Per-method calibration across the five logs}
 \label{sec:appendix:calibration}
-Figure~\ref{fig:calibration} is the visual companion to Table~\ref{tab:scale}: every metric against the ground truth, all five logs in one panel per method.
-
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.86\textwidth]{figures/fig_calibration_d1v2.pdf}
@@ -757,8 +673,6 @@ Figure~\ref{fig:calibration} is the visual companion to Table~\ref{tab:scale}: e
 
 \section{Generator premise per log}
 \label{sec:appendix:genval}
-Table~\ref{tab:genval} gives the per-log exact-match rates behind Sect.~\ref{sec:eval:genval}.
-
 \begin{table}[h]
 \centering
 \caption{Generator premise: share of generated traces that exactly match held-out real variants (mean over $15$ folds, in \%), and the share of the held-out variant set reached (coverage, in \%). TLRA (trace-based log representativeness, Table~\ref{tab:datasets}) is repeated here: the hit-rate tracks it at Pearson $0.97$.}
@@ -778,14 +692,8 @@ L5 & 0.95 & 25.9 & 5.5 & 0.0 & 1.7 \\
 \end{tabular}
 \end{table}
 
-\section{Baseline integration details}
-\label{sec:appendix:baselines}
-The engineering record behind Sect.~\ref{sec:impl:baselines}. SpeciAL (M7) is a Python package used directly; on L5 we use the released PyPI package (\texttt{special4pm} 0.1.3), on L1--L4 the source copy provided by the authors' repository, a version skew we disclose (Sect.~\ref{sec:eval:threats}). Entropic relevance (M3) needs a Petri-net-to-stochastic-automaton conversion, reported two ways. At scale we approximate it with a per-miner DFG simulation (PM4Py \texttt{play\_out}, 5\,000 traces) converted to a probability automaton via the open-source \texttt{relevance.jar} from the Entropia toolset~\cite{polyvyanyy2020entropia} (JDFG2Aut + Relevance); this runs on all five datasets but takes its transition probabilities from the simulated DFG frequencies, not from the net. For the construct test we build the automaton properly, from each net's reachability graph with silent transitions collapsed and the result determinized over visible labels, probabilities from log replay, scored with Entropia's entropic relevance directly. The proper conversion is exact but bounded (Appendix~\ref{sec:appendix:feasibility}). Both are additionally reimplemented in plain Python and validated against the Entropia tool ($3$-decimal agreement on every L1 automaton). For M6, our bridge runs the genuine \texttt{bsgen} bootstrap-with-breeding sampler and scores the bred traces by PM4Py token-replay fitness, a graded model--system recall, the way \genshadow{} grades the shadow log; the sampler is our reimplementation of the paper's published algorithms (the original source is not public) and reproduces the published L1 values within $0.008$ on every cell.
-
 \section{Choosing the context bound}
 \label{sec:appendix:nsweep}
-Figure~\ref{fig:nsweep} is the five-log sweep behind the $N{=}6$ default (Sect.~\ref{sec:eval:setup}).
-
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig_nsweep.pdf}
@@ -793,55 +701,12 @@ Figure~\ref{fig:nsweep} is the five-log sweep behind the $N{=}6$ default (Sect.~
 \label{fig:nsweep}
 \end{figure}
 
-\section{Complexity derivation}
-\label{sec:appendix:complexity}
-Let $|V(L)|$ be the number of variants, $E_V=\sum_{v\in V(L)}|v|$ the summed length of the variants, $A=|\mathcal{A}|$ the alphabet size, $N$ the context bound, $\theta$ the shadow-log size, and $K$ the iteration count. Let $\ell_{\max}=\max_{v\in V(L)}|v|$ be the length of the longest variant; the walk cap is set data-driven to $\lambda\approx2\ell_{\max}$. Let $|M_P|$ be the size of the Petri net under evaluation, measured as its number of places, transitions, and arcs. Building the N-gram statistics is $O(N\,E_V)$ in time and $O(N\,G)$ in space for the $G$ stored distinct $n$-grams. Generation is $O(\theta\,\lambda\,\bar b)$ with mean branching factor $\bar b\le A$, since context resolution and termination are memoized on the last $N$ activities, so each distinct context is resolved once. Token replay is roughly linear in trace length and net size~\cite{rozinat2008conformance}, $O(\theta\,\lambda\,|M_P|)$. Per evaluated model the total is $O\!\big(K\,(N\,E_V + \theta\,\lambda\,\bar b + \theta\,\lambda\,|M_P|)\big)$. The leave-one-variant-out ground truth performs $|V(L)|$ full discoveries, $O(|V(L)|\cdot\mathrm{discover})$.
-
-\section{Katz mutation at realistic counts}
-\label{sec:appendix:mutation}
-Figure~\ref{fig:mutation} illustrates the two-job split of backoff (Sect.~\ref{sec:method:gen}) at realistic successor counts.
-
-\begin{figure}[h]
-\centering
-\scalebox{0.90}{%
-\begin{tikzpicture}[
-  font=\scriptsize,
-  rung/.style={draw, rounded corners=2pt, align=center, inner sep=3.5pt, text width=48mm},
-  note/.style={align=center, text width=50mm},
-  arr/.style={-{Stealth[length=2mm]}, semithick}
-]
-% panel frames
-\node[draw=black!25, fill=black!3, rounded corners=8pt, minimum width=58mm, minimum height=56mm] (P1) at (0,0) {};
-\node[draw=black!25, fill=black!3, rounded corners=8pt, minimum width=58mm, minimum height=56mm] (P2) at (6.9,0) {};
-% ---- step 1: resolve ----
-\node[green!45!black, font=\scriptsize\bfseries] at (0,2.35) {Step 1: resolve the context};
-\node[black!55, font=\scriptsize\itshape, align=center] at (0,1.8) {back off to the deepest context\\with support};
-\node[rung, fill=black!8, draw=black!35, text=black!60] at (0,1.0) {order 6: seen $5\times$, each successor once $\to$ too sparse, skip};
-\node[black!55] at (0,0.38) {$\downarrow$ back off};
-\node[rung, fill=green!9, draw=green!45!black] at (0,-0.28) {order 5: seen $35\times$ $\to$ \textbf{resolved context}};
-\node[note] at (0,-1.6) {the next step samples from here; its one singleton successor sets the novelty rate $\punseen=1/35\approx3\%$ (Good--Turing)};
-% ---- step 2: invent ----
-\node[blue!45!black, font=\scriptsize\bfseries] at (6.9,2.35) {Step 2: find a novel event};
-\node[black!55, font=\scriptsize\itshape, align=center] at (6.9,1.8) {when the mutation fires:\\back off again};
-\node[rung, fill=black!8, draw=black!35, text=black!60] at (6.9,1.0) {order 5: its successors are all attested};
-\node[black!55] at (6.9,0.38) {$\downarrow$ back off};
-\node[rung, fill=blue!8, draw=blue!45!black] at (6.9,-0.28) {order 4: offers $z$, unseen at order 5 $\to$ \textbf{insert $z$}};
-\node[note] at (6.9,-1.6) {$z$ is novel in the resolved context, yet attested in a shorter one: novel, but grounded};
-% connector
-\draw[arr, black!45] (P1.east) -- (P2.west);
-\end{tikzpicture}}
-\caption{Katz backoff does the work twice (illustrative counts; activities abstracted). Step 1 resolves the deepest context with support, which supplies the next step and the Good--Turing novelty rate $\punseen$ (Eq.~\eqref{eq:gt}). When the mutation fires, step 2 backs off one level further, to the deepest shorter context offering an activity unseen in the resolved one (Eq.~\eqref{eq:proposal}): the inserted $z$ is novel in the exact context, yet attested in a related shorter one.}
-\label{fig:mutation}
-\end{figure}
-
 \section{Parameter robustness}
 \label{sec:appendix:tuning}
-The threats section states that no configuration improves on the shipped defaults and that tuning does not transfer (Sect.~\ref{sec:eval:threats}); this section records the evidence. Figure~\ref{fig:tuning-sweeps} sweeps each parameter one factor at a time against the calibration objective, on all five logs: the context bound to $N{=}20$, the support threshold to $\tau{=}20$, a weighting temperature $w(c)=c^{1/T}$ that generalizes the shipped MLE weighting ($T{=}1$) continuously, and the shadow-log size to $\theta{=}4{,}000$. Figure~\ref{fig:tuning-novelty} adds a novelty ablation, a scale $\alpha$ on the Good--Turing rate with $\alpha{=}0$ disabling novelty entirely. The harness loads the frozen generator source, injects the added parameters at asserted anchors, and reproduces the shipped scores bit-exactly at the default setting (\texttt{benchmark/tune\_shadowgen.py}).
-
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/fig_tuning_sweeps.pdf}
-\caption{One-factor sweeps around the shipped configuration (star): MAE to R1 over the six non-degenerate miners of all five logs at $K{=}1$; the shaded band is the metric's own sampling variance ($0.004$). $N$ plateaus from $4$ out to $20$. $\tau$ is a shallow basin with its minimum at the shipped $5$. The weighting is a symmetric well with MLE at the bottom; the \texttt{log} alternative and uniform weighting cost roughly twice and three times the calibration error. $\theta$ is flat while its cost grows linearly, so the residual error is systematic, not sampling noise.}
+\caption{One-factor sweeps around the shipped configuration (star): MAE to R1 over the six non-degenerate miners of all five logs at $K{=}1$; the shaded band is the metric's own sampling variance ($0.004$). $N$ plateaus from $4$ out to $20$. $\tau$ is a shallow basin with its minimum at the shipped $5$. The weighting is a symmetric well with MLE at the bottom; the \texttt{log} alternative and uniform weighting cost roughly twice and three times the calibration error. $\theta$ is flat while its cost grows linearly, so the residual error is systematic, not sampling noise. The temperature $w(c)=c^{1/T}$ generalizes the shipped MLE weighting ($T{=}1$); the sweep harness loads the frozen generator source and reproduces the shipped scores bit-exactly at the defaults (\texttt{benchmark/tune\_shadowgen.py}).}
 \label{fig:tuning-sweeps}
 \end{figure}
 
