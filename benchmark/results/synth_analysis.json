@@ -1,0 +1,67 @@
+{
+  "n_systems": 78,
+  "n_discriminating": 61,
+  "spread_min": 0.05,
+  "coverage_range": [
+    0.1656,
+    1.0
+  ],
+  "per_system_pearson_discriminating": {
+    "shadowgen": {
+      "median": 0.9039703729042975,
+      "mean": 0.6989070841225097,
+      "q25": 0.5838437895509484,
+      "q75": 0.9788264374123179,
+      "min": -1.0,
+      "frac_positive": 0.9016393442622951,
+      "n": 61
+    },
+    "m2": {
+      "median": -0.07785294439380411,
+      "mean": -0.03251905906344367,
+      "q25": -0.32986192927351343,
+      "q75": 0.28816278673408,
+      "min": -0.9952403888341371,
+      "frac_positive": 0.4,
+      "n": 60
+    }
+  },
+  "per_system_pearson_all": {
+    "shadowgen": {
+      "median": 0.9225840311277971,
+      "mean": 0.7236150675392793,
+      "q25": 0.7317333389461728,
+      "q75": 0.9797369188291439,
+      "min": -1.0,
+      "frac_positive": 0.9078947368421053,
+      "n": 76
+    },
+    "m2": {
+      "median": -0.0956430149370562,
+      "mean": -0.09404573122869739,
+      "q25": -0.4546908916522886,
+      "q75": 0.20287751771685653,
+      "min": -0.9952403888341371,
+      "frac_positive": 0.3698630136986301,
+      "n": 73
+    }
+  },
+  "within_system_centred_pooled_pearson": {
+    "shadowgen": 0.6114995804270206,
+    "m2": 0.09956092852270422
+  },
+  "raw_pooled_pearson": {
+    "shadowgen": 0.5879841402501533,
+    "m2": 0.21415490587294478
+  },
+  "paired_shadowgen_beats_m2_frac": 0.8833333333333333,
+  "paired_n": 60,
+  "poles": {
+    "flower_recall_mean": 1.0,
+    "flower_shadowgen_mean": 1.0,
+    "flower_precision_mean": 0.40576742832572443,
+    "trace_recall_mean": 0.7708900058175393,
+    "trace_shadowgen_mean": 0.7411706548075626,
+    "flower_shadowgen_min": 1.0
+  }
+}

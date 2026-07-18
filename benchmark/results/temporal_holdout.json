@@ -1,0 +1,487 @@
+{
+  "D2": {
+    "dataset": "BPI2013_Incidents",
+    "n_train": 5287,
+    "n_test": 2267,
+    "var_train": 1353,
+    "var_test": 323,
+    "novel_in_test": 0.07278341420379356,
+    "train_range": [
+      "2010-03-31 14:59:42+00:00",
+      "2012-05-03 10:08:54+00:00"
+    ],
+    "test_range": [
+      "2012-05-03 10:09:20+00:00",
+      "2012-05-06 05:27:59+00:00"
+    ],
+    "poles": {
+      "Trace_Filtered": {
+        "shadowgen": 0.6289903305067991,
+        "holdout_fit": 0.681856453897031
+      },
+      "Flower": {
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0
+      }
+    },
+    "shadowgen_vs_holdout": {
+      "pearson": 0.9590534813571807,
+      "spearman": 1.0,
+      "mae": 0.05002315948847677,
+      "n": 6
+    },
+    "m2_vs_holdout": {
+      "pearson": 0.25991282470234955,
+      "spearman": -0.028571428571428574,
+      "mae": null,
+      "n": 6
+    },
+    "models": {
+      "Trace_Filtered": {
+        "error": null,
+        "shadowgen": 0.6289903305067991,
+        "holdout_fit": 0.681856453897031,
+        "holdout_fit_strict": 0.0004411116012351125,
+        "m2": 0.05569630480357024
+      },
+      "Alpha": {
+        "error": null,
+        "shadowgen": 0.22570341931546745,
+        "holdout_fit": 0.36891262938929986,
+        "holdout_fit_strict": 0.0004411116012351125,
+        "m2": 0.8492319054956349
+      },
+      "Alpha+": {
+        "error": null,
+        "shadowgen": 0.6739847148258526,
+        "holdout_fit": 0.5313061380649559,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.8009707365395307
+      },
+      "Heuristics": {
+        "error": null,
+        "shadowgen": 0.9933626563361687,
+        "holdout_fit": 0.9978923678743146,
+        "holdout_fit_strict": 0.965152183502426,
+        "m2": 0.8157724404447612
+      },
+      "Heuristics_Strict": {
+        "error": null,
+        "shadowgen": 0.9975915553299601,
+        "holdout_fit": 0.9995374858699125,
+        "holdout_fit_strict": 0.992059991177768,
+        "m2": 0.8512963130627021
+      },
+      "Inductive_Strict": {
+        "error": null,
+        "shadowgen": 0.9998681019154471,
+        "holdout_fit": 1.0,
+        "holdout_fit_strict": 1.0,
+        "m2": 0.8103383900346005
+      },
+      "Inductive_Infrequent": {
+        "error": null,
+        "shadowgen": 0.9897176140161682,
+        "holdout_fit": 0.9973612439496484,
+        "holdout_fit_strict": 0.965152183502426,
+        "m2": 0.9868468186406306
+      },
+      "Flower": {
+        "error": null,
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0,
+        "holdout_fit_strict": 1.0,
+        "m2": 0.8492319054956349
+      }
+    },
+    "seconds": 13.26523232460022
+  },
+  "D1": {
+    "dataset": "Sepsis",
+    "n_train": 735,
+    "n_test": 315,
+    "var_train": 613,
+    "var_test": 264,
+    "novel_in_test": 0.7587301587301587,
+    "train_range": [
+      "2013-11-07 07:18:29+00:00",
+      "2014-09-18 20:24:34+00:00"
+    ],
+    "test_range": [
+      "2014-09-19 06:14:18+00:00",
+      "2015-02-26 08:00:00+00:00"
+    ],
+    "poles": {
+      "Trace_Filtered": {
+        "shadowgen": 0.5629530579808345,
+        "holdout_fit": 0.6337813733601038
+      },
+      "Flower": {
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0
+      }
+    },
+    "shadowgen_vs_holdout": {
+      "pearson": 0.9983708919170187,
+      "spearman": 1.0,
+      "mae": 0.01763562909526437,
+      "n": 6
+    },
+    "m2_vs_holdout": {
+      "pearson": -0.14208118489869181,
+      "spearman": 0.08571428571428573,
+      "mae": null,
+      "n": 6
+    },
+    "models": {
+      "Trace_Filtered": {
+        "error": null,
+        "shadowgen": 0.5629530579808345,
+        "holdout_fit": 0.6337813733601038,
+        "holdout_fit_strict": 0.044444444444444446,
+        "m2": 0.03891586388499868
+      },
+      "Alpha": {
+        "error": null,
+        "shadowgen": 0.22842791790100012,
+        "holdout_fit": 0.2445917588123016,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.8940783429900007
+      },
+      "Alpha+": {
+        "error": null,
+        "shadowgen": 0.756211461749309,
+        "holdout_fit": 0.8007288264924315,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9011557101525776
+      },
+      "Heuristics": {
+        "error": null,
+        "shadowgen": 0.8772179785751101,
+        "holdout_fit": 0.8745898885712848,
+        "holdout_fit_strict": 0.044444444444444446,
+        "m2": 0.8138153771349799
+      },
+      "Heuristics_Strict": {
+        "error": null,
+        "shadowgen": 0.9258060968488674,
+        "holdout_fit": 0.9310311980535085,
+        "holdout_fit_strict": 0.08253968253968255,
+        "m2": 0.8824996707213831
+      },
+      "Inductive_Strict": {
+        "error": null,
+        "shadowgen": 0.9761695285739406,
+        "holdout_fit": 0.9997800911610436,
+        "holdout_fit_strict": 0.9904761904761905,
+        "m2": 0.9065089877593885
+      },
+      "Inductive_Infrequent": {
+        "error": null,
+        "shadowgen": 0.9655402492707568,
+        "holdout_fit": 0.9792090643923496,
+        "holdout_fit_strict": 0.8095238095238095,
+        "m2": 0.8815753322246646
+      },
+      "Flower": {
+        "error": null,
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0,
+        "holdout_fit_strict": 1.0,
+        "m2": 0.8940783429900007
+      }
+    },
+    "seconds": 11.889609575271606
+  },
+  "D3": {
+    "dataset": "BPI2017",
+    "n_train": 22056,
+    "n_test": 9453,
+    "var_train": 11727,
+    "var_test": 5305,
+    "novel_in_test": 0.46249867766846503,
+    "train_range": [
+      "2016-01-01 09:51:15.304000+00:00",
+      "2016-09-16 15:03:25.813000+00:00"
+    ],
+    "test_range": [
+      "2016-09-16 15:07:41.531000+00:00",
+      "2016-12-31 21:37:53.216000+00:00"
+    ],
+    "poles": {
+      "Trace_Filtered": {
+        "shadowgen": 0.6754965048402888,
+        "holdout_fit": 0.72598829692675
+      },
+      "Flower": {
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0
+      }
+    },
+    "shadowgen_vs_holdout": {
+      "pearson": 0.9997972285803052,
+      "spearman": 1.0,
+      "mae": 0.00628424388125462,
+      "n": 6
+    },
+    "m2_vs_holdout": {
+      "pearson": -0.6570084884037285,
+      "spearman": -0.6,
+      "mae": null,
+      "n": 6
+    },
+    "models": {
+      "Trace_Filtered": {
+        "error": null,
+        "shadowgen": 0.6754965048402888,
+        "holdout_fit": 0.72598829692675,
+        "holdout_fit_strict": 0.002221516978736909,
+        "m2": 0.05291445329878708
+      },
+      "Alpha": {
+        "error": null,
+        "shadowgen": 0.39413212422283467,
+        "holdout_fit": 0.4103360677206026,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9809458480927502
+      },
+      "Alpha+": {
+        "error": null,
+        "shadowgen": 0.8534490802916926,
+        "holdout_fit": 0.859931181877991,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9809458480927502
+      },
+      "Heuristics": {
+        "error": null,
+        "shadowgen": 0.9453591960866363,
+        "holdout_fit": 0.9406624514442844,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9271561495788532
+      },
+      "Heuristics_Strict": {
+        "error": null,
+        "shadowgen": 0.9499577165418678,
+        "holdout_fit": 0.9434281471607696,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9608790261224287
+      },
+      "Inductive_Strict": {
+        "error": null,
+        "shadowgen": 0.9995858458184586,
+        "holdout_fit": 1.0,
+        "holdout_fit_strict": 1.0,
+        "m2": 0.9459169145396668
+      },
+      "Inductive_Infrequent": {
+        "error": null,
+        "shadowgen": 0.9868462766306086,
+        "holdout_fit": 0.9902252266290785,
+        "holdout_fit_strict": 0.43340738389929123,
+        "m2": 0.9464589977525266
+      },
+      "Flower": {
+        "error": null,
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0,
+        "holdout_fit_strict": 1.0,
+        "m2": 0.9809458480927502
+      }
+    },
+    "seconds": 557.5794341564178
+  },
+  "D5": {
+    "dataset": "BPI2019",
+    "n_train": 176213,
+    "n_test": 75521,
+    "var_train": 8822,
+    "var_test": 3780,
+    "novel_in_test": 0.20680340567524264,
+    "train_range": [
+      "1948-01-26 22:59:00+00:00",
+      "2018-08-31 13:54:00+00:00"
+    ],
+    "test_range": [
+      "2018-08-31 13:54:00+00:00",
+      "2019-01-17 14:32:00+00:00"
+    ],
+    "poles": {
+      "Trace_Filtered": {
+        "shadowgen": 0.5241926871339045,
+        "holdout_fit": 0.7154142155061526
+      },
+      "Flower": {
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0
+      }
+    },
+    "shadowgen_vs_holdout": {
+      "pearson": 0.982617000175971,
+      "spearman": 0.8857142857142858,
+      "mae": 0.06000236975412198,
+      "n": 6
+    },
+    "m2_vs_holdout": {
+      "pearson": -0.26009003761714167,
+      "spearman": 0.14285714285714288,
+      "mae": null,
+      "n": 6
+    },
+    "models": {
+      "Trace_Filtered": {
+        "error": null,
+        "shadowgen": 0.5241926871339045,
+        "holdout_fit": 0.7154142155061526,
+        "holdout_fit_strict": 0.14582698851974948,
+        "m2": 0.2112839616856872
+      },
+      "Alpha": {
+        "error": null,
+        "shadowgen": 0.39029955638814756,
+        "holdout_fit": 0.4677934826887737,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9022992736590836
+      },
+      "Alpha+": {
+        "error": null,
+        "shadowgen": 0.28625222216711904,
+        "holdout_fit": 0.5182603841601847,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9061667772178418
+      },
+      "Heuristics": {
+        "error": null,
+        "shadowgen": 0.839334867650451,
+        "holdout_fit": 0.8363741319177626,
+        "holdout_fit_strict": 0.055997669522384504,
+        "m2": 0.7697327002803653
+      },
+      "Heuristics_Strict": {
+        "error": null,
+        "shadowgen": 0.8960261732394065,
+        "holdout_fit": 0.9177264738098213,
+        "holdout_fit_strict": 0.06882853775770978,
+        "m2": 0.8629715756656224
+      },
+      "Inductive_Strict": {
+        "error": null,
+        "shadowgen": 0.9952992512940531,
+        "holdout_fit": 0.9999990580964746,
+        "holdout_fit_strict": 0.9999735172998239,
+        "m2": 0.912126778321867
+      },
+      "Inductive_Infrequent": {
+        "error": null,
+        "shadowgen": 0.9958436753455544,
+        "holdout_fit": 0.9746923882200391,
+        "holdout_fit_strict": 0.39039472464612496,
+        "m2": 0.873560918307957
+      },
+      "Flower": {
+        "error": null,
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0,
+        "holdout_fit_strict": 1.0,
+        "m2": 0.9022992736590836
+      }
+    },
+    "seconds": 306.3700783252716
+  },
+  "D4": {
+    "dataset": "BPI2018",
+    "n_train": 30666,
+    "n_test": 13143,
+    "var_train": 21555,
+    "var_test": 7163,
+    "novel_in_test": 0.6397321768241649,
+    "train_range": [
+      "2014-05-03 22:00:00+00:00",
+      "2017-04-09 22:00:00+00:00"
+    ],
+    "test_range": [
+      "2017-04-09 22:00:00+00:00",
+      "2017-08-23 22:00:00+00:00"
+    ],
+    "poles": {
+      "Trace_Filtered": {
+        "shadowgen": 0.6095050911885607,
+        "holdout_fit": 0.6490285375316123
+      },
+      "Flower": {
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0
+      }
+    },
+    "shadowgen_vs_holdout": {
+      "pearson": 0.9642005007065105,
+      "spearman": 1.0,
+      "mae": 0.050170485821610177,
+      "n": 6
+    },
+    "m2_vs_holdout": {
+      "pearson": -0.569010593490105,
+      "spearman": -0.4285714285714286,
+      "mae": null,
+      "n": 6
+    },
+    "models": {
+      "Trace_Filtered": {
+        "error": null,
+        "shadowgen": 0.6095050911885607,
+        "holdout_fit": 0.6490285375316123,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.0722075518134998
+      },
+      "Alpha": {
+        "error": null,
+        "shadowgen": 0.2368355887009608,
+        "holdout_fit": 0.25644446165073526,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9476838990089884
+      },
+      "Alpha+": {
+        "error": null,
+        "shadowgen": 0.5006259152543047,
+        "holdout_fit": 0.260807261447965,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9493024715640774
+      },
+      "Heuristics": {
+        "error": null,
+        "shadowgen": 0.878564589284188,
+        "holdout_fit": 0.8715886477434505,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.848861554290679
+      },
+      "Heuristics_Strict": {
+        "error": null,
+        "shadowgen": 0.9388750154973396,
+        "holdout_fit": 0.9602186595839138,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.9123607957365194
+      },
+      "Inductive_Strict": {
+        "error": null,
+        "shadowgen": 1.0,
+        "holdout_fit": 0.9999879612847432,
+        "holdout_fit_strict": 0.9992391387050141,
+        "m2": 0.9399777681282132
+      },
+      "Inductive_Infrequent": {
+        "error": null,
+        "shadowgen": 0.9662592315266241,
+        "holdout_fit": 0.9795229953576025,
+        "holdout_fit_strict": 0.0,
+        "m2": 0.8920682414530476
+      },
+      "Flower": {
+        "error": null,
+        "shadowgen": 1.0,
+        "holdout_fit": 1.0,
+        "holdout_fit_strict": 1.0,
+        "m2": 0.9476838990089884
+      }
+    },
+    "seconds": 2192.9481117725372
+  }
+}

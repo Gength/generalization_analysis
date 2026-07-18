@@ -1,0 +1,189 @@
+{
+  "protocol": "four criteria over the six non-degenerate miners; poles separate",
+  "temporal": {
+    "D1": {
+      "shadowgen": {
+        "pearson": 0.9983708919170187,
+        "spearman": 1.0,
+        "kendall_tau_b": 1.0,
+        "mae": 0.01763562909526437,
+        "spread_metric": 0.7477416106729404,
+        "spread_gt": 0.755188332348742,
+        "n": 6
+      },
+      "m2": {
+        "pearson": -0.14208118489869181,
+        "spearman": 0.08571428571428573,
+        "kendall_tau_b": 0.06666666666666667,
+        "mae": 0.17502072369593594,
+        "spread_metric": 0.09269361062440862,
+        "spread_gt": 0.755188332348742,
+        "n": 6
+      },
+      "poles": {
+        "Trace_Filtered": {
+          "metric_sg": 0.5629530579808345,
+          "gt": 0.6337813733601038
+        },
+        "Flower": {
+          "metric_sg": 1.0,
+          "gt": 1.0
+        }
+      }
+    },
+    "D2": {
+      "shadowgen": {
+        "pearson": 0.9590534813571807,
+        "spearman": 1.0,
+        "kendall_tau_b": 1.0,
+        "mae": 0.05002315948847677,
+        "spread_metric": 0.7741646825999796,
+        "spread_gt": 0.6310873706107001,
+        "n": 6
+      },
+      "m2": {
+        "pearson": 0.25991282470234955,
+        "spearman": -0.028571428571428574,
+        "kendall_tau_b": -0.06666666666666667,
+        "mae": 0.21342016834868183,
+        "spread_metric": 0.18587608210109996,
+        "spread_gt": 0.6310873706107001,
+        "n": 6
+      },
+      "poles": {
+        "Trace_Filtered": {
+          "metric_sg": 0.6289903305067991,
+          "gt": 0.681856453897031
+        },
+        "Flower": {
+          "metric_sg": 1.0,
+          "gt": 1.0
+        }
+      }
+    },
+    "D3": {
+      "shadowgen": {
+        "pearson": 0.9997972285803052,
+        "spearman": 1.0,
+        "kendall_tau_b": 1.0,
+        "mae": 0.00628424388125462,
+        "spread_metric": 0.6054537215956239,
+        "spread_gt": 0.5896639322793974,
+        "n": 6
+      },
+      "m2": {
+        "pearson": -0.6570084884037285,
+        "spearman": -0.6,
+        "kendall_tau_b": -0.5520524474738834,
+        "mae": 0.1367384902918137,
+        "spread_metric": 0.05378969851389703,
+        "spread_gt": 0.5896639322793974,
+        "n": 6
+      },
+      "poles": {
+        "Trace_Filtered": {
+          "metric_sg": 0.6754965048402888,
+          "gt": 0.72598829692675
+        },
+        "Flower": {
+          "metric_sg": 1.0,
+          "gt": 1.0
+        }
+      }
+    },
+    "D4": {
+      "shadowgen": {
+        "pearson": 0.9642005007065105,
+        "spearman": 1.0,
+        "kendall_tau_b": 1.0,
+        "mae": 0.050170485821610177,
+        "spread_metric": 0.7631644112990392,
+        "spread_gt": 0.743543499634008,
+        "n": 6
+      },
+      "m2": {
+        "pearson": -0.569010593490105,
+        "spearman": -0.4285714285714286,
+        "kendall_tau_b": -0.2,
+        "mae": 0.26629742530593603,
+        "spread_metric": 0.10044091727339843,
+        "spread_gt": 0.743543499634008,
+        "n": 6
+      },
+      "poles": {
+        "Trace_Filtered": {
+          "metric_sg": 0.6095050911885607,
+          "gt": 0.6490285375316123
+        },
+        "Flower": {
+          "metric_sg": 1.0,
+          "gt": 1.0
+        }
+      }
+    },
+    "D5": {
+      "shadowgen": {
+        "pearson": 0.982617000175971,
+        "spearman": 0.8857142857142858,
+        "kendall_tau_b": 0.7333333333333333,
+        "mae": 0.06000236975412198,
+        "spread_metric": 0.7095914531784353,
+        "spread_gt": 0.5322055754077009,
+        "n": 6
+      },
+      "m2": {
+        "pearson": -0.26009003761714167,
+        "spearman": 0.14285714285714288,
+        "kendall_tau_b": 0.2,
+        "mae": 0.18880204391604213,
+        "spread_metric": 0.14239407804150161,
+        "spread_gt": 0.5322055754077009,
+        "n": 6
+      },
+      "poles": {
+        "Trace_Filtered": {
+          "metric_sg": 0.5241926871339045,
+          "gt": 0.7154142155061526
+        },
+        "Flower": {
+          "metric_sg": 1.0,
+          "gt": 1.0
+        }
+      }
+    }
+  },
+  "synthetic": {
+    "n_discriminating": 61,
+    "spread_min": 0.05,
+    "median_per_system": {
+      "shadowgen": {
+        "pearson": 0.9039703729042975,
+        "spearman": 0.8285714285714287,
+        "kendall_tau_b": 0.7333333333333333,
+        "mae": 0.06729781467527805,
+        "spread_metric": 0.3149129824420023,
+        "spread_gt": 0.330916247457287
+      },
+      "m2": {
+        "pearson": -0.07785294439380411,
+        "spearman": 0.08571428571428573,
+        "kendall_tau_b": 0.06666666666666667,
+        "mae": 0.09941090196870646,
+        "spread_metric": 0.029769445149931406,
+        "spread_gt": 0.330916247457287
+      }
+    },
+    "poles": {
+      "flower": {
+        "true_recall_mean": 1.0,
+        "true_recall_min": 1.0,
+        "shadowgen_mean": 1.0,
+        "shadowgen_min": 1.0
+      },
+      "trace": {
+        "true_recall_mean": 0.7478893340030058,
+        "shadowgen_mean": 0.7189994855639155
+      }
+    }
+  }
+}

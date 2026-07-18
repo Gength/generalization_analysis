@@ -23,11 +23,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from datasets import DATASETS
 from miners import MINERS
 
-SEED, K, SHUFFLES = 42, 5, 3
+SEED, K = 42, 5
+SHUFFLES = int(os.environ.get("R1A_SHUFFLES", 3))   # fewer folds -> cheaper on big logs
 REAL = ["Alpha", "Alpha+", "Heuristics", "Heuristics_Strict",
         "Inductive_Infrequent", "Inductive_Strict"]
 CFG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", "configs")
-ALIGN_PARAMS = {alignments.Parameters.PARAM_MAX_ALIGN_TIME_TRACE: 30}
+_ALIGN_CAP = int(os.environ.get("R1A_ALIGN_CAP", 30))   # per-trace align time cap (s)
+ALIGN_PARAMS = {alignments.Parameters.PARAM_MAX_ALIGN_TIME_TRACE: _ALIGN_CAP}
 
 
 def cfg_val(dsname, miner, method, key="mean"):
@@ -108,13 +110,19 @@ if __name__ == "__main__":
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     keys = args.datasets or ["D1"]
-    res = {}
-    for dk in keys:
-        try:
-            res[dk] = run(dk)
-        except Exception as e:
-            res[dk] = {"error": repr(e)}; print(f"{dk} ERROR {e!r}", flush=True)
     path = args.out or os.path.join(CFG, "..", "r1_alignment.json")
-    with open(path, "w") as f:
-        json.dump(res, f, indent=2)
-    print(f"-> {path}", flush=True)
+    for dk in keys:                    # write after EACH dataset so a later hang can't lose earlier work
+        try:
+            rec = run(dk)
+        except Exception as e:
+            rec = {"error": repr(e)}; print(f"{dk} ERROR {e!r}", flush=True)
+        merged = {}
+        if os.path.exists(path):
+            try:
+                merged = json.load(open(path))
+            except Exception:
+                merged = {}
+        merged[dk] = rec               # preserve previously computed datasets (D1/D2)
+        with open(path, "w") as f:
+            json.dump(merged, f, indent=2)
+        print(f"-> {path}  (datasets now: {sorted(merged)})", flush=True)
