@@ -1,7 +1,7 @@
 % =====================================================================
 % Quantifying Process Model Generalization -- M.Sc. report, LMU Munich.
 % LNCS / Springer format. Compile with:
-%   pdflatex -enable-installer main_v5 && bibtex main_v5 && pdflatex main_v5 && pdflatex main_v5
+%   pdflatex -enable-installer main_v5_short && bibtex main_v5_short && pdflatex main_v5_short && pdflatex main_v5_short
 % ---------------------------------------------------------------------
 % REVISION DRAFT (v5): v4 content (five-log results, M9, AVATAR option C)
 % restructured per the supervisor's written feedback of 2026-07:
@@ -130,9 +130,10 @@ This section fixes the notation and the concepts the report builds on: event log
 Let $\mathcal{A}$ be a finite set of activities. A trace $\sigma=\langle a_1,\dots,a_k\rangle\in\mathcal{A}^{*}$ is a finite sequence of activities; $|\sigma|$ is its length, and $\mathrm{suffix}_n(\sigma)$ denotes the sequence of its last $n$ activities. An event log $L$ is a finite multiset of traces; $|L|$ is the number of traces (cases) it contains. In general, for a multiset $C$ we write $C[x]$ for the multiplicity of $x$ and $|C|=\sum_x C[x]$ for the total count. Traces with an identical activity sequence form a \emph{variant}; we write $V(L)$ for the set of variants and, for a variant $v\in V(L)$, $\#v$ for its case count. Real logs are typically dominated by a few frequent variants and a long tail of rare ones.
 
 \subsection{Process models and discovery}
-A process discovery algorithm (a miner, for short) maps an event log to a process model; in this report the model class is accepting Petri nets, and a model's language is the set of traces it accepts. Two extreme constructions bound the model space: a \emph{trace model}, one isolated path per observed variant, accepting exactly the observed variants, and a \emph{flower model}, all activities in a single self-loop, accepting every sequence over $\mathcal{A}$.
+A process discovery algorithm (a miner, for short) maps an event log to a process model; in this report the model class is accepting Petri nets (nets, for short), and a model's language is the set of traces it accepts. Two extreme constructions bound the model space: a \emph{trace model}, one isolated path per observed variant, accepting exactly the observed variants, and a \emph{flower model}, all activities in a single self-loop, accepting every sequence over $\mathcal{A}$.
 
 \subsection{Token replay and its two readings}
+\label{sec:background:replay}
 Token-based replay~\cite{rozinat2008conformance} replays a trace on a net, firing transitions and accounting for produced, consumed, missing, and remaining tokens. It yields two distinct quantities that this report keeps separate:
 \begin{itemize}
   \item a graded trace fitness in $[0,1]$ derived from the token bookkeeping, which awards partial credit (a trace the net cannot actually execute end-to-end can still score, e.g., $0.7$);
@@ -268,7 +269,7 @@ ShadowGen scores a model by the replay quality of a synthetic \emph{shadow log}:
 The generator is presented in walk order: the statistics it precomputes, the backoff that resolves a context, the novelty estimate, the mutation proposal, the exploitation step, termination, and the scoring of the finished shadow log.
 
 \subsubsection{Variant statistics.}
-The log is compressed to its variants with case counts; every count below is weighted by how often the variant occurs ($\#v$). Let $N\in\mathbb{N}$ be the context bound (an upper limit on the order, not a fixed operating point; its value, like every parameter value, is set in the evaluation protocol, Sect.~\ref{sec:eval:setup}). For each order $n\in\{1,\dots,N\}$ and each observed context $s$ (a length-$n$ activity sequence), we record the successor multiset $C_n(s)$, where $C_n(s)[a]$ is the frequency with which activity $a$ follows $s$, together with its support set $A_n(s)=\{a\in\mathcal{A}:C_n(s)[a]>0\}$, and the termination counts: $T_n(s)$, the number of occurrences of $s$, and $E_n(s)$, the number of those occurrences at the end of a trace. Where the order is clear from the context length we drop the subscript and write $C(s)$, $A(s)$, $T(s)$, $E(s)$.
+The log is compressed to its variants with case counts; every count below is weighted by how often the variant occurs ($\#v$). Let $N\in\mathbb{N}$ be the context bound (an upper limit on the order, not a fixed operating point; its value, like every parameter value, is set in the evaluation protocol, Sect.~\ref{sec:eval:setup}). For each order $n\in\{1,\dots,N\}$ and each observed context $s$ (a length-$n$ activity sequence), we record the successor multiset $C_n(s)$, where $C_n(s)[a]$ is the frequency with which activity $a$ follows $s$, together with its support set $A_n(s)=\{a\in\mathcal{A}:C_n(s)[a]>0\}$, and the termination counts: $T_n(s)$, the number of occurrences of $s$, and $E_n(s)$, the number of those occurrences at the end of a trace. Every occurrence of $s$ either continues with some activity or ends its trace, so $T_n(s)=|C_n(s)|+E_n(s)$. Where the order is clear from the context length we drop the subscript and write $C(s)$, $A(s)$, $T(s)$, $E(s)$.
 
 \subsubsection{Katz backoff.}
 At generation time the walker holds a partial trace $\sigma$ and resolves its decision context to the deepest order with adequate support. Let $\tau\in\mathbb{N}$ be a support threshold. The \emph{resolved order} $R$ is the largest $n\le N$ such that the suffix $s=\mathrm{suffix}_n(\sigma)$ satisfies $|C_n(s)|\ge\tau$ (at least $\tau$ observed successor occurrences, Sect.~\ref{sec:background}) \emph{and} the Good--Turing mass below is $<1$. If no order qualifies, the walker falls back to $n{=}1$. $N$ is therefore an upper bound: on sparse logs the effective order is reduced naturally.
@@ -287,7 +288,7 @@ When a mutation fires, the inserted activity must be novel in the resolved conte
 B_m \;=\; A_m(\mathrm{suffix}_m(\sigma))\setminus A_R(s)
 \label{eq:proposal}
 \end{equation}
-is nonempty, and sample the inserted activity from $B_m$ (weighted as in the exploitation step below). If no such $m$ exists, we fall back to the global activity frequencies restricted to $\mathcal{A}\setminus A_R(s)$. A short observation shows that this search is a genuine backoff. Every occurrence of a context is also an occurrence of its shorter suffixes with the same next activity, so support sets can only grow as the context shortens: $A_n(\mathrm{suffix}_n(\sigma))\subseteq A_m(\mathrm{suffix}_m(\sigma))$ for $m\le n$. Orders $\ge R$ therefore never offer a candidate outside $A_R(s)$, and the first candidates appear at order $R{-}1$ or below, one level below the resolved order.
+is nonempty, and sample the inserted activity from $B_m$, each candidate $a\in B_m$ weighted by $w(C_m(\mathrm{suffix}_m(\sigma))[a])$: the exploitation weighting below, applied to the counts at the proposal order $m$ rather than the resolved order. If no such $m$ exists, we fall back to the global activity frequencies restricted to $\mathcal{A}\setminus A_R(s)$, again weighted through $w$. A short observation shows that this search is a genuine backoff. Every occurrence of a context is also an occurrence of its shorter suffixes with the same next activity, so support sets can only grow as the context shortens: $A_n(\mathrm{suffix}_n(\sigma))\subseteq A_m(\mathrm{suffix}_m(\sigma))$ for $m\le n$. Orders $\ge R$ therefore never offer a candidate outside $A_R(s)$, and the first candidates appear at order $R{-}1$ or below, one level below the resolved order.
 
 \subsubsection{Exploitation: two sampling modes.}
 For a non-mutation step the walker samples a seen successor $a\in A(s)$ with probability proportional to $w(c)$, where $c=C(s)[a]$ is the observed successor count and $w:\mathbb{N}\to\mathbb{R}_{\ge0}$ is a weighting function. We support two weighting functions:
@@ -304,7 +305,11 @@ Whether the walk ends after context $s$ is decided by a termination probability 
 Conditioning termination on the $n$-gram context (rather than the last activity alone) fixes premature termination when activities that legitimately end traces appear early in a generated trace.
 
 \subsubsection{Deduplication and scoring.}
-Each generated trace is compared against the set of original variants and regenerated if it is a copy (up to a retry cap), so the shadow log contains only unseen sequences. A shadow log $\shlog$ of $\theta\in\mathbb{N}$ traces ($\theta$ capped by $|L|$) is replayed on the model; generation and replay are repeated $K\in\mathbb{N}$ times and the scores averaged. The metric is \genshadow{}: the mean graded trace fitness of the shadow log. It is also reported separately for shadow traces that contain a mutation and those that do not, which shows how a model handles genuinely novel events versus mere recombinations. A strict companion reading, \genaccept{} (the fraction of perfectly replayed shadow traces), is computed by the benchmark harness as a validation diagnostic that anchors the construct poles (Sect.~\ref{sec:eval:accept}); it is not part of the released metric.
+Each generated trace is compared against the set of original variants and regenerated if it is a copy (up to a retry cap), so the shadow log contains only unseen sequences. A shadow log $\shlog$ of $\theta\in\mathbb{N}$ traces ($\theta$ capped by $|L|$) is replayed on the model; generation and replay are repeated $K\in\mathbb{N}$ times and the scores averaged. The metric is \genshadow{}, the mean graded trace fitness of the shadow log averaged over the $K$ draws:
+\begin{equation}
+\genshadow \;=\; \frac{1}{K}\sum_{k=1}^{K}\,\frac{1}{|\shlog^{(k)}|}\sum_{\sigma\in\shlog^{(k)}}\mathit{fit}(\sigma,M),
+\end{equation}
+where $\shlog^{(k)}$ is the $k$-th generated shadow log and $\mathit{fit}(\sigma,M)$ is the graded token-replay trace fitness of Sect.~\ref{sec:background:replay}. It is also reported separately for shadow traces that contain a mutation and those that do not, which shows how a model handles genuinely novel events versus mere recombinations. A strict companion reading, \genaccept{} (the fraction of perfectly replayed shadow traces), is computed by the benchmark harness as a validation diagnostic that anchors the construct poles (Sect.~\ref{sec:eval:accept}); it is not part of the released metric.
 
 \subsection{Algorithm}
 \label{sec:method:algo}
@@ -317,15 +322,15 @@ Algorithm~\ref{alg:gen} gives the generation procedure; statistics gathering and
 \Require event log $L$; context bound $N\in\mathbb{N}$; support threshold $\tau\in\mathbb{N}$; shadow-log size $\theta\in\mathbb{N}$; length cap $\lambda\in\mathbb{N}$; weighting function $w:\mathbb{N}\to\mathbb{R}_{\ge0}$
 \State build $C_n,A_n,T_n,E_n$ for $n=1..N$ from the variants of $L$ (Sect.~\ref{sec:method:gen}); collect the start-activity distribution and the variant set $V(L)$
 \State $\shlog\gets\emptyset$
-\For{$i=1$ to $\theta$}
+\For{$i=1$ to $\min(\theta,\,|L|)$}
   \Repeat
     \State $\sigma\gets\langle\,$sample start activity$\,\rangle$
     \State $\mathit{mut}\gets$ false
     \While{$|\sigma|<\lambda$}
       \State resolve context $s$ and order $R$ by Katz backoff with threshold $\tau$
       \If{$\mathrm{rand}()<\pend(s)$} \textbf{break} \EndIf
-      \If{$\mathrm{rand}()<\punseen(s)$ \textbf{and} a novel candidate exists (Eq.~\eqref{eq:proposal})}
-        \State append a novel activity from $B_m$, weighted by $w$; $\mathit{mut}\gets$ true
+      \If{$\mathrm{rand}()<\punseen(s)$ \textbf{and} $A_R(s)\neq\mathcal{A}$ (a novel candidate exists)}
+        \State append a novel $a$ from $B_m$ (Eq.~\eqref{eq:proposal}) or $\mathcal{A}\setminus A_R(s)$, $\propto w$; $\mathit{mut}\gets$ true
       \Else
         \State append a seen successor $a\in A(s)$, $\propto w(C(s)[a])$; \textbf{break} if dead end
       \EndIf
@@ -371,7 +376,7 @@ The same two-job split of backoff holds at realistic counts: an over-sparse deep
 
 \subsection{Time and space complexity}
 \label{sec:method:complexity}
-Per evaluated model the total cost is $O\!\big(K\,(N\,E_V + \theta\,\lambda\,\bar b + \theta\,\lambda\,|M_P|)\big)$: building the N-gram statistics, generating $\theta$ traces of capped length $\lambda$, and replaying them on the net of size $|M_P|$, where $E_V$ is the summed variant length and $\bar b\le|\mathcal{A}|$ the mean branching factor. One observation matters. The cost is linear in the log \emph{through its variants}, not its cases: variant compression makes the metric scale with behavioral diversity rather than volume. This contrasts sharply with the leave-one-variant-out ground truth, which performs $|V(L)|$ full discoveries and is orders of magnitude more expensive on variant-rich logs.
+Per evaluated model the total cost is $O\!\big(K\,(N\,E_V + \theta\,\lambda\,\bar b + \theta\,\lambda\,|M_P|)\big)$: building the N-gram statistics, generating $\theta$ traces of capped length $\lambda$, and replaying them on $M_P$, the accepting Petri net of the model under evaluation, whose size $|M_P|$ counts its places, transitions, and arcs, where $E_V$ is the summed variant length and $\bar b\le|\mathcal{A}|$ the mean branching factor. One observation matters. The cost is linear in the log \emph{through its variants}, not its cases: variant compression makes the metric scale with behavioral diversity rather than volume. This contrasts sharply with the leave-one-variant-out ground truth, which performs $|V(L)|$ full discoveries and is orders of magnitude more expensive on variant-rich logs.
 
 \subsection{Assumptions, scope, and limitations of the approach}
 \label{sec:method:scope}
@@ -386,7 +391,7 @@ The metric is implemented in Python using PM4Py~\cite{berti2023pm4pysi} for log 
 
 \subsection{Key design decisions}
 \label{sec:impl:decisions}
-\textbf{Determinism.} All random number generators are seeded ($\mathit{seed}{=}42$) so that every cell is reproducible; the residual nondeterminism of the replay library itself is measured in Sect.~\ref{sec:eval:threats}. \textbf{Provenance.} Every (log, miner, method) cell writes a sidecar JSON with exact parameters, raw per-iteration scores, runtime, and integrity counters (\texttt{duplicates\_kept} and \texttt{truncated\_traces}, which surface any deviation of the shadow log from its specification); these files are the single source of truth for all tables, and a result without a matching config is invalid.
+\textbf{Determinism.} All random number generators are seeded ($\mathit{seed}{=}42$) so that every cell is reproducible; the residual nondeterminism of the replay library itself is measured in Sect.~\ref{sec:eval:threats}. \textbf{Provenance.} A \emph{cell} is one discovered model, a (log, miner) pair; every method measured on a cell writes a sidecar JSON with exact parameters, raw per-iteration scores, runtime, and integrity counters (\texttt{duplicates\_kept} and \texttt{truncated\_traces}, which surface any deviation of the shadow log from its specification); these files are the single source of truth for all tables, and a result without a matching config is invalid.
 
 \subsection{Baseline integration}
 \label{sec:impl:baselines}
@@ -568,12 +573,12 @@ Across the full 21-log catalog the premise holds broadly (Fig.~\ref{fig:genvalbo
 
 \subsubsection{Runtime.}
 \label{sec:eval:runtime}
-At its default single-draw operating point ($K{=}1$), ShadowGen scores a model in a median of $3$ seconds over all five logs, faster than every published baseline, the next being the trivial PM4Py built-in at $18.6$\,s, which does not track the ground truth. The cost is measured, not projected: timing each cell at both settings puts the $K{=}5$/$K{=}1$ ratio at $5.0\times$, the linear scaling of independent draws. The benchmark reports the $K{=}5$ mean for its error bars (median $14.9$\,s, worst cell $22$ minutes on L4 Inductive-strict); a single draw reproduces it to within Pearson $0.003$ (Sect.~\ref{sec:eval:threats}), so $K$ is a validation knob, not an operating cost. Even at $K{=}5$ ShadowGen is faster than PM4Py, whose worst cell reaches $3.5$ hours. The bootstrap adaptation has the same shape at $2.5\times$ the cost (median $36.9$\,s), and the references are of a different order: R1 reaches a worst cell of $5.7$ hours and leave-one-variant-out $46$ hours. AVATAR exceeds the budget on every log (Sect.~\ref{sec:eval:feasibility}). Figure~\ref{fig:pareto} sets accuracy against time for the methods that return a score. Among methods that agree with the ground truth, ours is the fastest, at $K{=}1$ by roughly sixfold over the next.
+At its default single-draw operating point ($K{=}1$), ShadowGen scores a model in a median of $3$ seconds over all five logs, faster than every published baseline, the next being the trivial PM4Py built-in at $18.6$\,s, which does not track the ground truth. The cost is measured, not projected: timing each cell at both settings puts the $K{=}5$/$K{=}1$ ratio at $5.0\times$, the linear scaling of independent draws. The benchmark reports the $K{=}5$ mean for its error bars (median $14.9$\,s, worst cell $22$ minutes on L4 Inductive-strict); a single draw reproduces it to within Pearson $0.003$ (Sect.~\ref{sec:eval:threats}), so $K$ is a validation knob, not an operating cost. Even at $K{=}5$ ShadowGen is faster than PM4Py, whose worst cell reaches $3.5$ hours. The bootstrap adaptation has the same shape at $2.5\times$ the cost (median $36.9$\,s), and the references are of a different order: R1 reaches a worst cell of $5.7$ hours and leave-one-variant-out $46$ hours. AVATAR exceeds the budget on every log (Sect.~\ref{sec:eval:feasibility}). Figure~\ref{fig:pareto} sets accuracy against time for the methods that return a score. Among methods that agree with the ground truth, ours is the fastest: $3$\,s at $K{=}1$ against the bootstrap's $36.9$\,s median.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig_pareto_scale.pdf}
-\caption{Speed against accuracy over all five logs: median time per model (linear axis) versus mean of the per-log MAEs to R1; lower-left is better. M1 is plotted at its shipped single-draw ($K{=}1$) operating point. Horizontal bars span min to max cell runtime; where the worst cell runs to hours, off this axis, the bar becomes an arrow to the edge with the worst-cell value labelled. Vertical bars span min to max per-log MAE. M1 ShadowGen and M6adapted are alone in the accurate corner; M2 PM4Py is fast but never accurate; M9 negative events is fast but poorly calibrated (plotted on the three logs it covers); the Entropia \texttt{-bgen} F-measure (M6original) is slow and the worst-calibrated method that returns. M5 AVATAR (a budget sentinel needing $9$--$12$\,h of GPU training per log; Sect.~\ref{sec:eval:feasibility}) and the infeasible M4 and M8 are omitted. Partial-coverage points carry their logs in the label.}
+\caption{Speed against accuracy over all five logs: median time per model (linear axis) versus mean of the per-log MAEs to R1; lower-left is better. M1 is plotted at its shipped single-draw ($K{=}1$) operating point. Horizontal bars span min to max cell runtime; where the worst cell runs to hours, off this axis, the bar becomes an arrow to the edge with the worst-cell value labelled. Vertical bars span min to max per-log MAE. M1 ShadowGen and M6adapted are alone in the accurate corner; M2 PM4Py is fast but never accurate; M9 negative events is fast but poorly calibrated (plotted on the three logs it covers); the Entropia \texttt{-bgen} F-measure (M6original) is slow and the worst-calibrated method that returns. M5 AVATAR (a budget sentinel needing $8.6$--$11.8$\,h of GPU training per log; Sect.~\ref{sec:eval:feasibility}) and the infeasible M4 and M8 are omitted. Partial-coverage points carry their logs in the label.}
 \label{fig:pareto}
 \end{figure}
 
@@ -589,7 +594,7 @@ Eight threats qualify the results; each is stated with what limits it.
 
 Shared measurement core: the metric, R1, R3, and M6adapted all score via token replay, so part of their mutual agreement may reflect a shared fitness notion rather than shared generalization semantics. R1's per-fold rediscovery limits but does not eliminate this, and the acceptance reading was validated against a separately computed ground truth (R1-accept). \chg{We also tested the engine directly: recomputing R1 on L1 with cost-zero alignments leaves ShadowGen's ranking unchanged (Spearman $1.0$, Pearson $0.96$ over the five sound nets), and on L2, where the tool accepts all six nets, the recomputation again keeps the ranking (Spearman $1.0$, Pearson $0.96$). Alignment fitness is undefined on unsound nets (the tool refuses Alpha+, which token replay scores), one reason the metric uses token replay.}
 
-Ground truth and representativeness: our validation rests on agreement with variant-based hold-out (R1/R2), the strongest available empirical reference because its test traces are provably valid where a shadow trace is only plausible by construction. Both are computed from the log, so both are only as faithful to the system as the log is representative of it, a responsibility of the data-gathering stage rather than of the metric (Sect.~\ref{sec:related}). \chg{The registered prediction that our calibration error grows as representativeness falls was tested and refuted (Sect.~\ref{sec:eval:scale}); the bound is real, but TLRA alone does not govern it.} \chg{Two additional references relax the log-derivation itself, and both are scored under the same four-criterion protocol as the benchmark. A temporal split discovers the models on the earliest $70\%$ of cases and scores generalization as replay fitness of the latest $30\%$, the literal future; on L1, $76\%$ of those future cases are variants unseen in training. All four criteria hold on every log: Pearson $0.96$--$1.00$, the ranking exact on four of five logs (Spearman and Kendall $\tau_b$ both $1.0$; $0.89$ and $0.73$ on L5), MAE $0.006$--$0.060$, and a spread of $0.61$--$0.77$ that tracks the ground truth's own $0.53$--$0.76$. The PM4Py metric (M2) compresses the same six models to a spread of $0.05$--$0.19$ and its calibration is negative on four of five logs. A synthetic-system study removes the log from the reference entirely. Each of $78$ random process-tree systems is sampled twice: an incomplete $300$-trace training log, from which the models are discovered and the metric is computed, and a fresh $2{,}500$-trace sample whose replay fitness is the reference; the metric never sees the system or the fresh sample. On the $61$ systems where true recall meaningfully varies across the six miners (standard deviation at least $0.05$), the per-system medians are Pearson $0.90$ (positive on $90\%$ of systems), Spearman $0.83$, Kendall $\tau_b$ $0.73$, MAE $0.067$, and a spread of $0.32$ against a true spread of $0.33$. M2's medians are $-0.08$ on calibration and $0.03$ on spread, a tenfold compression of the true range, and ShadowGen's correlation exceeds M2's on $88\%$ of systems. The poles anchor against the known referent: the flower model's true recall is $1.0$ on every system, ShadowGen scores it $1.0$ on every system, and its true precision averages $0.41$, so the construct stays separated from precision where both are measurable. Two limits: the synthetic reference is itself replay-scored, so this tests the shared log rather than the shared engine (the engine is the alignment recomputation above), and pooling across systems of different baseline recall lowers the global correlation to $0.59$, which is why the per-system reading is the one that carries.}
+Ground truth and representativeness: our validation rests on agreement with variant-based hold-out (R1/R2), the strongest available empirical reference because its test traces are provably valid where a shadow trace is only plausible by construction. Both are computed from the log, so both are only as faithful to the system as the log is representative of it, a responsibility of the data-gathering stage rather than of the metric (Sect.~\ref{sec:related}). \chg{The registered prediction that our calibration error grows as representativeness falls was tested and refuted (Sect.~\ref{sec:eval:scale}); the bound is real, but TLRA alone does not govern it.} \chg{Two additional references relax the log-derivation itself, and both are scored under the same four-criterion protocol as the benchmark. A temporal split discovers the models on the earliest $70\%$ of cases and scores generalization as replay fitness of the latest $30\%$, the literal future; on L1, $76\%$ of those future cases are variants unseen in training. All four criteria hold on every log: Pearson $0.96$--$1.00$, the ranking exact on four of five logs (Spearman and Kendall $\tau_b$ both $1.0$; $0.89$ and $0.73$ on L5), MAE $0.006$--$0.060$, and a spread of $0.61$--$0.77$ that tracks the temporal reference's own $0.53$--$0.76$. The PM4Py metric (M2) compresses the same six models to a spread of $0.05$--$0.19$ and its calibration is negative on four of five logs. A synthetic-system study removes the log from the reference entirely. Each of $78$ random process-tree systems is sampled twice: an incomplete $300$-trace training log, from which the models are discovered and the metric is computed, and a fresh $2{,}500$-trace sample whose replay fitness is the reference; the metric never sees the system or the fresh sample. On the $61$ systems where true recall meaningfully varies across the six miners (standard deviation at least $0.05$), the per-system medians are Pearson $0.90$ (positive on $90\%$ of systems), Spearman $0.83$, Kendall $\tau_b$ $0.73$, MAE $0.067$, and a spread of $0.32$ against a true spread of $0.33$. M2's medians are $-0.08$ on calibration and $0.03$ on spread, a tenfold compression of the true range, and ShadowGen's correlation exceeds M2's on $88\%$ of systems. The poles anchor against the known referent: the flower model's true recall is $1.0$ on every system, ShadowGen scores it $1.0$ on every system, and its true precision averages $0.41$, so the construct stays separated from precision where both are measurable. Two limits: the synthetic reference is itself replay-scored, so this tests the shared log rather than the shared engine (the engine is the alignment recomputation above), and pooling across systems of different baseline recall lowers the global correlation to $0.59$, which is why the per-system reading is the one that carries.}
 
 \chg{Generator validity: the premise that the shadow log resembles valid future behavior is tested directly (Sect.~\ref{sec:eval:genval}): up to $25.9\%$ of generated traces are exact held-out real variants, against at most $0.01\%$ for random traces. The residual threat is that exact matching is a lower-bound criterion: on deep-trace logs it cannot certify realism (L4: $0.09\%$), where the premise is supported only indirectly by the graded calibration and by the near-match reading ($2\%$ of L4 traces within three edits of a held-out variant, both floors zero).}
 
@@ -623,6 +628,7 @@ was reviewed and verified by the authors, who take full responsibility for it.
 \appendix
 \section{Acceptance-reading agreement}
 \label{sec:appendix:accept}
+Tables~\ref{tab:accept} and~\ref{tab:accept-scale} validate the acceptance reading against the acceptance ground truth R1-accept, per miner on L1 and per log.
 \begin{table}[h]
 \centering
 \caption{Acceptance reading on L1 (\genaccept) vs the acceptance ground truth (R1-accept), per miner.}
@@ -660,6 +666,7 @@ L5 BPI 2019 & 0.999 & 0.075 & 0.00\,/\,1.00 \\
 
 \section{Per-method calibration across the five logs}
 \label{sec:appendix:calibration}
+Figure~\ref{fig:calibration} plots every metric against the cross-validation ground truth over the six non-degenerate miners of all five logs; Figure~\ref{fig:accept} contrasts the graded and strict readings of the shadow log on L1.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.86\textwidth]{figures/fig_calibration_d1v2.pdf}
@@ -676,6 +683,7 @@ L5 BPI 2019 & 0.999 & 0.075 & 0.00\,/\,1.00 \\
 
 \section{Generator premise per log}
 \label{sec:appendix:genval}
+Table~\ref{tab:genval} reports the generator premise per log: the exact-match and coverage rates of generated traces against held-out real variants.
 \begin{table}[h]
 \centering
 \caption{Generator premise: share of generated traces that exactly match held-out real variants (mean over $15$ folds, in \%), and the share of the held-out variant set reached (coverage, in \%). TLRA (trace-based log representativeness, Table~\ref{tab:datasets}) is repeated here: the hit-rate tracks it at Pearson $0.97$.}
@@ -697,6 +705,7 @@ L5 & 0.95 & 25.9 & 5.5 & 0.0 & 1.7 \\
 
 \section{Choosing the context bound}
 \label{sec:appendix:nsweep}
+Figure~\ref{fig:nsweep} sweeps the context bound $N$ on all five logs.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig_nsweep.pdf}
@@ -706,6 +715,7 @@ L5 & 0.95 & 25.9 & 5.5 & 0.0 & 1.7 \\
 
 \section{Parameter robustness}
 \label{sec:appendix:tuning}
+Figure~\ref{fig:tuning-sweeps} shows the one-factor sweeps around the shipped configuration; Figure~\ref{fig:tuning-novelty} the novelty, near-miss, and tuning-transfer findings.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/fig_tuning_sweeps.pdf}

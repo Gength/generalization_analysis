@@ -175,7 +175,12 @@ def fig_novelty():
     al = load("tune_mae_alpha.json")["results"]
     near = load("nearmatch_novelty_split.json")
     coord = load("tune_mae_coord.json")["results"]
-    fig, axes = plt.subplots(1, 3, figsize=(14.2, 4.3))
+    # Two-row layout: (a) full width on top, (b)/(c) below. At \textwidth in the
+    # report each panel is ~2x the area of the old 1x3 strip, so the in-print
+    # font size clears the legibility bar.
+    fig = plt.figure(figsize=(10.5, 7.2))
+    gs = fig.add_gridspec(2, 2)
+    axes = [fig.add_subplot(gs[0, :]), fig.add_subplot(gs[1, 0]), fig.add_subplot(gs[1, 1])]
 
     # (a) alpha per log: the logs disagree, the mean cancels.
     # Label the lines at their right-hand ends instead of using a legend: with six
@@ -202,7 +207,7 @@ def fig_novelty():
     ax.annotate("shipped" + chr(10) + "(Good-Turing rate)", (1.0, 0.0068),
                 textcoords="offset points",
                 xytext=(5, 0), fontsize=7.5, color=GREEN, fontweight="bold", va="center")
-    ax.set_xlim(-0.15, 4.75)
+    ax.set_xlim(-0.15, 4.1)
     ax.set_ylim(0.004, 0.047)
     ax.set_xticks([0, 0.5, 1, 1.5, 2, 2.5, 3])
     ax.set_xlabel(r"novelty scale $\alpha$   (0 = novelty OFF)", fontsize=9.5)

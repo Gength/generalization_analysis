@@ -5,10 +5,11 @@ Metric and a Cross-Paradigm Benchmark*.
 
 ## Files
 
-- `main_v5_short.tex` / `.pdf`: the submitted version (24-page body; the
+- `main_v5_short.tex` / `.pdf`: the submitted and only maintained version (the
   appendix holds only data exhibits)
-- `main_v5.tex` / `.pdf`: the long version, same content plus the full appendix
-  (feasibility forensics, raw score tables, derivations)
+- `OMITTED_MATERIAL.md`: what the submission does not include and where to find
+  it; the long draft (`main_v5`) was removed on 2026-07-23 and remains in git
+  history
 - `references.bib`: BibTeX references (style `splncs04`)
 - `figures/`: all figures as vector PDFs; they regenerate from
   `benchmark/make_figures.py` and `benchmark/make_*_figure.py`

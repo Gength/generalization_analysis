@@ -611,7 +611,7 @@ def fig_pareto_scale():
         dd = [d for d, _ in _method_cover(meth)]
         return "" if len(dd) == 5 else " (" + "+".join("L" + d[1] for d in dd) + ")"
 
-    # No M5 (its 9-12 h GPU point forced a log axis); linear time axis. M1 is
+    # No M5 (its 8.6-11.8 h GPU point forced a log axis); linear time axis. M1 is
     # plotted at its shipped single-draw (K=1) operating point.
     def fmt_dur(s):
         if s >= 3600:
@@ -686,7 +686,7 @@ def fig_pareto_scale():
     ax.set_xlim(0, XMAX); ax.set_ylim(-0.02, 0.72)
     ax.annotate("better", xy=(4, 0.02), xytext=(22, 0.14), fontsize=9, color="0.3",
                 arrowprops=dict(arrowstyle="->", color="0.45"))
-    ax.text(0.98, 0.97, "not shown: M5 AVATAR (9–12 h GPU per log);\nM4, M8 infeasible on every log",
+    ax.text(0.98, 0.97, "not shown: M5 AVATAR (8.6–11.8 h GPU per log);\nM4, M8 infeasible on every log",
             transform=ax.transAxes, ha="right", va="top", fontsize=8, color="#b8403e")
     ax.text(0.63, 0.115, "bars: min–max over cells (horizontal, arrows run off axis,\nlabel = worst cell) and over per-log error (vertical)",
             transform=ax.transAxes, ha="center", va="bottom", fontsize=7, color="0.4")

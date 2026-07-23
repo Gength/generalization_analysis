@@ -16,7 +16,8 @@ This repository contains:
   0.986-0.999); the widely used PM4Py metric is anti-correlated on four of five.
 
 The full study is the report in [`report/`](report/): `main_v5_short.pdf` is the
-submitted version, `main_v5.pdf` the long version with the complete appendix.
+submitted version; material cut for length is catalogued in
+[`report/OMITTED_MATERIAL.md`](report/OMITTED_MATERIAL.md).
 
 > Naming: the Python package keeps the project's legacy name `HybridGen`; the
 > metric itself is called ShadowGen throughout the report. They are the same thing.
