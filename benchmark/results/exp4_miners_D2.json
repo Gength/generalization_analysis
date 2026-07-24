@@ -1,0 +1,58 @@
+{
+  "D2": {
+    "dataset": "BPI2013_Incidents",
+    "n_miners": 11,
+    "miners": [
+      "Alpha",
+      "Alpha+",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict",
+      "Inductive_n0.1",
+      "Inductive_n0.3",
+      "Inductive_n0.4",
+      "Heuristics_d0.7",
+      "Heuristics_d0.9"
+    ],
+    "ShadowGen": {
+      "Alpha": 0.2572,
+      "Alpha+": 0.6301,
+      "Heuristics": 0.9935,
+      "Heuristics_Strict": 0.9978,
+      "Inductive_Infrequent": 0.9907,
+      "Inductive_Strict": 1.0,
+      "Inductive_n0.1": 0.9907,
+      "Inductive_n0.3": 0.9907,
+      "Inductive_n0.4": 0.9191,
+      "Heuristics_d0.7": 0.9935,
+      "Heuristics_d0.9": 0.9978
+    },
+    "R1": {
+      "Alpha": 0.2693,
+      "Alpha+": 0.6291,
+      "Heuristics": 0.9963,
+      "Heuristics_Strict": 0.9983,
+      "Inductive_Infrequent": 0.976,
+      "Inductive_Strict": 1.0,
+      "Inductive_n0.1": 0.9954,
+      "Inductive_n0.3": 0.9713,
+      "Inductive_n0.4": 0.9153,
+      "Heuristics_d0.7": 0.9963,
+      "Heuristics_d0.9": 0.9981
+    },
+    "pearson": 0.9994,
+    "spearman": 0.9863,
+    "mae": 0.0056,
+    "bootstrap": {
+      "pearson_ci95": [
+        0.824,
+        1.0
+      ],
+      "mae_ci95": [
+        0.0022,
+        0.0096
+      ]
+    }
+  }
+}

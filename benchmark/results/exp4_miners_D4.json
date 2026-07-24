@@ -1,0 +1,58 @@
+{
+  "D4": {
+    "dataset": "BPI2018",
+    "n_miners": 11,
+    "miners": [
+      "Alpha",
+      "Alpha+",
+      "Heuristics",
+      "Heuristics_Strict",
+      "Inductive_Infrequent",
+      "Inductive_Strict",
+      "Inductive_n0.1",
+      "Inductive_n0.3",
+      "Inductive_n0.4",
+      "Heuristics_d0.7",
+      "Heuristics_d0.9"
+    ],
+    "ShadowGen": {
+      "Alpha": 0.22,
+      "Alpha+": 0.604,
+      "Heuristics": 0.8762,
+      "Heuristics_Strict": 0.9268,
+      "Inductive_Infrequent": 0.9688,
+      "Inductive_Strict": 0.9758,
+      "Inductive_n0.1": 0.9642,
+      "Inductive_n0.3": 0.9677,
+      "Inductive_n0.4": 0.9896,
+      "Heuristics_d0.7": 0.8819,
+      "Heuristics_d0.9": 0.9265
+    },
+    "R1": {
+      "Alpha": 0.2022,
+      "Alpha+": 0.6071,
+      "Heuristics": 0.8756,
+      "Heuristics_Strict": 0.9346,
+      "Inductive_Infrequent": 0.982,
+      "Inductive_Strict": 0.9886,
+      "Inductive_n0.1": 0.9943,
+      "Inductive_n0.3": 0.9744,
+      "Inductive_n0.4": 0.9785,
+      "Heuristics_d0.7": 0.8808,
+      "Heuristics_d0.9": 0.9345
+    },
+    "pearson": 0.9991,
+    "spearman": 0.8818,
+    "mae": 0.0102,
+    "bootstrap": {
+      "pearson_ci95": [
+        0.956,
+        1.0
+      ],
+      "mae_ci95": [
+        0.0057,
+        0.0155
+      ]
+    }
+  }
+}
