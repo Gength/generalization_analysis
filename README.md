@@ -15,7 +15,7 @@ This repository contains:
   five real-life logs. ShadowGen tracks the ground truth on every log (Pearson
   0.986-0.999); the widely used PM4Py metric is anti-correlated on four of five.
 
-The full study is the report in [`report/`](report/): `main_v5_short.pdf` is the
+The full study is the report in [`report/`](report/): `final_report.pdf` is the
 submitted version; material cut for length is catalogued in
 [`report/OMITTED_MATERIAL.md`](report/OMITTED_MATERIAL.md).
 

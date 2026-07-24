@@ -1,6 +1,6 @@
 # Omitted material
 
-`main_v5_short.pdf` is the single, authoritative version of the report. A longer
+`final_report.pdf` is the single, authoritative version of the report. A longer
 draft (`main_v5`, 37 pages) existed until 2026-07-23; it was removed to keep one
 canonical text, and its full source remains in git history. Earlier drafts
 (`main`, `main_v2` to `main_v4`) were removed in commit `c08672a` and are also

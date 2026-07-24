@@ -5,7 +5,7 @@ Metric and a Cross-Paradigm Benchmark*.
 
 ## Files
 
-- `main_v5_short.tex` / `.pdf`: the submitted and only maintained version (the
+- `final_report.tex` / `.pdf`: the submitted and only maintained version (the
   appendix holds only data exhibits)
 - `OMITTED_MATERIAL.md`: what the submission does not include and where to find
   it; the long draft (`main_v5`) was removed on 2026-07-23 and remains in git
@@ -32,7 +32,7 @@ the git history.
 
 ```bash
 cd report
-pdflatex main_v5_short && bibtex main_v5_short && pdflatex main_v5_short && pdflatex main_v5_short
+pdflatex final_report && bibtex final_report && pdflatex final_report && pdflatex final_report
 ```
 
 Uses `algorithm`/`algpseudocode`, `tikz`; packages auto-install on first MiKTeX

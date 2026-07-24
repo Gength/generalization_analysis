@@ -153,8 +153,8 @@ def fig_sweeps():
     # per-config wall time, and borrowing the three-log serial timings would put two
     # different runs in one panel. The cost claim lives in the caption instead.
     ax.text(0.03, 0.06, "every point is inside the noise band:\n"
-                        "16x the shadow log does not move MAE, so the\n"
-                        "residual error is systematic, not sampling",
+                        "16x the shadow log does not move MAE,\n"
+                        "so the residual error is systematic",
             transform=ax.transAxes, fontsize=7.5, color="0.45")
 
     for ax in axes.ravel():
