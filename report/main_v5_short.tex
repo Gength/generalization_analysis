@@ -675,6 +675,7 @@ was reviewed and verified by the authors, who take full responsibility for it.
 
 % =====================================================================
 \appendix
+\section*{Appendix}
 \section{Acceptance-reading agreement}
 \label{sec:appendix:accept}
 Tables~\ref{tab:accept} and~\ref{tab:accept-scale} validate the acceptance reading against the acceptance ground truth R1-accept, per miner on L1 and per log.
@@ -768,18 +769,18 @@ Figure~\ref{fig:nsweep} sweeps the context bound $N$ on all five logs.
 \FloatBarrier
 \section{Parameter robustness}
 \label{sec:appendix:tuning}
-Figure~\ref{fig:tuning-sweeps} shows the one-factor sweeps around the shipped configuration; Figure~\ref{fig:tuning-novelty} the novelty, near-miss, and tuning-transfer findings.
+Figure~\ref{fig:tuning-sweeps} shows the one-factor sweeps around the shipped configuration; Figure~\ref{fig:tuning-novelty} shows the novelty, near-miss, and tuning-transfer findings.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/fig_tuning_sweeps.pdf}
-\caption{One-factor sweeps around the shipped configuration (star): MAE to R1 over the six non-degenerate miners of all five logs at $K{=}1$; the shaded band is the metric's own sampling variance ($0.004$). $N$ plateaus from $4$ out to $20$. $\tau$ is a shallow basin with its minimum at the shipped $5$. The weighting is a symmetric well with MLE at the bottom; the \texttt{log} alternative and uniform weighting cost roughly twice and three times the calibration error. $\theta$ is flat while its cost grows linearly, so the residual error is systematic, not sampling noise. The temperature $w(c)=c^{1/T}$ generalizes the shipped MLE weighting ($T{=}1$); the sweep harness loads the frozen generator source and reproduces the shipped scores bit-exactly at the defaults (\texttt{benchmark/tune\_shadowgen.py}).}
+\caption{One-factor sweeps around the shipped configuration (star): MAE to R1 over the six non-degenerate miners of all five logs at $K{=}1$; the shaded band is the metric's own sampling variance ($0.004$). $N$ plateaus from $4$ out to $20$. $\tau$ is a shallow basin with its minimum at the shipped $5$. The weighting is a symmetric well with MLE at the bottom; the \texttt{log} alternative and uniform weighting cost roughly $2\times$ and $3\times$ the calibration error. $\theta$ is flat while its cost grows linearly, so the residual error is systematic. The temperature $w(c)=c^{1/T}$ generalizes the shipped MLE weighting ($T{=}1$); the sweep runs the shipped generator itself (\texttt{benchmark/tune\_shadowgen.py}).}
 \label{fig:tuning-sweeps}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/fig_tuning_novelty.pdf}
-\caption{(a) The novelty scale $\alpha$ per log, on all five logs: L1 degrades with added novelty, L5 improves, L2--L4 are flat, and the mean cancels; the shipped $\alpha{=}1$ is the raw Good--Turing rate. (b) Shadow traces carrying a context-novel event land within $3$ edits of a real held-out variant $13$--$57\%$ of the time (L1, L2, L3, L5), against a $4.6\%$ random floor: novel, but plausible. (c) The best configuration on four of the five logs is worse than the shipped defaults on the held-out fifth: tuning does not transfer.}
+\caption{(a) The novelty scale $\alpha$ on all five logs: L1 degrades with added novelty, L5 improves, L2--L4 are flat, and the mean cancels; the shipped $\alpha{=}1$ is the raw Good--Turing rate. (b) Shadow traces carrying a context-novel event land within $3$ edits of a real held-out variant $13$--$57\%$ of the time (L1, L2, L3, L5), against a $4.6\%$ random floor: novel, yet plausible. (c) The best configuration on four of the five logs is worse than the shipped defaults on the held-out fifth: tuning does not transfer.}
 \label{fig:tuning-novelty}
 \end{figure}
 
