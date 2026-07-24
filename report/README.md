@@ -6,10 +6,8 @@ Metric and a Cross-Paradigm Benchmark*.
 ## Files
 
 - `final_report.tex` / `.pdf`: the submitted and only maintained version (the
-  appendix holds only data exhibits)
-- `OMITTED_MATERIAL.md`: what the submission does not include and where to find
-  it; the long draft (`main_v5`) was removed on 2026-07-23 and remains in git
-  history
+  appendix holds only data exhibits); the long draft (`main_v5`) was removed on
+  2026-07-23 and remains in git history
 - `references.bib`: BibTeX references (style `splncs04`)
 - `figures/`: all figures as vector PDFs; they regenerate from
   `benchmark/make_figures.py` and `benchmark/make_*_figure.py`
