@@ -5,6 +5,22 @@
 
 ---
 
+## Paper IDs and file names
+
+One JSON per cell in `results/configs/`, named `{Log}__{Miner}__{Method}.json`.
+The paper and the file names use different identifiers:
+
+| Paper | File names |
+|-------|------------|
+| L1, L2, L3, L4, L5 | `Sepsis`, `BPI2013_Incidents`, `BPI2017`, `BPI2018`, `BPI2019` (dataset keys D1 to D5 in `datasets.py`) |
+| M1 (ShadowGen) | `M1g`; its 1-gram ablation is `M1a`; `M1b` to `M1f` are earlier algorithm versions not reported in the paper |
+| M6, M6adapted | `M6original` (Entropia `-bgen` F-measure), `M6adapted` (bsgen sampler, token-replay recall) |
+| R1-accept | `R1accept` |
+| M2 to M5, M7 to M9, R1 to R3 | unchanged |
+| Alpha, Alpha+, Heuristics default and strict, Inductive strict and infrequent, flower model, trace model (top-50 variants) | `Alpha`, `Alpha+`, `Heuristics`, `Heuristics_Strict`, `Inductive_Strict`, `Inductive_Infrequent`, `Flower`, `Trace_Filtered` |
+
+---
+
 ## Layout
 
 ### Job scripts (directly callable)
@@ -85,7 +101,6 @@ the output destination.
 - `alignment_spotcheck.py` — alignment quality spot-check
 - `audit_configs.py` — config completeness audit
 - `generator_validation.py` — generator output validation
-- `RUNBOOK_d3d5_fixes.md` — runbook for D3/D5-specific fixes and workarounds
 
 ---
 
@@ -142,15 +157,17 @@ uv run python benchmark/version_comparison.py --dataset D2 --seeds 42
 | D20 | Hospital_Billing | — |
 | D21 | Road_Traffic_Fine | — |
 
-### JSON value key per method (configs_v2)
+### JSON value key per method
 
 | Methods | Key in `results` |
 |---------|-----------------|
-| M1a–M1g, R1, R2, R3 | `mean` |
-| M2 | `score` |
+| M1a to M1g, M5, R1, R2, R3 | `mean` |
+| M2, M4, M9 | `score` |
 | M3 | `entropic_relevance_raw` (per-miner DFG-based) |
-| M5 | `mean` (present for D1/D2, missing for D3) |
-| M6, M7 | `gen_score` |
+| M6adapted, M6original, M7, M8 | `gen_score` |
+| R1accept | `accept_mean` |
+
+A score of -1 (in the key of the method, or in `gen_score` for a cell that never ran) marks a cell that did not return within the budget or failed; see the `notes` field of the file.
 
 ### Extraction
 
@@ -158,8 +175,16 @@ uv run python benchmark/version_comparison.py --dataset D2 --seeds 42
 
 ---
 
+## Reproducibility
+
+- Set `PYTHONHASHSEED=0` when calling a job script directly; the shell wrappers export it. Discovery (pm4py Heuristics in particular) depends on hash randomization, and the in-code default comes too late for the main process.
+- Discovered models are cached under `benchmark/models/<dataset_key>/` (not tracked). Discovery runs once per dataset; every job copies the cached PNML, so all methods score identical models and discovery time is excluded from method runtimes. Delete the folder to force rediscovery; `--no-model-cache` disables the cache for one M1 run.
+- Metric cells get a budget of 3,600 s (`--cell-timeout` on `run_m1_family.py`, `bridges/run_m6_bgen.py`, and `bridges/run_m6_adapted.py`; 0 means unlimited). Discovery is excluded from the budget. A timed-out cell is written as a -1 sentinel. R1, R2, and R1-accept have no timeout.
+- Token replay is order-sensitive on nets with duplicate labels or silent transitions; the measured drift is in the top-level README.
+
+---
+
 ## Gotchas
 
 - **File prefix = dataset `name`, not key**: `BPI2017` not `D3`.
-- **`benchmark/models/` is legacy** — self-contained jobs prepare models in `/tmp`.
 - **M6 JAR**: must use patched `jbpt-pm-entropia-1.7.1.jar` (see BenchmarkGuide §1 M6 note).
