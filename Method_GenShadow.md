@@ -1,10 +1,9 @@
 # Gen_shadow — Method Specification
 
 > **Status: authoritative.** This document describes the generalization metric as currently intended.
-> Where it conflicts with framing in `BenchmarkDesign.md` (flower model expectations,
-> Gen_struct motivation), **this document takes precedence** — those passages reflect an earlier,
-> contested design stance (see §8).
-> Code: `HybridGen/algorithm/v24.py`. The package name "HybridGen" is legacy (see §9).
+> The earlier design stance (a structural term, a low flower score) is retired; §8 records why,
+> and **this document takes precedence** over any remaining trace of it.
+> Code: `HybridGen/algorithm/v26.py`, wrapped by `shadowgen.py`. The package name "HybridGen" is legacy (see §9).
 
 ---
 
@@ -109,7 +108,7 @@ sequences that do not occur in the log — every shadow trace is unseen behavior
 
 | Parameter | Value | Rationale |
 |---|---|---|
-| `max_n` | 6 | Empirical mutation peak on BPI 2017 (N-gram sweep, `Method2Log_Geng.md`); backoff protects sparser logs |
+| `max_n` | 6 | Chosen on BPI 2017 at the mutation-rate peak; the five-log sweep confirms it by calibration (`benchmark/results/TUNING_FINDINGS.md`, `report/figures/fig_nsweep.pdf`); backoff protects sparser logs |
 | `safe_threshold` τ | 5 | Minimum support for a context to be trusted |
 | `num_shadow_traces` | min(1000, \|L\|) | Stable means; enough mutated traces for stratified analysis |
 | `iterations` | 5 | Tight mean ± std |
@@ -229,7 +228,7 @@ decisions per trace. On such logs the proposal distribution materially shapes th
 v2.4 → v2.5 on Sepsis: Inductive-strict 0.959 → 0.965, Heuristics 0.833 → 0.846; under the
 Katz-consistent proposal, mutated traces replay slightly *better* than regular ones
 (IM: 0.970 vs 0.959) — injected events are now plausible by construction, as intended.
-The stratified BPI 2017 analysis under uniform proposals (`Method2Log_Geng.md`) showed the
+The stratified BPI 2017 analysis under uniform proposals (its notes remain in git history as `Method2Log_Geng.md`) showed the
 per-miner sensitivity the other way: IM Δ = +0.004, Heuristics Δ = +0.033, Alpha Δ = −0.004
 (regular − mutated fitness).
 
@@ -334,9 +333,9 @@ the score in v2.3. It is **defunct as a method**: do not reactivate it as an ant
 It may still be worth *discussing* in the report as an explored design direction, with two honest
 observations: (a) its anti-flower motivation conflates generalization with precision (§1);
 (b) its anti-overfitting role (penalizing branches that memorize outlier traces) targets behavior
-that Gen_shadow already detects through replay failures of recombined traces. Passages in
-`Method2Log.md` §2.2, `BenchmarkDesign.md` (flower "expected lowest"), and the per-cell config
-JSON notes reflect the superseded stance.
+that Gen_shadow already detects through replay failures of recombined traces. The superseded stance
+survives only in git history (`Method2Log.md` §2.2) and in the note of one per-cell config,
+`Sepsis__Flower__R3.json`.
 
 ---
 
