@@ -159,8 +159,8 @@ def fig_calibration_v2(ds, tag):
     from matplotlib.lines import Line2D
     MARKS = {"D1": ("o", "#378ADD"), "D2": ("s", "#1D9E75"), "D3": ("^", "#9673a6"),
              "D4": ("D", "#E8943A"), "D5": ("v", "#b8403e")}
-    panels = [("M1 ShadowGen", "M1g"), ("M2 PM4Py", "M2"), ("M5 AVATAR", "M5"),
-              ("M6adapted", "M6adapted"), ("M6original -bgen", "M6original"), ("M7 SpeciAL", "M7")]
+    panels = [("M1", "M1g"), ("M2", "M2"), ("M5", "M5"),
+              ("M6adapted", "M6adapted"), ("M6original", "M6original"), ("M7", "M7")]
     fig, axes = plt.subplots(2, 3, figsize=(7.4, 5.2), sharex=True, sharey=True)
     for ax, (name, meth) in zip(axes.ravel(), panels):
         ax.plot([0, 1], [0, 1], ls="--", c="0.6", lw=1, zorder=1)
@@ -620,11 +620,11 @@ def fig_pareto_scale():
             return f"{s/60:.0f} min"
         return f"{s:.0f} s"
 
-    pts = [("M2 PM4Py", "M2", "work", 8, 8, "left"),
-           ("M7 SpeciAL", "M7", "work", 8, -13, "left"),
+    pts = [("M2", "M2", "work", 8, 8, "left"),
+           ("M7", "M7", "work", 8, -13, "left"),
            ("M6adapted", "M6adapted", "work", 8, 6, "left"),
-           ("M9 neg-events", "M9", "fail", 9, 3, "left"),
-           ("M6original -bgen", "M6original", "fail", -8, 6, "right")]
+           ("M9", "M9", "fail", 9, 3, "left"),
+           ("M6original", "M6original", "fail", -8, 6, "right")]
     cmap = {"ours": "#1D9E75", "work": "#378ADD", "fail": "#b8403e"}
     XMAX = 150
     fig, ax = plt.subplots(figsize=(6.6, 4.2))
@@ -677,7 +677,7 @@ def fig_pareto_scale():
     ax.plot([t1, t1], [m1lo, m1hi], color=c1, lw=0.9, alpha=0.45, zorder=2)
     ax.scatter(t1, m1, s=220, marker="*", color=c1, edgecolor="white",
                linewidth=0.8, zorder=4)
-    ax.annotate("M1 ShadowGen", (t1, m1), textcoords="offset points",
+    ax.annotate("M1", (t1, m1), textcoords="offset points",
                 xytext=(8, 6), fontsize=9, ha="left")
     print(f"  pareto M1g K=1 t={t1:.1f}s MAE={m1:.3f}")
 
@@ -686,7 +686,7 @@ def fig_pareto_scale():
     ax.set_xlim(0, XMAX); ax.set_ylim(-0.02, 0.72)
     ax.annotate("better", xy=(4, 0.02), xytext=(22, 0.14), fontsize=9, color="0.3",
                 arrowprops=dict(arrowstyle="->", color="0.45"))
-    ax.text(0.98, 0.97, "not shown: M5 AVATAR (8.6–11.8 h GPU per log);\nM4, M8 infeasible on every log",
+    ax.text(0.98, 0.97, "not shown: M5 (8.6–11.8 h GPU per log);\nM4/M8: insufficient coverage",
             transform=ax.transAxes, ha="right", va="top", fontsize=8, color="#b8403e")
     ax.text(0.63, 0.115, "bars: min–max over cells (horizontal, arrows run off axis,\nlabel = worst cell) and over per-log error (vertical)",
             transform=ax.transAxes, ha="center", va="bottom", fontsize=7, color="0.4")
