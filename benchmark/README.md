@@ -77,13 +77,11 @@ the output destination.
 
 ### Analysis & utilities
 
-- `version_comparison.py` — **teammate**, multi-seed cross-version comparison: v2.4 vs v2.5 vs v2.6 vs v2.6-mle
-- `version_comparison_analysis.ipynb` — **teammate**, notebook for analyzing `version_comparison_D*.csv`
-- `r1_accept.py` — **teammate**, R1 acceptance rate computation
+- `version_comparison.py` — multi-seed cross-version comparison: v2.4 vs v2.5 vs v2.6 vs v2.6-mle
+- `version_comparison_analysis.ipynb` — notebook for analyzing `version_comparison_D*.csv`
+- `r1_accept.py` — R1 acceptance rate computation
 - `make_figures.py` — figure generation for paper/report
 - `stat_timings.py` — timing statistics aggregation
-- `subsample_scaling.py` — subsample scaling analysis
-- `compare_runtimes.py` — cross-method runtime comparison
 - `alignment_spotcheck.py` — alignment quality spot-check
 - `audit_configs.py` — config completeness audit
 - `generator_validation.py` — generator output validation
@@ -165,10 +163,3 @@ uv run python benchmark/version_comparison.py --dataset D2 --seeds 42
 - **File prefix = dataset `name`, not key**: `BPI2017` not `D3`.
 - **`benchmark/models/` is legacy** — self-contained jobs prepare models in `/tmp`.
 - **M6 JAR**: must use patched `jbpt-pm-entropia-1.7.1.jar` (see BenchmarkGuide §1 M6 note).
-
----
-
-## Experiment safety
-
-- After completing experiments, output raw measurement data in a structured format. Do not output redundant debug information to the console. Before deleting any folders, list all files and subfolders within the current folder and indicate the reason and basis for the deletion operation in the output. Deletion operations must go through a human review and approval process.
-- The waiting time for running experiments should increase exponentially (e.g., 5 minutes followed by 10 minutes). Do not run multiple experiments at the same time. Before each experiment startup, check the number of currently running experiments to ensure it does not exceed one.

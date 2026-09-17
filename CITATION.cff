@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this code or the benchmark results, please cite the paper below."
+title: "ShadowGen: generative N-gram generalization metric and cross-paradigm benchmark"
+type: software
+authors:
+  - family-names: Krengel
+    given-names: Christian Daniel
+  - family-names: Geng
+    given-names: Tianhao
+repository-code: "https://github.com/Gength/generalization_analysis"
+license: MIT
+preferred-citation:
+  type: conference-paper
+  title: "Quantifying Process Model Generalization: A Hold-out Validation of Eight Paradigms and a Generative N-gram Metric"
+  authors:
+    - family-names: Krengel
+      given-names: Christian Daniel
+    - family-names: Geng
+      given-names: Tianhao
+    - family-names: Tavares
+      given-names: Gabriel Marques
+      orcid: "https://orcid.org/0000-0002-2601-8108"
+    - family-names: Schuster
+      given-names: Daniel
+      orcid: "https://orcid.org/0000-0002-6512-9580"
+  conference:
+    name: "International Conference on Process Mining (ICPM 2027)"
+    city: Rende
+    country: IT
+    date-start: 2027-02-08
+    date-end: 2027-02-12
+  collection-title: "Proceedings of the International Conference on Process Mining (ICPM 2027)"
+  year: 2027
+  # doi: add once assigned

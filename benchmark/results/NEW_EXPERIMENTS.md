@@ -1,9 +1,8 @@
 # Four validation experiments (2026-07-15)
 
-Independent hardening of ShadowGen's validation, run on cibox. Each targets a
-named threat in Sect. 6.4 or an open question in the conclusion. Numbers are from
-the committed matrix and the scripts below; nothing in the report or deck is
-changed here (propose-first).
+Independent hardening of ShadowGen's validation. Each targets a named threat in
+Sect. 6.4 or an open question in the conclusion. Numbers are from the committed
+matrix and the scripts below.
 
 ## Headline
 
@@ -147,7 +146,7 @@ Poles, VERIFIED per system (not means): flower true recall = 1.0000 on every
 system (min 1.0000) and ShadowGen scores it 1.0000 on every system (min 1.0000);
 trace true recall mean 0.748, ShadowGen 0.719.
 
-## Proposed report integration (propose-first, nothing applied)
+## Suggested report integration
 
 - Exp 1 + Exp 2: a short results subsection or two new threats paragraphs under
   "Ground truth and representativeness" and "Shared measurement core": "We also
@@ -175,4 +174,3 @@ trace true recall mean 0.748, ShadowGen 0.719.
 
 All four experiments closed. Exp 1, 2, 4 delivered; Exp 3 stopped as infeasible in
 budget (documented above, and it is not needed: L1/L2 already answer that threat).
-Nothing in the report or the deck has been modified.

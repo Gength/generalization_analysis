@@ -1,7 +1,7 @@
 [project]
 name = "generalization-analysis"
 version = "0.1.0"
-description = "Add your description here"
+description = "ShadowGen: a generative N-gram generalization metric for process models, with a cross-paradigm benchmark against hold-out ground truth"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

@@ -15,7 +15,7 @@ bash benchmark/shell/m3.sh          # Entropic Relevance
 bash benchmark/shell/m5.sh          # AVATAR (GPU, ~4h)
 bash benchmark/shell/m6.sh          # Bootstrap Gen
 bash benchmark/shell/m7.sh          # SpeciAL4PM
-bash benchmark/shell/reference.sh   # R1–R3
+bash benchmark/shell/r1.sh          # R1 (likewise r2.sh, r3.sh)
 ```
 
 All methods described in [`BenchmarkDesign.md`](BenchmarkDesign.md).
@@ -101,7 +101,7 @@ git clone https://github.com/promtecmx/relevance.git
 | `src/codebase/` | [jbpt/codebase](https://github.com/jbpt/codebase) | M3, M6 | ✅ |
 | `src/relevance/` | [promtecmx/relevance](https://github.com/promtecmx/relevance) | M3 | ✅ |
 
-**Known modifications (tracked in git history):**
+**Known modifications (`src/` is not tracked; apply by hand after cloning):**
 - `src/codebase/` — Patched Entropia JAR (`jbpt-pm-entropia-1.7.1.jar`) fixes a null-pointer bug in `EventLogSampling.java:101` for D2 BPI2013 Incidents at `k=2`.
 - `src/AVATAR/` — Trailing underscore fix in `avatar/generalization.py:78` for D2 activity name matching.
 
@@ -137,7 +137,7 @@ All scripts accept `--dataset D1..D21` and `--output <dir>`. Each produces one J
 # Bash
 bash benchmark/shell/m1.sh --dataset D1
 
-# SLURM (requires CIP-Pool krater partition)
+# SLURM (set #SBATCH --partition in the script to your cluster's partition)
 sbatch benchmark/shell/m1.sh --dataset D1
 
 # Full pipeline (all methods, all datasets)
@@ -176,9 +176,9 @@ Results directory (`benchmark/results/configs_v2/`):
 - One JSON per cell: `{Dataset}__{Miner}__{Method}.json`
 - Example: `Sepsis__Inductive_Strict__M1g.json`
 
-### Visualization
+### Figures
 
-Open `visualize_benchmark.ipynb`, set `DATASET_KEY`, and Run All. Saves heatmap CSVs and PNGs to `analysis/benchmark/{DATASET_NAME}/`.
+`uv run python benchmark/make_figures.py` regenerates the paper figures; the `benchmark/make_*_figure.py` scripts cover the supplementary validations.
 
 ---
 

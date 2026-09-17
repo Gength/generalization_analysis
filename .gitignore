@@ -14,3 +14,6 @@ archive/src_deps/
 # large regenerable input log copied beside SDFA results (Exp5, Entropia input)
 benchmark/results/sdfa/*.xes
 benchmark/results/configs_v2/
+# local scratch (paper drafts, PDF builds, temporary scripts)
+/output/
+/tmp/

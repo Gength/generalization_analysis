@@ -168,7 +168,7 @@ NADV_STEPS = int(os.environ.get("AVATAR_NADV_STEPS", NADV_STEPS))
 # Docker-based AVATAR (TF 1.15.5 GPU)
 docker_base = [
     "docker", "run", "--rm", "--gpus", "all",
-    "-v", "/home/gengtianhao/Process Mining/src/AVATAR:/workspace/src/AVATAR",
+    "-v", f"{os.path.abspath(AVATAR_DIR)}:/workspace/src/AVATAR",
     "-w", "/workspace/src/AVATAR",
     "avatar-tf1",
 ]

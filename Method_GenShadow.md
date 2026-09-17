@@ -1,7 +1,7 @@
 # Gen_shadow — Method Specification
 
 > **Status: authoritative.** This document describes the generalization metric as currently intended.
-> Where it conflicts with `Method2Log.md` or framing in `BenchmarkDesign.md` (flower model expectations,
+> Where it conflicts with framing in `BenchmarkDesign.md` (flower model expectations,
 > Gen_struct motivation), **this document takes precedence** — those passages reflect an earlier,
 > contested design stance (see §8).
 > Code: `HybridGen/algorithm/v24.py`. The package name "HybridGen" is legacy (see §9).

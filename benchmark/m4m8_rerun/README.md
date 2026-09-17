@@ -2,7 +2,7 @@
 
 Reruns of the two "infeasible" baselines under the 1-hour protocol budget, D1-D5,
 with per-cell instrumentation. Replaces the earlier placeholder sentinels and backs
-the Sect. 6.2 + appendix (`tab:external`) M4/M8 claims in `report/main_v4.tex`.
+the Sect. 6.2 + appendix (`tab:external`) M4/M8 claims in `report/final_report.tex`.
 
 ## What
 

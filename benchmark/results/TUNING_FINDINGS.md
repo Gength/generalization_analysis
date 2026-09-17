@@ -270,7 +270,7 @@ defaults are not a limitation conceded; they are the correct design, measured.
 
 Change nothing. Every shipped default is at an optimum or inside the noise band of
 one, including against three knobs the algorithm never had, and tuning actively
-backfires out-of-sample. The defensible line at a defense is now:
+backfires out-of-sample. The defensible summary:
 
 > We swept every parameter of the generator, and three it did not have, across
 > N=2..20, tau=1..20, a continuous weighting temperature, the shadow-log size over

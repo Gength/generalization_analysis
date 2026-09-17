@@ -1,13 +1,13 @@
-# Report (LNCS)
+# Report (LNCS, July 2026)
 
-M.Sc. report: *Quantifying Process Model Generalization: A Generative N-gram
-Metric and a Cross-Paradigm Benchmark*.
+Earlier report, superseded by the paper (see the top-level README):
+*Quantifying Process Model Generalization: A Generative N-gram Metric and a
+Cross-Paradigm Benchmark*.
 
 ## Files
 
-- `final_report.tex` / `.pdf`: the submitted and only maintained version (the
-  appendix holds only data exhibits); the long draft (`main_v5`) was removed on
-  2026-07-23 and remains in git history
+- `final_report.tex` / `.pdf`: the final version (the appendix holds only data
+  exhibits); the long draft (`main_v5`) remains in git history
 - `references.bib`: BibTeX references (style `splncs04`)
 - `figures/`: all figures as vector PDFs; they regenerate from
   `benchmark/make_figures.py` and `benchmark/make_*_figure.py`
@@ -15,7 +15,7 @@ Metric and a Cross-Paradigm Benchmark*.
 Earlier drafts (`main.tex`, `main_v2` to `main_v4`) are removed; they remain in
 the git history.
 
-## Structure (the supervisor's 7-section layout)
+## Structure
 
 1. Introduction
 2. Background (logs, models, token replay's two readings, hold-out, N-grams)
